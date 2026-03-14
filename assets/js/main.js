@@ -207,3 +207,60 @@
   document.addEventListener('scroll', navmenuScrollspy);
 
 })();
+
+/**
+ * Payment Section — switchPayment / toggleAccNo / copyAccount
+ * Kept outside IIFE so inline onclick attributes in HTML can reach them.
+ */
+var methodColors = {
+  kbank:  { border: '#00a651', bar: '#00a651', shadow: 'rgba(0,166,81,0.18)' },
+  ktb:    { border: '#1565c0', bar: '#1565c0', shadow: 'rgba(21,101,192,0.18)' },
+  alipay: { border: '#00a0e9', bar: '#00a0e9', shadow: 'rgba(0,160,233,0.18)' },
+  paypal: { border: '#0070ba', bar: '#0070ba', shadow: 'rgba(0,112,186,0.18)' }
+};
+
+function switchPayment(method, el) {
+  document.querySelectorAll('.payment-method-card').forEach(function(c) {
+    c.style.border = '2px solid #e8ecf4';
+    c.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)';
+    var bar = c.querySelector('.method-bar');
+    if (bar) bar.style.background = '#e8ecf4';
+  });
+  var col = methodColors[method];
+  el.style.border = '2px solid ' + col.border;
+  el.style.boxShadow = '0 4px 20px ' + col.shadow;
+  var bar = el.querySelector('.method-bar');
+  if (bar) bar.style.background = col.bar;
+  document.querySelectorAll('.payment-panel').forEach(function(p) { p.style.display = 'none'; });
+  document.getElementById('panel-' + method).style.display = 'block';
+}
+
+function toggleAccNo(bank) {
+  var mask    = document.getElementById('acno-' + bank + '-mask');
+  var reveal  = document.getElementById('acno-' + bank);
+  var btn     = document.getElementById('btn-toggle-' + bank);
+  var copyBtn = document.getElementById('btn-copy-' + bank);
+  var shown   = reveal.style.display !== 'none';
+  if (shown) {
+    mask.style.display    = '';
+    reveal.style.display  = 'none';
+    btn.innerHTML         = '<i class="bi bi-eye" id="icon-toggle-' + bank + '"></i> Show';
+    copyBtn.style.opacity       = '0.35';
+    copyBtn.style.pointerEvents = 'none';
+  } else {
+    mask.style.display    = 'none';
+    reveal.style.display  = '';
+    btn.innerHTML         = '<i class="bi bi-eye-slash" id="icon-toggle-' + bank + '"></i> Hide';
+    copyBtn.style.opacity       = '1';
+    copyBtn.style.pointerEvents = 'auto';
+  }
+}
+
+function copyAccount(elemId, msgId) {
+  var text = document.getElementById(elemId).innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    var msg = document.getElementById(msgId);
+    msg.style.opacity = '1';
+    setTimeout(function() { msg.style.opacity = '0'; }, 2500);
+  });
+}
