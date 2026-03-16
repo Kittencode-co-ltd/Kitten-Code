@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitten Code Receipt Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container no-print">
+
+        <!-- Left Panel: Form Input -->
+        <div class="form-panel">
+            <div class="form-header">
+                <h2><i class="fas fa-file-invoice-dollar"></i> สร้างใบเสร็จรับเงิน</h2>
+            </div>
+
+            <form id="quote-form">
+                <!-- Section: Document Info -->
+                <div class="form-section">
+                    <h3><i class="fas fa-file-alt"></i> ข้อมูลเอกสาร</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>เลขที่ใบเสร็จ (Receipt No)</label>
+                            <input type="text" id="in-doc-no" value="" placeholder="เช่น BI-20190008"
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>วันที่ (Issue Date)</label>
+                            <input type="date" id="in-doc-date" value="" oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>ชำระโดย (Payment)</label>
+                            <select id="in-doc-payment" onchange="buildPreview()">
+                                <option value="เงินสด">เงินสด (Cash)</option>
+                                <option value="โอนเงิน">โอนเงิน (Bank Transfer)</option>
+                                <option value="เช็คธนาคาร">เช็คธนาคาร (Cheque Bank)</option>
+                                <option value="อื่นๆ">อื่นๆ (Other)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>พนักงานขาย (Salesman)</label>
+                            <input type="text" id="in-doc-salesman" value="" placeholder="ชื่อพนักงานขาย"
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>ใบวางบิล (Invoice No)</label>
+                            <input type="text" id="in-doc-invoice" value="" placeholder="เช่น IN-20190008"
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>เอกสารอ้างอิง (Ref Document)</label>
+                            <input type="text" id="in-doc-ref" value="" placeholder="อ้างอิง..."
+                                oninput="buildPreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Customer -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user-tie"></i> ข้อมูลลูกค้า & โครงการ</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>ชื่อลูกค้า (Customer Name)</label>
+                            <input type="text" id="in-cust-name" value="" placeholder="ระบุชื่อบริษัทหรือชื่อลูกค้า..."
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>เลขประจำตัวผู้เสียภาษี (Tax ID)</label>
+                            <input type="text" id="in-cust-tax" value="" placeholder="เช่น 01909019999999 (สำนักงานใหญ่)"
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ที่อยู่ (Address)</label>
+                            <textarea id="in-cust-addr" rows="2" oninput="buildPreview()"
+                                placeholder="ระบุที่อยู่ลูกค้า..."></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ชื่อโปรเจ็ค (Project Name)</label>
+                            <input type="text" id="in-proj-name" value="" placeholder="ระบุชื่อโปรเจ็ค..."
+                                oninput="buildPreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Line Items -->
+                <div class="form-section">
+                    <div class="flex-between">
+                        <h3><i class="fas fa-list-ul"></i> รายการสินค้า / บริการ</h3>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addItemLine()">
+                            <i class="fas fa-plus"></i> เพิ่มรายการ
+                        </button>
+                    </div>
+
+                    <div id="items-container">
+                        <!-- Items will be injected here via JS -->
+                    </div>
+                </div>
+
+                <!-- Section: Summary Options -->
+                <div class="form-section">
+                    <h3><i class="fas fa-calculator"></i> สรุปยอดเงิน</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ส่วนลดพิเศษ (Special Discount)</label>
+                            <input type="number" id="in-special-discount" value="0" step="0.01" oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>ภาษีมูลค่าเพิ่ม (%)</label>
+                            <input type="number" id="in-doc-vat" value="7" oninput="buildPreview()">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>รายละเอียดการชำระเงิน (Payment Detail) [แสดงใต้ตารางชำระเงิน]</label>
+                            <textarea id="in-payment-detail" rows="2" oninput="buildPreview()" placeholder="ตัวอย่าง: โอนเข้าบัญชีธนาคาร กสิกรไทย..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Signatures -->
+                <div class="form-section">
+                    <h3><i class="fas fa-signature"></i> ข้อมูลลายเซ็น</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ผู้รับเงิน (Bill Receiver)</label>
+                            <input type="text" id="in-sign-receiver" value="" placeholder="ระบุชื่อผู้รับเงิน..."
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>ผู้รับมอบอำนาจ (Authorized Sign.)</label>
+                            <input type="text" id="in-sign-auth" value="" placeholder="ระบุชื่อผู้อนุมัติ..."
+                                oninput="buildPreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print Action -->
+                <div class="form-section print-section">
+                    <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn"
+                        onclick="window.print()" style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px;">
+                        <i class="fas fa-print"></i> พิมพ์ใบเสร็จรับเงิน (A4)
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Right Panel: A4 Preview -->
+        <div class="preview-panel" id="preview-panel">
+            <!-- JavaScript will render the paginated preview here -->
+        </div>
+    </div>
+
+    <script src="script-receipt.js"></script>
+</body>
+
+</html>

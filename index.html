@@ -1142,8 +1142,8 @@
           </ul>
         </div>
 
-        <div class="col-lg-4 col-md-12 footer-links">
-          <h4>&nbsp</h4>
+        <div class="col-lg-2 col-md-12 footer-links">
+          <h4>&nbsp;</h4>
           <ul>
             <li><i class="bi bi-chevron-right"></i> <a href="#services-2">System Analysis</a></li>
             <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Data Analysis & Prediction</a></li>
@@ -1151,6 +1151,38 @@
             <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Consult</a></li>
           </ul>
         </div>
+        <div class="col-lg-2 col-md-12 footer-links" id="adminFooterSection">
+          <h4>Admin</h4>
+          <ul id="adminLinks">
+            <!-- Links injected by JS -->
+          </ul>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const adminLinksContainer = document.getElementById('adminLinks');
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            if (isLoggedIn) {
+              adminLinksContainer.innerHTML = `
+                <li><i class="bi bi-chevron-right"></i> <a href="quotation/quotaion.html">Quotation</a></li>
+                <li><i class="bi bi-chevron-right"></i> <a href="#" onclick="handleLogout(event)">Logout</a></li>
+              `;
+            } else {
+              adminLinksContainer.innerHTML = `
+                <li><i class="bi bi-chevron-right"></i> <a href="login.html">Login</a></li>
+              `;
+            }
+          });
+
+          function handleLogout(event) {
+            event.preventDefault();
+            localStorage.removeItem('isLoggedIn');
+            window.location.reload();
+          }
+        </script>
+
+
 
       </div>
     </div>

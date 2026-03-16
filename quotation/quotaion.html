@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Kitten Code Quotation Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container no-print">
+
+        <!-- Left Panel: Form Input -->
+        <div class="form-panel">
+            <div class="form-header">
+                <h2><i class="fas fa-file-invoice-dollar"></i> สร้างใบเสนอราคา</h2>
+            </div>
+
+            <form id="quote-form">
+                <!-- Company Profile details are now fixed in the preview pane directly -->
+
+                <!-- Section: Document Info -->
+                <div class="form-section">
+                    <h3><i class="fas fa-file-alt"></i> ข้อมูลเอกสาร</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>เลขที่ใบเสนอราคา</label>
+                            <input type="text" id="in-doc-no" value="" placeholder="เช่น KC-2026001"
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>วันที่</label>
+                            <input type="date" id="in-doc-date" value="" oninput="buildPreview()">
+                            <!-- Hidden original input for syncing if needed, or we just override the sync function for this element -->
+                        </div>
+                        <div class="form-group">
+                            <label>เงื่อนไขชำระเงิน</label>
+                            <input type="text" id="in-doc-terms" value="" placeholder="เช่น ตามข้อตกลง"
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>เครดิต (วัน)</label>
+                            <input type="text" id="in-doc-credit" value="" placeholder="เช่น 7 วัน"
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>ภาษีมูลค่าเพิ่ม (%)</label>
+                            <input type="number" id="in-doc-vat" value="7" oninput="buildPreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Customer -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user-tie"></i> ข้อมูลลูกค้า</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>ชื่อลูกค้า</label>
+                            <input type="text" id="in-cust-name" value="" placeholder="ระบุชื่อบริษัทหรือชื่อลูกค้า..."
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ที่อยู่</label>
+                            <textarea id="in-cust-addr" oninput="buildPreview()"
+                                placeholder="ระบุที่อยู่ลูกค้า..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>เบอร์โทร</label>
+                            <input type="text" id="in-cust-tel" value="" placeholder="เช่น 08x-xxx-xxxx"
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>เลขประจำตัวผู้เสียภาษีอากร</label>
+                            <input type="text" id="in-cust-tax" value="" placeholder="เช่น 1234567890123"
+                                oninput="buildPreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Project / Contact -->
+                <div class="form-section">
+                    <h3><i class="fas fa-briefcase"></i> โครงการ / ผู้ติดต่อ</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>ชื่องาน</label>
+                            <input type="text" id="in-proj-name" value="" placeholder="ระบุชื่องาน หรือ โครงการ..."
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>ผู้ติดต่อ</label>
+                            <input type="text" id="in-proj-contact" value="" placeholder="ระบุชื่อผู้ติดต่อ..."
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>เบอร์โทร</label>
+                            <input type="text" id="in-proj-tel" value="" placeholder="เช่น 08x-xxx-xxxx"
+                                oninput="buildPreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Line Items -->
+                <div class="form-section">
+                    <div class="flex-between">
+                        <h3><i class="fas fa-list-ul"></i> รายการสินค้า / บริการ</h3>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addItemLine()">
+                            <i class="fas fa-plus"></i> เพิ่มรายการ
+                        </button>
+                    </div>
+
+                    <div id="items-container">
+                        <!-- Items will be injected here via JS -->
+                    </div>
+                </div>
+
+                <!-- Section: Signatures -->
+                <div class="form-section">
+                    <h3><i class="fas fa-signature"></i> ข้อมูลลายเซ็น (ผู้จัดทำ/อนุมัติ)</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>สั่งซื้อโดย / ผู้เจรจา (ชื่อลูกค้า)</label>
+                            <input type="text" id="in-sign-buyer" value="" placeholder="เช่น ระบุชื่อลูกค้า..."
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>จัดทำโดย</label>
+                            <input type="text" id="in-sign-prep" value="" placeholder="ระบุชื่อผู้จัดทำ..."
+                                oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>อนุมัติโดย</label>
+                            <input type="text" id="in-sign-appr" value="" placeholder="ระบุชื่อผู้อนุมัติ..."
+                                oninput="buildPreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print Action -->
+                <div class="form-section print-section">
+                    <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn"
+                        onclick="window.print()" style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px;">
+                        <i class="fas fa-print"></i> พิมพ์ใบเสนอราคา (A4)
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Right Panel: A4 Preview -->
+        <div class="preview-panel" id="preview-panel">
+            <!-- JavaScript will render the paginated preview here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

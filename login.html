@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Admin Login - Kitten Code</title>
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: url('assets/img/hero-bg.jpg') top center;
+      background-size: cover;
+      background-attachment: fixed;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 1;
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 420px;
+      padding: 15px;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 45px 35px;
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+      transition: transform 0.1s ease-in-out;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .login-header h1 {
+      font-family: 'Raleway', sans-serif;
+      color: #fff;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .login-header p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 15px;
+      font-weight: 300;
+      margin-bottom: 0;
+      letter-spacing: 1px;
+    }
+
+    .form-control {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 10px;
+      padding: 14px 15px;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+
+    .form-control:focus {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: #00b4ff;
+      color: #fff;
+      box-shadow: 0 0 0 0.25rem rgba(0, 180, 255, 0.2);
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .input-group-text {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.6);
+      border-right: none;
+      border-radius: 10px 0 0 10px;
+      padding-left: 18px;
+    }
+
+    .form-control {
+      border-left: none;
+      padding-left: 10px;
+    }
+
+    .btn-login {
+      background: linear-gradient(135deg, #0099ff 0%, #0066cc 100%);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+      box-shadow: 0 4px 15px rgba(0, 153, 255, 0.3);
+    }
+
+    .btn-login:hover {
+      background: linear-gradient(135deg, #33adff 0%, #0073e6 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 153, 255, 0.4);
+      color: #fff;
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .back-home {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .back-home a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .back-home a:hover {
+      color: #fff;
+      transform: translateX(-3px);
+    }
+
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 13.5px;
+      margin-top: 15px;
+      text-align: center;
+      display: none;
+      background: rgba(255, 107, 107, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Input autofill styling override for dark theme */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active{
+        -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.8) inset !important;
+        -webkit-text-fill-color: white !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+    <div class="login-card" data-aos="fade-up" data-aos-duration="800">
+      <div class="login-header">
+        <h1>KITTEN CODE</h1>
+        <p>Admin Portal Login</p>
+      </div>
+
+      <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+        <div class="mb-4">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input type="text" class="form-control" id="username" placeholder="Username" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input type="password" class="form-control" id="password" placeholder="Password" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-login w-100">Sign In</button>
+        <div id="loginError" class="error-msg">
+          <i class="bi bi-exclamation-circle me-1"></i> Invalid username or password
+        </div>
+      </form>
+
+      <div class="back-home">
+        <a href="index.html"><i class="bi bi-arrow-left me-2"></i> Back to Homepage</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script>
+    // Initialize AOS animation
+    AOS.init();
+
+    function handleLogin() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const errorMsg = document.getElementById('loginError');
+
+      if (user === 'admin' && pass === 'admin') {
+        errorMsg.style.display = 'none';
+        
+        // Show success state on button
+        const btn = document.querySelector('.btn-login');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Authenticating...';
+        btn.style.background = 'linear-gradient(135deg, #00b09b, #96c93d)'; // Success green color gradient
+        btn.style.boxShadow = '0 8px 25px rgba(0, 176, 155, 0.4)';
+        
+        setTimeout(() => {
+          localStorage.setItem('isLoggedIn', 'true');
+          window.location.href = 'back-office.html';
+        }, 800);
+      } else {
+        errorMsg.style.display = 'block';
+        
+        // Shake effect on error
+        const card = document.querySelector('.login-card');
+        card.style.transform = 'translateX(-10px)';
+        setTimeout(() => card.style.transform = 'translateX(10px)', 100);
+        setTimeout(() => card.style.transform = 'translateX(-10px)', 200);
+        setTimeout(() => card.style.transform = 'translateX(10px)', 300);
+        setTimeout(() => card.style.transform = 'translateX(0)', 400);
+      }
+    }
+  </script>
+</body>
+
+</html>
