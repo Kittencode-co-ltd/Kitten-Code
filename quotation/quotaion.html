@@ -51,6 +51,11 @@
                             <label>ภาษีมูลค่าเพิ่ม (%)</label>
                             <input type="number" id="in-doc-vat" value="7" oninput="buildPreview()">
                         </div>
+                        <div class="form-group">
+                            <label>ส่วนลด (บาท)</label>
+                            <input type="number" id="in-doc-discount" value="0" min="0" step="0.01"
+                                oninput="state.discount = Number(this.value); buildPreview()">
+                        </div>
                     </div>
                 </div>
 
@@ -114,6 +119,15 @@
 
                     <div id="items-container">
                         <!-- Items will be injected here via JS -->
+                    </div>
+                </div>
+
+                <!-- Section: Note -->
+                <div class="form-section">
+                    <h3><i class="fas fa-sticky-note"></i> หมายเหตุ</h3>
+                    <div class="form-group full-width">
+                        <textarea id="in-note" placeholder="ระบุหมายเหตุ..."
+                            oninput="state.note = this.value; buildPreview()"></textarea>
                     </div>
                 </div>
 

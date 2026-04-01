@@ -1,31 +1,53 @@
-/* Root Variables and Reset */
+/* ============================================================
+   ROOT VARIABLES & RESET
+   ============================================================ */
 :root {
-  --primary-color: #f26522;
-  /* Orange from image */
-  --text-color: #222;
-  --border-color: #000;
-  --blue-border: #0044cc;
-  /* Thin blue border as seen in the artifact */
-  --light-bg: #f5f6fa;
+  --primary: #f26522;
+  --primary-dark: #d4521a;
+  --primary-light: #fff4ee;
+  --accent: #1a3a5c;
+  --accent-light: #e8eef6;
+  --text-main: #1e1e1e;
+  --text-muted: #6b7280;
+  --border: #d1d5db;
+  --border-light: #e5e7eb;
+  --surface: #f9fafb;
   --white: #ffffff;
-  --font-family: "Sarabun", sans-serif;
+  --success: #059669;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --font: "Sarabun", sans-serif;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.14);
+  --transition: 0.18s ease;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body {
-  font-family: var(--font-family);
-  background-color: var(--light-bg);
-  color: var(--text-color);
+html {
   font-size: 14px;
-  line-height: 1.5;
 }
 
-/* App Layout - Split Screen */
+body {
+  font-family: var(--font);
+  background: #e9edf2;
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   APP LAYOUT — SPLIT SCREEN
+   ============================================================ */
 .app-container {
   display: flex;
   flex-direction: row-reverse;
@@ -33,49 +55,89 @@ body {
   overflow: hidden;
 }
 
-/* Form Panel */
+/* ============================================================
+   FORM PANEL (RIGHT SIDE)
+   ============================================================ */
 .form-panel {
-  width: 450px;
-  min-width: 400px;
-  background-color: var(--white);
-  border-left: 1px solid #ddd;
+  width: 460px;
+  min-width: 420px;
+  background: var(--white);
+  border-left: 1px solid var(--border-light);
   overflow-y: auto;
-  padding: 20px;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+  padding: 24px 20px 32px;
+  box-shadow: -3px 0 20px rgba(0, 0, 0, 0.07);
   z-index: 10;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
 
+.form-panel::-webkit-scrollbar {
+  width: 5px;
+}
+.form-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.form-panel::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+/* --- Form Header --- */
 .form-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--primary-light);
 }
 
 .form-header h2 {
-  font-size: 20px;
-  color: #333;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+.form-header h2 i {
+  color: var(--primary);
+}
+
+/* --- Form Sections --- */
 .form-section {
-  margin-bottom: 25px;
-  background: #fafafa;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid #eaeaea;
+  margin-bottom: 18px;
+  background: var(--surface);
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-light);
+  transition: border-color var(--transition);
+}
+
+.form-section:hover {
+  border-color: #c8cdd4;
 }
 
 .form-section h3 {
-  font-size: 16px;
-  color: #444;
-  margin-bottom: 15px;
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 5px;
-  display: inline-block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: 0.01em;
 }
 
+.form-section h3 i {
+  color: var(--primary);
+  font-size: 13px;
+}
+
+/* --- Form Grid & Groups --- */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -85,150 +147,249 @@ body {
 .form-group {
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
-
 .form-group.full-width {
   grid-column: span 2;
 }
 
 .form-group label {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
-  color: #666;
-  margin-bottom: 4px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-family: var(--font-family);
-  font-size: 14px;
-  transition: border-color 0.2s;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 13.5px;
+  color: var(--text-main);
+  background: var(--white);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+  line-height: 1.5;
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
   outline: none;
-  border-color: var(--primary-color);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.12);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #b0b7c3;
+  font-style: italic;
 }
 
 .form-group textarea {
   resize: vertical;
-  min-height: 60px;
+  min-height: 64px;
 }
 
-/* Buttons */
+/* ชื่อลูกค้า — ใช้ textarea แทน input เพื่อรองรับข้อความยาว */
+#in-cust-name {
+  min-height: 38px;
+}
+
+/* --- Buttons --- */
 .btn {
-  padding: 8px 16px;
+  padding: 9px 18px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-family: var(--font-family);
-  font-weight: 600;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 13.5px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  transition: background 0.2s;
+  justify-content: center;
+  gap: 7px;
+  transition:
+    background var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+  letter-spacing: 0.01em;
+}
+
+.btn:active {
+  transform: translateY(1px);
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
-  color: white;
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(242, 101, 34, 0.3);
 }
-
 .btn-primary:hover {
-  background-color: #d95318;
+  background: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(242, 101, 34, 0.35);
 }
 
 .btn-secondary {
-  background-color: #e2e8f0;
-  color: #475569;
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 1px solid #c3cfe0;
 }
-
 .btn-secondary:hover {
-  background-color: #cbd5e1;
+  background: #d5e0ef;
 }
 
 .btn-danger {
-  background-color: #fee2e2;
-  color: #ef4444;
-  padding: 4px 8px;
+  background: var(--danger-light);
+  color: var(--danger);
+  padding: 4px 9px;
+  font-size: 12px;
 }
-
 .btn-danger:hover {
-  background-color: #fca5a5;
+  background: #fecaca;
 }
 
 .btn-sm {
-  padding: 5px 10px;
+  padding: 6px 12px;
   font-size: 12px;
 }
 
+.btn-large {
+  padding: 14px 24px;
+  font-size: 15px;
+}
+
+.full-width-btn {
+  width: 100% !important;
+}
+
+/* --- Flex helpers --- */
 .flex-between {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 14px;
 }
 
-/* Item Entry Form */
+/* --- Item Entry --- */
 .item-entry {
-  background: white;
-  border: 1px solid #e2e8f0;
-  padding: 12px;
-  border-radius: 6px;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  padding: 14px 14px 12px;
+  border-radius: var(--radius-sm);
   margin-bottom: 10px;
   position: relative;
+  transition: border-color var(--transition);
+}
+
+.item-entry:hover {
+  border-color: var(--primary);
 }
 
 .item-entry .remove-btn {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 8px;
+  right: 8px;
 }
 
-/* Preview Panel (Left Side Now due to row-reverse) */
+/* --- Print Section --- */
+.print-section {
+  background: linear-gradient(135deg, var(--primary-light), #fff);
+  border-color: rgba(242, 101, 34, 0.25);
+}
+
+/* ============================================================
+   PREVIEW PANEL (LEFT SIDE)
+   ============================================================ */
 .preview-panel {
   flex-grow: 1;
-  background-color: #e5e7eb;
+  background: #dde1e9;
+  background-image:
+    radial-gradient(
+      circle at 20% 50%,
+      rgba(242, 101, 34, 0.04) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(26, 58, 92, 0.04) 0%,
+      transparent 60%
+    );
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   overflow-y: auto;
-  padding: 40px 20px;
+  padding: 36px 24px 48px;
+  scrollbar-width: thin;
+  scrollbar-color: #b4b9c4 transparent;
 }
 
-/* A4 Canvas styling - exactly matching A4 dimensions at 96 DPI */
-.a4-canvas {
+.preview-panel::-webkit-scrollbar {
+  width: 6px;
+}
+.preview-panel::-webkit-scrollbar-thumb {
+  background: #b4b9c4;
+  border-radius: 10px;
+}
+
+/* ============================================================
+   A4 PAGE
+   ============================================================ */
+.a4-page {
   width: 210mm;
+  height: 297mm;
   min-height: 297mm;
-  background-color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-height: 297mm;
+  background: var(--white);
+  margin: 0 auto 28px auto;
   position: relative;
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
-  /* In actual print, we rely on @page and padding */
-  border-left: 1px solid var(--blue-border);
-  border-right: 1px solid var(--blue-border);
-  border-bottom: 1px solid var(--blue-border);
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: 2px;
 }
 
+/* Orange accent bar top */
 .page-top-border {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 18px;
-  /* Thick orange border */
-  background-color: var(--primary-color);
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    var(--primary-dark) 100%
+  );
+  z-index: 2;
 }
 
+/* Thin left accent line */
+.a4-page::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 3px;
+  height: calc(100% - 6px);
+  background: var(--primary);
+  opacity: 0.18;
+}
+
+/* Content wrapper */
 .content-wrapper {
   height: 100%;
-  padding: 40px 15mm 20mm 15mm;
+  padding: 22px 14mm 16mm 14mm;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -238,20 +399,26 @@ body {
   flex-shrink: 0;
 }
 
-/* Quotation Specific Styles inside A4 */
+/* ============================================================
+   DOCUMENT: HEADER
+   ============================================================ */
 .header-section {
   display: flex;
-  align-items: center;
-  margin-bottom: 25px;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--border-light);
 }
 
 .logo-area {
-  margin-right: 20px;
+  flex-shrink: 0;
 }
 
 .company-logo {
-  width: 80px;
-  height: 80px;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
 }
 
 .company-details {
@@ -259,158 +426,256 @@ body {
 }
 
 .company-name {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 5px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
 }
 
 .company-address,
 .company-contact {
-  font-size: 13px;
-  color: #333;
-  line-height: 1.4;
+  font-size: 11.5px;
+  color: #555;
+  line-height: 1.5;
 }
 
-.doc-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.meta-info-section {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.meta-left {
-  width: 55%;
-}
-
-.meta-right {
-  width: 40%;
-}
-
-.project-info-section {
-  margin-bottom: 20px;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-/* Table styling matching the picture */
-.quote-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 30px;
-  font-size: 13.5px;
-}
-
-.quote-table th {
-  background-color: #f8f9fa;
-  border: 1px solid var(--border-color);
-  padding: 12px 10px;
-  text-align: center;
+.company-contact span {
+  color: var(--accent);
   font-weight: 600;
 }
 
-.quote-table td {
-  border: 1px solid var(--border-color);
-  padding: 10px 12px;
-  vertical-align: top;
+/* Document title */
+.doc-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  position: relative;
 }
 
-/* Alignments inside table */
+.doc-title::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 2px;
+  background: var(--primary);
+  margin: 4px auto 0;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   DOCUMENT: INFO SECTION (customer / doc meta)
+   ============================================================ */
+.doc-info-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  font-size: 12px;
+  gap: 12px;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 4px;
+  line-height: 1.5;
+  align-items: flex-start; /* รองรับ multiline */
+}
+
+.info-label {
+  font-weight: 700;
+  color: #444;
+  flex-shrink: 0;
+}
+
+/* ค่าข้อมูลต่างๆ ให้ตัดบรรทัดได้ */
+.info-value {
+  color: var(--text-main);
+  flex: 1;
+  word-break: break-word;
+  white-space: normal; /* ✅ ตัดบรรทัดอัตโนมัติ */
+  overflow-wrap: break-word;
+}
+
+/* multiline เช่น ที่อยู่ */
+.info-value.line-break {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* right-side doc meta box */
+.doc-meta-box {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+}
+
+.doc-meta-box table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.doc-meta-box td {
+  padding: 3px 6px 3px 0;
+  vertical-align: top;
+  white-space: nowrap; /* meta ฝั่งขวา (เลขที่, วันที่) OK ที่ nowrap */
+  line-height: 1.55;
+}
+
+.doc-meta-box td:first-child {
+  font-weight: 700;
+  color: #444;
+  padding-right: 8px;
+}
+
+/* ============================================================
+   DOCUMENT: MAIN TABLE
+   ============================================================ */
+.quote-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.quote-table th {
+  background: var(--accent);
+  color: var(--white);
+  border: 1px solid var(--accent);
+  padding: 8px 10px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: 12px;
+}
+
+.quote-table td {
+  border: 1px solid var(--border);
+  padding: 7px 10px;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.quote-table tbody tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+.quote-table tbody tr:hover td {
+  background: var(--primary-light);
+  transition: background 0.12s;
+}
+
+/* Column widths */
 .col-no {
   text-align: center;
   width: 6%;
 }
-
 .col-desc {
   text-align: left;
-  white-space: pre-wrap;
   width: 50%;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
-
 .col-qty {
   text-align: center;
   width: 12%;
 }
-
 .col-price {
   text-align: right;
   width: 15%;
-  padding-right: 15px;
 }
-
 .col-amount {
   text-align: right;
   width: 17%;
-  padding-right: 15px;
 }
 
-.quote-table tfoot td {
-  border: 1px solid var(--border-color);
-  padding: 10px 12px;
+/* ============================================================
+   DOCUMENT: SUMMARY TABLE
+   ============================================================ */
+.summary-table {
+  border-top: none;
+  margin-top: -1px;
+}
+
+.summary-table td {
+  font-size: 12px;
 }
 
 .text-amount-cell {
   text-align: center;
   vertical-align: middle;
-  background-color: #fafafa;
+  background: var(--surface) !important;
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .summary-label {
-  text-align: left;
-  padding-left: 20px !important;
+  text-align: right !important;
+  padding-right: 12px !important;
+  color: #444;
+  font-size: 12px;
 }
 
-.summary-value {
-  text-align: right;
+.summary-amount {
+  text-align: right !important;
+  padding-right: 10px !important;
+  font-size: 12px;
 }
 
-/* Signatures */
-.signatures-section {
+/* แถวรวมราคาทั้งสิ้น */
+.summary-table tr:last-child td {
+  background: var(--accent-light);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ============================================================
+   DOCUMENT: SIGNATURES
+   ============================================================ */
+.signatures {
   display: flex;
-  justify-content: space-between;
-  margin-top: 50px;
-  padding: 0 10px;
+  justify-content: space-around;
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border);
+  text-align: center;
+  font-size: 12px;
 }
 
 .sig-box {
-  text-align: center;
-  width: 30%;
-  font-size: 13px;
+  flex: 1;
+  padding: 0 10px;
 }
 
 .sig-line {
-  border-bottom: 1px dotted #666;
-  height: 40px;
-  margin: 15px auto 10px auto;
-  width: 150px;
-  position: relative;
+  border-bottom: 1px dashed #999;
+  width: 130px;
+  margin: 0 auto 10px auto;
+  height: 32px;
+}
+
+.sig-role {
+  font-weight: 700;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .sig-name {
-  margin-top: 5px;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--text-main);
 }
 
-/* Adjustments for Dynamic Pagination */
-.a4-page {
-  width: 210mm;
-  height: 297mm;
-  min-height: 297mm;
-  max-height: 297mm;
-  background: white;
-  margin: 0 auto 30px auto;
-  position: relative;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
 @media print {
   .no-print,
   .form-panel {
@@ -423,7 +688,7 @@ body {
     height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
-    background-color: white !important;
+    background: white !important;
     overflow: visible !important;
   }
 
@@ -455,6 +720,7 @@ body {
     overflow: hidden !important;
     visibility: visible !important;
     display: block !important;
+    border-radius: 0 !important;
   }
 
   .a4-page:last-child {
@@ -462,8 +728,47 @@ body {
     break-after: auto !important;
   }
 
+  /* ซ่อน pseudo element ที่อาจไม่ print ได้สวย */
+  .a4-page::before {
+    display: none !important;
+  }
+
+  .quote-table tbody tr:hover td {
+    background: transparent !important;
+  }
+
   @page {
     size: A4 portrait;
     margin: 0mm;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — จอเล็ก
+   ============================================================ */
+@media (max-width: 900px) {
+  .app-container {
+    flex-direction: column;
+    height: auto;
+    overflow: auto;
+  }
+  .form-panel {
+    width: 100%;
+    min-width: unset;
+    border-left: none;
+    border-top: 1px solid var(--border-light);
+  }
+  .preview-panel {
+    padding: 20px 8px;
+  }
+  .a4-page {
+    width: 100%;
+    max-width: 210mm;
+    height: auto;
+    min-height: unset;
+    max-height: unset;
+  }
+  .content-wrapper {
+    height: auto;
   }
 }

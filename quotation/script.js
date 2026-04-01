@@ -1,5 +1,7 @@
 let state = {
-    items: [{ id: generateId(), desc: "", qty: 1, price: 0 }]
+    items: [{ id: generateId(), desc: "", qty: 1, price: 0 }],
+    discount: 0,
+    note: ""
 };
 
 // Initialize Application
@@ -302,20 +304,33 @@ function buildPreview() {
     });
 
     const vatRate = Number(getInputValue('doc-vat')) || 0;
-    const vatAmount = subtotal * (vatRate / 100);
-    const grandTotal = subtotal + vatAmount;
+    const discountAmount = state.discount || 0;
+    const afterDiscount = subtotal - discountAmount;
+    const vatAmount = afterDiscount * (vatRate / 100);
+    const grandTotal = afterDiscount + vatAmount;
+    const noteText = state.note || '';
     const isVatAdded = vatRate > 0;
+    const isDiscounted = discountAmount > 0;
+    // Count rows for rowspan: รวมเงิน + ส่วนลด(optional) + vat(optional) + รวมทั้งสิ้น = 2~4
+    const summaryRows = 2 + (isDiscounted ? 1 : 0) + (isVatAdded ? 1 : 0);
 
     const summaryHTML = `
             <table class="quote-table no-top-margin summary-table" style="width: 100%; border-collapse: collapse; border-top: none; margin-top: -1px;">
                 <tbody>
                     <tr>
-                        <td colspan="2" rowspan="${isVatAdded ? 3 : 2}" class="text-amount-cell" style="width: 56%; border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: middle; background: #fafafa;">
+                        <td colspan="2" rowspan="${summaryRows}" class="text-amount-cell" style="width: 56%; border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: middle; background: #fafafa;">
+                            ${noteText ? `<div style="text-align:left; margin-bottom: 8px;"><strong>หมายเหตุ : </strong><span style="white-space: pre-wrap;">${noteText}</span></div>` : ''}
                             <strong>ตัวอักษร : </strong><span>${ArabicNumberToText(grandTotal)}</span>
                         </td>
                         <td colspan="2" class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right; width: 27%;">รวมเงิน</td>
                         <td class="summary-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right; width: 17%;">${formatMoney(subtotal)}</td>
                     </tr>
+                    ${isDiscounted ? `
+                    <tr>
+                        <td colspan="2" class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right;">ส่วนลด</td>
+                        <td class="summary-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right;">-${formatMoney(discountAmount)}</td>
+                    </tr>
+                    ` : ''}
                     ${isVatAdded ? `
                 <tr>
                     <td colspan="2" class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right;">ภาษีมูลค่าเพิ่ม ${vatRate}%</td>
