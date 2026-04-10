@@ -1,3 +1,8 @@
+const escapeHTML = (str) => {
+    if (!str) return '';
+    return String(str).replace(/[&<>'"]/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[match]));
+};
+
 let state = {
     items: [{ id: generateId(), desc: "", qty: 1, price: 0 }],
     discount: 0,
@@ -68,7 +73,7 @@ function renderItemsForm() {
                 </button>
                 <div class="form-group full-width" style="margin-bottom: 8px;">
                     <label>รายการที่ ${index + 1} - รายละเอียดสินค้า</label>
-                    <textarea oninput="handleItemChange(${item.id}, 'desc', this.value)">${item.desc}</textarea>
+                    <textarea oninput="handleItemChange(${item.id}, 'desc', this.value)">${escapeHTML(item.desc)}</textarea>
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
@@ -189,25 +194,25 @@ function createPageDOM(sv) {
             <!-- Flex Row for Details -->
             <div class="doc-info-section flex-between align-start" style="margin-bottom: 20px; font-size: 13px; align-items: flex-start;">
                 <div class="info-group" style="width: 54%;">
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1;">${sv.custName}</span></div>
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ที่อยู่ :</span> <span class="info-value line-break" style="flex: 1;">${sv.custAddr}</span></div>
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">โทร :</span> <span class="info-value" style="flex: 1;">${sv.custTel}</span></div>
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 160px; font-weight: bold;">เลขประจำตัวผู้เสียภาษีอากร :</span> <span class="info-value" style="flex: 1;">${sv.custTax}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ที่อยู่ :</span> <span class="info-value line-break" style="flex: 1;">${escapeHTML(sv.custAddr)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">โทร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTel)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 160px; font-weight: bold;">เลขประจำตัวผู้เสียภาษีอากร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTax)}</span></div>
                     
                     <div class="customer-project-section" style="margin-top: 15px;">
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่องาน :</span> <span class="info-value" style="flex: 1;">${sv.projName}</span></div>
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ผู้ติดต่อ :</span> <span class="info-value" style="flex: 1;">${sv.projContact}</span></div>
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">เบอร์โทร :</span> <span class="info-value" style="flex: 1;">${sv.projTel}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่องาน :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projName)}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ผู้ติดต่อ :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projContact)}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">เบอร์โทร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projTel)}</span></div>
                     </div>
                 </div>
                 
                 <div class="info-group right-align" style="width: 42%; margin-top: -5px;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                         <colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เลขที่ใบเสนอราคา :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docNo}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">วันที่ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docDate}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เงื่อนไขชำระเงิน :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docTerms}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เครดิต :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docCredit}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เลขที่ใบเสนอราคา :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docNo)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">วันที่ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docDate)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เงื่อนไขชำระเงิน :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docTerms)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เครดิต :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docCredit)}</td></tr>
                         <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">หน้า :</td><td class="page-number-display" style="padding: 0 0 6px 0; white-space: nowrap;"></td></tr>
                     </table>
                 </div>
@@ -279,7 +284,7 @@ function buildPreview() {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="col-no" style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top;">${index + 1}</td>
-            <td class="col-desc" style="border: 1px solid #ddd; padding: 8px; white-space: pre-wrap; vertical-align: top;">${item.desc}</td>
+            <td class="col-desc" style="border: 1px solid #ddd; padding: 8px; white-space: pre-wrap; vertical-align: top;">${escapeHTML(item.desc)}</td>
             <td class="col-qty" style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top;">${formatQty(item.qty)}</td>
             <td class="col-price" style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">${formatMoney(item.price)}</td>
             <td class="col-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">${formatMoney(amount)}</td>
@@ -319,7 +324,7 @@ function buildPreview() {
                 <tbody>
                     <tr>
                         <td colspan="2" rowspan="${summaryRows}" class="text-amount-cell" style="width: 56%; border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: middle; background: #fafafa;">
-                            ${noteText ? `<div style="text-align:left; margin-bottom: 8px;"><strong>หมายเหตุ : </strong><span style="white-space: pre-wrap;">${noteText}</span></div>` : ''}
+                            ${noteText ? `<div style="text-align:left; margin-bottom: 8px;"><strong>หมายเหตุ : </strong><span style="white-space: pre-wrap;">${escapeHTML(noteText)}</span></div>` : ''}
                             <strong>ตัวอักษร : </strong><span>${ArabicNumberToText(grandTotal)}</span>
                         </td>
                         <td colspan="2" class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right; width: 27%;">รวมเงิน</td>
@@ -350,17 +355,17 @@ function buildPreview() {
             <div class="sig-box">
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role">สั่งซื้อโดย / ผู้เจรจา</div>
-                <div class="sig-name" style="margin-top: 5px;">${stateVars.signBuyer}</div>
+                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signBuyer)}</div>
             </div>
             <div class="sig-box">
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role">จัดทำโดย</div>
-                <div class="sig-name" style="margin-top: 5px;">${stateVars.signPrep}</div>
+                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signPrep)}</div>
             </div>
             <div class="sig-box">
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role">อนุมัติโดย</div>
-                <div class="sig-name" style="margin-top: 5px;">${stateVars.signAppr}</div>
+                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signAppr)}</div>
             </div>
         </div>
             `;

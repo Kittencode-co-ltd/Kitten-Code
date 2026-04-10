@@ -248,23 +248,7 @@
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/vendor/aos/aos.js"></script>
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyC6H2iwP7VKaFX5rOzOGJDFBY6ayR1mpTc",
-      authDomain: "kitten-code.firebaseapp.com",
-      databaseURL: "https://kitten-code-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "kitten-code",
-      storageBucket: "kitten-code.firebasestorage.app",
-      messagingSenderId: "309423062731",
-      appId: "1:309423062731:web:19a94778a32f87a8f3654e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    import { auth, db, signInWithEmailAndPassword, createUserWithEmailAndPassword, collection, query, where, getDocs } from '../assets/js/firebase-config.js';
 
     // Initialize AOS animation
     AOS.init();
@@ -329,7 +313,6 @@
         await signInWithEmailAndPassword(auth, email, pass);
         showSuccess();
         setTimeout(() => {
-          localStorage.setItem('isLoggedIn', 'true');
           window.location.href = 'back-office.html';
         }, 800);
       } catch (error) {
@@ -359,7 +342,6 @@
         document.getElementById('signUpContainer').style.display = 'none';
         showSuccess();
         setTimeout(() => {
-          localStorage.setItem('isLoggedIn', 'true');
           window.location.href = 'back-office.html';
         }, 800);
       } catch (error) {

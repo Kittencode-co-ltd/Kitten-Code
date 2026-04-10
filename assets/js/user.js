@@ -1,23 +1,24 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDocs, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
+        import { app, auth, db, onAuthStateChanged, createUserWithEmailAndPassword, signOut, collection, doc, setDoc, getDocs, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc } from './firebase-config.js';
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        
+        // Load secrets securely injected at build-time by GitHub Actions
+        const __ENV__ = (typeof window !== 'undefined' && window.__ENV__) || {};
         const firebaseConfig = {
-            apiKey: "AIzaSyC6H2iwP7VKaFX5rOzOGJDFBY6ayR1mpTc",
-            authDomain: "kitten-code.firebaseapp.com",
-            databaseURL: "https://kitten-code-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "kitten-code",
-            storageBucket: "kitten-code.firebasestorage.app",
-            messagingSenderId: "309423062731",
-            appId: "1:309423062731:web:19a94778a32f87a8f3654e"
+            apiKey:            __ENV__.FIREBASE_API_KEY            || 'AIzaSyC6H2iwP7VKaFX5rOzOGJDFBY6ayR1mpTc',
+            authDomain:        __ENV__.FIREBASE_AUTH_DOMAIN        || 'kitten-code.firebaseapp.com',
+            projectId:         __ENV__.FIREBASE_PROJECT_ID         || 'kitten-code',
+            storageBucket:     __ENV__.FIREBASE_STORAGE_BUCKET     || 'kitten-code.firebasestorage.app',
+            messagingSenderId: __ENV__.FIREBASE_MESSAGING_SENDER_ID|| '309423062731',
+            appId:             __ENV__.FIREBASE_APP_ID             || '1:309423062731:web:19a94778a32f87a8f3654e'
         };
 
-        // Main App
-        const app = initializeApp(firebaseConfig);
-        const db  = getFirestore(app);
-        const auth = getAuth(app);    // Primary auth — restores session from IndexedDB
+        const escapeHTML = (str) => {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[match]));
+        };
 
-        // Secondary app for admin creating users without losing their session
+        // Secondary app for admin creating users without losing primary session
         const secondaryApp  = initializeApp(firebaseConfig, "Secondary");
         const secondaryAuth = getAuth(secondaryApp);
 
@@ -250,14 +251,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/fireba
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-            <td>${user.username || 'N/A'}</td>
-            <td class="fw-bold">${fullName}</td>
-            <td>${user.email}</td>
-            <td>${user.position || '-'}</td>
+            <td>${escapeHTML(user.username) || 'N/A'}</td>
+            <td class="fw-bold">${escapeHTML(fullName)}</td>
+            <td>${escapeHTML(user.email)}</td>
+            <td>${escapeHTML(user.position) || '-'}</td>
             <td>${roleBadge}</td>
             <td class="text-end pe-4">
               <button class="btn btn-sm btn-light me-1" onclick="prepareUpdateModal('${userJson}')"><i class="bi bi-pencil"></i></button>
-              <button class="btn btn-sm btn-outline-danger" onclick="promptDelete('${user.uid}', '${(fullName !== '<i>N/A</i>' ? fullName : user.username).replace(/'/g, "\\'")}')"><i class="bi bi-trash"></i></button>
+              <button class="btn btn-sm btn-outline-danger" onclick="promptDelete('${user.uid}', '${escapeHTML(fullName !== '<i>N/A</i>' ? fullName : user.username).replace(/'/g, "\\'")}')"><i class="bi bi-trash"></i></button>
             </td>
           `;
                     tbody.appendChild(tr);

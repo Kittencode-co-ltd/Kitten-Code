@@ -4,13 +4,11 @@
 //  Config: reads window.__ENV__ (injected by GitHub Actions)
 //          falls back to local dev constants if not present
 // ============================================================
-import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js';
-import {
-    getAuth,
-    onAuthStateChanged
-} from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
-import {
-    getFirestore,
+import { 
+    app, 
+    auth, 
+    db, 
+    onAuthStateChanged,
     collection,
     doc,
     addDoc,
@@ -19,26 +17,13 @@ import {
     onSnapshot,
     query,
     orderBy,
-    serverTimestamp
-} from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js';
+    serverTimestamp 
+} from './firebase-config.js';
 
-// ── Config: GitHub Actions injects window.__ENV__ at build time. ───
-// For local development the hardcoded values below act as fallback.
-// NEVER remove the fallback block — it makes local dev zero-config.
-const __ENV__ = (typeof window !== 'undefined' && window.__ENV__) || {};
-
-const firebaseConfig = {
-    apiKey:            __ENV__.FIREBASE_API_KEY            || 'AIzaSyC6H2iwP7VKaFX5rOzOGJDFBY6ayR1mpTc',
-    authDomain:        __ENV__.FIREBASE_AUTH_DOMAIN        || 'kitten-code.firebaseapp.com',
-    projectId:         __ENV__.FIREBASE_PROJECT_ID         || 'kitten-code',
-    storageBucket:     __ENV__.FIREBASE_STORAGE_BUCKET     || 'kitten-code.firebasestorage.app',
-    messagingSenderId: __ENV__.FIREBASE_MESSAGING_SENDER_ID|| '309423062731',
-    appId:             __ENV__.FIREBASE_APP_ID             || '1:309423062731:web:19a94778a32f87a8f3654e'
+const escapeHTML = (str) => {
+    if (!str) return '';
+    return String(str).replace(/[&<>'"]/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[match]));
 };
-
-const app  = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-const db   = getFirestore(app);
-const auth = getAuth(app);
 
 const CATS_COL   = 'fin_categories';
 const TXNS_COL   = 'fin_transactions';
@@ -225,7 +210,7 @@ function renderRegister() {
                 <div style="font-size:11px;margin-top:4px;color:${isExpired ? 'var(--color-exp)' : 'var(--text-secondary)'}">
                   ${isExpired
                     ? '<span style="color:var(--color-exp);font-weight:600;">หมดอายุแล้ว</span>'
-                    : `สิ้นสุด: <span style="color:var(--accent-primary);">${endStr}</span>`}
+                    : `สิ้นสุด: <span style="color:var(--accent-primary);">${escapeHTML(endStr)}</span>`}
                 </div>
                 ${isExpired
                   ? `<button class="btn-reset-quota" onclick="resetQuota('${c.id}')">↺ รีเซ็ตงวด</button>`
@@ -234,8 +219,8 @@ function renderRegister() {
         }
 
         return `<tr>
-        <td><span class="tag-code">${c.code}</span></td>
-        <td>${c.name}</td>
+        <td><span class="tag-code">${escapeHTML(c.code)}</span></td>
+        <td>${escapeHTML(c.name)}</td>
         <td><span class="badge ${c.type === 1 ? 'badge-inc' : 'badge-exp'}">${c.type === 1 ? 'รายรับ' : 'รายจ่าย'}</span></td>
         <td style="text-align:right;">${c.budget > 0 ? fmtNum(c.budget) : '<span style="color:var(--text-tertiary);font-size:11px;">ไม่จำกัด</span>'}</td>
         <td style="text-align:right;color:#993C1D;font-weight:500;">${fmtNum(used)}</td>
@@ -280,10 +265,10 @@ function renderTxns() {
 
         return `<tr>
         <td style="font-size:12px;color:var(--text-secondary);">${t.date}</td>
-        <td>${t.desc}</td>
-        <td><span class="tag-code">${cat?.code || ''}</span></td>
-        <td style="font-size:12px;color:var(--text-secondary);">${t.ref || '-'}</td>
-        <td style="font-size:12px;color:var(--text-secondary);">${t.contact || '-'}</td>
+        <td>${escapeHTML(t.desc)}</td>
+        <td><span class="tag-code">${escapeHTML(cat?.code) || ''}</span></td>
+        <td style="font-size:12px;color:var(--text-secondary);">${escapeHTML(t.ref) || '-'}</td>
+        <td style="font-size:12px;color:var(--text-secondary);">${escapeHTML(t.contact) || '-'}</td>
         <td style="text-align:center;">${statusBadge(t.payment_status)}</td>
         <td style="font-size:12px;color:var(--text-secondary);">${t.paid_date || '-'}</td>
         <td style="text-align:right;" class="${cls}">${sign}${fmt(t.amount)}</td>

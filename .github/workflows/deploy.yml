@@ -58,10 +58,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Build deploy structure
+        run: |
+          mkdir public
+          cp -r assets public/
+          cp -r back-office public/
+          cp index.html public/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "." # deploy entire repo root
+          path: "./public" # deploy only the scoped structure
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -21,10 +21,9 @@
 
     <!-- css -->
     <link href="../assets/css/back-office.css" rel="stylesheet">
-    <script src="../assets/js/firebase.js"></script>
 </head>
 
-<body>
+<body style="display: none;">
 
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -95,23 +94,33 @@
         </section>
     </main>
 
-    <script>
+    <script type="module">
+        import { onAuthStateChanged, auth, signOut } from '../assets/js/firebase-config.js';
+
         // Authentication Check
-        document.addEventListener("DOMContentLoaded", function () {
-            if (localStorage.getItem('isLoggedIn') !== 'true') {
-                window.location.href = 'login.html';
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.body.style.display = 'block';
+            } else {
+                window.location.replace('login.html');
             }
         });
 
         // Logout Handler
-        function handleLogout(event) {
+        window.handleLogout = async function(event) {
             event.preventDefault();
             if (confirm("Are you sure you want to log out?")) {
-                localStorage.removeItem('isLoggedIn');
-                window.location.href = 'login.html'; // Let them land back on homepage on logout
+                try {
+                    await signOut(auth);
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error("Logout error", error);
+                }
             }
-        }
+        };
+    </script>
 
+    <script>
         // Sidebar Toggle
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');

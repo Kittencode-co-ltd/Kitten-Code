@@ -1,3 +1,8 @@
+const escapeHTML = (str) => {
+    if (!str) return '';
+    return String(str).replace(/[&<>'"]/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[match]));
+};
+
 let state = {
     items: [{ id: generateId(), desc: "", qty: 1, price: 0, discount: 0 }]
 };
@@ -65,7 +70,7 @@ function renderItemsForm() {
                 </button>
                 <div class="form-group full-width" style="margin-bottom: 8px;">
                     <label>รายการที่ ${index + 1} - รายละเอียดสินค้า</label>
-                    <textarea oninput="handleItemChange(${item.id}, 'desc', this.value)">${item.desc}</textarea>
+                    <textarea oninput="handleItemChange(${item.id}, 'desc', this.value)">${escapeHTML(item.desc)}</textarea>
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
@@ -196,24 +201,24 @@ function createPageDOM(sv) {
             <!-- Flex Row for Details -->
             <div class="doc-info-section flex-between align-start" style="margin-bottom: 20px; font-size: 13px; align-items: flex-start;">
                 <div class="info-group" style="width: 54%;">
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1;">${sv.custName}</span></div>
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ที่อยู่ :</span> <span class="info-value line-break" style="flex: 1;">${sv.custAddr}</span></div>
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 160px; font-weight: bold;">เลขประจำตัวผู้เสียภาษีอากร :</span> <span class="info-value" style="flex: 1;">${sv.custTax}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ที่อยู่ :</span> <span class="info-value line-break" style="flex: 1;">${escapeHTML(sv.custAddr)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 160px; font-weight: bold;">เลขประจำตัวผู้เสียภาษีอากร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTax)}</span></div>
                     
                     <div class="customer-project-section" style="margin-top: 15px;">
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อโปรเจ็ค :</span> <span class="info-value" style="flex: 1;">${sv.projName}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อโปรเจ็ค :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projName)}</span></div>
                     </div>
                 </div>
                 
                 <div class="info-group right-align" style="width: 42%; margin-top: -5px;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                         <colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เลขที่ใบเสร็จ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docNo}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">วันที่ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docDate}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">ชำระโดย :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docPayment}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">พนักงานขาย :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docSalesman}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">ใบวางบิล :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docInvoice}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เอกสารอ้างอิง :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${sv.docRef}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เลขที่ใบเสร็จ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docNo)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">วันที่ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docDate)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">ชำระโดย :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docPayment)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">พนักงานขาย :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docSalesman)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">ใบวางบิล :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docInvoice)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เอกสารอ้างอิง :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docRef)}</td></tr>
                         <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">หน้า :</td><td class="page-number-display" style="padding: 0 0 6px 0; white-space: nowrap;"></td></tr>
                     </table>
                 </div>
@@ -284,7 +289,7 @@ function buildPreview() {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="col-no" style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top;">${index + 1}</td>
-            <td class="col-desc" style="border: 1px solid #ddd; padding: 8px; white-space: pre-wrap; vertical-align: top;">${item.desc}</td>
+            <td class="col-desc" style="border: 1px solid #ddd; padding: 8px; white-space: pre-wrap; vertical-align: top;">${escapeHTML(item.desc)}</td>
             <td class="col-qty" style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top;">${formatQty(item.qty)}</td>
             <td class="col-price" style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">${formatMoney(item.price)}</td>
             <td class="col-discount" style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">${formatMoney(item.discount)}</td>
@@ -335,7 +340,7 @@ function buildPreview() {
                 <span style="white-space: nowrap;">${chkCheque} เช็คธนาคาร</span>
                 <span style="white-space: nowrap;">${chkOther} อื่นๆ</span>
             </div>
-            <div><span style="font-weight: bold;">รายละเอียด (Payment Detail):</span><br>${stateVars.paymentDetail.replace(/\\n/g, '<br>')}</div>
+            <div><span style="font-weight: bold;">รายละเอียด (Payment Detail):</span><br>${escapeHTML(stateVars.paymentDetail).replace(/\\n/g, '<br>')}</div>
         </div>
     `;
 
@@ -382,7 +387,7 @@ function buildPreview() {
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role" style="font-weight: bold;">ผู้รับเงิน / Bill Receiver Signature</div>
                 <div class="sig-name" style="margin-top: 5px; font-size: 11px;">วันที่ / Date ...../...../.....</div>
-                <div class="sig-name" style="margin-top: 5px;">${stateVars.signReceiver}</div>
+                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signReceiver)}</div>
             </div>
             <div class="sig-box" style="display: flex; align-items: center; justify-content: center;">
                 <div style="border: 2px dashed #ccc; padding: 10px 20px; color: #aaa; font-weight: bold; font-size: 14px; transform: rotate(-5deg); border-radius: 4px;">
@@ -393,7 +398,7 @@ function buildPreview() {
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role" style="font-weight: bold;">ผู้มีอำนาจลงนาม / Authorized Signature</div>
                 <div class="sig-name" style="margin-top: 5px; font-size: 11px;">วันที่ / Date ...../...../.....</div>
-                <div class="sig-name" style="margin-top: 5px;">${stateVars.signAuth}</div>
+                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signAuth)}</div>
             </div>
         </div>
     `;
