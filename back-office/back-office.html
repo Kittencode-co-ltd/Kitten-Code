@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Back Office - Kitten Code</title>
+
+    <!-- Favicon -->
+    <link href="../assets/img/favicon.png" rel="icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- css -->
+    <link href="../assets/css/back-office.css" rel="stylesheet">
+    <script src="../assets/js/firebase.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="bo-sidebar" id="sidebar">
+        <!-- Brand -->
+        <div class="sidebar-brand">
+            Kitten Code
+        </div>
+
+        <!-- Navigation Menu -->
+        <div class="sidebar-menu">
+            <div class="menu-title">Main Navigation</div>
+
+            <a href="quotaion.html" class="menu-item active" target="contentFrame" onclick="updateTitle('Quotation')">
+                <i class="bi bi-file-earmark-text"></i>
+                Quotation
+            </a>
+
+            <a href="receipt.html" class="menu-item" target="contentFrame" onclick="updateTitle('Receipt')">
+                <i class="bi bi-people"></i>
+                Receipt
+
+            </a>
+
+            <a href="financial.html" class="menu-item" target="contentFrame" onclick="updateTitle('financial')">
+                <i class="bi bi-box-seam"></i>
+                financial
+            </a>
+
+            <a href="user.html" class="menu-item" target="contentFrame" onclick="updateTitle('user')">
+                <i class="bi bi-gear"></i>
+                user
+            </a>
+
+            <a href="setting.html" class="menu-item" target="contentFrame" onclick="updateTitle('setting')">
+                <i class="bi bi-gear"></i>
+                setting
+            </a>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="sidebar-footer">
+            <a class="logout-btn-side" onclick="handleLogout(event)">
+                <i class="bi bi-box-arrow-left"></i>
+                Sign Out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="bo-main-wrapper">
+        <!-- Top Navigation Bar -->
+        <header class="bo-header">
+            <div class="header-left">
+                <i class="bi bi-list menu-toggle" onclick="toggleSidebar()"></i>
+                <h1 class="page-title" id="topPageTitle">Quotation</h1>
+            </div>
+
+        </header>
+
+        <!-- Dynamic Content Iframe -->
+        <section class="bo-content">
+            <div class="iframe-wrapper">
+                <iframe name="contentFrame" id="contentFrame" src="quotaion.html"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Authentication Check
+        document.addEventListener("DOMContentLoaded", function () {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Logout Handler
+        function handleLogout(event) {
+            event.preventDefault();
+            if (confirm("Are you sure you want to log out?")) {
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'login.html'; // Let them land back on homepage on logout
+            }
+        }
+
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            if (window.innerWidth <= 768) {
+                // Mobile behavior
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('open');
+            } else {
+                // Desktop behavior
+                sidebar.classList.toggle('collapsed');
+            }
+        }
+
+        // Active State & Title Update
+        function updateTitle(titleText) {
+            document.getElementById('topPageTitle').innerText = titleText;
+        }
+
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function () {
+                if (this.getAttribute('target') === 'contentFrame') {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    if (window.innerWidth <= 768) {
+                        toggleSidebar();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

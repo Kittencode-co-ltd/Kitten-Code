@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kitten Code — ระบบติดตามงบประมาณและการเบิกจ่ายเงินกองกลาง">
+    <title>บัญชีคุม — Kitten Code Financial</title>
+    <link rel="stylesheet" href="../assets/css/finance.css">
+</head>
+
+<body>
+    <div id="vis-container">
+        <style>
+
+        </style>
+
+        <div class="app">
+            <div class="header">
+                <div class="logo">บัญชี<span>คุม</span></div>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('dashboard')">ภาพรวม</button>
+                    <button class="tab" onclick="switchTab('register')">ทะเบียนคุม</button>
+                    <button class="tab" onclick="switchTab('transactions')">รายการ</button>
+                    <button class="tab" onclick="switchTab('add')">+ บันทึก</button>
+                </div>
+            </div>
+
+            <div id="page-dashboard" class="page active">
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-label">รายรับรวม (เดือนนี้)</div>
+                        <div class="metric-value inc" id="total-inc">฿50,000</div>
+                        <div class="metric-sub">เมษายน 2569</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">รายจ่ายรวม (เดือนนี้)</div>
+                        <div class="metric-value exp" id="total-exp">฿12,300</div>
+                        <div class="metric-sub">เมษายน 2569</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">คงเหลือสุทธิ</div>
+                        <div class="metric-value bal" id="total-bal">฿37,700</div>
+                        <div class="metric-sub">รับ - จ่าย</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">รอเบิกจ่าย (Pending)</div>
+                        <div class="metric-value" style="color:var(--color-warn);" id="total-pending">฿0</div>
+                        <div class="metric-sub">รายการที่ยังไม่ชำระ</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title">สถานะงบประมาณ</div>
+                        <button class="action-btn" onclick="switchTab('register')">ดูทั้งหมด</button>
+                    </div>
+                    <div id="budget-overview">
+                        <div style="margin-bottom:12px;">
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
+                                <span style="font-size:13px;">ค่าเช่า Server (Cloud)</span>
+                                <span style="font-size:12px;color:var(--color-text-secondary);">2,500 / 10,000
+                                    บาท</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill fill-ok" style="width:25%"></div>
+                            </div>
+                            <div class="pct">ใช้ไป 25% — คงเหลือ ฿7,500</div>
+                        </div>
+                        <div style="margin-bottom:12px;">
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
+                                <span style="font-size:13px;">ค่า API ภายนอก</span>
+                                <span style="font-size:12px;color:var(--color-text-secondary);">1,800 / 5,000 บาท</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill fill-ok" style="width:36%"></div>
+                            </div>
+                            <div class="pct">ใช้ไป 36% — คงเหลือ ฿3,200</div>
+                        </div>
+                        <div style="margin-bottom:12px;">
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
+                                <span style="font-size:13px;">ค่าโฆษณา</span>
+                                <span style="font-size:12px;color:var(--color-text-secondary);">8,000 / 20,000
+                                    บาท</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill fill-ok" style="width:40%"></div>
+                            </div>
+                            <div class="pct">ใช้ไป 40% — คงเหลือ ฿12,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title">รายการล่าสุด</div>
+                        <button class="action-btn" onclick="switchTab('transactions')">ดูทั้งหมด</button>
+                    </div>
+                    <div id="recent-txns">
+                        <table class="txn-table">
+                            <thead>
+                                <tr>
+                                    <th>วันที่</th>
+                                    <th>รายการ</th>
+                                    <th style="text-align:right;">จำนวน</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-06</td>
+                                    <td>ค่าที่ปรึกษา Phase 2<br><span class="tag-code">INC-02</span></td>
+                                    <td style="text-align:right;" class="amount-inc">+฿15,000</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-05</td>
+                                    <td>ค่าโฆษณา Facebook เดือนเมษายน<br><span class="tag-code">EXP-03</span></td>
+                                    <td style="text-align:right;" class="amount-exp">-฿8,000</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-03</td>
+                                    <td>ค่า OpenAI API<br><span class="tag-code">EXP-02</span></td>
+                                    <td style="text-align:right;" class="amount-exp">-฿1,800</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-02</td>
+                                    <td>จ่ายค่า AWS EC2 เดือนมีนาคม<br><span class="tag-code">EXP-01</span></td>
+                                    <td style="text-align:right;" class="amount-exp">-฿2,500</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-01</td>
+                                    <td>รายได้ค่าบริการ แพ็คเกจ Pro<br><span class="tag-code">INC-01</span></td>
+                                    <td style="text-align:right;" class="amount-inc">+฿35,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-register" class="page">
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title">ทะเบียนคุมหมวดหมู่</div>
+                        <button class="btn-add" onclick="showAddCategory()">+ เพิ่มหมวด</button>
+                    </div>
+
+                    <div id="add-cat-form"
+                        style="display:none; background:var(--bg-glass); border-radius:var(--border-radius-md); padding:1.25rem; margin-bottom:1rem; border:1px solid var(--border-glass);">
+                        <div class="form-grid" style="margin-bottom:10px;">
+                            <div class="form-group">
+                                <div class="form-label">รหัสหมวด (category_code)</div>
+                                <input type="text" id="cat-code" placeholder="เช่น EXP-01">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label">ประเภท (txn_type)</div>
+                                <select id="cat-type">
+                                    <option value="1">1 = รายรับ</option>
+                                    <option value="2">2 = รายจ่าย</option>
+                                </select>
+                            </div>
+                            <div class="form-group full">
+                                <div class="form-label">ชื่อหมวดหมู่ (category_name)</div>
+                                <input type="text" id="cat-name" placeholder="เช่น ค่าเช่า Server">
+                            </div>
+                            <div class="form-group full">
+                                <div class="form-label">งบประมาณสูงสุด (budget_limit) — ใส่ 0 = ไม่จำกัด</div>
+                                <input type="number" id="cat-budget" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label">ช่วงโครตา (quota_value)</div>
+                                <input type="number" id="cat-quota-value" placeholder="เช่น 7, 1, 30" min="1">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label">หน่วยโครตา (quota_unit)</div>
+                                <select id="cat-quota-unit">
+                                    <option value="">— ไม่มีวงรอบ (ไม่มีคาบ) —</option>
+                                    <option value="days">วัน (Days)</option>
+                                    <option value="months">เดือน (Months)</option>
+                                    <option value="years">ปี (Years)</option>
+                                </select>
+                            </div>
+                            <div class="form-group full" id="cat-reset-date-group" style="display:none;">
+                                <div class="form-label">วันเริ่มต้นงวดโครตาปัจจุบัน (last_reset_date)</div>
+                                <input type="date" id="cat-reset-date">
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn-add" onclick="addCategory()">บันทึก</button>
+                            <button class="action-btn"
+                                onclick="document.getElementById('add-cat-form').style.display='none'">ยกเลิก</button>
+                        </div>
+                    </div>
+
+
+                    <table class="register-table">
+                        <thead>
+                            <tr>
+                                <th>รหัส</th>
+                                <th>ชื่อหมวดหมู่</th>
+                                <th>ประเภท</th>
+                                <th style="text-align:right;">งบ (บาท)</th>
+                                <th style="text-align:right;">ใช้ไป</th>
+                                <th style="text-align:right;">คงเหลือ</th>
+                                <th>ช่วงโครตา</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cat-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="page-transactions" class="page">
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title">บันทึกรายการทั้งหมด</div>
+                        <button class="btn-add" onclick="switchTab('add')">+ บันทึกรายการ</button>
+                    </div>
+                    <div class="filter-row">
+                        <select id="filter-type" onchange="renderTxns()">
+                            <option value="">ทุกประเภท</option>
+                            <option value="1">รายรับ</option>
+                            <option value="2">รายจ่าย</option>
+                        </select>
+                        <input type="month" id="filter-month" onchange="renderTxns()">
+                    </div>
+                    <div class="table-scroll-wrapper">
+                        <table class="txn-table">
+                            <thead>
+                                <tr>
+                                    <th>วันที่</th>
+                                    <th>รายการ</th>
+                                    <th>หมวด</th>
+                                    <th>เลขที่อ้างอิง</th>
+                                    <th>ผู้รับ/จ่าย</th>
+                                    <th style="text-align:center;">สถานะ</th>
+                                    <th>วันที่จ่าย</th>
+                                    <th style="text-align:right;">จำนวนเงิน</th>
+                                    <th style="text-align:center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="txn-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-add" class="page">
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title">บันทึกรายการรับ-จ่าย</div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <div class="form-label">วันที่ (txn_date)</div>
+                            <input type="date" id="txn-date">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label">หมวดหมู่ (category_id)</div>
+                            <select id="txn-cat"></select>
+                        </div>
+                        <div class="form-group full">
+                            <div class="form-label">คำอธิบายรายการ (description)</div>
+                            <input type="text" id="txn-desc" placeholder="เช่น จ่ายค่า AWS เดือนกุมภาพันธ์">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label">จำนวนเงิน (amount)</div>
+                            <input type="number" id="txn-amount" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label">เลขที่บิล/ใบเสร็จ (doc_ref)</div>
+                            <input type="text" id="txn-ref" placeholder="เช่น INV-2024-001">
+                        </div>
+                        <div class="form-group full">
+                            <div class="form-label">ชื่อผู้รับ/จ่าย (contact_name) — ไม่บังคับ</div>
+                            <input type="text" id="txn-contact" placeholder="เช่น บริษัท AWS Thailand">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label">สถานะการเบิกจ่าย (payment_status)</div>
+                            <select id="txn-status">
+                                <option value="1" selected>รอดำเนินการ (Pending)</option>
+                                <option value="2">จ่ายเงินแล้ว (Paid)</option>
+                                <option value="0">ปฏิเสธ (Rejected)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label">วันที่จ่ายจริง (paid_date) — ถ้ายังไม่จ่ายให้เว้นว่าง</div>
+                            <input type="date" id="txn-paid-date">
+                        </div>
+                    </div>
+                    <div style="margin-top:1rem; display:flex; gap:8px;">
+                        <button class="btn-add" onclick="addTransaction()">บันทึกรายการ</button>
+                        <button class="action-btn" onclick="switchTab('transactions')">ดูรายการทั้งหมด</button>
+                    </div>
+                    <div id="add-msg" style="margin-top:10px;font-size:13px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../assets/js/financial.js" type="module"></script>
+    </div>
+</body>
+
+</html>

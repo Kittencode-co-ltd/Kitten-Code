@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ──────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // ── Users collection ──────────────────────────────────────
+    // Each user can only read/write their own profile document.
+    // Admins can read any profile.
+    match /users/{userId} {
+      allow read:   if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId
+                       && request.resource.data.keys().hasAll(['uid', 'email', 'username', 'role'])
+                       && request.resource.data.role in ['admin', 'user'];
+      allow update: if isAuthenticated() && (request.auth.uid == userId || isAdmin())
+                       && request.resource.data.role in ['admin', 'user'];
+      allow delete: if isAdmin();
+    }
+
+    // ── Financial Categories ──────────────────────────────────
+    // Any authenticated user can read.
+    // Only admins can create/update/delete.
+    match /fin_categories/{catId} {
+      allow read:   if isAuthenticated();
+      allow create: if isAdmin()
+                       && request.resource.data.keys().hasAll(['code', 'name', 'type', 'budget'])
+                       && request.resource.data.type   in [1, 2]
+                       && request.resource.data.budget is number
+                       && request.resource.data.budget >= 0;
+      allow update: if isAdmin()
+                       && request.resource.data.type   in [1, 2]
+                       && request.resource.data.budget is number
+                       && request.resource.data.budget >= 0;
+      allow delete: if isAdmin();
+    }
+
+    // ── Financial Transactions ────────────────────────────────
+    // Any authenticated user can read.
+    // Authenticated users may create with validated data.
+    // Only admins can change payment_status (approve/reject disbursements).
+    match /fin_transactions/{txnId} {
+      allow read: if isAuthenticated();
+
+      allow create: if isAuthenticated()
+                       && request.resource.data.keys().hasAll(['date', 'catCode', 'desc', 'amount', 'payment_status'])
+                       && request.resource.data.amount         is number
+                       && request.resource.data.amount         >  0
+                       && request.resource.data.payment_status is int
+                       && request.resource.data.payment_status in [0, 1, 2]
+                       && request.resource.data.desc.size()    >  0
+                       && request.resource.data.desc.size()    <= 500;
+
+      // Field-level guard: only admins may change payment_status
+      allow update: if isAuthenticated()
+                       && request.resource.data.amount         is number
+                       && request.resource.data.amount         >  0
+                       && request.resource.data.payment_status is int
+                       && request.resource.data.payment_status in [0, 1, 2]
+                       && (
+                            // Non-admins cannot change payment_status
+                            request.resource.data.payment_status == resource.data.payment_status
+                            || isAdmin()
+                          );
+
+      allow delete: if isAdmin();
+    }
+  }
+}

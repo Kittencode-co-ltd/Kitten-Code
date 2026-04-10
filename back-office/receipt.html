@@ -7,7 +7,7 @@
     <title>Kitten Code Receipt Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../assets/css/quotation.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
@@ -72,8 +72,8 @@
                         </div>
                         <div class="form-group full-width">
                             <label>เลขประจำตัวผู้เสียภาษี (Tax ID)</label>
-                            <input type="text" id="in-cust-tax" value="" placeholder="เช่น 01909019999999 (สำนักงานใหญ่)"
-                                oninput="buildPreview()">
+                            <input type="text" id="in-cust-tax" value=""
+                                placeholder="เช่น 01909019999999 (สำนักงานใหญ่)" oninput="buildPreview()">
                         </div>
                         <div class="form-group full-width">
                             <label>ที่อยู่ (Address)</label>
@@ -108,7 +108,8 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label>ส่วนลดพิเศษ (Special Discount)</label>
-                            <input type="number" id="in-special-discount" value="0" step="0.01" oninput="buildPreview()">
+                            <input type="number" id="in-special-discount" value="0" step="0.01"
+                                oninput="buildPreview()">
                         </div>
                         <div class="form-group">
                             <label>ภาษีมูลค่าเพิ่ม (%)</label>
@@ -116,7 +117,8 @@
                         </div>
                         <div class="form-group full-width">
                             <label>รายละเอียดการชำระเงิน (Payment Detail) [แสดงใต้ตารางชำระเงิน]</label>
-                            <textarea id="in-payment-detail" rows="2" oninput="buildPreview()" placeholder="ตัวอย่าง: โอนเข้าบัญชีธนาคาร กสิกรไทย..."></textarea>
+                            <textarea id="in-payment-detail" rows="2" oninput="buildPreview()"
+                                placeholder="ตัวอย่าง: โอนเข้าบัญชีธนาคาร กสิกรไทย..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -155,7 +157,7 @@
         </div>
     </div>
 
-    <script src="script-receipt.js"></script>
+    <script src="../assets/js/script-receipt.js"></script>
 </body>
 
 </html>

@@ -7,8 +7,8 @@
   <title>Admin Login - Kitten Code</title>
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="../assets/img/favicon.png" rel="icon">
+  <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -18,16 +18,16 @@
     rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="../assets/css/main.css" rel="stylesheet">
 
   <style>
     body {
-      background: url('assets/img/hero-bg.jpg') top center;
+      background: url('../assets/img/hero-bg.jpg') top center;
       background-size: cover;
       background-attachment: fixed;
       height: 100vh;
@@ -183,18 +183,25 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    
+
     /* Input autofill styling override for dark theme */
     input:-webkit-autofill,
-    input:-webkit-autofill:hover, 
-    input:-webkit-autofill:focus, 
-    input:-webkit-autofill:active{
-        -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.8) inset !important;
-        -webkit-text-fill-color: white !important;
-        transition: background-color 5000s ease-in-out 0s;
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.8) inset !important;
+      -webkit-text-fill-color: white !important;
+      transition: background-color 5000s ease-in-out 0s;
     }
   </style>
 </head>
@@ -223,9 +230,12 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-login w-100">Sign In</button>
+        <button type="submit" class="btn btn-login w-100" id="signInBtn">Sign In</button>
+        <div class="text-center mt-3" id="signUpContainer">
+          <a href="#" onclick="event.preventDefault(); handleSignUp();" class="text-white-50 text-decoration-none" style="font-size: 13px;">Create initial account</a>
+        </div>
         <div id="loginError" class="error-msg">
-          <i class="bi bi-exclamation-circle me-1"></i> Invalid username or password
+          <i class="bi bi-exclamation-circle me-1"></i> <span id="errorText">Invalid username or password</span>
         </div>
       </form>
 
@@ -235,43 +245,128 @@
     </div>
   </div>
 
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC6H2iwP7VKaFX5rOzOGJDFBY6ayR1mpTc",
+      authDomain: "kitten-code.firebaseapp.com",
+      databaseURL: "https://kitten-code-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "kitten-code",
+      storageBucket: "kitten-code.firebasestorage.app",
+      messagingSenderId: "309423062731",
+      appId: "1:309423062731:web:19a94778a32f87a8f3654e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
     // Initialize AOS animation
     AOS.init();
 
-    function handleLogin() {
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
-      const errorMsg = document.getElementById('loginError');
+    async function formatEmail(username) {
+      if (username.includes('@')) return username;
+      
+      try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("username", "==", username));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          return querySnapshot.docs[0].data().email;
+        }
+      } catch (e) {
+        console.error("Error fetching username from Firestore", e);
+      }
+      
+      // Fallback
+      return `${username}@kittencode.com`;
+    }
 
-      if (user === 'admin' && pass === 'admin') {
-        errorMsg.style.display = 'none';
-        
-        // Show success state on button
-        const btn = document.querySelector('.btn-login');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Authenticating...';
-        btn.style.background = 'linear-gradient(135deg, #00b09b, #96c93d)'; // Success green color gradient
-        btn.style.boxShadow = '0 8px 25px rgba(0, 176, 155, 0.4)';
-        
+    function showError(message) {
+      const errorMsg = document.getElementById('loginError');
+      const errorText = document.getElementById('errorText');
+      errorText.textContent = message;
+      errorMsg.style.display = 'block';
+
+      // Shake effect on error
+      const card = document.querySelector('.login-card');
+      card.style.transform = 'translateX(-10px)';
+      setTimeout(() => card.style.transform = 'translateX(10px)', 100);
+      setTimeout(() => card.style.transform = 'translateX(-10px)', 200);
+      setTimeout(() => card.style.transform = 'translateX(10px)', 300);
+      setTimeout(() => card.style.transform = 'translateX(0)', 400);
+    }
+
+    function showSuccess() {
+      const errorMsg = document.getElementById('loginError');
+      errorMsg.style.display = 'none';
+
+      // Show success state on button
+      const btn = document.querySelector('.btn-login');
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Authenticating...';
+      btn.style.background = 'linear-gradient(135deg, #00b09b, #96c93d)'; // Success green color gradient
+      btn.style.boxShadow = '0 8px 25px rgba(0, 176, 155, 0.4)';
+    }
+
+    window.handleLogin = async function() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value;
+      
+      if (!user || !pass) {
+        showError('Please enter username and password');
+        return;
+      }
+
+      const email = await formatEmail(user);
+
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        showSuccess();
         setTimeout(() => {
           localStorage.setItem('isLoggedIn', 'true');
           window.location.href = 'back-office.html';
         }, 800);
-      } else {
-        errorMsg.style.display = 'block';
-        
-        // Shake effect on error
-        const card = document.querySelector('.login-card');
-        card.style.transform = 'translateX(-10px)';
-        setTimeout(() => card.style.transform = 'translateX(10px)', 100);
-        setTimeout(() => card.style.transform = 'translateX(-10px)', 200);
-        setTimeout(() => card.style.transform = 'translateX(10px)', 300);
-        setTimeout(() => card.style.transform = 'translateX(0)', 400);
+      } catch (error) {
+        console.error("Login error:", error);
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+            showError('Invalid username or password');
+        } else {
+            showError(error.message);
+        }
       }
-    }
+    };
+
+    window.handleSignUp = async function() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value;
+      
+      if (!user || !pass) {
+        showError('Please enter desired username and password');
+        return;
+      }
+
+      const email = await formatEmail(user);
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, pass);
+        // Hide sign up button
+        document.getElementById('signUpContainer').style.display = 'none';
+        showSuccess();
+        setTimeout(() => {
+          localStorage.setItem('isLoggedIn', 'true');
+          window.location.href = 'back-office.html';
+        }, 800);
+      } catch (error) {
+        console.error("Sign up error:", error);
+        showError(error.message);
+      }
+    };
   </script>
 </body>
 

@@ -1,0 +1,43 @@
+type User @table {
+  displayName: String!
+  createdAt: Timestamp!
+  email: String
+  photoUrl: String
+}
+
+type Collection @table {
+  owner: User!
+  name: String!
+  public: Boolean!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  description: String
+}
+
+type Field @table {
+  collection: Collection!
+  name: String!
+  type: String!
+  position: Int!
+  required: Boolean
+}
+
+type Entry @table {
+  collection: Collection!
+  creator: User!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+}
+
+type FieldValue @table {
+  entry: Entry!
+  field: Field!
+  value: String!
+}
+
+type Share @table(key: ["collection", "sharedWith"]) {
+  collection: Collection!
+  sharedWith: User!
+  accessType: String!
+  createdAt: Timestamp!
+}
