@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, getDocs, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -14,10 +14,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/fireba
 
         // Main App
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const db  = getFirestore(app);
+        const auth = getAuth(app);    // Primary auth — restores session from IndexedDB
 
-        // Secondary app for admin creating users without losing session
-        const secondaryApp = initializeApp(firebaseConfig, "Secondary");
+        // Secondary app for admin creating users without losing their session
+        const secondaryApp  = initializeApp(firebaseConfig, "Secondary");
         const secondaryAuth = getAuth(secondaryApp);
 
         const PAGE_LIMIT = 10;
@@ -101,7 +102,23 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/fireba
         document.addEventListener('DOMContentLoaded', () => {
             userModalInstance = new bootstrap.Modal(document.getElementById('userModal'));
             deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
-            loadUsers();
+
+            // ── Auth guard: wait for Firebase to restore session from IndexedDB ──
+            // Without this, loadUsers() fires before auth.currentUser is set,
+            // causing Firestore to reject with "Missing or insufficient permissions".
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    loadUsers();
+                } else {
+                    const tbody = document.getElementById('userTableBody');
+                    if (tbody) {
+                        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-danger">
+                          <i class="bi bi-shield-lock-fill me-2"></i>
+                          <strong>Session not found.</strong> Please sign in via the Back Office.
+                        </td></tr>`;
+                    }
+                }
+            });
 
             // Form submission for create / update
             document.getElementById('userForm').addEventListener('submit', async (e) => {

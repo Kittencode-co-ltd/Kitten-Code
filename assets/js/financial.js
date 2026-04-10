@@ -6,6 +6,10 @@
 // ============================================================
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js';
 import {
+    getAuth,
+    onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
+import {
     getFirestore,
     collection,
     doc,
@@ -32,8 +36,9 @@ const firebaseConfig = {
     appId:             __ENV__.FIREBASE_APP_ID             || '1:309423062731:web:19a94778a32f87a8f3654e'
 };
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app  = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
 
 const CATS_COL   = 'fin_categories';
 const TXNS_COL   = 'fin_transactions';
@@ -442,5 +447,26 @@ function initRealtimeListeners() {
 // ── Filter change handler ─────────────────────────────────────
 window.renderTxns = renderTxns;
 
-// ── Boot ──────────────────────────────────────────────────────
-initRealtimeListeners();
+// ── Boot: wait for Firebase Auth before touching Firestore ────
+// Firestore rules require request.auth != null on all collections.
+// onAuthStateChanged fires once with the current user (or null),
+// so the page never makes an unauthenticated Firestore request.
+onAuthStateChanged(auth, user => {
+    if (user) {
+        initRealtimeListeners();
+    } else {
+        // Not signed in — display a clear error instead of raw Firestore exception
+        _isLoading = false;
+        const errHtml = `
+          <tr><td colspan="10" style="text-align:center;padding:2.5rem;color:var(--color-exp);">
+            <strong>\u26a0 \u0e01\u0e23\u0e38\u0e13\u0e32 Sign In \u0e01\u0e48\u0e2d\u0e19\u0e40\u0e02\u0e49\u0e32\u0e16\u0e36\u0e07\u0e23\u0e30\u0e1a\u0e1a\u0e01\u0e32\u0e23\u0e40\u0e07\u0e34\u0e19</strong><br>
+            <span style="font-size:12px;color:var(--text-secondary);margin-top:6px;display:block;">
+              Firebase Auth session not found \u2014 please log in via the Back Office
+            </span>
+          </td></tr>`;
+        ['cat-tbody', 'txn-tbody'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = errHtml;
+        });
+    }
+});
