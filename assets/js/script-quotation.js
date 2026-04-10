@@ -9,6 +9,57 @@ let state = {
     note: ""
 };
 
+// --- Draft Recovery System ---
+const showDraftToast = () => {
+    if(document.getElementById('kcToast')) return;
+    const toast = document.createElement('div');
+    toast.id = 'kcToast';
+    toast.className = 'kc-toast-container';
+    toast.innerHTML = `
+        <i class="bi bi-check-circle kc-toast-icon"></i>
+        <div class="kc-toast-content">
+            <span class="kc-toast-title">Draft Restored</span>
+            <span class="kc-toast-message">Your unsaved form data has been recovered.</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
+};
+
+function saveDraft() {
+    const draft = { state: state, inputs: {} };
+    document.querySelectorAll('.form-panel input, .form-panel textarea, .form-panel select').forEach(el => {
+        if(el.id) draft.inputs[el.id] = el.value;
+    });
+    localStorage.setItem('draft_quotation_data', JSON.stringify(draft));
+}
+
+function restoreDraft() {
+    const saved = localStorage.getItem('draft_quotation_data');
+    if (saved) {
+        try {
+            const draft = JSON.parse(saved);
+            state = draft.state;
+            Object.keys(draft.inputs).forEach(id => {
+                const el = document.getElementById(id);
+                // Sanitize upon restore to maintain security
+                if(el) el.value = escapeHTML(draft.inputs[id]);
+            });
+            showDraftToast();
+        } catch(e) { console.error("Could not restore draft", e); }
+    }
+}
+
+window.clearDraft = function() {
+    localStorage.removeItem('draft_quotation_data');
+    location.reload();
+};
+// ------------------------------
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     // Set default date to today
@@ -26,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('input', () => buildPreview());
     });
 
+    restoreDraft();
     renderItemsForm();
 
     // Initial build
@@ -241,6 +293,7 @@ function createPageDOM(sv) {
 }
 
 function buildPreview() {
+    saveDraft();
     const container = document.getElementById('preview-panel');
     if (!container) return;
 

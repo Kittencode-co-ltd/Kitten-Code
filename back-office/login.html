@@ -231,16 +231,13 @@
         </div>
 
         <button type="submit" class="btn btn-login w-100" id="signInBtn">Sign In</button>
-        <div class="text-center mt-3" id="signUpContainer">
-          <a href="#" onclick="event.preventDefault(); handleSignUp();" class="text-white-50 text-decoration-none" style="font-size: 13px;">Create initial account</a>
-        </div>
         <div id="loginError" class="error-msg">
           <i class="bi bi-exclamation-circle me-1"></i> <span id="errorText">Invalid username or password</span>
         </div>
       </form>
 
       <div class="back-home">
-        <a href="index.html"><i class="bi bi-arrow-left me-2"></i> Back to Homepage</a>
+        <a href="../index.html"><i class="bi bi-arrow-left me-2"></i> Back to Homepage</a>
       </div>
     </div>
   </div>
@@ -255,19 +252,19 @@
 
     async function formatEmail(username) {
       if (username.includes('@')) return username;
-      
+
       try {
         const usersRef = collection(db, "users");
         const q = query(usersRef, where("username", "==", username));
         const querySnapshot = await getDocs(q);
-        
+
         if (!querySnapshot.empty) {
           return querySnapshot.docs[0].data().email;
         }
       } catch (e) {
         console.error("Error fetching username from Firestore", e);
       }
-      
+
       // Fallback
       return `${username}@kittencode.com`;
     }
@@ -298,10 +295,10 @@
       btn.style.boxShadow = '0 8px 25px rgba(0, 176, 155, 0.4)';
     }
 
-    window.handleLogin = async function() {
+    window.handleLogin = async function () {
       const user = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value;
-      
+
       if (!user || !pass) {
         showError('Please enter username and password');
         return;
@@ -318,17 +315,17 @@
       } catch (error) {
         console.error("Login error:", error);
         if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-            showError('Invalid username or password');
+          showError('Invalid username or password');
         } else {
-            showError(error.message);
+          showError(error.message);
         }
       }
     };
 
-    window.handleSignUp = async function() {
+    window.handleSignUp = async function () {
       const user = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value;
-      
+
       if (!user || !pass) {
         showError('Please enter desired username and password');
         return;

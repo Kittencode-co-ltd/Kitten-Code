@@ -39,28 +39,32 @@
         <div class="sidebar-menu">
             <div class="menu-title">Main Navigation</div>
 
-            <a href="quotaion.html" class="menu-item active" target="contentFrame" onclick="updateTitle('Quotation')">
+            <a href="#dashboard" class="menu-item active" data-title="Dashboard">
+                <i class="bi bi-bar-chart"></i>
+                Dashboard
+            </a>
+
+            <a href="#quotation" class="menu-item" data-title="Quotation">
                 <i class="bi bi-file-earmark-text"></i>
                 Quotation
             </a>
 
-            <a href="receipt.html" class="menu-item" target="contentFrame" onclick="updateTitle('Receipt')">
+            <a href="#receipt" class="menu-item" data-title="Receipt">
                 <i class="bi bi-people"></i>
                 Receipt
-
             </a>
 
-            <a href="financial.html" class="menu-item" target="contentFrame" onclick="updateTitle('financial')">
+            <!-- <a href="#financial" class="menu-item" data-title="financial">
                 <i class="bi bi-box-seam"></i>
                 financial
-            </a>
+            </a> -->
 
-            <a href="user.html" class="menu-item" target="contentFrame" onclick="updateTitle('user')">
-                <i class="bi bi-gear"></i>
+            <a href="#user" class="menu-item" data-title="user">
+                <i class="bi bi-person"></i>
                 user
             </a>
 
-            <a href="setting.html" class="menu-item" target="contentFrame" onclick="updateTitle('setting')">
+            <a href="#setting" class="menu-item" data-title="setting">
                 <i class="bi bi-gear"></i>
                 setting
             </a>
@@ -101,13 +105,15 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.body.style.display = 'flex';
+                // Trigger initial view load upon successful authentication
+                loadView();
             } else {
                 window.location.replace('login.html');
             }
         });
 
         // Logout Handler
-        window.handleLogout = async function(event) {
+        window.handleLogout = async function (event) {
             event.preventDefault();
             if (confirm("Are you sure you want to log out?")) {
                 try {
@@ -144,16 +150,40 @@
         const menuItems = document.querySelectorAll('.menu-item');
         menuItems.forEach(item => {
             item.addEventListener('click', function () {
-                if (this.getAttribute('target') === 'contentFrame') {
-                    menuItems.forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-
-                    if (window.innerWidth <= 768) {
-                        toggleSidebar();
-                    }
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
                 }
             });
         });
+
+        // Hash Routing Map
+        const routeMap = {
+            '#dashboard': 'dashboard.html',  // Typo originates from source file name
+            '#quotation': 'quotaion.html',
+            '#receipt': 'receipt.html',
+            '#financial': 'financial.html',
+            '#user': 'user.html',
+            '#setting': 'setting.html'
+        };
+
+        function loadView() {
+            let hash = window.location.hash || '#quotation'; // Default to quotation
+            let viewFile = routeMap[hash] || 'quotaion.html';
+
+            // Set iframe src
+            document.getElementById('contentFrame').src = viewFile;
+
+            // Highlight Active Menu visually
+            menuItems.forEach(i => {
+                i.classList.remove('active');
+                if (i.getAttribute('href') === hash) {
+                    i.classList.add('active');
+                    updateTitle(i.getAttribute('data-title'));
+                }
+            });
+        }
+
+        window.onhashchange = loadView;
     </script>
 </body>
 

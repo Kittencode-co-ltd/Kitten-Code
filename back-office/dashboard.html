@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kitten Code — Dark Luxury Financial Analytics Dashboard">
+    <title>Analytics Dashboard — Kitten Code Financial</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+    <!-- Dashboard stylesheet -->
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+
+<body>
+
+    <div class="db-wrapper">
+
+        <!-- ══════════════════════════════════════════════════════
+         HEADER
+    ══════════════════════════════════════════════════════ -->
+        <header class="db-header">
+            <div class="db-logo">
+                <div class="db-logo-icon">📊</div>
+                <div class="db-logo-text">
+                    <strong>Analytics Dashboard</strong>
+                    <span>Kitten Code Financial — Back Office</span>
+                </div>
+            </div>
+
+            <div class="db-header-right">
+                <!-- Period filter -->
+                <div class="period-tabs" role="group" aria-label="ช่วงเวลา">
+                    <button class="period-btn active" data-period="month" id="btn-month">เดือนนี้</button>
+                    <button class="period-btn" data-period="quarter" id="btn-quarter">ไตรมาสนี้</button>
+                </div>
+
+                <!-- Back to financial management -->
+                <a href="financial.html" class="db-back-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12" />
+                        <polyline points="12 19 5 12 12 5" />
+                    </svg>
+                    จัดการการเงิน
+                </a>
+            </div>
+        </header>
+
+        <!-- ══════════════════════════════════════════════════════
+         SECTION 1 — KPI CARDS
+    ══════════════════════════════════════════════════════ -->
+        <section class="db-section" aria-label="KPI Overview">
+            <div class="db-section-label">Key Performance Indicators</div>
+
+            <div class="kpi-grid">
+
+                <!-- Net Profit/Loss -->
+                <div class="kpi-card kpi-net" role="region" aria-label="กำไร/ขาดทุนสุทธิ">
+                    <div class="kpi-header">
+                        <div class="kpi-label">กำไร/ขาดทุนสุทธิ<br><span class="kpi-period-label">เดือนนี้</span></div>
+                        <div class="kpi-icon" aria-hidden="true">⚡</div>
+                    </div>
+                    <div class="kpi-value kpi-net-val" id="kpi-net">—</div>
+                    <div class="kpi-sub">
+                        รับ − จ่าย (Paid)
+                        <span id="kpi-net-badge" class="kpi-badge badge-pos" aria-live="polite">▲ กำไร</span>
+                    </div>
+                </div>
+
+                <!-- Total Income -->
+                <div class="kpi-card kpi-inc" role="region" aria-label="รายรับรวม">
+                    <div class="kpi-header">
+                        <div class="kpi-label">รายรับรวม<br><span class="kpi-period-label">เดือนนี้</span></div>
+                        <div class="kpi-icon" aria-hidden="true">↑</div>
+                    </div>
+                    <div class="kpi-value kpi-inc-val" id="kpi-inc">—</div>
+                    <div class="kpi-sub">รายการ ประเภท รายรับ (Paid)</div>
+                </div>
+
+                <!-- Total Expenses -->
+                <div class="kpi-card kpi-exp" role="region" aria-label="รายจ่ายรวม">
+                    <div class="kpi-header">
+                        <div class="kpi-label">รายจ่ายรวม<br><span class="kpi-period-label">เดือนนี้</span></div>
+                        <div class="kpi-icon" aria-hidden="true">↓</div>
+                    </div>
+                    <div class="kpi-value kpi-exp-val" id="kpi-exp">—</div>
+                    <div class="kpi-sub">รายการ ประเภท รายจ่าย (Paid)</div>
+                </div>
+
+                <!-- Pending Reimbursements -->
+                <div class="kpi-card kpi-pend" role="region" aria-label="รอเบิกจ่าย">
+                    <div class="kpi-header">
+                        <div class="kpi-label">รอเบิกจ่าย<br><span class="kpi-period-label">เดือนนี้</span></div>
+                        <div class="kpi-icon" aria-hidden="true">⏳</div>
+                    </div>
+                    <div class="kpi-value kpi-pend-val" id="kpi-pend">—</div>
+                    <div class="kpi-sub">Pending Reimbursements</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════
+         SECTION 2 — CHARTS
+    ══════════════════════════════════════════════════════ -->
+        <section class="db-section" aria-label="Charts">
+            <div class="db-section-label">Visualisations</div>
+
+            <div class="charts-grid">
+
+                <!-- Line Chart: Monthly Trend -->
+                <div class="chart-card">
+                    <div class="chart-title">Monthly Net Profit Trend</div>
+                    <div class="chart-subtitle">รายรับ / รายจ่าย / กำไรสุทธิ — 6 เดือนย้อนหลัง</div>
+                    <div class="chart-canvas-wrap" style="height:280px;">
+                        <canvas id="lineChart" aria-label="Monthly net profit trend line chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Doughnut Chart: Expense Breakdown -->
+                <div class="chart-card">
+                    <div class="chart-title">Expense Breakdown by Category</div>
+                    <div class="chart-subtitle">สัดส่วนรายจ่ายตามหมวดหมู่ (<span
+                            id="donut-period-label">เดือนนี้</span>)</div>
+                    <div class="chart-canvas-wrap" style="height:200px;">
+                        <canvas id="donutChart" aria-label="Expense breakdown doughnut chart"></canvas>
+                    </div>
+                    <!-- Custom legend rendered by JS -->
+                    <div class="donut-legend" id="donut-legend" aria-label="Expense breakdown legend"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════
+         SECTION 3 — TRANSACTIONS + SECURITY
+    ══════════════════════════════════════════════════════ -->
+        <section class="db-section" aria-label="Recent Transactions & System Status">
+            <div class="db-section-label">Data &amp; Security</div>
+
+            <div class="bottom-grid">
+
+                <!-- Recent Transactions -->
+                <div class="data-card">
+                    <div class="data-card-header">
+                        <span class="data-card-title">5 รายการล่าสุด</span>
+                        <a href="financial.html" class="data-card-action">ดูทั้งหมด →</a>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table class="txn-tbl" aria-label="5 รายการล่าสุด">
+                            <thead>
+                                <tr>
+                                    <th>วันที่</th>
+                                    <th>รายการ / หมวด</th>
+                                    <th>สถานะ</th>
+                                    <th style="text-align:right;">จำนวน</th>
+                                    <th>ประเภท</th>
+                                </tr>
+                            </thead>
+                            <tbody id="txn-tbody">
+                                <!-- Populated by dashboard.js -->
+                                <tr>
+                                    <td colspan="5" class="empty-state">
+                                        <span class="skel" style="height:14px;width:60%;display:inline-block;"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- System & Security Status -->
+                <div class="data-card">
+                    <div class="data-card-header">
+                        <span class="data-card-title">System &amp; Security Status</span>
+                        <a href="https://github.com/Kittencode-co-ltd/Kitten-Code/security" target="_blank"
+                            rel="noopener noreferrer" class="data-card-action">GitHub →</a>
+                    </div>
+                    <div id="sec-panel" aria-label="Security panel" aria-live="polite">
+                        <!-- Populated by dashboard.js after auth -->
+                        <div class="sec-list">
+                            <div class="sec-item">
+                                <span class="sec-dot dot-info"></span>
+                                <div class="sec-content">
+                                    <div class="sec-label">Loading</div>
+                                    <div class="sec-value">
+                                        <span class="skel" style="height:13px;width:80%;display:inline-block;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div><!-- /db-wrapper -->
+
+    <!-- Dashboard JS (ES Module) -->
+    <script type="module" src="../assets/js/dashboard.js"></script>
+
+</body>
+
+</html>

@@ -18,6 +18,69 @@
             return String(str).replace(/[&<>'"]/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[match]));
         };
 
+        const showDraftToast = () => {
+            if(document.getElementById('kcToast')) return;
+            const toast = document.createElement('div');
+            toast.id = 'kcToast';
+            toast.style.cssText = "position:fixed;bottom:-100px;right:30px;background:rgba(15,23,42,0.85);backdrop-filter:blur(12px);border-left:4px solid #00b09b;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.5);color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;z-index:9999;transition:bottom 0.4s;opacity:0;";
+            toast.innerHTML = `
+                <i class="bi bi-check-circle" style="font-size:1.25rem;color:#00b09b;"></i>
+                <div style="display:flex;flex-direction:column;">
+                    <span style="font-weight:600;font-size:0.95rem;">Draft Restored</span>
+                    <span style="font-size:0.8rem;color:#cbd5e1;">Your unsaved form data has been recovered.</span>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.bottom = '30px'; toast.style.opacity = '1'; }, 100);
+            setTimeout(() => {
+                toast.style.bottom = '-100px'; toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        };
+
+        let _userDraftRestored = false;
+        function saveDraftUser() {
+            if (document.getElementById('docId')?.value) return; // Only autosave during Create
+            const draft = {
+                username: document.getElementById('mUsername')?.value || '',
+                email: document.getElementById('mEmail')?.value || '',
+                role: document.getElementById('mRole')?.value || 'user',
+                position: document.getElementById('mPosition')?.value || '',
+                firstName: document.getElementById('mFirstName')?.value || '',
+                lastName: document.getElementById('mLastName')?.value || '',
+                birthDate: document.getElementById('mBirthDate')?.value || '',
+                phone: document.getElementById('mPhone')?.value || '',
+                bankAccountName: document.getElementById('mBankAccountName')?.value || '',
+                bankName: document.getElementById('mBankName')?.value || '',
+                bankAccountNumber: document.getElementById('mBankAccountNumber')?.value || ''
+            };
+            localStorage.setItem('draft_user_data', JSON.stringify(draft));
+        }
+
+        function restoreDraftUser() {
+            if (_userDraftRestored || document.getElementById('docId').value) return;
+            const saved = localStorage.getItem('draft_user_data');
+            if (saved) {
+                try {
+                    const draft = JSON.parse(saved);
+                    const bind = (id, val) => { if(val && document.getElementById(id)) document.getElementById(id).value = escapeHTML(val); };
+                    bind('mUsername', draft.username);
+                    bind('mEmail', draft.email);
+                    bind('mRole', draft.role);
+                    bind('mPosition', draft.position);
+                    bind('mFirstName', draft.firstName);
+                    bind('mLastName', draft.lastName);
+                    bind('mBirthDate', draft.birthDate);
+                    bind('mPhone', draft.phone);
+                    bind('mBankAccountName', draft.bankAccountName);
+                    bind('mBankName', draft.bankName);
+                    bind('mBankAccountNumber', draft.bankAccountNumber);
+                    showDraftToast();
+                } catch(e) {}
+            }
+            _userDraftRestored = true;
+        }
+
         // Secondary app for admin creating users without losing primary session
         const secondaryApp  = initializeApp(firebaseConfig, "Secondary");
         const secondaryAuth = getAuth(secondaryApp);
@@ -40,6 +103,8 @@
             document.getElementById('mPassword').required = true;
             document.getElementById('mEmail').disabled = false;
             document.getElementById('modalAlert').classList.add('d-none');
+            _userDraftRestored = false;
+            restoreDraftUser();
         };
 
         window.prepareUpdateModal = (userJson) => {
@@ -104,6 +169,14 @@
             userModalInstance = new bootstrap.Modal(document.getElementById('userModal'));
             deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
 
+            ['mUsername', 'mEmail', 'mRole', 'mPosition', 'mFirstName', 'mLastName', 'mBirthDate', 'mPhone', 'mBankAccountName', 'mBankName', 'mBankAccountNumber'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.addEventListener('input', saveDraftUser);
+                    el.addEventListener('change', saveDraftUser);
+                }
+            });
+
             // ── Auth guard: wait for Firebase to restore session from IndexedDB ──
             // Without this, loadUsers() fires before auth.currentUser is set,
             // causing Firestore to reject with "Missing or insufficient permissions".
@@ -162,6 +235,7 @@
                         };
 
                         await setDoc(doc(db, "users", uid), userData);
+                        localStorage.removeItem('draft_user_data');
                         loadUsers(true);
 
                     } else { // Update

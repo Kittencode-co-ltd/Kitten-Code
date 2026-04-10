@@ -8,15 +8,15 @@
 }
 
 :root {
-  /* Kitten Code Premium Dark Themes */
-  --bg-dark: #0f172a;
-  --bg-glass: rgba(30, 41, 59, 0.7);
-  --bg-glass-hover: rgba(30, 41, 59, 0.9);
-  --border-glass: rgba(255, 255, 255, 0.1);
-  --border-glass-light: rgba(255, 255, 255, 0.2);
+  /* Kitten Code Premium Light Themes */
+  --bg-dark: #f8fafc;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --bg-glass-hover: rgba(255, 255, 255, 0.95);
+  --border-glass: rgba(15, 23, 42, 0.1);
+  --border-glass-light: rgba(15, 23, 42, 0.15);
 
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
   --text-tertiary: #64748b;
 
   /* Vibrant Accents */
@@ -36,8 +36,8 @@
   --border-radius-md: 12px;
   --border-radius-lg: 16px;
 
-  --shadow-glow: 0 4px 20px rgba(0, 0, 0, 0.25);
-  --shadow-neon: 0 0 15px rgba(14, 165, 233, 0.3);
+  --shadow-glow: 0 4px 20px rgba(15, 23, 42, 0.08);
+  --shadow-neon: 0 4px 15px rgba(14, 165, 233, 0.3);
 }
 
 body {
@@ -67,10 +67,10 @@ body {
 }
 
 .logo {
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  background: linear-gradient(135deg, #fff, #94a3b8);
+  background: linear-gradient(135deg, #0f172a, #64748b);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -83,7 +83,7 @@ body {
 .tabs {
   display: flex;
   gap: 8px;
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(255, 255, 255, 0.6);
   border: 1px solid var(--border-glass);
   border-radius: 20px;
   padding: 6px;
@@ -92,20 +92,22 @@ body {
 }
 
 .tab {
+  display: inline-block;
   padding: 8px 20px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   border-radius: 14px;
   border: none;
   background: transparent;
   cursor: pointer;
   color: var(--text-secondary);
+  text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tab:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(15, 23, 42, 0.05);
 }
 
 .tab.active {
@@ -152,7 +154,7 @@ body {
 }
 
 .metric-label {
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -178,7 +180,7 @@ body {
 }
 
 .metric-sub {
-  font-size: 13px;
+  font-size: 16px;
   color: var(--text-tertiary);
 }
 
@@ -205,7 +207,7 @@ body {
 }
 
 .section-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
   letter-spacing: 0.5px;
@@ -236,13 +238,13 @@ body {
 }
 
 .action-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--border-glass);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: var(--border-glass-light);
   color: var(--text-secondary);
 }
 
 .action-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.06);
   color: var(--text-primary);
 }
 
@@ -274,7 +276,7 @@ td {
 }
 
 tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(15, 23, 42, 0.03);
 }
 
 tr:last-child td {
@@ -294,7 +296,7 @@ tr:last-child td {
 
 .tag-code {
   font-family: "JetBrains Mono", monospace;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.05);
   color: var(--text-secondary);
   border: 1px solid var(--border-glass);
 }
@@ -324,7 +326,7 @@ tr:last-child td {
 .progress-bar {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.1);
   border-radius: 4px;
   overflow: hidden;
   margin-top: 8px;
@@ -349,7 +351,7 @@ tr:last-child td {
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.5) 50%,
     rgba(255, 255, 255, 0) 100%
   );
   animation: shine 2s infinite;
@@ -366,7 +368,7 @@ tr:last-child td {
 }
 
 .pct {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-tertiary);
   margin-top: 6px;
   font-weight: 500;
@@ -398,7 +400,7 @@ tr:last-child td {
 input,
 select {
   width: 100%;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(255, 255, 255, 0.8);
   border: 1px solid var(--border-glass);
   color: var(--text-primary);
   padding: 10px 14px;
@@ -412,7 +414,7 @@ input:focus,
 select:focus {
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.25);
-  background: rgba(15, 23, 42, 0.8);
+  background: #ffffff;
 }
 
 input::placeholder {
@@ -442,7 +444,7 @@ input::placeholder {
   text-align: center;
   padding: 3rem 2rem;
   color: var(--text-tertiary);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(15, 23, 42, 0.03);
   border-radius: var(--border-radius-md);
   border: 1px dashed var(--border-glass);
   font-size: 15px;
@@ -458,9 +460,9 @@ input::placeholder {
   display: block;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.04) 25%,
-    rgba(255, 255, 255, 0.10) 50%,
-    rgba(255, 255, 255, 0.04) 75%
+    rgba(15, 23, 42, 0.03) 25%,
+    rgba(15, 23, 42, 0.08) 50%,
+    rgba(15, 23, 42, 0.03) 75%
   );
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.6s ease-in-out infinite;
@@ -470,12 +472,20 @@ input::placeholder {
 }
 
 @keyframes skeleton-shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Metric skeleton mimics the 32px value + 14px label */
-.metric-value .skeleton { height: 32px; width: 120px; margin-bottom: 4px; }
+.metric-value .skeleton {
+  height: 32px;
+  width: 120px;
+  margin-bottom: 4px;
+}
 
 /* =============================================
    Responsive Tables
@@ -496,8 +506,13 @@ input::placeholder {
 }
 
 @keyframes glow-paid {
-  0%,  100% { box-shadow: 0 0 6px rgba(16, 185, 129, 0.15); }
-  50%       { box-shadow: 0 0 14px rgba(16, 185, 129, 0.5); }
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.5);
+  }
 }
 
 /* ── Mobile responsive (≤ 640px) ──────────────────────────────
@@ -723,15 +738,15 @@ input::placeholder {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(15, 23, 42, 0.05);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.25);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
+  background: rgba(15, 23, 42, 0.4);
 }

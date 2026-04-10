@@ -25,6 +25,72 @@ const escapeHTML = (str) => {
     return String(str).replace(/[&<>'"]/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[match]));
 };
 
+const showDraftToast = () => {
+    if(document.getElementById('kcToast')) return;
+    const toast = document.createElement('div');
+    toast.id = 'kcToast';
+    toast.className = 'kc-toast-container';
+    toast.innerHTML = `
+        <i class="bi bi-check-circle kc-toast-icon"></i>
+        <div class="kc-toast-content">
+            <span class="kc-toast-title">Draft Restored</span>
+            <span class="kc-toast-message">Your unsaved form data has been recovered.</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
+};
+
+function saveDraftTxn() {
+    const draft = {
+        date: document.getElementById('txn-date')?.value || '',
+        cat: document.getElementById('txn-cat')?.value || '',
+        desc: document.getElementById('txn-desc')?.value || '',
+        amount: document.getElementById('txn-amount')?.value || '',
+        ref: document.getElementById('txn-ref')?.value || '',
+        contact: document.getElementById('txn-contact')?.value || '',
+        status: document.getElementById('txn-status')?.value || '',
+        paidDate: document.getElementById('txn-paid-date')?.value || ''
+    };
+    localStorage.setItem('draft_financial_data', JSON.stringify(draft));
+}
+
+let _txnDraftRestored = false;
+function restoreDraftTxn() {
+    if (_txnDraftRestored) return;
+    const saved = localStorage.getItem('draft_financial_data');
+    if (saved) {
+        try {
+            const draft = JSON.parse(saved);
+            const bind = (id, val) => { if(val && document.getElementById(id)) document.getElementById(id).value = escapeHTML(val); };
+            bind('txn-date', draft.date);
+            bind('txn-cat', draft.cat);
+            bind('txn-desc', draft.desc);
+            bind('txn-amount', draft.amount);
+            bind('txn-ref', draft.ref);
+            bind('txn-contact', draft.contact);
+            bind('txn-status', draft.status);
+            bind('txn-paid-date', draft.paidDate);
+            showDraftToast();
+        } catch(e) {}
+    }
+    _txnDraftRestored = true;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    ['txn-date', 'txn-cat', 'txn-desc', 'txn-amount', 'txn-ref', 'txn-contact', 'txn-status', 'txn-paid-date'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) {
+            el.addEventListener('input', saveDraftTxn);
+            el.addEventListener('change', saveDraftTxn);
+        }
+    });
+});
+
 const CATS_COL   = 'fin_categories';
 const TXNS_COL   = 'fin_transactions';
 
@@ -150,8 +216,8 @@ function renderDashboard() {
                 : '';
             return `<div style="margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
-            <span style="font-size:13px;">${c.name}</span>
-            <span style="font-size:12px;color:var(--text-secondary);">${fmtNum(used)} / ${fmtNum(c.budget)} บาท${pendNote}</span>
+            <span style="font-size:14px;">${c.name}</span>
+            <span style="font-size:14px;color:var(--text-secondary);">${fmtNum(used)} / ${fmtNum(c.budget)} บาท${pendNote}</span>
           </div>
           <div class="progress-bar"><div class="progress-fill ${fillClass}" style="width:${pct}%"></div></div>
           <div class="pct">จ่ายแล้ว ${pct}% — คงเหลือ ${fmt(c.budget - used)}</div>
@@ -279,14 +345,26 @@ function renderTxns() {
 
 // ── Add Transaction Form ──────────────────────────────────────
 function renderAddForm() {
-    const today = new Date().toISOString().slice(0, 10);
-    document.getElementById('txn-date').value = today;
+    // Only set defaults if draft hasn't been injected or if clear was triggered
+    if (!_txnDraftRestored) {
+        const today = new Date().toISOString().slice(0, 10);
+        document.getElementById('txn-date').value = today;
+    }
     const sel = document.getElementById('txn-cat');
+    
+    // Remember current value before wiping innerHTML to rebuild options
+    const prevCat = sel.value; 
     sel.innerHTML = _categories.map(c => `<option value="${c.code}">[${c.type === 1 ? 'รายรับ' : 'รายจ่าย'}] ${c.name}</option>`).join('');
-    const statusSel = document.getElementById('txn-status');
-    if (statusSel) statusSel.value = '1';
-    const paidDate = document.getElementById('txn-paid-date');
-    if (paidDate) paidDate.value = '';
+    if (prevCat) sel.value = prevCat;
+
+    if (!_txnDraftRestored) {
+        const statusSel = document.getElementById('txn-status');
+        if (statusSel) statusSel.value = '1';
+        const paidDate = document.getElementById('txn-paid-date');
+        if (paidDate) paidDate.value = '';
+    }
+
+    restoreDraftTxn();
 }
 
 // ── CRUD: Categories ──────────────────────────────────────────
@@ -380,6 +458,11 @@ window.addTransaction = async function () {
         if (document.getElementById('txn-status')) document.getElementById('txn-status').value = '1';
         if (document.getElementById('txn-paid-date')) document.getElementById('txn-paid-date').value = '';
         setTimeout(() => { msgEl.innerHTML = ''; }, 3000);
+        
+        // Clear autosaved draft heavily
+        localStorage.removeItem('draft_financial_data');
+        _txnDraftRestored = false;
+        
     } catch (e) {
         msgEl.innerHTML = `<span style="color:#D85A30;">เกิดข้อผิดพลาด: ${e.message}</span>`;
     }

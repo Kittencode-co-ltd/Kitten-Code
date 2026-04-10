@@ -353,3 +353,52 @@ body::before {
     padding: 10px;
   }
 }
+
+/* Toast Notification Theme */
+.kc-toast-container {
+    position: fixed;
+    bottom: -100px;
+    right: 30px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-left: 4px solid #00b09b; /* Fallback to success green if needed, but matches theme inc */
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 9999;
+    transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.kc-toast-container.show {
+    bottom: 30px;
+    opacity: 1;
+}
+
+.kc-toast-icon {
+    font-size: 1.25rem;
+    color: #00b09b;
+    text-shadow: 0 0 10px rgba(0, 176, 155, 0.6);
+}
+
+.kc-toast-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.kc-toast-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.kc-toast-message {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+}

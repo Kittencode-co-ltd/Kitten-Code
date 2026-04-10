@@ -8,7 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/quotation.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 
 <body>
@@ -16,8 +18,12 @@
 
         <!-- Left Panel: Form Input -->
         <div class="form-panel">
-            <div class="form-header">
+            <div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2><i class="fas fa-file-invoice-dollar"></i> สร้างใบเสนอราคา</h2>
+                <button type="button" onclick="clearDraft()"
+                    style="padding: 6px 12px; font-size: 0.85rem; background: #dc2626; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                    <i class="fas fa-eraser"></i> Clear Draft
+                </button>
             </div>
 
             <form id="quote-form">

@@ -16,8 +16,11 @@
 
         <!-- Left Panel: Form Input -->
         <div class="form-panel">
-            <div class="form-header">
+            <div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2><i class="fas fa-file-invoice-dollar"></i> สร้างใบเสร็จรับเงิน</h2>
+                <button type="button" onclick="clearDraft()" style="padding: 6px 12px; font-size: 0.85rem; background: #dc2626; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                    <i class="fas fa-eraser"></i> Clear Draft
+                </button>
             </div>
 
             <form id="quote-form">

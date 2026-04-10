@@ -19,14 +19,14 @@
             <div class="header">
                 <div class="logo">บัญชี<span>คุม</span></div>
                 <div class="tabs">
-                    <button class="tab active" onclick="switchTab('dashboard')">ภาพรวม</button>
-                    <button class="tab" onclick="switchTab('register')">ทะเบียนคุม</button>
+                    <a href="dashboard.html" class="tab">ภาพรวม</a>
+                    <button class="tab active" onclick="switchTab('register')">ทะเบียนคุม</button>
                     <button class="tab" onclick="switchTab('transactions')">รายการ</button>
                     <button class="tab" onclick="switchTab('add')">+ บันทึก</button>
                 </div>
             </div>
 
-            <div id="page-dashboard" class="page active">
+            <div id="page-dashboard" class="page ">
                 <div class="metrics">
                     <div class="metric">
                         <div class="metric-label">รายรับรวม (เดือนนี้)</div>
@@ -56,41 +56,7 @@
                         <button class="action-btn" onclick="switchTab('register')">ดูทั้งหมด</button>
                     </div>
                     <div id="budget-overview">
-                        <div style="margin-bottom:12px;">
-                            <div
-                                style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
-                                <span style="font-size:13px;">ค่าเช่า Server (Cloud)</span>
-                                <span style="font-size:12px;color:var(--color-text-secondary);">2,500 / 10,000
-                                    บาท</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill fill-ok" style="width:25%"></div>
-                            </div>
-                            <div class="pct">ใช้ไป 25% — คงเหลือ ฿7,500</div>
-                        </div>
-                        <div style="margin-bottom:12px;">
-                            <div
-                                style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
-                                <span style="font-size:13px;">ค่า API ภายนอก</span>
-                                <span style="font-size:12px;color:var(--color-text-secondary);">1,800 / 5,000 บาท</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill fill-ok" style="width:36%"></div>
-                            </div>
-                            <div class="pct">ใช้ไป 36% — คงเหลือ ฿3,200</div>
-                        </div>
-                        <div style="margin-bottom:12px;">
-                            <div
-                                style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
-                                <span style="font-size:13px;">ค่าโฆษณา</span>
-                                <span style="font-size:12px;color:var(--color-text-secondary);">8,000 / 20,000
-                                    บาท</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill fill-ok" style="width:40%"></div>
-                            </div>
-                            <div class="pct">ใช้ไป 40% — คงเหลือ ฿12,000</div>
-                        </div>
+
                     </div>
                 </div>
 
@@ -100,47 +66,12 @@
                         <button class="action-btn" onclick="switchTab('transactions')">ดูทั้งหมด</button>
                     </div>
                     <div id="recent-txns">
-                        <table class="txn-table">
-                            <thead>
-                                <tr>
-                                    <th>วันที่</th>
-                                    <th>รายการ</th>
-                                    <th style="text-align:right;">จำนวน</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-06</td>
-                                    <td>ค่าที่ปรึกษา Phase 2<br><span class="tag-code">INC-02</span></td>
-                                    <td style="text-align:right;" class="amount-inc">+฿15,000</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-05</td>
-                                    <td>ค่าโฆษณา Facebook เดือนเมษายน<br><span class="tag-code">EXP-03</span></td>
-                                    <td style="text-align:right;" class="amount-exp">-฿8,000</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-03</td>
-                                    <td>ค่า OpenAI API<br><span class="tag-code">EXP-02</span></td>
-                                    <td style="text-align:right;" class="amount-exp">-฿1,800</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-02</td>
-                                    <td>จ่ายค่า AWS EC2 เดือนมีนาคม<br><span class="tag-code">EXP-01</span></td>
-                                    <td style="text-align:right;" class="amount-exp">-฿2,500</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:var(--color-text-secondary);font-size:12px;">2026-04-01</td>
-                                    <td>รายได้ค่าบริการ แพ็คเกจ Pro<br><span class="tag-code">INC-01</span></td>
-                                    <td style="text-align:right;" class="amount-inc">+฿35,000</td>
-                                </tr>
-                            </tbody>
-                        </table>
+
                     </div>
                 </div>
             </div>
 
-            <div id="page-register" class="page">
+            <div id="page-register" class="page active">
                 <div class="section">
                     <div class="section-header">
                         <div class="section-title">ทะเบียนคุมหมวดหมู่</div>
@@ -301,6 +232,12 @@
         </div>
 
         <script src="../assets/js/financial.js" type="module"></script>
+        <script type="module">
+            import { onAuthStateChanged, auth } from '../assets/js/firebase-config.js';
+            onAuthStateChanged(auth, (user) => {
+                if (!user) { window.location.replace('login.html'); }
+            });
+        </script>
     </div>
 </body>
 
