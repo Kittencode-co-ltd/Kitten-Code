@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/quotation.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 
 <body>
@@ -18,7 +20,8 @@
         <div class="form-panel">
             <div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2><i class="fas fa-file-invoice-dollar"></i> สร้างใบเสร็จรับเงิน</h2>
-                <button type="button" onclick="clearDraft()" style="padding: 6px 12px; font-size: 0.85rem; background: #dc2626; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                <button type="button" onclick="clearDraft()"
+                    style="padding: 6px 12px; font-size: 0.85rem; background: #dc2626; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
                     <i class="fas fa-eraser"></i> Clear Draft
                 </button>
             </div>
@@ -29,36 +32,36 @@
                     <h3><i class="fas fa-file-alt"></i> ข้อมูลเอกสาร</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>เลขที่ใบเสร็จ (Receipt No)</label>
-                            <input type="text" id="in-doc-no" value="" placeholder="เช่น BI-20190008"
+                            <label>เลขที่ใบเสร็จ</label>
+                            <input type="text" id="in-doc-no" value="" placeholder="e.g., BI-20190008"
                                 oninput="buildPreview()">
                         </div>
                         <div class="form-group">
-                            <label>วันที่ (Issue Date)</label>
+                            <label>วันที่ออกใบเสร็จ</label>
                             <input type="date" id="in-doc-date" value="" oninput="buildPreview()">
                         </div>
                         <div class="form-group">
-                            <label>ชำระโดย (Payment)</label>
+                            <label>การชำระเงิน</label>
                             <select id="in-doc-payment" onchange="buildPreview()">
-                                <option value="เงินสด">เงินสด (Cash)</option>
-                                <option value="โอนเงิน">โอนเงิน (Bank Transfer)</option>
-                                <option value="เช็คธนาคาร">เช็คธนาคาร (Cheque Bank)</option>
-                                <option value="อื่นๆ">อื่นๆ (Other)</option>
+                                <option value="เงินสด">เงินสด</option>
+                                <option value="โอนเงิน">โอนเงิน</option>
+                                <option value="เช็คธนาคาร">เช็คธนาคาร</option>
+                                <option value="อื่นๆ">อื่นๆ</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>พนักงานขาย (Salesman)</label>
-                            <input type="text" id="in-doc-salesman" value="" placeholder="ชื่อพนักงานขาย"
+                            <label>พนักงานขาย</label>
+                            <input type="text" id="in-doc-salesman" value="" placeholder="Salesman Name"
                                 oninput="buildPreview()">
                         </div>
                         <div class="form-group">
-                            <label>ใบวางบิล (Invoice No)</label>
-                            <input type="text" id="in-doc-invoice" value="" placeholder="เช่น IN-20190008"
+                            <label>เลขที่ใบแจ้งหนี้</label>
+                            <input type="text" id="in-doc-invoice" value="" placeholder="e.g., IN-20190008"
                                 oninput="buildPreview()">
                         </div>
                         <div class="form-group">
-                            <label>เอกสารอ้างอิง (Ref Document)</label>
-                            <input type="text" id="in-doc-ref" value="" placeholder="อ้างอิง..."
+                            <label>เอกสารอ้างอิง</label>
+                            <input type="text" id="in-doc-ref" value="" placeholder="Reference..."
                                 oninput="buildPreview()">
                         </div>
                     </div>
@@ -66,26 +69,26 @@
 
                 <!-- Section: Customer -->
                 <div class="form-section">
-                    <h3><i class="fas fa-user-tie"></i> ข้อมูลลูกค้า & โครงการ</h3>
+                    <h3><i class="fas fa-user-tie"></i> ข้อมูลลูกค้า</h3>
                     <div class="form-grid">
                         <div class="form-group full-width">
-                            <label>ชื่อลูกค้า (Customer Name)</label>
-                            <input type="text" id="in-cust-name" value="" placeholder="ระบุชื่อบริษัทหรือชื่อลูกค้า..."
-                                oninput="buildPreview()">
+                            <label>ชื่อลูกค้า</label>
+                            <input type="text" id="in-cust-name" value=""
+                                placeholder="Enter company or customer name..." oninput="buildPreview()">
                         </div>
                         <div class="form-group full-width">
-                            <label>เลขประจำตัวผู้เสียภาษี (Tax ID)</label>
+                            <label>เลขประจำตัวผู้เสียภาษีอากร</label>
                             <input type="text" id="in-cust-tax" value=""
-                                placeholder="เช่น 01909019999999 (สำนักงานใหญ่)" oninput="buildPreview()">
+                                placeholder="e.g., 01909019999999 (Head Office)" oninput="buildPreview()">
                         </div>
                         <div class="form-group full-width">
-                            <label>ที่อยู่ (Address)</label>
+                            <label>ที่อยู่</label>
                             <textarea id="in-cust-addr" rows="2" oninput="buildPreview()"
-                                placeholder="ระบุที่อยู่ลูกค้า..."></textarea>
+                                placeholder="Enter customer address..."></textarea>
                         </div>
                         <div class="form-group full-width">
-                            <label>ชื่อโปรเจ็ค (Project Name)</label>
-                            <input type="text" id="in-proj-name" value="" placeholder="ระบุชื่อโปรเจ็ค..."
+                            <label>ชื่อโปรเจ็ค</label>
+                            <input type="text" id="in-proj-name" value="" placeholder="Enter project name..."
                                 oninput="buildPreview()">
                         </div>
                     </div>
@@ -94,7 +97,7 @@
                 <!-- Section: Line Items -->
                 <div class="form-section">
                     <div class="flex-between">
-                        <h3><i class="fas fa-list-ul"></i> รายการสินค้า / บริการ</h3>
+                        <h3><i class="fas fa-list-ul"></i>รายละเอียดสินค้า / บริการ</h3>
                         <button type="button" class="btn btn-secondary btn-sm" onclick="addItemLine()">
                             <i class="fas fa-plus"></i> เพิ่มรายการ
                         </button>
@@ -107,37 +110,46 @@
 
                 <!-- Section: Summary Options -->
                 <div class="form-section">
-                    <h3><i class="fas fa-calculator"></i> สรุปยอดเงิน</h3>
+                    <h3><i class="fas fa-calculator"></i> รายละเอียดสรุป</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>ส่วนลดพิเศษ (Special Discount)</label>
+                            <label>ส่วนลด</label>
                             <input type="number" id="in-special-discount" value="0" step="0.01"
-                                oninput="buildPreview()">
+                                oninput="state.discount = Number(this.value); buildPreview()">
                         </div>
                         <div class="form-group">
                             <label>ภาษีมูลค่าเพิ่ม (%)</label>
                             <input type="number" id="in-doc-vat" value="7" oninput="buildPreview()">
                         </div>
                         <div class="form-group full-width">
-                            <label>รายละเอียดการชำระเงิน (Payment Detail) [แสดงใต้ตารางชำระเงิน]</label>
+                            <label>รายละเอียดการชำระเงิน</label>
                             <textarea id="in-payment-detail" rows="2" oninput="buildPreview()"
-                                placeholder="ตัวอย่าง: โอนเข้าบัญชีธนาคาร กสิกรไทย..."></textarea>
+                                placeholder="e.g., Bank Transfer to Kasikorn Bank..."></textarea>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Section: Note -->
+                <div class="form-section">
+                    <h3><i class="fas fa-sticky-note"></i> หมายเหตุ / Note</h3>
+                    <div class="form-group full-width">
+                        <textarea id="in-note" placeholder="ระบุหมายเหตุ..."
+                            oninput="state.note = this.value; buildPreview()"></textarea>
                     </div>
                 </div>
 
                 <!-- Section: Signatures -->
                 <div class="form-section">
-                    <h3><i class="fas fa-signature"></i> ข้อมูลลายเซ็น</h3>
+                    <h3><i class="fas fa-signature"></i> Signatures</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>ผู้รับเงิน (Bill Receiver)</label>
-                            <input type="text" id="in-sign-receiver" value="" placeholder="ระบุชื่อผู้รับเงิน..."
+                            <label>ผู้รับเงิน</label>
+                            <input type="text" id="in-sign-receiver" value="" placeholder="Enter receiver name..."
                                 oninput="buildPreview()">
                         </div>
                         <div class="form-group">
-                            <label>ผู้รับมอบอำนาจ (Authorized Sign.)</label>
-                            <input type="text" id="in-sign-auth" value="" placeholder="ระบุชื่อผู้อนุมัติ..."
+                            <label>ผู้มีอำนาจลงนาม</label>
+                            <input type="text" id="in-sign-auth" value="" placeholder="Enter authorized name..."
                                 oninput="buildPreview()">
                         </div>
                     </div>
@@ -147,7 +159,12 @@
                 <div class="form-section print-section">
                     <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn"
                         onclick="window.print()" style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px;">
-                        <i class="fas fa-print"></i> พิมพ์ใบเสร็จรับเงิน (A4)
+                        <i class="fas fa-print"></i> Print Receipt (A4)
+                    </button>
+                    <button type="button" id="btn-save-cloud" class="btn btn-success btn-large full-width-btn"
+                        onclick="saveDocumentToFirestore()"
+                        style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px; background-color: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                        <i class="fas fa-cloud-upload-alt"></i> Save to Cloud
                     </button>
                 </div>
 

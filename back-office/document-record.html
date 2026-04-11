@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kitten Code — Document Records">
+    <title>Document Records — Kitten Code</title>
+    <link rel="stylesheet" href="../assets/css/finance.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        .badge-quote {
+            background: rgba(14, 165, 233, 0.12);
+            color: #0ea5e9;
+            border: 1px solid rgba(14, 165, 233, 0.35);
+        }
+        .badge-invoice {
+            background: rgba(139, 92, 246, 0.12);
+            color: #8b5cf6;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+        }
+        .badge-receipt {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="vis-container">
+        <div class="app">
+            <div class="header">
+                <div class="logo">Kitten<span>Documents</span></div>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('all')">All Documents</button>
+                    <button class="tab" onclick="switchTab('quotations')">Quotations</button>
+                    <button class="tab" onclick="switchTab('invoices')">Invoices</button>
+                    <button class="tab" onclick="switchTab('receipts')">Receipts</button>
+                </div>
+            </div>
+
+            <div id="page-records" class="page active">
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title">Document Records</div>
+                        <div style="display:flex; gap: 8px;">
+                            <a href="quotaion.html" class="action-btn" style="text-decoration:none;">+ Quotation</a>
+                            <a href="invoice.html" class="action-btn" style="text-decoration:none;">+ Invoice</a>
+                            <a href="receipt.html" class="action-btn" style="text-decoration:none;">+ Receipt</a>
+                        </div>
+                    </div>
+                    
+                    <div class="table-scroll-wrapper">
+                        <table class="txn-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Doc No.</th>
+                                    <th style="text-align:center;">Type</th>
+                                    <th>Customer</th>
+                                    <th style="text-align:right;">Total Amount</th>
+                                    <th style="text-align:center;">Status</th>
+                                    <th style="text-align:center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doc-tbody">
+                                <tr><td colspan="7" style="text-align:center;">Loading documents...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../assets/js/document-record.js" type="module"></script>
+        <script type="module">
+            import { onAuthStateChanged, auth } from '../assets/js/firebase-config.js';
+            onAuthStateChanged(auth, (user) => {
+                if (!user) { window.location.replace('login.html'); }
+            });
+        </script>
+    </div>
+</body>
+
+</html>

@@ -38,7 +38,7 @@ const CHART_COLORS = [
 ];
 
 // ── Number formatter ──────────────────────────────────────────
-const fmtTHB = (n) => '฿' + Math.round(n).toLocaleString('th-TH');
+const fmtTHB = (n) => '฿' + Math.round(n).toLocaleString('en-US');
 const fmtShort = (n) => {
     const abs = Math.abs(n);
     if (abs >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
@@ -181,19 +181,19 @@ class FinancialDashboard {
         // Pending: show count + amount
         const pendEl = document.getElementById('kpi-pend');
         if (pendEl) pendEl.innerHTML = `
-            <span style="display:block;">${pendCount} รายการ</span>
+            <span style="display:block;">${pendCount} Items</span>
             <span style="font-size:16px;font-weight:600;opacity:0.7;">${fmtTHB(pend)}</span>
         `;
 
         // Net badge
         const badge = document.getElementById('kpi-net-badge');
         if (badge) {
-            badge.textContent = net >= 0 ? '▲ กำไร' : '▼ ขาดทุน';
+            badge.textContent = net >= 0 ? '▲ Profit' : '▼ Loss';
             badge.className = 'kpi-badge ' + (net >= 0 ? 'badge-pos' : 'badge-neg');
         }
 
         // Period label
-        const label = this._period === 'quarter' ? 'ไตรมาสนี้' : 'เดือนนี้';
+        const label = this._period === 'quarter' ? 'This Year' : 'This Month';
         document.querySelectorAll('.kpi-period-label').forEach(el => { el.textContent = label; });
     }
 
@@ -218,7 +218,7 @@ class FinancialDashboard {
         const months = pastMonths(6);
         const labels = months.map(m => {
             const [y, mo] = m.split('-');
-            return new Date(+y, +mo - 1, 1).toLocaleString('th-TH', { month: 'short', year: '2-digit' });
+            return new Date(+y, +mo - 1, 1).toLocaleString('en-US', { month: 'short', year: '2-digit' });
         });
 
         const netByMonth = months.map(m => {
@@ -254,7 +254,7 @@ class FinancialDashboard {
                 labels,
                 datasets: [
                     {
-                        label: 'รายรับ',
+                        label: 'Income',
                         data: incByMonth,
                         borderColor: '#10B981',
                         backgroundColor: 'rgba(16,185,129,0.08)',
@@ -267,7 +267,7 @@ class FinancialDashboard {
                         borderWidth: 2.5
                     },
                     {
-                        label: 'รายจ่าย',
+                        label: 'Expenses',
                         data: expByMonth,
                         borderColor: '#F97316',
                         backgroundColor: 'rgba(249,115,22,0.06)',
@@ -280,7 +280,7 @@ class FinancialDashboard {
                         borderWidth: 2.5
                     },
                     {
-                        label: 'กำไรสุทธิ',
+                        label: 'Net Profit',
                         data: netByMonth,
                         borderColor: '#00A3FF',
                         backgroundColor: 'rgba(0,163,255,0.08)',
@@ -364,7 +364,7 @@ class FinancialDashboard {
 
         if (!catTotals.length) {
             const wrap = document.getElementById('donut-legend');
-            if (wrap) wrap.innerHTML = '<div class="empty-state">ไม่มีข้อมูลรายจ่าย</div>';
+            if (wrap) wrap.innerHTML = '<div class="empty-state">No expense data</div>';
             return;
         }
 
@@ -430,7 +430,7 @@ class FinancialDashboard {
             .slice(0, 5);
 
         if (!recent.length) {
-            tbody.innerHTML = `<tr><td colspan="5" class="empty-state">ยังไม่มีรายการ</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No transactions yet</td></tr>`;
             return;
         }
 
@@ -455,9 +455,9 @@ class FinancialDashboard {
     }
 
     _statusBadge(status) {
-        if (status === 2) return '<span class="status-badge sb-paid">✓ จ่ายแล้ว</span>';
-        if (status === 1) return '<span class="status-badge sb-pending">⏳ รอจ่าย</span>';
-        return '<span class="status-badge sb-rejected">✕ ปฏิเสธ</span>';
+        if (status === 2) return '<span class="status-badge sb-paid">✓ Paid</span>';
+        if (status === 1) return '<span class="status-badge sb-pending">⏳ Pending</span>';
+        return '<span class="status-badge sb-rejected">✕ Rejected</span>';
     }
 
     // ── Security & System Panel ───────────────────────────────
@@ -467,7 +467,7 @@ class FinancialDashboard {
 
         const user = this._currentUser;
         const lastLogin = user?.metadata?.lastSignInTime
-            ? new Date(user.metadata.lastSignInTime).toLocaleString('th-TH', {
+            ? new Date(user.metadata.lastSignInTime).toLocaleString('en-US', {
                 day: 'numeric', month: 'short', year: 'numeric',
                 hour: '2-digit', minute: '2-digit'
               })
@@ -513,7 +513,7 @@ class FinancialDashboard {
                     <span class="sec-dot dot-warn"></span>
                     <div class="sec-content">
                         <div class="sec-label">Dependabot</div>
-                        <div class="sec-value">ตรวจสอบบน GitHub</div>
+                        <div class="sec-value">Check on GitHub</div>
                         <div class="sec-meta">github.com/Kittencode-co-ltd</div>
                     </div>
                 </div>

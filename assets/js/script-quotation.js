@@ -229,7 +229,7 @@ function createPageDOM(sv) {
             <!-- Header -->
             <div class="header-section flex-between align-start" style="margin-bottom: 15px;">
                 <div class="logo-area">
-                    <img src="LOGO-KittenCode + QR +Bar.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
+                    <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
                 </div>
                 <div class="company-details">
                     <h1 class="company-name">Kitten Code</h1>
@@ -286,6 +286,7 @@ function createPageDOM(sv) {
             </table>
             
             <div class="tfoot-placeholder"></div>
+            <div class="note-placeholder"></div>
             <div class="signatures-placeholder" style="margin-top: auto;"></div>
         </div>
     `;
@@ -369,16 +370,18 @@ function buildPreview() {
     const noteText = state.note || '';
     const isVatAdded = vatRate > 0;
     const isDiscounted = discountAmount > 0;
-    // Count rows for rowspan: รวมเงิน + ส่วนลด(optional) + vat(optional) + รวมทั้งสิ้น = 2~4
     const summaryRows = 2 + (isDiscounted ? 1 : 0) + (isVatAdded ? 1 : 0);
+
+    const noteHTML = noteText ? `<div style="text-align:left; padding: 10px; font-size: 13px;"><strong>หมายเหตุ : </strong><span style="white-space: pre-wrap;">${escapeHTML(noteText)}</span></div>` : '';
 
     const summaryHTML = `
             <table class="quote-table no-top-margin summary-table" style="width: 100%; border-collapse: collapse; border-top: none; margin-top: -1px;">
                 <tbody>
                     <tr>
-                        <td colspan="2" rowspan="${summaryRows}" class="text-amount-cell" style="width: 56%; border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: middle; background: #fafafa;">
-                            ${noteText ? `<div style="text-align:left; margin-bottom: 8px;"><strong>หมายเหตุ : </strong><span style="white-space: pre-wrap;">${escapeHTML(noteText)}</span></div>` : ''}
-                            <strong>ตัวอักษร : </strong><span>${ArabicNumberToText(grandTotal)}</span>
+                        <td colspan="2" rowspan="${summaryRows}" class="text-amount-cell" style="width: 56%; border: 1px solid #ddd; padding: 15px; text-align: center; vertical-align: top; background: #fafafa;">
+                            <div style="margin-top: 15px; background: #eee; padding: 8px; display: inline-block; border-radius: 4px; width: 100%;">
+                                <strong>ตัวอักษร : </strong><span>${ArabicNumberToText(grandTotal)}</span>
+                            </div>
                         </td>
                         <td colspan="2" class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right; width: 27%;">รวมเงิน</td>
                         <td class="summary-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right; width: 17%;">${formatMoney(subtotal)}</td>
@@ -423,11 +426,13 @@ function buildPreview() {
         </div>
             `;
 
+    currentPage.querySelector('.note-placeholder').innerHTML = noteHTML;
     currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML;
     currentPage.querySelector('.signatures-placeholder').innerHTML = signaturesHTML;
 
     if (wrapper.scrollHeight > wrapper.clientHeight) {
         // Doesn't fit in the current page!
+        currentPage.querySelector('.note-placeholder').innerHTML = '';
         currentPage.querySelector('.tfoot-placeholder').innerHTML = '';
         currentPage.querySelector('.signatures-placeholder').innerHTML = '';
 
@@ -436,7 +441,8 @@ function buildPreview() {
         pages.push(currentPage);
 
         // Remove the negative margin on a new isolated page so it doesn't overlap header
-        currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML.replace('margin-top: -1px;', 'margin-top: 0;');
+        currentPage.querySelector('.note-placeholder').innerHTML = noteHTML;
+            currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML.replace('margin-top: -1px;', 'margin-top: 0;');
         currentPage.querySelector('.signatures-placeholder').innerHTML = signaturesHTML;
     }
 
@@ -449,3 +455,112 @@ function buildPreview() {
 
     container.scrollTop = scrollPos;
 }
+
+// --- Firestore Integration ---
+const showSaveToast = (message, type = 'success') => {
+    if(document.getElementById('saveToast')) {
+        document.getElementById('saveToast').remove();
+    }
+    const toast = document.createElement('div');
+    toast.id = 'saveToast';
+    toast.className = 'kc-toast-container';
+    toast.innerHTML = `
+        <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} kc-toast-icon" style="color: ${type === 'success' ? '#10b981' : '#ef4444'}"></i>
+        <div class="kc-toast-content">
+            <span class="kc-toast-title">${type === 'success' ? 'สำเร็จ (Success)' : 'ข้อผิดพลาด (Error)'}</span>
+            <span class="kc-toast-message">${message}</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
+};
+
+window.saveDocumentToFirestore = async function() {
+    const btnSave = document.getElementById('btn-save-cloud');
+    if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    }
+
+    try {
+        const { db, auth, doc, setDoc, serverTimestamp } = await import('./firebase-config.js');
+
+        if (!auth.currentUser) {
+            throw new Error("You must be logged in to save documents.");
+        }
+
+        const docNo = getInputValue('doc-no');
+        const custName = getInputValue('cust-name');
+
+        if (!docNo || !custName) {
+            throw new Error("กรุณากรอก 'เลขที่ใบเสนอราคา' และ 'ชื่อลูกค้า' (Missing Document No or Customer Name)");
+        }
+
+        // Calculate totals for quick querying
+        let subtotal = 0;
+        state.items.forEach(item => { subtotal += (item.qty * item.price); });
+        
+        const vatRate = Number(getInputValue('doc-vat')) || 0;
+        const discountAmount = state.discount || 0;
+        const afterDiscount = subtotal - discountAmount;
+        const vatAmount = afterDiscount * (vatRate / 100);
+        const grandTotal = afterDiscount + vatAmount;
+
+        const quotationData = {
+            docNo,
+            docDate: getInputValue('doc-date') || new Date().toISOString().split('T')[0],
+            docTerms: getInputValue('doc-terms'),
+            docCredit: getInputValue('doc-credit'),
+            vatRate,
+            discountAmount,
+            custName: escapeHTML(custName),
+            custAddr: escapeHTML(getInputValue('cust-addr')),
+            custTel: escapeHTML(getInputValue('cust-tel')),
+            custTax: escapeHTML(getInputValue('cust-tax')),
+            projName: escapeHTML(getInputValue('proj-name')),
+            projContact: escapeHTML(getInputValue('proj-contact')),
+            projTel: escapeHTML(getInputValue('proj-tel')),
+            note: escapeHTML(state.note || ''),
+            signBuyer: escapeHTML(getInputValue('sign-buyer')),
+            signPrep: escapeHTML(getInputValue('sign-prep')),
+            signAppr: escapeHTML(getInputValue('sign-appr')),
+            items: state.items.map(item => ({
+                desc: escapeHTML(item.desc),
+                qty: Number(item.qty),
+                price: Number(item.price)
+            })),
+            amountTotal: grandTotal,
+            subtotal,
+            type: 'quotation',
+            status: 'Pending',
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            updatedBy: auth.currentUser.uid
+        };
+
+        // Use setDoc with a custom ID (docNo) to avoid duplicates if saved multiple times
+        await setDoc(doc(db, 'quotations', docNo), quotationData);
+
+        showSaveToast("บันทึกใบเสนอราคาไปยังระบบเรียบร้อยแล้ว", "success");
+        // Reset button state
+        setTimeout(() => {
+            if (btnSave) {
+                btnSave.disabled = false;
+                btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+            }
+        }, 3000);
+
+    } catch (error) {
+        console.error("Error saving document:", error);
+        showSaveToast(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล", "error");
+        alert("Error: " + (error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล"));
+        if (btnSave) {
+            btnSave.disabled = false;
+            btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+        }
+    }
+};

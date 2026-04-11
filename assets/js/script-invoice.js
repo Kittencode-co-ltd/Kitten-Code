@@ -4,7 +4,7 @@ const escapeHTML = (str) => {
 };
 
 let state = {
-    items: [{ id: generateId(), desc: "", qty: 1, price: 0, discount: 0 }],
+    items: [{ id: generateId(), desc: "", qty: 1, price: 0 }],
     discount: 0,
     note: ""
 };
@@ -35,17 +35,18 @@ function saveDraft() {
     document.querySelectorAll('.form-panel input, .form-panel textarea, .form-panel select').forEach(el => {
         if(el.id) draft.inputs[el.id] = el.value;
     });
-    localStorage.setItem('draft_receipt_data', JSON.stringify(draft));
+    localStorage.setItem('draft_invoice_data', JSON.stringify(draft));
 }
 
 function restoreDraft() {
-    const saved = localStorage.getItem('draft_receipt_data');
+    const saved = localStorage.getItem('draft_invoice_data');
     if (saved) {
         try {
             const draft = JSON.parse(saved);
             state = draft.state;
             Object.keys(draft.inputs).forEach(id => {
                 const el = document.getElementById(id);
+                // Sanitize upon restore to maintain security
                 if(el) el.value = escapeHTML(draft.inputs[id]);
             });
             showDraftToast();
@@ -54,7 +55,7 @@ function restoreDraft() {
 }
 
 window.clearDraft = function() {
-    localStorage.removeItem('draft_receipt_data');
+    localStorage.removeItem('draft_invoice_data');
     location.reload();
 };
 // ------------------------------
@@ -74,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Bind all inputs to buildPreview
     document.querySelectorAll('.form-panel input, .form-panel textarea, .form-panel select').forEach(el => {
         el.addEventListener('input', () => buildPreview());
-        el.addEventListener('change', () => buildPreview());
     });
 
     restoreDraft();
@@ -87,13 +87,15 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => buildPreview(), 500);
 });
 
+// Update functions are now just buildPreview
 function updatePreview() { buildPreview(); }
+function updatePreviewFromItems() { buildPreview(); }
 
 // Generate unique ID
 function generateId() { return Date.now() + Math.floor(Math.random() * 100); }
 
 function addItemLine() {
-    state.items.push({ id: generateId(), desc: "", qty: 1, price: 0, discount: 0 });
+    state.items.push({ id: generateId(), desc: "", qty: 1, price: 0 });
     renderItemsForm();
     buildPreview();
 }
@@ -134,7 +136,6 @@ function renderItemsForm() {
                         <label>ราคา/หน่วย</label>
                         <input type="number" step="0.01" value="${item.price}" oninput="handleItemChange(${item.id}, 'price', this.value)">
                     </div>
-                   
                 </div>
             </div>
         `;
@@ -147,7 +148,7 @@ function formatMoney(amount) {
 }
 
 function formatQty(qty) {
-    return Number(qty).toLocaleString('en-US', { maximumFractionDigits: 0 }); // Int for mostly qty
+    return Number(qty).toLocaleString('en-US', { maximumFractionDigits: 2 });
 }
 
 function getInputValue(id) {
@@ -157,12 +158,13 @@ function getInputValue(id) {
 
 function getThaiDate(dateString) {
     if (!dateString) return '';
-    const months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+    const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    // Manually parse YYYY-MM-DD to avoid timezone shifting timezone offsets for midnight UTC
     const parts = dateString.split('-');
     if (parts.length !== 3) return '';
     const d = new Date(parts[0], parts[1] - 1, parts[2]);
     if (isNaN(d)) return '';
-    return `${String(d.getDate()).padStart(2, '0')}/${months[d.getMonth()]}/${d.getFullYear() + 543}`;
+    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
 }
 
 function ArabicNumberToText(Number) {
@@ -217,13 +219,6 @@ function ProcessPart(str, NumberValues, DigitValues) {
     return text;
 }
 
-// Checkbox helper to set check based on condition
-function renderCheckbox(checked) {
-    return checked ? 
-        '<i class="fa-solid fa-square-check" style="color: #333; margin-right: 4px; font-size: 14px;"></i>' : 
-        '<i class="fa-regular fa-square" style="color: #333; margin-right: 4px; font-size: 14px;"></i>';
-}
-
 function createPageDOM(sv) {
     const page = document.createElement('div');
     page.className = 'a4-page';
@@ -246,29 +241,28 @@ function createPageDOM(sv) {
                 </div>
             </div>
 
-            <h2 class="doc-title" style="text-align: center; margin-bottom: 20px; font-size: 18px;">ใบเสร็จรับเงิน (Receipt)</h2>
+            <h2 class="doc-title" style="text-align: center; margin-bottom: 20px; font-size: 18px;">ใบแจ้งหนี้ (Invoice)</h2>
 
             <!-- Flex Row for Details -->
             <div class="doc-info-section flex-between align-start" style="margin-bottom: 20px; font-size: 13px; align-items: flex-start;">
                 <div class="info-group" style="width: 54%;">
                     <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custName)}</span></div>
                     <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ที่อยู่ :</span> <span class="info-value line-break" style="flex: 1;">${escapeHTML(sv.custAddr)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">โทร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTel)}</span></div>
                     <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 160px; font-weight: bold;">เลขประจำตัวผู้เสียภาษีอากร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTax)}</span></div>
                     
                     <div class="customer-project-section" style="margin-top: 15px;">
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อโปรเจ็ค :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projName)}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 120px; font-weight: bold;">เลขอ้างอิง P.O. :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.docRef)}</span></div>
                     </div>
                 </div>
                 
                 <div class="info-group right-align" style="width: 42%; margin-top: -5px;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                         <colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เลขที่ใบเสร็จ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docNo)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เลขที่ใบแจ้งหนี้ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docNo)}</td></tr>
                         <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">วันที่ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docDate)}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">ชำระโดย :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docPayment)}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">พนักงานขาย :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docSalesman)}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เลขที่ใบแจ้งหนี้ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docInvoice)}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เอกสารอ้างอิง :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docRef)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">ครบกำหนด :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docDueDate)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เงื่อนไขชำระเงิน :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docTerms)}</td></tr>
                         <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">หน้า :</td><td class="page-number-display" style="padding: 0 0 6px 0; white-space: nowrap;"></td></tr>
                     </table>
                 </div>
@@ -279,8 +273,8 @@ function createPageDOM(sv) {
                 <thead>
                     <tr>
                         <th class="col-no" style="width: 6%; border: 1px solid #ddd; padding: 10px; text-align: center; background: #f8f9fa;">ลำดับ</th>
-                        <th class="col-desc" style="width: 40%; border: 1px solid #ddd; padding: 10px; text-align: center; background: #f8f9fa;">รายละเอียดสินค้า / บริการ</th>
-                        <th class="col-qty" style="width: 9%; border: 1px solid #ddd; padding: 10px; text-align: center; background: #f8f9fa;">จำนวน</th>
+                        <th class="col-desc" style="width: 50%; border: 1px solid #ddd; padding: 10px; text-align: center; background: #f8f9fa;">รายละเอียดสินค้า / บริการ</th>
+                        <th class="col-qty" style="width: 12%; border: 1px solid #ddd; padding: 10px; text-align: center; background: #f8f9fa;">จำนวน</th>
                         <th class="col-price" style="width: 15%; border: 1px solid #ddd; padding: 10px; text-align: center; background: #f8f9fa;">ราคา/หน่วย</th>
                         <th class="col-amount" style="width: 17%; border: 1px solid #ddd; padding: 10px; text-align: center; background: #f8f9fa;">จำนวนเงิน</th>
                     </tr>
@@ -290,6 +284,7 @@ function createPageDOM(sv) {
             </table>
             
             <div class="tfoot-placeholder"></div>
+            <div class="payment-placeholder"></div>
             <div class="note-placeholder"></div>
             <div class="signatures-placeholder" style="margin-top: auto;"></div>
         </div>
@@ -304,20 +299,19 @@ function buildPreview() {
 
     // Remember scroll position to snap back
     const scrollPos = container.scrollTop;
+
     container.innerHTML = '';
 
     const stateVars = {
         docNo: getInputValue('doc-no') || '-',
         docDate: getThaiDate(getInputValue('doc-date')),
-        docPayment: getInputValue('doc-payment') || '-',
-        docSalesman: getInputValue('doc-salesman') || '-',
-        docInvoice: getInputValue('doc-invoice') || '-',
+        docDueDate: getThaiDate(getInputValue('doc-due-date')) || '-',
+        docTerms: getInputValue('doc-terms') || '-',
         docRef: getInputValue('doc-ref') || '-',
-        projName: getInputValue('proj-name') || '-',
         custName: getInputValue('cust-name') || '-',
-        custTax: getInputValue('cust-tax') || '-',
         custAddr: getInputValue('cust-addr') || '-',
-        paymentDetail: getInputValue('payment-detail') || '',
+        custTel: getInputValue('cust-tel') || '-',
+        custTax: getInputValue('cust-tax') || '-',
         signReceiver: getInputValue('sign-receiver') || '',
         signAuth: getInputValue('sign-auth') || ''
     };
@@ -330,12 +324,12 @@ function buildPreview() {
     let tbody = currentPage.querySelector('.table-body');
     let wrapper = currentPage.querySelector('.content-wrapper');
 
-    let subtotalAmount = 0;
+    let subtotal = 0;
 
-    // Add Items iteratively
+    // Add Items iteratively to measure height
     state.items.forEach((item, index) => {
-        const lineTotal = (item.qty * item.price);
-        subtotalAmount += lineTotal;
+        const amount = item.qty * item.price;
+        subtotal += amount;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -343,11 +337,13 @@ function buildPreview() {
             <td class="col-desc" style="border: 1px solid #ddd; padding: 8px; white-space: pre-wrap; vertical-align: top;">${escapeHTML(item.desc)}</td>
             <td class="col-qty" style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top;">${formatQty(item.qty)}</td>
             <td class="col-price" style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">${formatMoney(item.price)}</td>
-            <td class="col-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">${formatMoney(lineTotal)}</td>
+            <td class="col-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">${formatMoney(amount)}</td>
         `;
         tbody.appendChild(tr);
 
-        // Measure using absolute pixel threshold for A4
+        console.log(`Item ${index}: scrollHeight = ${wrapper.scrollHeight} `);
+
+        // Measure using absolute pixel threshold for A4 (1122px at 96DPI)
         if (wrapper.scrollHeight > wrapper.clientHeight && tbody.children.length > 1) {
             tr.remove(); // Remove from this page
 
@@ -362,79 +358,140 @@ function buildPreview() {
         }
     });
 
-    // Calculate Totals
-    const discountAmount = state.discount || 0;
-    const afterDiscount = subtotalAmount - discountAmount;
     const vatRate = Number(getInputValue('doc-vat')) || 0;
+    const discountAmount = state.discount || 0;
+    const afterDiscount = subtotal - discountAmount;
     const vatAmount = afterDiscount * (vatRate / 100);
     const grandTotal = afterDiscount + vatAmount;
+    const noteText = state.note || '';
     const isVatAdded = vatRate > 0;
     const isDiscounted = discountAmount > 0;
-    const noteText = state.note || '';
+    const summaryRows = 2 + (isDiscounted ? 1 : 0) + (isVatAdded ? 1 : 0);
 
-    let totalRowsCount = 2; // Subtotal + Grand Total
-    if (isDiscounted) totalRowsCount += 1;
-    if (isVatAdded) totalRowsCount += 1;
+    const selectedBank = (document.getElementById('in-payment-method') || {}).value || 'none';
 
-    // Checkbox boolean checks
-    const chkCash = renderCheckbox(stateVars.docPayment === 'เงินสด');
-    const chkTrans = renderCheckbox(stateVars.docPayment === 'โอนเงิน');
-    const chkCheque = renderCheckbox(stateVars.docPayment === 'เช็คธนาคาร');
-    const chkOther = renderCheckbox(stateVars.docPayment === 'อื่นๆ');
+    const BANKS = {
+        kasikorn: {
+            name: 'KASIKORN BANK',
+            color: '#138f5b',
+            colorLight: '#1db26e',
+            bg: '#f0fdf4',
+            border: '#138f5b22',
+            account: '226-3-92729-2',
+        },
+        krungthai: {
+            name: 'KRUNGTHAI BANK',
+            color: '#1a56db',
+            colorLight: '#3b82f6',
+            bg: '#eff6ff',
+            border: '#1a56db22',
+            account: '665-6-09488-0',
+        }
+    };
 
-    const paymentDetailsHtml = `
-        <div style="text-align: left; margin-bottom: 10px; font-size: 11px;">
-            <div style="font-weight: bold; margin-bottom: 5px;">การชำระเงิน (Conditions of Payments)</div>
-            <div style="display: flex; gap: 10px; margin-bottom: 5px; flex-wrap: wrap;">
-                <span style="white-space: nowrap;">${chkCash} เงินสด</span>
-                <span style="white-space: nowrap;">${chkTrans} โอนเงิน</span>
-                <span style="white-space: nowrap;">${chkCheque} เช็คธนาคาร</span>
-                <span style="white-space: nowrap;">${chkOther} อื่นๆ</span>
+    const renderBankCard = (bank) => `
+        <div style="
+            background: #fff;
+            border: 1.5px solid ${bank.border};
+            border-radius: 7px;
+            padding: 12px 16px;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        ">
+            <div style="
+                position: absolute; top: 0; left: 0; right: 0; height: 4px;
+                background: linear-gradient(90deg, ${bank.color}, ${bank.colorLight});
+                border-radius: 7px 7px 0 0;
+            "></div>
+            <div style="margin-top: 6px;">
+                <div style="font-weight: 700; color: ${bank.color}; font-size: 13px; margin-bottom: 6px; letter-spacing: 0.02em;">🏦 ${bank.name}</div>
+                <table style="border: none; font-size: 12px; border-collapse: collapse; width: 100%;">
+                    <tr>
+                        <td style="color: #64748b; padding: 2px 10px 2px 0; white-space: nowrap; vertical-align: top;">ชื่อบัญชี</td>
+                        <td style="font-weight: 600; color: #1e293b; padding: 2px 0;">คิทเท่น โค้ด</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #64748b; padding: 2px 10px 2px 0; white-space: nowrap; vertical-align: top;">เลขบัญชี</td>
+                        <td style="padding: 2px 0;">
+                            <span style="
+                                font-weight: 700;
+                                color: ${bank.color};
+                                font-size: 15px;
+                                letter-spacing: 0.1em;
+                                background: ${bank.bg};
+                                padding: 2px 10px;
+                                border-radius: 4px;
+                                display: inline-block;
+                            ">${bank.account}</span>
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <div><span style="font-weight: bold;">รายละเอียด (Payment Detail):</span><br>${escapeHTML(stateVars.paymentDetail).replace(/\\n/g, '<br>')}</div>
         </div>
     `;
 
-    const noteHTML = noteText ? `<div style="text-align:left; padding: 10px; font-size: 13px;"><strong>หมายเหตุ : </strong><span style="white-space: pre-wrap;">${escapeHTML(noteText)}</span></div>` : '';
+    const paymentHTML = selectedBank !== 'none' && BANKS[selectedBank] ? `
+        <div style="
+            margin-top: 16px;
+            padding: 12px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        ">
+            <div style="
+                display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+            ">
+                <span style="
+                    background: #1e293b; color: #fff;
+                    padding: 2px 10px; border-radius: 4px;
+                    font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+                ">ช่องทางชำระเงิน</span>
+                <span style="color: #94a3b8; font-size: 11.5px;">Payment Information</span>
+            </div>
+            ${renderBankCard(BANKS[selectedBank])}
+        </div>
+    ` : '';
+
+    const noteHTML = noteText ? `<div style="text-align:left; padding: 10px 0 0 0; font-size: 13px;"><strong>หมายเหตุ : </strong><span style="white-space: pre-wrap;">${escapeHTML(noteText)}</span></div>` : '';
 
     const summaryHTML = `
             <table class="quote-table no-top-margin summary-table" style="width: 100%; border-collapse: collapse; border-top: none; margin-top: -1px;">
                 <tbody>
                     <tr>
-                        <td colspan="4" rowspan="${totalRowsCount}" class="text-amount-cell" style="width: 56%; border: 1px solid #ddd; padding: 15px; text-align: center; vertical-align: top; background: #fafafa;">
-                            ${paymentDetailsHtml}
+                        <td colspan="2" rowspan="${summaryRows}" class="text-amount-cell" style="width: 56%; border: 1px solid #ddd; padding: 15px; text-align: center; vertical-align: top; background: #fafafa;">
                             <div style="margin-top: 15px; background: #eee; padding: 8px; display: inline-block; border-radius: 4px; width: 100%;">
                                 <strong>ตัวอักษร : </strong><span>${ArabicNumberToText(grandTotal)}</span>
                             </div>
                         </td>
-                        <td class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right; width: 27%;">รวมเป็นเงิน</td>
-                        <td class="summary-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right; width: 17%;">${formatMoney(subtotalAmount)}</td>
+                        <td colspan="2" class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right; width: 27%;">รวมเงิน</td>
+                        <td class="summary-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right; width: 17%;">${formatMoney(subtotal)}</td>
                     </tr>
                     ${isDiscounted ? `
                     <tr>
-                        <td class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right;">ส่วนลด</td>
+                        <td colspan="2" class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right;">ส่วนลด</td>
                         <td class="summary-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right;">-${formatMoney(discountAmount)}</td>
                     </tr>
                     ` : ''}
                     ${isVatAdded ? `
+                <tr>
+                    <td colspan="2" class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right;">ภาษีมูลค่าเพิ่ม ${vatRate}%</td>
+                    <td class="summary-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right;">${formatMoney(vatAmount)}</td>
+                </tr>
+                ` : ''}
                     <tr>
-                        <td class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right;">ภาษีมูลค่าเพิ่ม ${vatRate}%</td>
-                        <td class="summary-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right;">${formatMoney(vatAmount)}</td>
-                    </tr>
-                    ` : ''}
-                    <tr>
-                        <td class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>จำนวนเงินรวมทั้งสิ้น</strong></td>
+                        <td colspan="2" class="summary-label" style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>รวมราคาทั้งสิ้น</strong></td>
                         <td class="summary-amount" style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>${formatMoney(grandTotal)}</strong></td>
                     </tr>
                 </tbody>
         </table>
-    `;
+            `;
 
     const signaturesHTML = `
-            <div class="signatures" style="display: flex; justify-content: space-around; margin-top: 40px; text-align: center; font-size: 13px;">
+        <div class="signatures" style="display: flex; justify-content: space-around; margin-top: 40px; text-align: center; font-size: 13px;">
             <div class="sig-box">
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
-                <div class="sig-role" style="font-weight: bold;">ผู้รับเงิน / Bill Receiver Signature</div>
+                <div class="sig-role" style="font-weight: bold;">ผู้รับใบแจ้งหนี้ / Bill Receiver Signature</div>
                 <div class="sig-name" style="margin-top: 5px; font-size: 11px;">วันที่ / Date ...../...../.....</div>
                 <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signReceiver)}</div>
             </div>
@@ -453,13 +510,14 @@ function buildPreview() {
     `;
 
     currentPage.querySelector('.note-placeholder').innerHTML = noteHTML;
+    currentPage.querySelector('.payment-placeholder').innerHTML = paymentHTML;
     currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML;
     currentPage.querySelector('.signatures-placeholder').innerHTML = signaturesHTML;
 
-    // Check layout spill again after injecting footer
     if (wrapper.scrollHeight > wrapper.clientHeight) {
-        // Doesn't fit! Move footer to new page.
+        // Doesn't fit in the current page!
         currentPage.querySelector('.note-placeholder').innerHTML = '';
+        currentPage.querySelector('.payment-placeholder').innerHTML = '';
         currentPage.querySelector('.tfoot-placeholder').innerHTML = '';
         currentPage.querySelector('.signatures-placeholder').innerHTML = '';
 
@@ -467,6 +525,8 @@ function buildPreview() {
         container.appendChild(currentPage);
         pages.push(currentPage);
 
+        // Remove the negative margin on a new isolated page so it doesn't overlap header
+        currentPage.querySelector('.payment-placeholder').innerHTML = paymentHTML;
         currentPage.querySelector('.note-placeholder').innerHTML = noteHTML;
         currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML.replace('margin-top: -1px;', 'margin-top: 0;');
         currentPage.querySelector('.signatures-placeholder').innerHTML = signaturesHTML;
@@ -523,67 +583,64 @@ window.saveDocumentToFirestore = async function() {
         const custName = getInputValue('cust-name');
 
         if (!docNo || !custName) {
-            throw new Error("กรุณากรอก 'เลขที่ใบเสร็จ' และ 'ชื่อลูกค้า' (Missing Document No or Customer Name)");
+            throw new Error("กรุณากรอก 'เลขที่ใบแจ้งหนี้' และ 'ชื่อลูกค้า' (Missing Document No or Customer Name)");
         }
 
         // Calculate totals for quick querying
-        let subtotalAmount = 0;
-        state.items.forEach(item => { 
-            subtotalAmount += (item.qty * item.price) - (item.discount || 0); 
-        });
-
-        const discountAmount = state.discount || 0;
-        const afterDiscount = subtotalAmount - discountAmount;
+        let subtotal = 0;
+        state.items.forEach(item => { subtotal += (item.qty * item.price); });
+        
         const vatRate = Number(getInputValue('doc-vat')) || 0;
+        const discountAmount = state.discount || 0;
+        const afterDiscount = subtotal - discountAmount;
         const vatAmount = afterDiscount * (vatRate / 100);
         const grandTotal = afterDiscount + vatAmount;
 
-        const receiptData = {
+        const invoiceData = {
             docNo,
             docDate: getInputValue('doc-date') || new Date().toISOString().split('T')[0],
-            docPayment: getInputValue('doc-payment'),
-            docSalesman: escapeHTML(getInputValue('doc-salesman')),
-            docInvoice: getInputValue('doc-invoice'),
+            docDueDate: getInputValue('doc-due-date'),
+            docTerms: getInputValue('doc-terms'),
             docRef: getInputValue('doc-ref'),
+            vatRate,
+            discountAmount,
             custName: escapeHTML(custName),
-            custTax: escapeHTML(getInputValue('cust-tax')),
             custAddr: escapeHTML(getInputValue('cust-addr')),
-            projName: escapeHTML(getInputValue('proj-name')),
-            paymentDetail: escapeHTML(getInputValue('payment-detail')),
+            custTel: escapeHTML(getInputValue('cust-tel')),
+            custTax: escapeHTML(getInputValue('cust-tax')),
             note: escapeHTML(state.note || ''),
             signReceiver: escapeHTML(getInputValue('sign-receiver')),
             signAuth: escapeHTML(getInputValue('sign-auth')),
-            vatRate,
-            discountAmount,
             items: state.items.map(item => ({
                 desc: escapeHTML(item.desc),
                 qty: Number(item.qty),
-                price: Number(item.price),
-                discount: Number(item.discount || 0)
+                price: Number(item.price)
             })),
             amountTotal: grandTotal,
-            subtotal: subtotalAmount,
-            type: 'receipt',
-            status: 'Completed',
+            subtotal,
+            type: 'invoice',
+            status: 'Pending',
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
-            userId: auth.currentUser.uid
+            updatedBy: auth.currentUser.uid
         };
 
-        // Use setDoc with docNo as document ID to prevent duplicates
-        await setDoc(doc(db, 'receipts', docNo), receiptData);
+        // Use setDoc with a custom ID (docNo) to avoid duplicates if saved multiple times
+        await setDoc(doc(db, 'invoices', docNo), invoiceData);
 
-        showSaveToast("บันทึกใบเสร็จรับเงินไปยังระบบเรียบร้อยแล้ว", "success");
-        
-        // Clear draft and refresh
+        showSaveToast("บันทึกใบแจ้งหนี้ไปยังระบบเรียบร้อยแล้ว", "success");
+        // Reset button state
         setTimeout(() => {
-            localStorage.removeItem('draft_receipt_data');
-            location.reload();
-        }, 1500);
+            if (btnSave) {
+                btnSave.disabled = false;
+                btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+            }
+        }, 3000);
 
     } catch (error) {
         console.error("Error saving document:", error);
         showSaveToast(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล", "error");
+        alert("Error: " + (error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล"));
         if (btnSave) {
             btnSave.disabled = false;
             btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';

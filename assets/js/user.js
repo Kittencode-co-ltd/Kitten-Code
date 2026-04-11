@@ -1,4 +1,4 @@
-        import { app, auth, db, onAuthStateChanged, createUserWithEmailAndPassword, signOut, collection, doc, setDoc, getDocs, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc } from './firebase-config.js';
+        import { app, auth, db, onAuthStateChanged, createUserWithEmailAndPassword, signOut, collection, doc, setDoc, addDoc, getDocs, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc } from './firebase-config.js';
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
         
@@ -92,6 +92,7 @@
 
         let userModalInstance;
         let deleteModalInstance;
+        let payrollModalInstance;
         let userToDeleteId = null;
 
         // Globals for inline onclick triggers
@@ -138,6 +139,83 @@
 
             userModalInstance.show();
         };
+        
+        window.preparePayrollModal = (userJson) => {
+            const user = JSON.parse(decodeURIComponent(userJson));
+            const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username;
+            
+            document.getElementById('payrollForm').reset();
+            document.getElementById('pUid').value = user.uid;
+            document.getElementById('pFullName').value = fullName;
+            document.getElementById('pDate').value = new Date().toISOString().split('T')[0];
+            
+            payrollModalInstance.show();
+        };
+
+        window.confirmPayroll = async (e) => {
+            e.preventDefault();
+            if(!auth.currentUser) {
+                alert("Security Error: You must be authenticated to perform this action.");
+                return;
+            }
+
+            const btn = document.getElementById('btnConfirmPayroll');
+            const targetUserName = document.getElementById('pFullName').value;
+            const projectRef = document.getElementById('pProjectRef').value;
+            const amountInput = document.getElementById('pAmount').value;
+            const selectedDate = document.getElementById('pDate').value;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+
+            try {
+                const payrollDoc = {
+                    date: selectedDate,
+                    catCode: "EXP-17", // Salary Category Code
+                    desc: `จ่ายเงินเดือน/ค่าจ้าง: ${targetUserName} (งาน: ${projectRef})`,
+                    amount: parseFloat(amountInput),
+                    contact: targetUserName,
+                    ref: "PAYROLL-" + Date.now(),
+                    payment_status: 2, // 2 = Paid
+                    paid_date: selectedDate,
+                    created_at: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "fin_transactions"), payrollDoc);
+                
+                payrollModalInstance.hide();
+            } catch (err) {
+                console.error("Payroll Error:", err);
+                alert("Failed to record payroll: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-check-circle me-1"></i> Confirm Payment';
+            }
+        };
+
+        function showToast(title, message) {
+            // Check if element exists, if not create basic wrapper
+            let toast = document.getElementById('payrollToast');
+            if(!toast) {
+                toast = document.createElement('div');
+                toast.id = 'payrollToast';
+                toast.className = 'kc-toast-container';
+                document.body.appendChild(toast);
+            }
+            
+            toast.innerHTML = `
+                <i class="bi bi-check-circle kc-toast-icon"></i>
+                <div class="kc-toast-content">
+                    <span class="kc-toast-title">${title}</span>
+                    <span class="kc-toast-message">${message}</span>
+                </div>
+            `;
+            
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
 
         window.promptDelete = (uid, fullName) => {
             userToDeleteId = uid;
@@ -168,6 +246,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             userModalInstance = new bootstrap.Modal(document.getElementById('userModal'));
             deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
+            payrollModalInstance = new bootstrap.Modal(document.getElementById('payrollModal'));
 
             ['mUsername', 'mEmail', 'mRole', 'mPosition', 'mFirstName', 'mLastName', 'mBirthDate', 'mPhone', 'mBankAccountName', 'mBankName', 'mBankAccountNumber'].forEach(id => {
                 const el = document.getElementById(id);
@@ -266,13 +345,13 @@
         window.loadPrevPage = async () => {
             if (currentPage <= 1 || !firstVisibleDoc) return;
             currentPage--;
-            await loadUsersData(query(collection(db, "users"), orderBy("created_at", "desc"), endBefore(firstVisibleDoc), limitToLast(PAGE_LIMIT)));
+            await loadUsersData(query(collection(db, "users"), orderBy("username", "asc"), endBefore(firstVisibleDoc), limitToLast(PAGE_LIMIT)));
         };
 
         window.loadNextPage = async () => {
             if (!lastVisibleDoc) return;
             currentPage++;
-            await loadUsersData(query(collection(db, "users"), orderBy("created_at", "desc"), startAfter(lastVisibleDoc), limit(PAGE_LIMIT)));
+            await loadUsersData(query(collection(db, "users"), orderBy("username", "asc"), startAfter(lastVisibleDoc), limit(PAGE_LIMIT)));
         };
 
         async function loadUsers(reset = false) {
@@ -281,7 +360,7 @@
                 firstVisibleDoc = null;
                 lastVisibleDoc = null;
             }
-            await loadUsersData(query(collection(db, "users"), orderBy("created_at", "desc"), limit(PAGE_LIMIT)));
+            await loadUsersData(query(collection(db, "users"), orderBy("username", "asc"), limit(PAGE_LIMIT)));
         }
 
         async function loadUsersData(q) {
@@ -331,6 +410,7 @@
             <td>${escapeHTML(user.position) || '-'}</td>
             <td>${roleBadge}</td>
             <td class="text-end pe-4">
+              <button class="btn btn-sm btn-outline-success me-1" onclick="preparePayrollModal('${userJson}')" title="Payroll (EXP-17)"><i class="bi bi-currency-dollar"></i></button>
               <button class="btn btn-sm btn-light me-1" onclick="prepareUpdateModal('${userJson}')"><i class="bi bi-pencil"></i></button>
               <button class="btn btn-sm btn-outline-danger" onclick="promptDelete('${user.uid}', '${escapeHTML(fullName !== '<i>N/A</i>' ? fullName : user.username).replace(/'/g, "\\'")}')"><i class="bi bi-trash"></i></button>
             </td>

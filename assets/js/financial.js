@@ -116,8 +116,8 @@ function showMetricSkeleton() {
 }
 
 // ── Helpers ──────────────────────────────────────────────────
-function fmt(n)    { return '฿' + Math.round(n).toLocaleString('th-TH'); }
-function fmtNum(n) { return Math.round(n).toLocaleString('th-TH'); }
+function fmt(n)    { return '฿' + Math.round(n).toLocaleString('en-US'); }
+function fmtNum(n) { return Math.round(n).toLocaleString('en-US'); }
 
 function getCatByCode(code) { return _categories.find(c => c.code === code); }
 
@@ -168,9 +168,9 @@ function getPending(catCode) {
 }
 
 function statusBadge(status) {
-    if (status === 2) return '<span class="badge badge-paid">จ่ายแล้ว</span>';
-    if (status === 1) return '<span class="badge badge-pending">รอจ่าย</span>';
-    return '<span class="badge badge-rejected">ปฏิเสธ</span>';
+    if (status === 2) return '<span class="badge badge-paid">Paid</span>';
+    if (status === 1) return '<span class="badge badge-pending">Pending</span>';
+    return '<span class="badge badge-rejected">Rejected</span>';
 }
 
 // ── Tab Switching ─────────────────────────────────────────────
@@ -204,7 +204,7 @@ function renderDashboard() {
     const budgetEl = document.getElementById('budget-overview');
     const expCats  = _categories.filter(c => c.type === 2 && c.budget > 0);
     if (!expCats.length) {
-        budgetEl.innerHTML = '<div class="empty-state">ยังไม่มีหมวดรายจ่ายที่ตั้งงบ</div>';
+        budgetEl.innerHTML = '<div class="empty-state">No expense categories with a budget set yet.</div>';
     } else {
         budgetEl.innerHTML = expCats.map(c => {
             const used       = getUsed(c.code);
@@ -212,15 +212,15 @@ function renderDashboard() {
             const pct        = Math.min(100, Math.round((used / c.budget) * 100));
             const fillClass  = pct >= 90 ? 'fill-over' : pct >= 70 ? 'fill-warn' : 'fill-ok';
             const pendNote   = pendingAmt > 0
-                ? `<span style="font-size:11px;color:var(--color-warn);"> + ${fmt(pendingAmt)} รอจ่าย</span>`
+                ? `<span style="font-size:11px;color:var(--color-warn);"> + ${fmt(pendingAmt)} pending</span>`
                 : '';
             return `<div style="margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
             <span style="font-size:14px;">${c.name}</span>
-            <span style="font-size:14px;color:var(--text-secondary);">${fmtNum(used)} / ${fmtNum(c.budget)} บาท${pendNote}</span>
+            <span style="font-size:14px;color:var(--text-secondary);">${fmtNum(used)} / ${fmtNum(c.budget)} THB${pendNote}</span>
           </div>
           <div class="progress-bar"><div class="progress-fill ${fillClass}" style="width:${pct}%"></div></div>
-          <div class="pct">จ่ายแล้ว ${pct}% — คงเหลือ ${fmt(c.budget - used)}</div>
+          <div class="pct">Paid ${pct}% — Remaining ${fmt(c.budget - used)}</div>
         </div>`;
         }).join('');
     }
@@ -229,10 +229,10 @@ function renderDashboard() {
     const recentEl = document.getElementById('recent-txns');
     const recent = [..._transactions].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
     if (!recent.length) {
-        recentEl.innerHTML = '<div class="empty-state">ยังไม่มีรายการ</div>';
+        recentEl.innerHTML = '<div class="empty-state">No recent transactions.</div>';
         return;
     }
-    recentEl.innerHTML = `<table class="txn-table"><thead><tr><th>วันที่</th><th>รายการ</th><th style="text-align:center;">สถานะ</th><th style="text-align:right;">จำนวน</th></tr></thead><tbody>` +
+    recentEl.innerHTML = `<table class="txn-table"><thead><tr><th>Date</th><th>Description</th><th style="text-align:center;">Status</th><th style="text-align:right;">Amount</th></tr></thead><tbody>` +
         recent.map(t => {
             const cat  = getCatByCode(t.catCode);
             const cls  = cat?.type === 1 ? 'amount-inc' : 'amount-exp';
@@ -250,7 +250,7 @@ function renderDashboard() {
 function renderRegister() {
     const tbody = document.getElementById('cat-tbody');
     if (!_categories.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">ยังไม่มีหมวดหมู่</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No categories available.</td></tr>';
         return;
     }
     const today = new Date();
@@ -267,19 +267,19 @@ function renderRegister() {
         if (c.quota_unit && c.quota_value && c.last_reset_date) {
             const endDate   = calcQuotaEnd(c.last_reset_date, c.quota_value, c.quota_unit);
             const isExpired = endDate < today;
-            const endStr    = endDate.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
-            const unitLabel = c.quota_unit === 'days' ? 'วัน' : c.quota_unit === 'months' ? 'เดือน' : 'ปี';
+            const endStr    = endDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+            const unitLabel = c.quota_unit === 'days' ? 'days' : c.quota_unit === 'months' ? 'months' : 'years';
 
             quotaCell = `
               <div style="line-height:1.6;">
                 <span class="quota-period-tag">${c.quota_value} ${unitLabel}</span>
                 <div style="font-size:11px;margin-top:4px;color:${isExpired ? 'var(--color-exp)' : 'var(--text-secondary)'}">
                   ${isExpired
-                    ? '<span style="color:var(--color-exp);font-weight:600;">หมดอายุแล้ว</span>'
-                    : `สิ้นสุด: <span style="color:var(--accent-primary);">${escapeHTML(endStr)}</span>`}
+                    ? '<span style="color:var(--color-exp);font-weight:600;">Expired</span>'
+                    : `Ends: <span style="color:var(--accent-primary);">${escapeHTML(endStr)}</span>`}
                 </div>
                 ${isExpired
-                  ? `<button class="btn-reset-quota" onclick="resetQuota('${c.id}')">↺ รีเซ็ตงวด</button>`
+                  ? `<button class="btn-reset-quota" onclick="resetQuota('${c.id}')">↺ Reset Period</button>`
                   : ''}
               </div>`;
         }
@@ -287,15 +287,19 @@ function renderRegister() {
         return `<tr>
         <td><span class="tag-code">${escapeHTML(c.code)}</span></td>
         <td>${escapeHTML(c.name)}</td>
-        <td><span class="badge ${c.type === 1 ? 'badge-inc' : 'badge-exp'}">${c.type === 1 ? 'รายรับ' : 'รายจ่าย'}</span></td>
-        <td style="text-align:right;">${c.budget > 0 ? fmtNum(c.budget) : '<span style="color:var(--text-tertiary);font-size:11px;">ไม่จำกัด</span>'}</td>
+        <td><span class="badge ${c.type === 1 ? 'badge-inc' : 'badge-exp'}">${c.type === 1 ? 'Income' : 'Expense'}</span></td>
+        <td style="text-align:right;">${c.budget > 0 ? fmtNum(c.budget) : '<span style="color:var(--text-tertiary);font-size:11px;">Unlimited</span>'}</td>
         <td style="text-align:right;color:#993C1D;font-weight:500;">${fmtNum(used)}</td>
         <td style="text-align:right;">${remaining !== null
             ? `<span style="color:${remaining < 0 ? '#D85A30' : '#0F6E56'};font-weight:500;">${fmtNum(remaining)}</span>
                ${pct !== null ? `<div class="progress-bar" style="margin-top:4px;"><div class="progress-fill ${fillClass}" style="width:${pct}%"></div></div>` : ''}`
             : '<span style="color:var(--text-tertiary);font-size:11px;">-</span>'}</td>
         <td>${quotaCell}</td>
-        <td><button class="action-btn" onclick="deleteCategory('${c.id}')">ลบ</button></td>
+        <td>
+          <div style="display:flex;gap:4px;justify-content:center;">
+             <button class="action-btn" onclick="openEditModal('${c.id}', '${CATS_COL}')" title="Edit">Edit</button>
+          </div>
+        </td>
       </tr>`;
     }).join('');
 }
@@ -310,7 +314,7 @@ function renderTxns() {
     txns.sort((a, b) => b.date.localeCompare(a.date));
 
     const tbody = document.getElementById('txn-tbody');
-    if (!txns.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">ไม่พบรายการ</td></tr>'; return; }
+    if (!txns.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No transactions found.</td></tr>'; return; }
     tbody.innerHTML = txns.map(t => {
         const cat  = getCatByCode(t.catCode);
         const cls  = cat?.type === 1 ? 'amount-inc' : 'amount-exp';
@@ -322,9 +326,9 @@ function renderTxns() {
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                   Verify Payment
                 </button>
-                <button class="btn-txn-action btn-mark-rejected" onclick="updateDisbursementStatus('${t.id}', 0, '')" title="ปฏิเสธรายการนี้">
+                <button class="btn-txn-action btn-mark-rejected" onclick="updateDisbursementStatus('${t.id}', 0, '')" title="Reject this transaction">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                  ปฏิเสธ
+                  Reject
                 </button>
                </div>`
             : '';
@@ -338,7 +342,12 @@ function renderTxns() {
         <td style="text-align:center;">${statusBadge(t.payment_status)}</td>
         <td style="font-size:12px;color:var(--text-secondary);">${t.paid_date || '-'}</td>
         <td style="text-align:right;" class="${cls}">${sign}${fmt(t.amount)}</td>
-        <td style="text-align:center;min-width:160px;">${actionBtns}</td>
+        <td style="text-align:center;min-width:160px;">
+            <div style="display:flex;gap:4px;justify-content:center;margin-bottom:${t.payment_status === 1 ? '6px' : '0'};">
+                <button class="action-btn" onclick="openEditModal('${t.id}', '${TXNS_COL}')" title="Edit">Edit</button>
+            </div>
+            ${actionBtns}
+        </td>
       </tr>`;
     }).join('');
 }
@@ -354,7 +363,7 @@ function renderAddForm() {
     
     // Remember current value before wiping innerHTML to rebuild options
     const prevCat = sel.value; 
-    sel.innerHTML = _categories.map(c => `<option value="${c.code}">[${c.type === 1 ? 'รายรับ' : 'รายจ่าย'}] ${c.name}</option>`).join('');
+    sel.innerHTML = _categories.map(c => `<option value="${c.code}">[${c.type === 1 ? 'Income' : 'Expense'}] ${c.name}</option>`).join('');
     if (prevCat) sel.value = prevCat;
 
     if (!_txnDraftRestored) {
@@ -391,8 +400,8 @@ window.addCategory = async function () {
     const quotaUnit   = document.getElementById('cat-quota-unit').value || null;
     const resetDate   = document.getElementById('cat-reset-date').value || null;
 
-    if (!code || !name) { alert('กรุณากรอกรหัสและชื่อหมวดหมู่'); return; }
-    if (quotaUnit && (!quotaVal || quotaVal < 1)) { alert('กรุณาระบุจำนวนงวดโครตาให้ถูกต้อง'); return; }
+    if (!code || !name) { alert('Please enter both code and name.'); return; }
+    if (quotaUnit && (!quotaVal || quotaVal < 1)) { alert('Please enter a valid quota amount.'); return; }
 
     const data = {
         code, name, type, budget,
@@ -408,7 +417,7 @@ window.addCategory = async function () {
         ['cat-code', 'cat-name', 'cat-budget', 'cat-quota-value'].forEach(id => { document.getElementById(id).value = ''; });
         document.getElementById('cat-quota-unit').value = '';
         document.getElementById('cat-reset-date-group').style.display = 'none';
-    } catch (e) { alert('เกิดข้อผิดพลาด: ' + e.message); }
+    } catch (e) { alert('An error occurred: ' + e.message); }
 };
 
 // Reset quota: update last_reset_date to today for a category
@@ -416,16 +425,16 @@ window.resetQuota = async function (catId) {
     const today = new Date().toISOString().slice(0, 10);
     try {
         await updateDoc(doc(db, CATS_COL, catId), { last_reset_date: today, updated_at: serverTimestamp() });
-    } catch (e) { alert('รีเซ็ตงวดไม่สำเร็จ: ' + e.message); }
+    } catch (e) { alert('Failed to reset quota: ' + e.message); }
 };
 
 window.deleteCategory = async function (id) {
     const cat  = _categories.find(c => c.id === id);
     const inUse = _transactions.some(t => t.catCode === cat?.code);
-    if (inUse) { alert('ไม่สามารถลบได้ มีรายการที่ใช้งานหมวดนี้อยู่'); return; }
+    if (inUse) { alert('Cannot delete: This category is in use by transactions.'); return; }
     try {
         await deleteDoc(doc(db, CATS_COL, id));
-    } catch (e) { alert('เกิดข้อผิดพลาด: ' + e.message); }
+    } catch (e) { alert('An error occurred: ' + e.message); }
 };
 
 // ── CRUD: Transactions ────────────────────────────────────────
@@ -441,7 +450,7 @@ window.addTransaction = async function () {
 
     const msgEl = document.getElementById('add-msg');
     if (!date || !desc || !amount || !catCode) {
-        msgEl.innerHTML = '<span style="color:#D85A30;">กรุณากรอกข้อมูลให้ครบถ้วน</span>';
+        msgEl.innerHTML = '<span style="color:#D85A30;">Please fill in all required fields.</span>';
         return;
     }
     try {
@@ -450,7 +459,7 @@ window.addTransaction = async function () {
             payment_status, paid_date,
             created_at: serverTimestamp()
         });
-        msgEl.innerHTML = '<span style="color:#0F6E56;">บันทึกรายการสำเร็จ!</span>';
+        msgEl.innerHTML = '<span style="color:#0F6E56;">Transaction saved successfully!</span>';
         ['txn-desc', 'txn-amount', 'txn-ref', 'txn-contact'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';
@@ -464,7 +473,7 @@ window.addTransaction = async function () {
         _txnDraftRestored = false;
         
     } catch (e) {
-        msgEl.innerHTML = `<span style="color:#D85A30;">เกิดข้อผิดพลาด: ${e.message}</span>`;
+        msgEl.innerHTML = `<span style="color:#D85A30;">An error occurred: ${e.message}</span>`;
     }
 };
 
@@ -480,7 +489,145 @@ window.updateDisbursementStatus = async function (txnId, newStatus, paidDate) {
         await updateDoc(doc(db, TXNS_COL, txnId), updateData);
         // onSnapshot will auto-refresh all views
     } catch (e) {
-        alert('อัปเดตสถานะไม่สำเร็จ: ' + e.message);
+        alert('Failed to update status: ' + e.message);
+    }
+};
+
+window.deleteTransaction = async function(id) {
+    if (!confirm('Are you sure you want to delete this transaction? This action cannot be undone.')) return;
+    try {
+        await deleteDoc(doc(db, TXNS_COL, id));
+    } catch(e) {
+        alert('Failed to delete transaction: ' + e.message);
+    }
+};
+
+// ── Edit Record Logic ─────────────────────────────────────────
+
+window.confirmDeleteFromModal = async function() {
+    const docId = document.getElementById('edit-doc-id').value;
+    const collectionName = document.getElementById('edit-col-name').value;
+    
+    if (collectionName === TXNS_COL) {
+        if (!confirm('Are you sure you want to delete this transaction? This action cannot be undone.')) return;
+        try {
+            await deleteDoc(doc(db, TXNS_COL, docId));
+            closeEditModal();
+        } catch(e) { alert('Failed to delete transaction: ' + e.message); }
+    } else if (collectionName === CATS_COL) {
+        const cat  = _categories.find(c => c.id === docId);
+        const inUse = _transactions.some(t => t.catCode === cat?.code);
+        if (inUse) { alert('Cannot delete: This category is in use by transactions.'); return; }
+        if (!confirm('Are you sure you want to delete this category? This action cannot be undone.')) return;
+        try {
+            await deleteDoc(doc(db, CATS_COL, docId));
+            closeEditModal();
+        } catch (e) { alert('An error occurred: ' + e.message); }
+    }
+};
+
+window.openEditModal = function(docId, collectionName) {
+    document.getElementById('edit-modal').style.display = 'flex';
+    document.getElementById('edit-doc-id').value = docId;
+    document.getElementById('edit-col-name').value = collectionName;
+    
+    if (collectionName === TXNS_COL) {
+        document.getElementById('edit-txn-fields').style.display = 'grid';
+        document.getElementById('edit-cat-fields').style.display = 'none';
+        
+        const txn = _transactions.find(t => t.id === docId);
+        if (txn) {
+            document.getElementById('edit-txn-date').value = escapeHTML(txn.date);
+            document.getElementById('edit-txn-desc').value = escapeHTML(txn.desc);
+            document.getElementById('edit-txn-amount').value = txn.amount;
+            document.getElementById('edit-txn-ref').value = escapeHTML(txn.ref || '');
+            document.getElementById('edit-txn-contact').value = escapeHTML(txn.contact || '');
+            document.getElementById('edit-txn-status').value = txn.payment_status?.toString() || '1';
+            document.getElementById('edit-txn-paid-date').value = escapeHTML(txn.paid_date || '');
+            
+            // Populate categories in the select
+            const sel = document.getElementById('edit-txn-cat');
+            sel.innerHTML = _categories.map(c => `<option value="${c.code}">[${c.type === 1 ? 'Income' : 'Expense'}] ${c.name}</option>`).join('');
+            sel.value = escapeHTML(txn.catCode);
+        }
+    } else if (collectionName === CATS_COL) {
+        document.getElementById('edit-txn-fields').style.display = 'none';
+        document.getElementById('edit-cat-fields').style.display = 'grid';
+        
+        const cat = _categories.find(c => c.id === docId);
+        if (cat) {
+            document.getElementById('edit-cat-name').value = escapeHTML(cat.name);
+            document.getElementById('edit-cat-budget').value = cat.budget;
+            document.getElementById('edit-cat-quota-value').value = cat.quota_value || '';
+            document.getElementById('edit-cat-quota-unit').value = cat.quota_unit || '';
+        }
+    }
+};
+
+window.closeEditModal = function() {
+    document.getElementById('edit-modal').style.display = 'none';
+};
+
+window.submitEdit = async function() {
+    if (!auth.currentUser) {
+        alert("You must be logged in to update data.");
+        return;
+    }
+    const docId = document.getElementById('edit-doc-id').value;
+    const collectionName = document.getElementById('edit-col-name').value;
+    
+    let updatedData = {};
+    if (collectionName === TXNS_COL) {
+        const date = document.getElementById('edit-txn-date').value;
+        const catCode = document.getElementById('edit-txn-cat').value;
+        const desc = document.getElementById('edit-txn-desc').value.trim();
+        const amount = parseFloat(document.getElementById('edit-txn-amount').value);
+        const ref = document.getElementById('edit-txn-ref').value.trim();
+        const contact = document.getElementById('edit-txn-contact').value.trim();
+        const payment_status = parseInt(document.getElementById('edit-txn-status').value);
+        const paid_date = document.getElementById('edit-txn-paid-date').value;
+        
+        if (!date || !catCode || !desc || isNaN(amount) || amount <= 0) {
+            alert("Please fill in all transaction fields correctly.");
+            return;
+        }
+        updatedData = {
+           date: escapeHTML(date),
+           catCode: escapeHTML(catCode),
+           desc: escapeHTML(desc),
+           amount: amount,
+           ref: escapeHTML(ref),
+           contact: escapeHTML(contact),
+           payment_status: payment_status,
+           paid_date: escapeHTML(paid_date),
+           updated_at: serverTimestamp()
+        };
+    } else if (collectionName === CATS_COL) {
+        const name = document.getElementById('edit-cat-name').value.trim();
+        const budget = parseFloat(document.getElementById('edit-cat-budget').value);
+        const quotaVal = parseInt(document.getElementById('edit-cat-quota-value').value) || null;
+        const quotaUnit = document.getElementById('edit-cat-quota-unit').value || null;
+        
+        if (!name || isNaN(budget) || budget < 0) {
+            alert("Please fill in a valid Category Name and Budget.");
+            return;
+        }
+        updatedData = {
+           name: escapeHTML(name),
+           budget: budget,
+           quota_value: quotaUnit ? quotaVal : null,
+           quota_unit: quotaUnit || null,
+           // Note: if quota is modified, we leave last_reset_date untouched to avoid resetting the cycle artificially
+           updated_at: serverTimestamp()
+        };
+    }
+    
+    try {
+        await updateDoc(doc(db, collectionName, docId), updatedData);
+        closeEditModal();
+        // Since we are using real-time listeners (onSnapshot), the table and dashboard will automatically refresh and calculate the new balances!
+    } catch(e) {
+        alert("Error updating document: " + e.message);
     }
 };
 
@@ -527,7 +674,7 @@ onAuthStateChanged(auth, user => {
         _isLoading = false;
         const errHtml = `
           <tr><td colspan="10" style="text-align:center;padding:2.5rem;color:var(--color-exp);">
-            <strong>\u26a0 \u0e01\u0e23\u0e38\u0e13\u0e32 Sign In \u0e01\u0e48\u0e2d\u0e19\u0e40\u0e02\u0e49\u0e32\u0e16\u0e36\u0e07\u0e23\u0e30\u0e1a\u0e1a\u0e01\u0e32\u0e23\u0e40\u0e07\u0e34\u0e19</strong><br>
+            <strong>\u26a0 Please Sign In to access the Financial Management system.</strong><br>
             <span style="font-size:12px;color:var(--text-secondary);margin-top:6px;display:block;">
               Firebase Auth session not found \u2014 please log in via the Back Office
             </span>

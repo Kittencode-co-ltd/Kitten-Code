@@ -23,7 +23,7 @@
   },
   "firestore": {
     "database": "(default)",
-    "location": "asia-southeast1",
+    "location": "nam5",
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },

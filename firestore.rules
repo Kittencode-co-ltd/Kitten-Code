@@ -14,11 +14,9 @@ service cloud.firestore {
     }
 
     // ── Users collection ──────────────────────────────────────
-    // Each user can only read/write their own profile document.
-    // Admins can read any profile.
     match /users/{userId} {
       allow read:   if isAuthenticated() && (request.auth.uid == userId || isAdmin());
-      allow create: if isAuthenticated() && request.auth.uid == userId
+      allow create: if isAuthenticated() && (request.auth.uid == userId || isAdmin())
                        && request.resource.data.keys().hasAll(['uid', 'email', 'username', 'role'])
                        && request.resource.data.role in ['admin', 'user'];
       allow update: if isAuthenticated() && (request.auth.uid == userId || isAdmin())
@@ -27,8 +25,6 @@ service cloud.firestore {
     }
 
     // ── Financial Categories ──────────────────────────────────
-    // Any authenticated user can read.
-    // Only admins can create/update/delete.
     match /fin_categories/{catId} {
       allow read:   if isAuthenticated();
       allow create: if isAdmin()
@@ -44,9 +40,6 @@ service cloud.firestore {
     }
 
     // ── Financial Transactions ────────────────────────────────
-    // Any authenticated user can read.
-    // Authenticated users may create with validated data.
-    // Only admins can change payment_status (approve/reject disbursements).
     match /fin_transactions/{txnId} {
       allow read: if isAuthenticated();
 
@@ -59,19 +52,47 @@ service cloud.firestore {
                        && request.resource.data.desc.size()    >  0
                        && request.resource.data.desc.size()    <= 500;
 
-      // Field-level guard: only admins may change payment_status
       allow update: if isAuthenticated()
                        && request.resource.data.amount         is number
                        && request.resource.data.amount         >  0
                        && request.resource.data.payment_status is int
                        && request.resource.data.payment_status in [0, 1, 2]
                        && (
-                            // Non-admins cannot change payment_status
                             request.resource.data.payment_status == resource.data.payment_status
                             || isAdmin()
                           );
 
       allow delete: if isAdmin();
+    }
+
+    // ── Quotations, Invoices & Receipts ───────────────────────
+    match /quotations/{docId} {
+      allow read:   if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /invoices/{docId} {
+      allow read:   if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /receipts/{docId} {
+      allow read:   if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ── Calendar Events ───────────────────────────────────────
+    match /calendar_events/{evtId} {
+      allow read:   if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
     }
   }
 }

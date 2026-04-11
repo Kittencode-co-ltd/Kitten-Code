@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kitten Code — ปฏิทินและนัดหมาย">
+    <title>Calendar — Kitten Code</title>
+    <link rel="stylesheet" href="../assets/css/finance.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* ── Calendar-specific styles ── */
+        :root {
+            --cal-accent: #6366f1;
+            --cal-accent-light: #818cf8;
+            --cal-green: #10b981;
+            --cal-red: #ef4444;
+            --cal-orange: #f59e0b;
+            --cal-blue: #3b82f6;
+            --cal-purple: #a855f7;
+            --cal-pink: #ec4899;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Sarabun', sans-serif;
+            background: var(--color-bg, #0f172a);
+            color: var(--color-text, #e2e8f0);
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .cal-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* ── Top Bar ── */
+        .cal-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .cal-title-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .cal-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c7d2fe, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cal-subtitle {
+            font-size: 0.85rem;
+            color: var(--color-text-muted, #94a3b8);
+        }
+
+        .cal-nav-btn {
+            background: var(--color-card, #1e293b);
+            border: 1px solid var(--color-border, #334155);
+            color: var(--color-text, #e2e8f0);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .cal-nav-btn:hover { background: var(--cal-accent); border-color: var(--cal-accent); }
+
+        .cal-month-label {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #c7d2fe;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .cal-view-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--color-card, #1e293b);
+            border: 1px solid var(--color-border, #334155);
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .view-btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            background: transparent;
+            color: var(--color-text-muted, #94a3b8);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .view-btn.active {
+            background: var(--cal-accent);
+            color: #fff;
+        }
+
+        .btn-add-event {
+            background: linear-gradient(135deg, var(--cal-accent), var(--cal-accent-light));
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+        }
+        .btn-add-event:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99,102,241,0.4);
+        }
+
+        /* ── Calendar Grid ── */
+        .cal-grid-wrapper {
+            background: var(--color-card, #1e293b);
+            border: 1px solid var(--color-border, #334155);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #0f172a;
+            border-bottom: 1px solid var(--color-border, #334155);
+        }
+
+        .cal-weekday {
+            text-align: center;
+            padding: 12px 0;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted, #94a3b8);
+        }
+        .cal-weekday:first-child { color: #f87171; }
+        .cal-weekday:last-child { color: #60a5fa; }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .cal-cell {
+            min-height: 110px;
+            border-right: 1px solid #1e293b;
+            border-bottom: 1px solid #1e293b;
+            padding: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+            position: relative;
+        }
+        .cal-cell:nth-child(7n) { border-right: none; }
+        .cal-cell:hover { background: rgba(99,102,241,0.05); }
+
+        .cal-cell.other-month { opacity: 0.35; }
+
+        .cal-cell.today .cell-date {
+            background: var(--cal-accent);
+            color: #fff;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .cal-cell.selected {
+            background: rgba(99,102,241,0.08);
+        }
+
+        .cell-date {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+
+        .cal-cell:nth-child(7n+1) .cell-date { color: #f87171; }
+        .cal-cell:nth-child(7n) .cell-date { color: #60a5fa; }
+
+        /* ── Events ── */
+        .cal-event {
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .cal-event:hover { opacity: 0.8; }
+
+        .evt-work    { background: rgba(99,102,241,0.25); color: #a5b4fc; border-left: 3px solid #6366f1; }
+        .evt-meet    { background: rgba(16,185,129,0.2);  color: #6ee7b7; border-left: 3px solid #10b981; }
+        .evt-deadline{ background: rgba(239,68,68,0.2);   color: #fca5a5; border-left: 3px solid #ef4444; }
+        .evt-personal{ background: rgba(168,85,247,0.2);  color: #d8b4fe; border-left: 3px solid #a855f7; }
+        .evt-holiday { background: rgba(245,158,11,0.2);  color: #fcd34d; border-left: 3px solid #f59e0b; }
+
+        .more-events {
+            font-size: 0.7rem;
+            color: var(--cal-accent-light);
+            cursor: pointer;
+            padding: 1px 6px;
+        }
+
+        /* ── Mini sidebar ── */
+        .cal-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .cal-sidebar {
+            background: var(--color-card, #1e293b);
+            border: 1px solid var(--color-border, #334155);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted, #94a3b8);
+            margin-bottom: 12px;
+        }
+
+        /* ── Mini Calendar ── */
+        .mini-cal {
+            width: 100%;
+        }
+
+        .mini-cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .mini-cal-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .mini-nav {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: color 0.15s;
+        }
+        .mini-nav:hover { color: var(--cal-accent-light); }
+
+        .mini-cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            text-align: center;
+        }
+
+        .mini-day-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #64748b;
+            padding: 4px 0;
+            text-transform: uppercase;
+        }
+
+        .mini-day {
+            font-size: 0.78rem;
+            padding: 5px 2px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .mini-day:hover { background: rgba(99,102,241,0.15); }
+        .mini-day.today-mini { background: var(--cal-accent); color: #fff; font-weight: 700; border-radius: 50%; }
+        .mini-day.other-mini { opacity: 0.3; }
+        .mini-day.has-event { position: relative; }
+        .mini-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--cal-accent);
+        }
+
+        /* ── Upcoming Events ── */
+        .upcoming-event {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #1e293b;
+        }
+        .upcoming-event:last-child { border-bottom: none; }
+
+        .upcoming-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .upcoming-info {}
+        .upcoming-title { font-size: 0.88rem; font-weight: 500; }
+        .upcoming-date  { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+
+        /* ── Legend ── */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+            cursor: pointer;
+        }
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+
+        .modal-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 28px;
+            width: 480px;
+            max-width: 95vw;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: slideUp 0.2s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #c7d2fe;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: color 0.15s;
+        }
+        .modal-close:hover { color: #e2e8f0; }
+
+        .form-group-cal {
+            margin-bottom: 16px;
+        }
+
+        .form-label-cal {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-input-cal {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #e2e8f0;
+            font-size: 0.92rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .form-input-cal:focus {
+            outline: none;
+            border-color: var(--cal-accent);
+        }
+
+        .color-picker-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .color-chip {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.15s;
+            position: relative;
+        }
+        .color-chip:hover { transform: scale(1.1); }
+        .color-chip.selected { border-color: #fff; }
+        .color-chip.selected::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-cancel:hover { border-color: #475569; color: #e2e8f0; }
+
+        .btn-save-evt {
+            flex: 2;
+            background: linear-gradient(135deg, var(--cal-accent), var(--cal-accent-light));
+            border: none;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-save-evt:hover { opacity: 0.9; }
+
+        .btn-delete-evt {
+            background: rgba(239,68,68,0.15);
+            border: 1px solid rgba(239,68,68,0.3);
+            color: #f87171;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-delete-evt:hover { background: rgba(239,68,68,0.25); }
+
+        /* ── Toast ── */
+        .cal-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-size: 0.88rem;
+            color: #e2e8f0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cal-toast.show { transform: translateY(0); opacity: 1; }
+
+        @media (max-width: 900px) {
+            .cal-layout { grid-template-columns: 1fr; }
+            .cal-sidebar { display: none; }
+            .cal-cell { min-height: 70px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cal-container">
+        <!-- Top Bar -->
+        <div class="cal-topbar">
+            <div class="cal-title-group">
+                <div>
+                    <div class="cal-title"><i class="fas fa-calendar-alt" style="font-size:1.3rem; margin-right:8px;"></i>ปฏิทิน</div>
+                    <div class="cal-subtitle">Calendar & Events — Kitten Code</div>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <div class="cal-view-toggle">
+                    <button class="view-btn active" id="btn-month-view" onclick="setView('month')">Month</button>
+                    <button class="view-btn" id="btn-week-view" onclick="setView('week')">Week</button>
+                </div>
+                <button class="btn-add-event" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> เพิ่มกิจกรรม
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+            <button class="cal-nav-btn" onclick="navigate(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="cal-nav-btn" onclick="goToday()"><i class="fas fa-dot-circle"></i> วันนี้</button>
+            <button class="cal-nav-btn" onclick="navigate(1)"><i class="fas fa-chevron-right"></i></button>
+            <span class="cal-month-label" id="month-label"></span>
+        </div>
+
+        <!-- Layout: Grid + Sidebar -->
+        <div class="cal-layout">
+            <!-- Main Calendar -->
+            <div>
+                <!-- Month View -->
+                <div id="view-month">
+                    <div class="cal-grid-wrapper">
+                        <div class="cal-weekdays">
+                            <div class="cal-weekday">อา</div>
+                            <div class="cal-weekday">จ</div>
+                            <div class="cal-weekday">อ</div>
+                            <div class="cal-weekday">พ</div>
+                            <div class="cal-weekday">พฤ</div>
+                            <div class="cal-weekday">ศ</div>
+                            <div class="cal-weekday">ส</div>
+                        </div>
+                        <div class="cal-grid" id="cal-grid"></div>
+                    </div>
+                </div>
+
+                <!-- Week View -->
+                <div id="view-week" style="display:none;">
+                    <div class="cal-grid-wrapper" id="week-view-inner" style="overflow-x:auto;"></div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="cal-sidebar">
+                <!-- Mini Calendar -->
+                <div class="sidebar-section">
+                    <div class="sidebar-title">📅 Mini Calendar</div>
+                    <div class="mini-cal">
+                        <div class="mini-cal-header">
+                            <button class="mini-nav" onclick="miniNav(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <span class="mini-cal-title" id="mini-label"></span>
+                            <button class="mini-nav" onclick="miniNav(1)"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="mini-cal-grid" id="mini-cal-grid"></div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="sidebar-section">
+                    <div class="sidebar-title">⏰ กิจกรรมที่จะมาถึง</div>
+                    <div id="upcoming-list">
+                        <div style="color:#64748b; font-size:0.85rem;">ยังไม่มีกิจกรรม</div>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="sidebar-section">
+                    <div class="sidebar-title">🏷️ ประเภทกิจกรรม</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#6366f1;"></div> งาน / Work</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div> ประชุม / Meeting</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> กำหนดส่ง / Deadline</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#a855f7;"></div> ส่วนตัว / Personal</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div> วันหยุด / Holiday</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Event Modal -->
+    <div class="modal-overlay" id="event-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title-text">✨ เพิ่มกิจกรรม</div>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="form-group-cal">
+                <label class="form-label-cal">ชื่อกิจกรรม *</label>
+                <input type="text" class="form-input-cal" id="evt-title" placeholder="ระบุชื่อกิจกรรม...">
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div class="form-group-cal">
+                    <label class="form-label-cal">วันที่เริ่ม *</label>
+                    <input type="date" class="form-input-cal" id="evt-start">
+                </div>
+                <div class="form-group-cal">
+                    <label class="form-label-cal">วันที่สิ้นสุด</label>
+                    <input type="date" class="form-input-cal" id="evt-end">
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div class="form-group-cal">
+                    <label class="form-label-cal">เวลาเริ่ม</label>
+                    <input type="time" class="form-input-cal" id="evt-time-start">
+                </div>
+                <div class="form-group-cal">
+                    <label class="form-label-cal">เวลาสิ้นสุด</label>
+                    <input type="time" class="form-input-cal" id="evt-time-end">
+                </div>
+            </div>
+
+            <div class="form-group-cal">
+                <label class="form-label-cal">หมายเหตุ / รายละเอียด</label>
+                <textarea class="form-input-cal" id="evt-note" rows="2" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
+            </div>
+
+            <div class="form-group-cal">
+                <label class="form-label-cal">ประเภท / สี</label>
+                <div class="color-picker-row" id="color-picker">
+                    <div class="color-chip selected" data-type="work"     style="background:#6366f1;" title="Work"></div>
+                    <div class="color-chip" data-type="meet"     style="background:#10b981;" title="Meeting"></div>
+                    <div class="color-chip" data-type="deadline" style="background:#ef4444;" title="Deadline"></div>
+                    <div class="color-chip" data-type="personal" style="background:#a855f7;" title="Personal"></div>
+                    <div class="color-chip" data-type="holiday"  style="background:#f59e0b;" title="Holiday"></div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-delete-evt" id="btn-delete-evt" style="display:none;" onclick="deleteEvent()">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+                <button class="btn-save-evt" onclick="saveEvent()">
+                    <i class="fas fa-save"></i> บันทึก
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="cal-toast" id="cal-toast"></div>
+
+    <script>
+        // ── State ──────────────────────────────────────────────
+        let currentDate = new Date();
+        let miniDate   = new Date();
+        let currentView = 'month';
+        let events = [];          // loaded from Firestore / localStorage fallback
+        let editingEventId = null;
+        let selectedType = 'work';
+
+        const TYPE_COLORS = {
+            work:     '#6366f1',
+            meet:     '#10b981',
+            deadline: '#ef4444',
+            personal: '#a855f7',
+            holiday:  '#f59e0b'
+        };
+
+        const TYPE_LABELS = {
+            work:     'งาน',
+            meet:     'ประชุม',
+            deadline: 'กำหนดส่ง',
+            personal: 'ส่วนตัว',
+            holiday:  'วันหยุด'
+        };
+
+        const THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                             'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+        const THAI_MONTHS_SHORT = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
+                                   'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+        // ── Firestore ──────────────────────────────────────────
+        let db = null, firebaseAuth = null, firestoreModule = null;
+
+        async function initFirebase() {
+            try {
+                const mod = await import('../assets/js/firebase-config.js');
+                db = mod.db;
+                firebaseAuth = mod.auth;
+                firestoreModule = mod;
+                await loadEventsFromFirestore();
+            } catch (e) {
+                console.warn('Firebase unavailable, using localStorage', e);
+                loadEventsFromLocal();
+            }
+        }
+
+        async function loadEventsFromFirestore() {
+            if (!db || !firebaseAuth.currentUser) { loadEventsFromLocal(); return; }
+            try {
+                const { collection, getDocs, query, orderBy } = firestoreModule;
+                const q = query(collection(db, 'calendar_events'), orderBy('startDate'));
+                const snap = await getDocs(q);
+                events = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderAll();
+            } catch (e) {
+                console.error('Load events error', e);
+                loadEventsFromLocal();
+            }
+        }
+
+        function loadEventsFromLocal() {
+            try {
+                events = JSON.parse(localStorage.getItem('kc_events') || '[]');
+            } catch { events = []; }
+            renderAll();
+        }
+
+        function saveToLocal() {
+            localStorage.setItem('kc_events', JSON.stringify(events));
+        }
+
+        async function persistEvent(evt) {
+            saveToLocal();
+            if (!db || !firebaseAuth.currentUser) return;
+            try {
+                const { collection, doc, setDoc, serverTimestamp } = firestoreModule;
+                const ref = doc(collection(db, 'calendar_events'), evt.id);
+                await setDoc(ref, { ...evt, updatedAt: serverTimestamp() });
+            } catch(e) { console.error('Persist event error', e); }
+        }
+
+        async function removeFromFirestore(id) {
+            saveToLocal();
+            if (!db || !firebaseAuth.currentUser) return;
+            try {
+                const { collection, doc, deleteDoc } = firestoreModule;
+                await deleteDoc(doc(collection(db, 'calendar_events'), id));
+            } catch(e) { console.error('Delete event error', e); }
+        }
+
+        // ── Render ──────────────────────────────────────────────
+        function renderAll() {
+            renderMonthGrid();
+            renderMiniCal();
+            renderUpcoming();
+        }
+
+        function renderMonthGrid() {
+            const year  = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            document.getElementById('month-label').textContent =
+                `${THAI_MONTHS[month]} ${year + 543}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrev  = new Date(year, month, 0).getDate();
+
+            const grid = document.getElementById('cal-grid');
+            grid.innerHTML = '';
+
+            const today = new Date();
+
+            // Fill grid cells
+            let cells = [];
+            for (let i = firstDay - 1; i >= 0; i--) {
+                cells.push({ day: daysInPrev - i, month: month - 1, year: month === 0 ? year - 1 : year, other: true });
+            }
+            for (let d = 1; d <= daysInMonth; d++) {
+                cells.push({ day: d, month, year, other: false });
+            }
+            while (cells.length % 7 !== 0) {
+                cells.push({ day: cells.length - daysInMonth - firstDay + 1, month: month + 1, year: month === 11 ? year + 1 : year, other: true });
+            }
+
+            cells.forEach(c => {
+                const dateStr = `${c.year}-${String(c.month + 1).padStart(2,'0')}-${String(c.day).padStart(2,'0')}`;
+                const isToday = !c.other && c.day === today.getDate() && c.month === today.getMonth() && c.year === today.getFullYear();
+                const dayEvents = getEventsOnDate(dateStr);
+
+                const cell = document.createElement('div');
+                cell.className = 'cal-cell' + (c.other ? ' other-month' : '') + (isToday ? ' today' : '');
+                cell.onclick = () => { if (!c.other) openAddModal(dateStr); };
+
+                const dateEl = document.createElement('div');
+                dateEl.className = 'cell-date';
+                dateEl.textContent = c.day;
+                cell.appendChild(dateEl);
+
+                const MAX_SHOW = 3;
+                dayEvents.slice(0, MAX_SHOW).forEach(evt => {
+                    const evEl = document.createElement('div');
+                    evEl.className = `cal-event evt-${evt.type}`;
+                    evEl.textContent = (evt.timeStart ? evt.timeStart + ' ' : '') + evt.title;
+                    evEl.onclick = (e) => { e.stopPropagation(); openEditModal(evt); };
+                    cell.appendChild(evEl);
+                });
+                if (dayEvents.length > MAX_SHOW) {
+                    const more = document.createElement('div');
+                    more.className = 'more-events';
+                    more.textContent = `+${dayEvents.length - MAX_SHOW} more`;
+                    cell.appendChild(more);
+                }
+
+                grid.appendChild(cell);
+            });
+        }
+
+        function renderWeekView() {
+            const year  = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const day   = currentDate.getDate();
+            const dow   = currentDate.getDay();
+            const weekStart = new Date(year, month, day - dow);
+
+            const wrapper = document.getElementById('week-view-inner');
+            const today = new Date();
+
+            let html = `<div style="display:grid; grid-template-columns: 70px repeat(7,1fr); min-width:600px;">`;
+            html += `<div style="padding:12px; border-bottom:1px solid #1e293b; background:#0f172a;"></div>`;
+
+            const days = [];
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(weekStart);
+                d.setDate(weekStart.getDate() + i);
+                days.push(d);
+                const isToday = d.toDateString() === today.toDateString();
+                const dayNames = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+                html += `<div style="text-align:center; padding:12px 4px; border-bottom:1px solid #1e293b; border-left:1px solid #1e293b; background:#0f172a;">
+                    <div style="font-size:0.7rem; color:#64748b; text-transform:uppercase;">${dayNames[d.getDay()]}</div>
+                    <div style="font-size:1.1rem; font-weight:700; ${isToday ? 'background:var(--cal-accent);color:#fff;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;' : 'color:#e2e8f0;'}">${d.getDate()}</div>
+                </div>`;
+            }
+
+            const HOURS = Array.from({length: 17}, (_, i) => i + 7); // 07:00-23:00
+            HOURS.forEach(h => {
+                const timeLabel = `${String(h).padStart(2,'0')}:00`;
+                html += `<div style="padding:8px 6px; border-bottom:1px solid #1e293b; font-size:0.72rem; color:#475569; text-align:right; line-height:40px; height:50px;">${timeLabel}</div>`;
+                days.forEach(d => {
+                    const dateStr = d.toISOString().split('T')[0];
+                    const hourEvts = getEventsOnDate(dateStr).filter(e => {
+                        if (!e.timeStart) return false;
+                        return parseInt(e.timeStart.split(':')[0]) === h;
+                    });
+                    let evtsHtml = hourEvts.map(e => `
+                        <div class="cal-event evt-${e.type}" style="font-size:0.7rem; margin:1px 2px;" onclick="openEditModal(${JSON.stringify(e).replace(/"/g,'&quot;')})">
+                            ${e.timeStart} ${e.title}
+                        </div>`).join('');
+                    html += `<div style="border-bottom:1px solid #1e293b; border-left:1px solid #1e293b; height:50px; overflow:hidden; cursor:pointer; padding:2px;"
+                        onclick="openAddModal('${dateStr}')">${evtsHtml}</div>`;
+                });
+            });
+
+            html += `</div>`;
+            wrapper.innerHTML = html;
+        }
+
+        function renderMiniCal() {
+            const year  = miniDate.getFullYear();
+            const month = miniDate.getMonth();
+            document.getElementById('mini-label').textContent = `${THAI_MONTHS_SHORT[month]} ${year + 543}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+
+            const grid = document.getElementById('mini-cal-grid');
+            grid.innerHTML = '';
+
+            ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d => {
+                const el = document.createElement('div');
+                el.className = 'mini-day-label';
+                el.textContent = d;
+                grid.appendChild(el);
+            });
+
+            const prevDays = new Date(year, month, 0).getDate();
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const el = document.createElement('div');
+                el.className = 'mini-day other-mini';
+                el.textContent = prevDays - i;
+                grid.appendChild(el);
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                const hasEvt  = getEventsOnDate(dateStr).length > 0;
+
+                const el = document.createElement('div');
+                el.className = 'mini-day' + (isToday ? ' today-mini' : '') + (hasEvt ? ' has-event' : '');
+                el.textContent = d;
+                el.onclick = () => {
+                    currentDate = new Date(year, month, d);
+                    renderAll();
+                };
+                grid.appendChild(el);
+            }
+        }
+
+        function renderUpcoming() {
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const upcoming = events
+                .filter(e => {
+                    const d = new Date(e.startDate + 'T00:00:00');
+                    return d >= today;
+                })
+                .sort((a,b) => a.startDate.localeCompare(b.startDate))
+                .slice(0, 6);
+
+            const list = document.getElementById('upcoming-list');
+            if (upcoming.length === 0) {
+                list.innerHTML = '<div style="color:#64748b; font-size:0.85rem;">ยังไม่มีกิจกรรม</div>';
+                return;
+            }
+
+            list.innerHTML = upcoming.map(e => {
+                const d = new Date(e.startDate + 'T00:00:00');
+                const diffDays = Math.round((d - today) / 86400000);
+                const whenLabel = diffDays === 0 ? 'วันนี้' : diffDays === 1 ? 'พรุ่งนี้' : `${d.getDate()} ${THAI_MONTHS_SHORT[d.getMonth()]}`;
+                return `
+                    <div class="upcoming-event" onclick="openEditModal(${JSON.stringify(e).replace(/"/g,'&quot;')})">
+                        <div class="upcoming-dot" style="background:${TYPE_COLORS[e.type] || '#6366f1'};"></div>
+                        <div class="upcoming-info">
+                            <div class="upcoming-title">${escHTML(e.title)}</div>
+                            <div class="upcoming-date">${whenLabel}${e.timeStart ? ' · '+e.timeStart : ''} · ${TYPE_LABELS[e.type]||e.type}</div>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        // ── Helpers ─────────────────────────────────────────────
+        function getEventsOnDate(dateStr) {
+            return events.filter(e => {
+                if (!e.endDate || e.startDate === e.endDate) return e.startDate === dateStr;
+                return e.startDate <= dateStr && e.endDate >= dateStr;
+            }).sort((a,b) => (a.timeStart||'').localeCompare(b.timeStart||''));
+        }
+
+        function escHTML(s) {
+            return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function genId() { return Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+
+        function showToast(msg, ok=true) {
+            const t = document.getElementById('cal-toast');
+            t.innerHTML = `<i class="fas fa-${ok?'check-circle':'exclamation-circle'}" style="color:${ok?'#10b981':'#ef4444'};"></i> ${msg}`;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2800);
+        }
+
+        // ── Navigation ───────────────────────────────────────────
+        function navigate(dir) {
+            if (currentView === 'month') {
+                currentDate.setMonth(currentDate.getMonth() + dir);
+            } else {
+                currentDate.setDate(currentDate.getDate() + dir * 7);
+            }
+            renderAll();
+            if (currentView === 'week') renderWeekView();
+        }
+
+        function goToday() {
+            currentDate = new Date();
+            miniDate = new Date();
+            renderAll();
+            if (currentView === 'week') renderWeekView();
+        }
+
+        function miniNav(dir) {
+            miniDate.setMonth(miniDate.getMonth() + dir);
+            renderMiniCal();
+        }
+
+        function setView(v) {
+            currentView = v;
+            document.getElementById('btn-month-view').classList.toggle('active', v==='month');
+            document.getElementById('btn-week-view').classList.toggle('active', v==='week');
+            document.getElementById('view-month').style.display = v==='month' ? '' : 'none';
+            document.getElementById('view-week').style.display  = v==='week'  ? '' : 'none';
+            if (v==='week') renderWeekView();
+        }
+
+        // ── Modal ─────────────────────────────────────────────────
+        function openAddModal(dateStr = null) {
+            editingEventId = null;
+            document.getElementById('modal-title-text').textContent = '✨ เพิ่มกิจกรรม';
+            document.getElementById('btn-delete-evt').style.display = 'none';
+            document.getElementById('evt-title').value = '';
+            document.getElementById('evt-start').value = dateStr || new Date().toISOString().split('T')[0];
+            document.getElementById('evt-end').value   = dateStr || '';
+            document.getElementById('evt-time-start').value = '';
+            document.getElementById('evt-time-end').value   = '';
+            document.getElementById('evt-note').value  = '';
+            selectType('work');
+            document.getElementById('event-modal').classList.add('open');
+            setTimeout(() => document.getElementById('evt-title').focus(), 100);
+        }
+
+        function openEditModal(evt) {
+            // evt may be a string if passed via onclick attr
+            if (typeof evt === 'string') try { evt = JSON.parse(evt); } catch {}
+            editingEventId = evt.id;
+            document.getElementById('modal-title-text').textContent = '✏️ แก้ไขกิจกรรม';
+            document.getElementById('btn-delete-evt').style.display = '';
+            document.getElementById('evt-title').value      = evt.title || '';
+            document.getElementById('evt-start').value      = evt.startDate || '';
+            document.getElementById('evt-end').value        = evt.endDate || '';
+            document.getElementById('evt-time-start').value = evt.timeStart || '';
+            document.getElementById('evt-time-end').value   = evt.timeEnd || '';
+            document.getElementById('evt-note').value       = evt.note || '';
+            selectType(evt.type || 'work');
+            document.getElementById('event-modal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('event-modal').classList.remove('open');
+            editingEventId = null;
+        }
+
+        function selectType(type) {
+            selectedType = type;
+            document.querySelectorAll('.color-chip').forEach(c => {
+                c.classList.toggle('selected', c.dataset.type === type);
+            });
+        }
+
+        // chip click
+        document.getElementById('color-picker').addEventListener('click', e => {
+            const chip = e.target.closest('.color-chip');
+            if (chip) selectType(chip.dataset.type);
+        });
+
+        // ── CRUD ──────────────────────────────────────────────────
+        async function saveEvent() {
+            const title = document.getElementById('evt-title').value.trim();
+            const startDate = document.getElementById('evt-start').value;
+            if (!title || !startDate) { showToast('กรุณากรอกชื่อกิจกรรมและวันที่', false); return; }
+
+            const evt = {
+                id:        editingEventId || genId(),
+                title,
+                startDate,
+                endDate:   document.getElementById('evt-end').value || startDate,
+                timeStart: document.getElementById('evt-time-start').value,
+                timeEnd:   document.getElementById('evt-time-end').value,
+                note:      document.getElementById('evt-note').value.trim(),
+                type:      selectedType
+            };
+
+            if (editingEventId) {
+                events = events.map(e => e.id === editingEventId ? evt : e);
+            } else {
+                events.push(evt);
+            }
+
+            await persistEvent(evt);
+            closeModal();
+            renderAll();
+            if (currentView === 'week') renderWeekView();
+            showToast(editingEventId ? 'อัปเดตกิจกรรมแล้ว ✅' : 'เพิ่มกิจกรรมแล้ว ✅');
+        }
+
+        async function deleteEvent() {
+            if (!editingEventId) return;
+            if (!confirm('ต้องการลบกิจกรรมนี้หรือไม่?')) return;
+            events = events.filter(e => e.id !== editingEventId);
+            await removeFromFirestore(editingEventId);
+            closeModal();
+            renderAll();
+            if (currentView === 'week') renderWeekView();
+            showToast('ลบกิจกรรมแล้ว');
+        }
+
+        // close on overlay click
+        document.getElementById('event-modal').addEventListener('click', e => {
+            if (e.target === document.getElementById('event-modal')) closeModal();
+        });
+
+        // keyboard shortcut
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
+            if ((e.ctrlKey || e.metaKey) && e.key === 'ArrowLeft') { navigate(-1); e.preventDefault(); }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'ArrowRight') { navigate(1); e.preventDefault(); }
+        });
+
+        // ── Init ─────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            initFirebase();
+        });
+    </script>
+
+    <!-- Auth Guard -->
+    <script type="module">
+        import { onAuthStateChanged, auth } from '../assets/js/firebase-config.js';
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace('login.html'); }
+        });
+    </script>
+</body>
+
+</html>

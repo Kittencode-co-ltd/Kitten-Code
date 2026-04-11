@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Kitten Code — Dark Luxury Financial Analytics Dashboard">
-    <title>Analytics Dashboard — Kitten Code Financial</title>
+    <meta name="description" content="Kitten Code — Dark Luxury Financial Dashboard">
+    <title>Dashboard — Kitten Code Financial</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,16 +32,16 @@
             <div class="db-logo">
                 <div class="db-logo-icon">📊</div>
                 <div class="db-logo-text">
-                    <strong>Analytics Dashboard</strong>
+                    <strong>Dashboard</strong>
                     <span>Kitten Code Financial — Back Office</span>
                 </div>
             </div>
 
             <div class="db-header-right">
                 <!-- Period filter -->
-                <div class="period-tabs" role="group" aria-label="ช่วงเวลา">
-                    <button class="period-btn active" data-period="month" id="btn-month">เดือนนี้</button>
-                    <button class="period-btn" data-period="quarter" id="btn-quarter">ไตรมาสนี้</button>
+                <div class="period-tabs" role="group" aria-label="Period">
+                    <button class="period-btn active" data-period="month" id="btn-month">This Month</button>
+                    <button class="period-btn" data-period="quarter" id="btn-quarter">This Year</button>
                 </div>
 
                 <!-- Back to financial management -->
@@ -51,7 +51,7 @@
                         <line x1="19" y1="12" x2="5" y2="12" />
                         <polyline points="12 19 5 12 12 5" />
                     </svg>
-                    จัดการการเงิน
+                    Financial Management
                 </a>
             </div>
         </header>
@@ -65,42 +65,43 @@
             <div class="kpi-grid">
 
                 <!-- Net Profit/Loss -->
-                <div class="kpi-card kpi-net" role="region" aria-label="กำไร/ขาดทุนสุทธิ">
+                <div class="kpi-card kpi-net" role="region" aria-label="Net Profit/Loss">
                     <div class="kpi-header">
-                        <div class="kpi-label">กำไร/ขาดทุนสุทธิ<br><span class="kpi-period-label">เดือนนี้</span></div>
+                        <div class="kpi-label">Net Profit/Loss<br><span class="kpi-period-label">This Month</span></div>
                         <div class="kpi-icon" aria-hidden="true">⚡</div>
                     </div>
                     <div class="kpi-value kpi-net-val" id="kpi-net">—</div>
                     <div class="kpi-sub">
-                        รับ − จ่าย (Paid)
-                        <span id="kpi-net-badge" class="kpi-badge badge-pos" aria-live="polite">▲ กำไร</span>
+                        Income − Expenses (Paid)
+                        <span id="kpi-net-badge" class="kpi-badge badge-pos" aria-live="polite">▲ Profit</span>
                     </div>
                 </div>
 
                 <!-- Total Income -->
-                <div class="kpi-card kpi-inc" role="region" aria-label="รายรับรวม">
+                <div class="kpi-card kpi-inc" role="region" aria-label="Total Income">
                     <div class="kpi-header">
-                        <div class="kpi-label">รายรับรวม<br><span class="kpi-period-label">เดือนนี้</span></div>
+                        <div class="kpi-label">Total Income<br><span class="kpi-period-label">This Month</span></div>
                         <div class="kpi-icon" aria-hidden="true">↑</div>
                     </div>
                     <div class="kpi-value kpi-inc-val" id="kpi-inc">—</div>
-                    <div class="kpi-sub">รายการ ประเภท รายรับ (Paid)</div>
+                    <div class="kpi-sub">Transaction Type: Income (Paid)</div>
                 </div>
 
                 <!-- Total Expenses -->
-                <div class="kpi-card kpi-exp" role="region" aria-label="รายจ่ายรวม">
+                <div class="kpi-card kpi-exp" role="region" aria-label="Total Expenses">
                     <div class="kpi-header">
-                        <div class="kpi-label">รายจ่ายรวม<br><span class="kpi-period-label">เดือนนี้</span></div>
+                        <div class="kpi-label">Total Expenses<br><span class="kpi-period-label">This Month</span></div>
                         <div class="kpi-icon" aria-hidden="true">↓</div>
                     </div>
                     <div class="kpi-value kpi-exp-val" id="kpi-exp">—</div>
-                    <div class="kpi-sub">รายการ ประเภท รายจ่าย (Paid)</div>
+                    <div class="kpi-sub">Transaction Type: Expense (Paid)</div>
                 </div>
 
                 <!-- Pending Reimbursements -->
-                <div class="kpi-card kpi-pend" role="region" aria-label="รอเบิกจ่าย">
+                <div class="kpi-card kpi-pend" role="region" aria-label="Pending Reimbursements">
                     <div class="kpi-header">
-                        <div class="kpi-label">รอเบิกจ่าย<br><span class="kpi-period-label">เดือนนี้</span></div>
+                        <div class="kpi-label">Pending Reimbursements<br><span class="kpi-period-label">This
+                                Month</span></div>
                         <div class="kpi-icon" aria-hidden="true">⏳</div>
                     </div>
                     <div class="kpi-value kpi-pend-val" id="kpi-pend">—</div>
@@ -121,7 +122,7 @@
                 <!-- Line Chart: Monthly Trend -->
                 <div class="chart-card">
                     <div class="chart-title">Monthly Net Profit Trend</div>
-                    <div class="chart-subtitle">รายรับ / รายจ่าย / กำไรสุทธิ — 6 เดือนย้อนหลัง</div>
+                    <div class="chart-subtitle">Income / Expense / Net Profit — Last 6 Months</div>
                     <div class="chart-canvas-wrap" style="height:280px;">
                         <canvas id="lineChart" aria-label="Monthly net profit trend line chart"></canvas>
                     </div>
@@ -130,8 +131,8 @@
                 <!-- Doughnut Chart: Expense Breakdown -->
                 <div class="chart-card">
                     <div class="chart-title">Expense Breakdown by Category</div>
-                    <div class="chart-subtitle">สัดส่วนรายจ่ายตามหมวดหมู่ (<span
-                            id="donut-period-label">เดือนนี้</span>)</div>
+                    <div class="chart-subtitle">Expense Breakdown by Category (<span id="donut-period-label">This
+                            Month</span>)</div>
                     <div class="chart-canvas-wrap" style="height:200px;">
                         <canvas id="donutChart" aria-label="Expense breakdown doughnut chart"></canvas>
                     </div>
@@ -153,18 +154,18 @@
                 <!-- Recent Transactions -->
                 <div class="data-card">
                     <div class="data-card-header">
-                        <span class="data-card-title">5 รายการล่าสุด</span>
-                        <a href="financial.html" class="data-card-action">ดูทั้งหมด →</a>
+                        <span class="data-card-title">Last 5 Transactions</span>
+                        <a href="financial.html" class="data-card-action">View All →</a>
                     </div>
                     <div style="overflow-x:auto;">
-                        <table class="txn-tbl" aria-label="5 รายการล่าสุด">
+                        <table class="txn-tbl" aria-label="Last 5 Transactions">
                             <thead>
                                 <tr>
-                                    <th>วันที่</th>
-                                    <th>รายการ / หมวด</th>
-                                    <th>สถานะ</th>
-                                    <th style="text-align:right;">จำนวน</th>
-                                    <th>ประเภท</th>
+                                    <th>Date</th>
+                                    <th>Transaction / Category</th>
+                                    <th>Status</th>
+                                    <th style="text-align:right;">Amount</th>
+                                    <th>Type</th>
                                 </tr>
                             </thead>
                             <tbody id="txn-tbody">

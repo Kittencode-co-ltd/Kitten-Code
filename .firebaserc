@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "kitten-code"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

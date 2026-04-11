@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Kitten Code Quotation Generator</title>
+    <title>Kitten Code Invoice Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/quotation.css">
@@ -19,7 +19,7 @@
         <!-- Left Panel: Form Input -->
         <div class="form-panel">
             <div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
-                <h2><i class="fas fa-file-invoice-dollar"></i> สร้างใบเสนอราคา</h2>
+                <h2><i class="fas fa-file-invoice-dollar"></i> สร้างใบแจ้งหนี้ (Invoice)</h2>
                 <button type="button" onclick="clearDraft()"
                     style="padding: 6px 12px; font-size: 0.85rem; background: #dc2626; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
                     <i class="fas fa-eraser"></i> Clear Draft
@@ -34,26 +34,28 @@
                     <h3><i class="fas fa-file-alt"></i> ข้อมูลเอกสาร</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>เลขที่ใบเสนอราคา</label>
-                            <input type="text" id="in-doc-no" value="" placeholder="เช่น KC-2026001"
+                            <label>เลขที่ใบแจ้งหนี้</label>
+                            <input type="text" id="in-doc-no" value="" placeholder="เช่น INV-2026001"
                                 oninput="buildPreview()">
                         </div>
                         <div class="form-group">
                             <label>วันที่</label>
                             <input type="date" id="in-doc-date" value="" oninput="buildPreview()">
-                            <!-- Hidden original input for syncing if needed, or we just override the sync function for this element -->
                         </div>
                         <div class="form-group">
-                            <label>เงื่อนไขชำระเงิน</label>
-                            <input type="text" id="in-doc-terms" value="" placeholder="เช่น ตามข้อตกลง"
+                            <label>วันครบกำหนด (Due Date)</label>
+                            <input type="date" id="in-doc-due-date" value="" oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>เงื่อนไขชำระเงิน (เครดิต)</label>
+                            <input type="text" id="in-doc-terms" value="" placeholder="เช่น 30 วัน"
                                 oninput="buildPreview()">
                         </div>
                         <div class="form-group">
-                            <label>เครดิต (วัน)</label>
-                            <input type="text" id="in-doc-credit" value="" placeholder="เช่น 7 วัน"
+                            <label>เลขอ้างอิงลูกค้า (P.O. No)</label>
+                            <input type="text" id="in-doc-ref" value="" placeholder="เช่น PO-12345"
                                 oninput="buildPreview()">
                         </div>
-                        <!-- Moved VAT and Discount to Summary Options -->
                     </div>
                 </div>
 
@@ -84,24 +86,27 @@
                     </div>
                 </div>
 
-                <!-- Section: Project / Contact -->
+
+
+                <!-- Section: Project Info -->
                 <div class="form-section">
-                    <h3><i class="fas fa-briefcase"></i> โครงการ / ผู้ติดต่อ</h3>
+                    <h3><i class="fas fa-project-diagram"></i> ข้อมูลโปรเจคและการอ้างอิง</h3>
                     <div class="form-grid">
                         <div class="form-group full-width">
-                            <label>ชื่องาน</label>
-                            <input type="text" id="in-proj-name" value="" placeholder="ระบุชื่องาน หรือ โครงการ..."
-                                oninput="buildPreview()">
+                            <label>ชื่อโปรเจค (Project Name)</label>
+                            <input type="text" id="in-proj-name" value="" placeholder="ระบุชื่อโปรเจค..." oninput="buildPreview()">
                         </div>
                         <div class="form-group">
-                            <label>ผู้ติดต่อ</label>
-                            <input type="text" id="in-proj-contact" value="" placeholder="ระบุชื่อผู้ติดต่อ..."
-                                oninput="buildPreview()">
+                            <label>ชื่อผู้ติดต่อ (Contact Name)</label>
+                            <input type="text" id="in-proj-contact" value="" placeholder="ระบุชื่อผู้ติดต่อ..." oninput="buildPreview()">
                         </div>
                         <div class="form-group">
-                            <label>เบอร์โทร</label>
-                            <input type="text" id="in-proj-tel" value="" placeholder="เช่น 08x-xxx-xxxx"
-                                oninput="buildPreview()">
+                            <label>พนักงานขาย (Salesperson)</label>
+                            <input type="text" id="in-sales-name" value="" placeholder="ระบุชื่อพนักงานขาย..." oninput="buildPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>เลขอ้างอิงใบเสนอราคา (Quotation No)</label>
+                            <input type="text" id="in-quote-ref" value="" placeholder="เช่น QT-2026001" oninput="buildPreview()">
                         </div>
                     </div>
                 </div>
@@ -136,10 +141,19 @@
                     </div>
                 </div>
 
-                <!-- Section: Note -->
+                <!-- Section: Payment & Note -->
                 <div class="form-section">
-                    <h3><i class="fas fa-sticky-note"></i> หมายเหตุ</h3>
+                    <h3><i class="fas fa-university"></i> ช่องทางชำระเงิน & หมายเหตุ</h3>
                     <div class="form-group full-width">
+                        <label>ช่องทางชำระเงิน (Payment Method)</label>
+                        <select id="in-payment-method" onchange="buildPreview()" style="width:100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--input-bg, #1e293b); color: var(--text-primary, #f1f5f9); font-size: 0.95rem; cursor: pointer;">
+                            <option value="none">— ไม่แสดงช่องทางชำระเงิน —</option>
+                            <option value="kasikorn">🏦 KASIKORN BANK (226-3-92729-2)</option>
+                            <option value="krungthai">🏦 KRUNGTHAI BANK (665-6-09488-0)</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>หมายเหตุ</label>
                         <textarea id="in-note" placeholder="ระบุหมายเหตุ..."
                             oninput="state.note = this.value; buildPreview()"></textarea>
                     </div>
@@ -147,21 +161,16 @@
 
                 <!-- Section: Signatures -->
                 <div class="form-section">
-                    <h3><i class="fas fa-signature"></i> ข้อมูลลายเซ็น (ผู้จัดทำ/อนุมัติ)</h3>
+                    <h3><i class="fas fa-signature"></i> ข้อมูลลายเซ็น</h3>
                     <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label>สั่งซื้อโดย / ผู้เจรจา (ชื่อลูกค้า)</label>
-                            <input type="text" id="in-sign-buyer" value="" placeholder="เช่น ระบุชื่อลูกค้า..."
+                        <div class="form-group">
+                            <label>ผู้รับใบแจ้งหนี้ (Bill Receiver)</label>
+                            <input type="text" id="in-sign-receiver" value="" placeholder="ระบุชื่อผู้รับใบแจ้งหนี้..."
                                 oninput="buildPreview()">
                         </div>
                         <div class="form-group">
-                            <label>จัดทำโดย</label>
-                            <input type="text" id="in-sign-prep" value="" placeholder="ระบุชื่อผู้จัดทำ..."
-                                oninput="buildPreview()">
-                        </div>
-                        <div class="form-group">
-                            <label>อนุมัติโดย</label>
-                            <input type="text" id="in-sign-appr" value="" placeholder="ระบุชื่อผู้อนุมัติ..."
+                            <label>ผู้มีอำนาจลงนาม (Authorized Signature)</label>
+                            <input type="text" id="in-sign-auth" value="" placeholder="ระบุชื่อผู้มีอำนาจลงนาม..."
                                 oninput="buildPreview()">
                         </div>
                     </div>
@@ -171,7 +180,7 @@
                 <div class="form-section print-section">
                     <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn"
                         onclick="window.print()" style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px;">
-                        <i class="fas fa-print"></i> พิมพ์ใบเสนอราคา (A4)
+                        <i class="fas fa-print"></i> พิมพ์ใบแจ้งหนี้ (A4)
                     </button>
                     <button type="button" id="btn-save-cloud" class="btn btn-success btn-large full-width-btn"
                         onclick="saveDocumentToFirestore()"
@@ -189,7 +198,7 @@
         </div>
     </div>
 
-    <script src="../assets/js/script-quotation.js"></script>
+    <script src="../assets/js/script-invoice.js"></script>
     <script type="module">
         import { onAuthStateChanged, auth } from '../assets/js/firebase-config.js';
         onAuthStateChanged(auth, (user) => {
