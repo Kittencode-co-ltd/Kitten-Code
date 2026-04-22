@@ -1178,21 +1178,27 @@ section,
 
 .clients .client-logo img {
   padding: 0px 15px;
-  max-width: 60%;
+  max-width: 85%;
   max-height: 150px;
-  transition: 0.3s;
-  opacity: 0.5;
-  filter: grayscale(100);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0.4;
+  filter: grayscale(100%);
 }
 
 .clients .client-logo img:hover {
   filter: none;
   opacity: 1;
+  transform: scale(1.1);
+}
+
+.marquee-slider .swiper-wrapper {
+  transition-timing-function: linear !important;
 }
 
 @media (max-width: 640px) {
   .clients .client-logo img {
     padding: 20px;
+    max-width: 90%;
   }
 }
 
