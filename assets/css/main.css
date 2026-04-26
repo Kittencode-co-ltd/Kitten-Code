@@ -1985,13 +1985,27 @@ section,
 }
 
 /*--------------------------------------------------------------
-# i18n Loading States
+# i18n Language Switch Animation
 --------------------------------------------------------------*/
-body {
-  transition: opacity 0.3s ease-in-out;
+.main {
+  transition:
+    filter 0.25s ease,
+    transform 0.25s ease,
+    opacity 0.25s ease;
+  will-change: filter, transform, opacity;
 }
 
-body.i18n-loading {
-  opacity: 0 !important;
+body.i18n-loading .main {
+  filter: blur(6px);
+  transform: scale(0.985);
+  opacity: 0.4;
   pointer-events: none;
+}
+
+/* Smooth lang-btn active indicator */
+.lang-btn {
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
