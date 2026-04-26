@@ -20,6 +20,15 @@
   --nav-font: "Inter", sans-serif;
 }
 
+html[lang="th"] {
+  --default-font:
+    "Prompt", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --heading-font: "Prompt", sans-serif;
+  --nav-font: "Prompt", sans-serif;
+}
+
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
 :root {
   --background-color: #ffffff; /* Background color for the entire website, including individual sections */
@@ -435,6 +444,46 @@ h6 {
   }
 }
 
+/* Language Switcher Button */
+.lang-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  background-color: color-mix(in srgb, var(--default-color) 10%, transparent);
+  border-radius: 20px;
+  padding: 3px;
+}
+
+.navmenu .lang-toggle a.lang-btn {
+  padding: 6px 14px !important;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navmenu .lang-toggle a.lang-btn:before {
+  display: none !important; /* Hide the nav hover underline */
+}
+
+.navmenu .lang-toggle a.lang-btn.active {
+  background-color: var(--accent-color);
+  color: var(--contrast-color) !important;
+}
+
+.navmenu .lang-toggle a.lang-btn:hover:not(.active) {
+  background-color: transparent;
+}
+
 /* Mobile Navigation */
 @media (max-width: 1199px) {
   .mobile-nav-toggle {
@@ -444,6 +493,11 @@ h6 {
     margin-right: 10px;
     cursor: pointer;
     transition: color 0.3s;
+  }
+
+  .lang-toggle-wrapper {
+    margin-left: 0;
+    padding: 10px 20px;
   }
 
   .navmenu {
@@ -870,6 +924,14 @@ section,
   }
 }
 
+@media (max-width: 768px) {
+  section,
+  .section {
+    padding: 80px 0 40px 0;
+    scroll-margin-top: 100px;
+  }
+}
+
 /*--------------------------------------------------------------
 # Global Section Titles
 --------------------------------------------------------------*/
@@ -1085,6 +1147,19 @@ section,
   font-size: 16px;
 }
 
+@media (max-width: 768px) {
+  .stats .stats-item {
+    padding: 20px;
+  }
+  .stats .stats-item i {
+    font-size: 32px;
+    margin-right: 15px;
+  }
+  .stats .stats-item span {
+    font-size: 28px;
+  }
+}
+
 /*--------------------------------------------------------------
 # Services Section
 --------------------------------------------------------------*/
@@ -1139,6 +1214,20 @@ section,
   line-height: 24px;
   font-size: 14px;
   margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .services .details {
+    margin: -50px 15px 0 15px;
+    padding: 40px 20px;
+  }
+  .services .details .icon {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    top: -30px;
+    left: calc(50% - 30px);
+  }
 }
 
 .services .service-item:hover .details h3 {
@@ -1618,6 +1707,7 @@ section,
   font-style: italic;
   display: block;
   font-size: 13px;
+  padding-right: 75px; /* Reserve space for absolutely-positioned social icons */
 }
 
 .team .member .social {
@@ -1638,6 +1728,29 @@ section,
 .team .member .social i {
   font-size: 16px;
   margin: 0 2px;
+}
+
+/* Mobile: stack position and social icons vertically to prevent overlap */
+@media (max-width: 768px) {
+  .team .member .member-info {
+    position: static;
+    margin-top: -40px;
+    left: 0;
+    right: 0;
+    padding: 15px 12px 12px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .team .member span {
+    padding-right: 0;
+    margin-bottom: 8px;
+  }
+
+  .team .member .social {
+    position: static;
+    margin-top: 6px;
+  }
 }
 
 /*--------------------------------------------------------------
@@ -1869,4 +1982,16 @@ section,
 --------------------------------------------------------------*/
 .starter-section {
   /* Add your styles here */
+}
+
+/*--------------------------------------------------------------
+# i18n Loading States
+--------------------------------------------------------------*/
+body {
+  transition: opacity 0.3s ease-in-out;
+}
+
+body.i18n-loading {
+  opacity: 0 !important;
+  pointer-events: none;
 }

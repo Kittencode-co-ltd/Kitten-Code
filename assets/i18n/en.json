@@ -1,0 +1,198 @@
+{
+  "meta": {
+    "title": "Kitten Code | Full-Stack Tech Partner",
+    "description": "Expert web development, mobile apps, multimedia, and AI consulting services."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "team": "Team",
+    "contact": "Contact",
+    "lang_th": "TH",
+    "lang_en": "EN"
+  },
+  "hero": {
+    "label": "Digital Native",
+    "title_word1": "Kitten",
+    "title_word2": "Code",
+    "subtitle": "Great innovation doesn't always start in a big company.",
+    "cta_button": "Get Started"
+  },
+  "about": {
+    "heading": "About us",
+    "description": "Since 2019, our team of experts has been at the forefront of digital development, delivering precision solutions for our clients. In 2026, we officially evolved into a registered Full-Stack Tech Partner to further amplify our capabilities. Our expertise now spans from high-performance web and mobile application development to professional multimedia production. Furthermore, we empower organizations through specialized AI keynotes and consultancy, ensuring our partners stay ahead of the curve. We don't just build platforms; we bring your boldest ideas to life using world-class technology.",
+    "mission_heading": "Our Mission",
+    "mission_text": "\"To drive business growth through high-performance digital solutions and AI-powered innovations.\"",
+    "why_choose_us": "Why Choose Us?",
+    "bullet1": "All-in-One Tech Partner: From Web & App development to Media & AI. We cover it all.",
+    "bullet2": "AI-Driven Success: We integrate cutting-edge AI to keep your business ahead of the curve.",
+    "bullet3": "Proven Precision: Expertise since 2019, delivering results that actually work."
+  },
+  "stats": {
+    "projects": "Projects",
+    "development": "Development",
+    "multimedia": "Multimedia & Production",
+    "team": "Team"
+  },
+  "services": {
+    "heading": "Services",
+    "featured_subheading": "Featured Services",
+    "check_subheading": "Check Our Services",
+    "featured": {
+      "development": {
+        "title": "Development",
+        "description": "We provide end-to-end software development services with a focus on hard coded solutions to ensure high performance, security, and flexibility. Our services include web and mobile application development (iOS and Android), chatbot development, ERP system implementation, system analysis and design, as well as data analytics with predictive modeling."
+      },
+      "multimedia": {
+        "title": "Multimedia",
+        "description": "We deliver comprehensive multimedia and production services to enhance corporate branding and marketing communication. Our services include corporate videos, commercial advertisements, motion graphics, digital media content, and multimedia design for campaigns and brand development, with an emphasis on quality, creativity, and audience engagement."
+      },
+      "consult": {
+        "title": "Consult",
+        "description": "We provide technology and AI consulting to help organizations strategically adapt to the digital era. Our offerings include AI training programs and hands on workshops for organizations and educational institutions, advisory services on AI and technology integration in business operations, and strategic planning for system development aligned with long-term business objectives."
+      }
+    },
+    "list": {
+      "web_app": {
+        "title": "Web Application",
+        "description": "We develop custom web applications with a strong focus on hard coded solutions to ensure high performance, stability, and flexibility, while supporting future scalability.",
+        "price": "Starting price 20,000 THB"
+      },
+      "mobile_app": {
+        "title": "Mobile Application",
+        "description": "We build iOS and Android mobile applications using hard coded development approaches to maximize performance, responsiveness, and the ability to meet specific business requirements.",
+        "price": "Starting price 35,000 THB"
+      },
+      "chatbot": {
+        "title": "Chatbot Development",
+        "description": "We design and develop intelligent chatbots for websites, social media, and various platforms to enhance customer service efficiency and automate business processes.",
+        "price": "Starting price 15,000 THB"
+      },
+      "ai_training": {
+        "title": "AI Training",
+        "description": "We provide AI training programs and seminars for organizations and educational institutions, covering fundamentals, industry trends, and practical applications.",
+        "price": "Starting price 30,000 THB"
+      },
+      "erp": {
+        "title": "ERP System",
+        "description": "We develop and customize ERP systems to manage organizational resources comprehensively, improving efficiency, reducing redundancy, and supporting better business decision-making.",
+        "price": "Starting price 50,000 THB"
+      },
+      "system_analysis": {
+        "title": "System Analysis",
+        "description": "We analyze and design systems aligned with business processes, creating clear structures that reduce complexity and improve operational efficiency.",
+        "price": "Starting price 10,000 THB"
+      },
+      "data_analysis": {
+        "title": "Data Analysis & Prediction",
+        "description": "We perform in depth data analysis and develop predictive models to support accurate and data-driven business decisions.",
+        "price": "Starting price 30,000 THB"
+      },
+      "multimedia_production": {
+        "title": "Multimedia & Production",
+        "description": "We provide video editing and media production to help tell your brand’s story through clear and engaging visual content.",
+        "price": "Starting price 15,000 THB"
+      },
+      "consult": {
+        "title": "Consult",
+        "description": "We offer technology and information system consulting, including AI integration strategies, to enhance organizational capability and competitiveness.",
+        "price": "Starting price 10,000 THB"
+      },
+      "workshops": {
+        "title": "Workshops",
+        "description": "We provide workshops across all our services, taking you from start to smart. Boost your digital presence through professional.",
+        "price": "Starting price 12,000 THB"
+      },
+      "rnd": {
+        "title": "Research & Development",
+        "description": "We apply advanced food science and formulation expertise to craft recipes that ensure quality and stability for food, drinks, and bakery products.",
+        "price": "Starting price 30,000 THB"
+      },
+      "cloud": {
+        "title": "Cloud",
+        "description": "Coming Soon.",
+        "price": ""
+      }
+    }
+  },
+  "partners": {
+    "heading": "Partners",
+    "subheading": "CHECK OUR PARTNERS"
+  },
+  "portfolio": {
+    "heading": "Portfolio",
+    "subheading": "CHECK OUR PORTFOLIO",
+    "filters": {
+      "all": "All",
+      "product": "Product",
+      "media": "Media",
+      "certificates": "Certificates"
+    }
+  },
+  "team": {
+    "heading": "Team",
+    "subheading": "CHECK OUR TEAM",
+    "founder_category": "Founder & Co-Founder",
+    "full_team_category": "Our Full Team",
+    "roles": {
+      "ceo": "CEO / Co-Founder",
+      "cio": "Founder / CIO",
+      "cdo": "CDO / Co-Founder",
+      "cto": "CTO / Co-Founder",
+      "hr": "CLO / HR",
+      "coo": "COO",
+      "cro": "CRO",
+      "cmo": "CMO",
+      "member": "Member"
+    }
+  },
+  "payment": {
+    "heading": "Payment",
+    "subheading": "Secure Payment Methods",
+    "method_thai_bank": "Thai Bank Transfer",
+    "method_scan_qr": "Scan QR to Pay",
+    "method_international": "International Transfer",
+    "secure_transfer": "Secure Bank Transfer",
+    "account_type_label": "ACCOUNT TYPE",
+    "account_type_savings": "Savings",
+    "account_holder": "Account Holder",
+    "company_name": "(Kitten Code Co., Ltd.)",
+    "account_number": "Account Number",
+    "show": "Show",
+    "copy": "Copy",
+    "copied": "Copied to clipboard!",
+    "alipay_prompt": "Scan QR Code to Pay via Alipay",
+    "alipay_desc": "Open your Alipay app and scan the QR code below",
+    "paypal_prompt": "Scan QR Code to Pay via PayPal",
+    "paypal_desc": "Open your PayPal app or scan the QR code to complete your payment"
+  },
+  "contact": {
+    "heading": "Contact",
+    "subheading": "Kitten Code",
+    "address_title": "Address",
+    "call_title": "Call Us",
+    "email_title": "Email Us"
+  },
+  "footer": {
+    "useful_links": "Useful Links",
+    "our_services": "Our Services",
+    "admin": "Admin",
+    "logout": "Logout",
+    "login": "Login",
+    "copyright": "Copyright"
+  },
+  "images": {
+    "hero_bg": "High-tech hero background image",
+    "about_thumb1": "Team of experts collaborating on digital development",
+    "about_thumb2": "Video thumbnail for Kitten Code introduction",
+    "service_dev": "Coding interface representing software development",
+    "service_media": "Multimedia production and video editing equipment",
+    "service_consult": "Consultants in a strategic planning meeting",
+    "bank_kbank": "KASIKORN BANK Logo",
+    "bank_ktb": "KRUNGTHAI BANK Logo",
+    "alipay_qr": "Alipay QR Code",
+    "paypal_qr": "PayPal QR Code"
+  }
+}

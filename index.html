@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
 
   <!-- Vendor CSS Files -->
@@ -31,7 +31,7 @@
 
 </head>
 
-<body class="index-page">
+<body class="index-page i18n-loading">
 
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
@@ -42,12 +42,18 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="#hero" class="active">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#portfolio">Portfolio</a></li>
-          <li><a href="#team">Team</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#hero" class="active" data-i18n="nav.home">Home</a></li>
+          <li><a href="#about" data-i18n="nav.about">About</a></li>
+          <li><a href="#services" data-i18n="nav.services">Services</a></li>
+          <li><a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a></li>
+          <li><a href="#team" data-i18n="nav.team">Team</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+          <li class="lang-toggle-wrapper">
+            <div class="lang-toggle">
+              <a href="#" class="lang-btn active" data-lang="th" onclick="switchLanguage('th'); return false;">TH</a>
+              <a href="#" class="lang-btn" data-lang="en" onclick="switchLanguage('en'); return false;">EN</a>
+            </div>
+          </li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -82,7 +88,7 @@
         <div data-aos="fade-down" data-aos-delay="100" class="mb-4 d-flex align-items-center justify-content-center">
           <span
             style="display: block; width: 40px; height: 1px; background-color: rgba(255,255,255,0.2); margin-right: 15px;"></span>
-          <span
+          <span data-i18n="hero.label"
             style="font-size: 0.75rem; font-weight: 500; letter-spacing: 5px; color: #ff4a17; text-transform: uppercase;">Digital
             Native</span>
           <span
@@ -91,14 +97,14 @@
 
         <!-- Typography Contrast -->
         <h2 data-aos="fade-up" data-aos-delay="200"
-          style="font-size: clamp(3rem, 8vw, 6.5rem); letter-spacing: -2px; margin-bottom: 25px; line-height: 1; color: #fff; font-family: 'Inter', sans-serif;">
-          <span style="font-weight: 200;" id="scramble-kitten">Kitten</span>
-          <span style="font-weight: 700;" id="scramble-code">Code</span><span
+          style="font-size: clamp(2.5rem, 8vw, 6.5rem); letter-spacing: -2px; margin-bottom: 25px; line-height: 1; color: #fff; font-family: 'Inter', sans-serif;">
+          <span style="font-weight: 200;" id="scramble-kitten" data-i18n="hero.title_word1">Kitten</span>
+          <span style="font-weight: 700;" id="scramble-code" data-i18n="hero.title_word2">Code</span><span
             style="color: #ff4a17; font-weight: 700;">.</span>
         </h2>
 
         <!-- Spaced Minimal Slogan -->
-        <p data-aos="fade-up" data-aos-delay="300"
+        <p data-aos="fade-up" data-aos-delay="300" data-i18n="hero.subtitle"
           style="font-size: clamp(0.85rem, 1.5vw, 1rem); font-weight: 300; letter-spacing: 3px; max-width: 600px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; margin-bottom: 4rem;">
           Great innovation doesn't always start in big company
         </p>
@@ -106,7 +112,7 @@
         <!-- Precision Button -->
         <div class="d-flex mt-2" data-aos="fade-up" data-aos-delay="400">
           <a href="#about" class="minimal-tech-btn d-inline-flex align-items-center justify-content-center">
-            <span>Get Started</span>
+            <span data-i18n="hero.cta_button">Get Started</span>
             <i class="bi bi-arrow-right fw-light ms-3"></i>
           </a>
         </div>
@@ -254,9 +260,9 @@
 
         <div class="row gy-4">
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-            <h3>About us</h3>
-            <img src="assets/img/about.jpg" class="img-fluid rounded-4 mb-4" alt="">
-            <p style="text-align: justify;">Since 2019, our team of experts has been at the forefront of digital
+            <h3 data-i18n="about.heading">About us</h3>
+            <img src="assets/img/about.jpg" class="img-fluid rounded-4 mb-4" alt="" data-i18n-alt="images.about_thumb1">
+            <p style="text-align: justify;" data-i18n="about.description">Since 2019, our team of experts has been at the forefront of digital
               development, delivering precision
               solutions for our clients. In 2026, we officially evolved into a registered Full-stack Tech Partner to
               further amplify our capabilities. Our expertise now spans from high-performance web and mobile application
@@ -266,23 +272,23 @@
           </div>
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="250">
             <div class="content ps-0 ps-lg-5">
-              <h5>Our Mission</h5>
+              <h5 data-i18n="about.mission_heading">Our Mission</h5>
               <p>
-                "To drive business growth through high-performance digital solutions and AI-powered innovations."
-                Why Choose Us?
+                <span data-i18n="about.mission_text">"To drive business growth through high-performance digital solutions and AI-powered innovations."</span><br>
+                <span data-i18n="about.why_choose_us">Why Choose Us?</span>
               </p>
               <ul>
-                <li><i class="bi bi-check-circle-fill"></i> <span>All-in-One Tech Partner : From Web & App development
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="about.bullet1">All-in-One Tech Partner : From Web & App development
                     to Media & AI. We cover it all.</span></li>
-                <li><i class="bi bi-check-circle-fill"></i> <span>AI-Driven Success : We integrate cutting-edge AI to
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="about.bullet2">AI-Driven Success : We integrate cutting-edge AI to
                     keep your business ahead of the curve.</span></li>
-                <li><i class="bi bi-check-circle-fill"></i> <span>Proven Precision : Expertise since 2019, delivering
+                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="about.bullet3">Proven Precision : Expertise since 2019, delivering
                     results that actually work.</span></li>
               </ul>
 
 
               <div class="position-relative mt-4">
-                <img src="assets/img/about-2.jpg" class="img-fluid rounded-4" alt="">
+                <img src="assets/img/about-2.jpg" class="img-fluid rounded-4" alt="" data-i18n-alt="images.about_thumb2">
                 <a href="https://www.youtube.com/watch?v=hpbBAxjNSxc&list=PL49IrTamKNr2nia8A-sWQDjFln8TbLrbJ&index=1"
                   class="glightbox pulsating-play-btn"></a>
               </div>
@@ -307,7 +313,7 @@
               <div>
                 <span data-purecounter-start="0" data-purecounter-end="500" data-purecounter-duration="1"
                   class="purecounter"></span>
-                <p>Projects</p>
+                <p data-i18n="stats.projects">Projects</p>
               </div>
             </div>
           </div><!-- End Stats Item -->
@@ -318,7 +324,7 @@
               <div>
                 <span data-purecounter-start="0" data-purecounter-end="300" data-purecounter-duration="1"
                   class="purecounter"></span>
-                <p>Development</p>
+                <p data-i18n="stats.development">Development</p>
               </div>
             </div>
           </div><!-- End Stats Item -->
@@ -329,7 +335,7 @@
               <div>
                 <span data-purecounter-start="0" data-purecounter-end="200" data-purecounter-duration="1"
                   class="purecounter"></span>
-                <p>Multimedia & Production </p>
+                <p data-i18n="stats.multimedia">Multimedia & Production </p>
               </div>
             </div>
           </div><!-- End Stats Item -->
@@ -340,7 +346,7 @@
               <div>
                 <span data-purecounter-start="0" data-purecounter-end="9" data-purecounter-duration="1"
                   class="purecounter"></span>
-                <p>Team</p>
+                <p data-i18n="stats.team">Team</p>
               </div>
             </div>
           </div><!-- End Stats Item -->
@@ -356,8 +362,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Services</h2>
-        <p>Featured Services<br></p>
+        <h2 data-i18n="services.heading">Services</h2>
+        <p data-i18n="services.featured_subheading">Featured Services<br></p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -374,9 +380,9 @@
                   <i class="bi bi-braces"></i>
                 </div>
                 <a class="stretched-link">
-                  <h3>Development</h3>
+                  <h3 data-i18n="services.featured.development.title">Development</h3>
                 </a>
-                <p style="text-align: start;">We provide end-to-end software development services with a focus on hard
+                <p style="text-align: start;" data-i18n="services.featured.development.description">We provide end-to-end software development services with a focus on hard
                   coded solutions to ensure
                   high performance, security, and flexibility. Our services include web and mobile application
                   development (iOS and Android), chatbot development, ERP system implementation, system analysis and
@@ -395,9 +401,9 @@
                   <i class="bi bi-play"></i>
                 </div>
                 <a class="stretched-link">
-                  <h3>Multimedia</h3>
+                  <h3 data-i18n="services.featured.multimedia.title">Multimedia</h3>
                 </a>
-                <p style="text-align: start;">We deliver comprehensive multimedia and production services to enhance
+                <p style="text-align: start;" data-i18n="services.featured.multimedia.description">We deliver comprehensive multimedia and production services to enhance
                   corporate branding and
                   marketing communication. Our services include corporate videos, commercial advertisements, motion
                   graphics, digital media content, and multimedia design for campaigns and brand development, with an
@@ -417,9 +423,9 @@
                   <i class="bi bi-people"></i>
                 </div>
                 <a class="stretched-link">
-                  <h3>Consult</h3>
+                  <h3 data-i18n="services.featured.consult.title">Consult</h3>
                 </a>
-                <p style="text-align: start;">We provide technology and AI consulting to help organizations
+                <p style="text-align: start;" data-i18n="services.featured.consult.description">We provide technology and AI consulting to help organizations
                   strategically adapt to the digital era.
                   Our offerings include AI training programs and hands on workshops for organizations and educational
                   institutions, advisory services on AI and technology integration in business operations, and strategic
@@ -439,8 +445,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Services</h2>
-        <p>CHECK OUR SERVICES</p>
+        <h2 data-i18n="services.heading">Services</h2>
+        <p data-i18n="services.check_subheading">CHECK OUR SERVICES</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -453,13 +459,13 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">Web Application</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.web_app.title">Web Application</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify; ">We develop custom web
+                <p class="description" style="text-align: justify; " data-i18n="services.list.web_app.description">We develop custom web
                   applications with a strong focus on hard coded solutions to
                   ensure high performance, stability, and flexibility, while supporting future scalability.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 20,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.web_app.price">Starting price 20,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -470,13 +476,13 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">Mobile Application</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.mobile_app.title">Mobile Application</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We build iOS and Android mobile applications using
+                <p class="description" style="text-align: justify;" data-i18n="services.list.mobile_app.description">We build iOS and Android mobile applications using
                   hard coded development approaches to maximize performance, responsiveness, and the ability to meet
                   specific business requirements.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 35,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.mobile_app.price">Starting price 35,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -487,13 +493,13 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">Chatbot Development</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.chatbot.title">Chatbot Development</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We design and develop intelligent chatbots for
+                <p class="description" style="text-align: justify;" data-i18n="services.list.chatbot.description">We design and develop intelligent chatbots for
                   websites, social media, and various platforms to enhance customer service efficiency and automate
                   business processes.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 15,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.chatbot.price">Starting price 15,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -504,13 +510,13 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">AI Training</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.ai_training.title">AI Training</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We provide AI training programs and seminars for
+                <p class="description" style="text-align: justify;" data-i18n="services.list.ai_training.description">We provide AI training programs and seminars for
                   organizations and educational institutions, covering fundamentals, industry trends, and practical
                   applications.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 30,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.ai_training.price">Starting price 30,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -521,13 +527,13 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">ERP System</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.erp.title">ERP System</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We develop and customize ERP systems to manage
+                <p class="description" style="text-align: justify;" data-i18n="services.list.erp.description">We develop and customize ERP systems to manage
                   organizational resources comprehensively, improving efficiency, reducing redundancy, and supporting
                   better business decision-making.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 50,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.erp.price">Starting price 50,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -538,12 +544,12 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">System Analysis</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.system_analysis.title">System Analysis</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We analyze and design systems aligned with business
+                <p class="description" style="text-align: justify;" data-i18n="services.list.system_analysis.description">We analyze and design systems aligned with business
                   processes, creating clear structures that reduce complexity and improve operational efficiency.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 10,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.system_analysis.price">Starting price 10,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -554,12 +560,12 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">Data Analysis & Prediction</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.data_analysis.title">Data Analysis & Prediction</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We perform in depth data analysis and develop
+                <p class="description" style="text-align: justify;" data-i18n="services.list.data_analysis.description">We perform in depth data analysis and develop
                   predictive models to support accurate and data-driven business decisions.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 30,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.data_analysis.price">Starting price 30,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -570,12 +576,12 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">Multimedia & Production</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.multimedia_production.title">Multimedia & Production</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We provide video editing and media production to
+                <p class="description" style="text-align: justify;" data-i18n="services.list.multimedia_production.description">We provide video editing and media production to
                   help tell your brand’s story through clear and engaging visual content.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 15,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.multimedia_production.price">Starting price 15,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -586,13 +592,13 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">Consult</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.consult.title">Consult</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We offer technology and information system
+                <p class="description" style="text-align: justify;" data-i18n="services.list.consult.description">We offer technology and information system
                   consulting, including AI integration strategies, to enhance organizational capability and
                   competitiveness.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 10,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.consult.price">Starting price 10,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -603,12 +609,12 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">Workshops</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.workshops.title">Workshops</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We provide workshops across all our services, taking
+                <p class="description" style="text-align: justify;" data-i18n="services.list.workshops.description">We provide workshops across all our services, taking
                   you from start to smart. Boost your digital presence through professional.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 12,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.workshops.price">Starting price 12,000 THB</p>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -619,13 +625,13 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">Research & Development</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.rnd.title">Research & Development</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">We apply advanced food science and formulation
+                <p class="description" style="text-align: justify;" data-i18n="services.list.rnd.description">We apply advanced food science and formulation
                   expertise to craft recipes that ensure quality and stability for food, drinks,
                   and bakery products.</p>
-                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;">Starting price 30,000 THB</p>
+                <p class="title" style="font-size: large; margin: 10px 0px 0px 0px;" data-i18n="services.list.rnd.price">Starting price 30,000 THB</p>
 
               </div>
             </div>
@@ -637,10 +643,10 @@
               <div>
                 <div class="row">
                   <div class="col">
-                    <h4 class="title"><a class="stretched-link">Cloud</a></h4>
+                    <h4 class="title"><a class="stretched-link" data-i18n="services.list.cloud.title">Cloud</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;">Coming Soon.</p>
+                <p class="description" style="text-align: justify;" data-i18n="services.list.cloud.description">Coming Soon.</p>
 
               </div>
             </div>
@@ -655,8 +661,8 @@
     <!-- Clients Section -->
     <section id="clients" class="clients section ">
       <div class="container section-title" data-aos="fade-up">
-        <h2>Partners</h2>
-        <p>CHECK OUR PARTNERS</p>
+        <h2 data-i18n="partners.heading">Partners</h2>
+        <p data-i18n="partners.subheading">CHECK OUR PARTNERS</p>
       </div><!-- End Section Title -->
       <div class="container" data-aos="fade-up">
 
@@ -735,8 +741,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Portfolio</h2>
-        <p>CHECK OUR PORTFOLIO</p>
+        <h2 data-i18n="portfolio.heading">Portfolio</h2>
+        <p data-i18n="portfolio.subheading">CHECK OUR PORTFOLIO</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -744,10 +750,10 @@
         <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
 
           <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-            <li data-filter="*" class="filter-active">All</li>
-            <li data-filter=".filter-product">Product</li>
-            <li data-filter=".filter-media">Media</li>
-            <li data-filter=".filter-certificates">Certificates</li>
+            <li data-filter="*" class="filter-active" data-i18n="portfolio.filters.all">All</li>
+            <li data-filter=".filter-product" data-i18n="portfolio.filters.product">Product</li>
+            <li data-filter=".filter-media" data-i18n="portfolio.filters.media">Media</li>
+            <li data-filter=".filter-certificates" data-i18n="portfolio.filters.certificates">Certificates</li>
           </ul><!-- End Portfolio Filters -->
 
           <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
@@ -872,8 +878,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Team</h2>
-        <p style="margin-bottom: 0;">CHECK OUR TEAM</p>
+        <h2 data-i18n="team.heading">Team</h2>
+        <p style="margin-bottom: 0;" data-i18n="team.subheading">CHECK OUR TEAM</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -882,7 +888,7 @@
           <div class="col-auto text-center">
             <div class="d-inline-flex align-items-center justify-content-center" style="gap: 12px;">
               <span style="width: 40px; height: 1px; background-color: rgba(255, 74, 23, 0.4);"></span>
-              <h4 class="mb-0"
+              <h4 class="mb-0" data-i18n="team.founder_category"
                 style="font-weight: 600; font-size: 0.95rem; color: var(--heading-color); text-transform: uppercase; letter-spacing: 2px;">
                 Founder & Co-Founder
               </h4>
@@ -901,7 +907,7 @@
                 <a href="team-profile/profile-ceo.html">
                   <h4>Pimsiree Anurakchanachai (Panda)</h4>
                 </a>
-                <span>CEO / Co-Founder</span>
+                <span data-i18n="team.roles.ceo">CEO / Co-Founder</span>
                 <div class="social">
                   <a href=""><i class="bi bi-facebook"></i></a>
                   <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -918,7 +924,7 @@
                 <a href="team-profile/profile-cto.html">
                   <h4>Natchanon Jaruteekampron (OongGee)</h4>
                 </a>
-                <span>Founder / CIO</span>
+                <span data-i18n="team.roles.cio">Founder / CIO</span>
                 <div class="social">
                   <a href=""><i class="bi bi-facebook"></i></a>
                   <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -935,7 +941,7 @@
                 <a href="team-profile/profile-editor.html">
                   <h4>Juthamas Tubtimsri (Plai)</h4>
                 </a>
-                <span>CDO / Co-Founder </span>
+                <span data-i18n="team.roles.cdo">CDO / Co-Founder </span>
                 <div class="social">
                   <a href=""><i class="bi bi-facebook"></i></a>
                   <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -952,7 +958,7 @@
                 <a href="team-profile/profile-dev.html">
                   <h4>Supawit Kongboon ( F )</h4>
                 </a>
-                <span>CTO / Co-Founder </span>
+                <span data-i18n="team.roles.cto">CTO / Co-Founder </span>
                 <div class="social">
                   <a href=""><i class="bi bi-facebook"></i></a>
                   <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -968,7 +974,7 @@
           <div class="col-auto text-center">
             <div class="d-inline-flex align-items-center justify-content-center" style="gap: 12px;">
               <span style="width: 40px; height: 1px; background-color: rgba(255, 74, 23, 0.4);"></span>
-              <h4 class="mb-0"
+              <h4 class="mb-0" data-i18n="team.full_team_category"
                 style="font-weight: 600; font-size: 0.95rem; color: var(--heading-color); text-transform: uppercase; letter-spacing: 2px;">
                 Our Full Team
               </h4>
@@ -1023,7 +1029,7 @@
                       <a href="team-profile/profile-hr-beam.html">
                         <h4>Paphawadee Buakao (Beam)</h4>
                       </a>
-                      <span>CLO / HR</span>
+                      <span data-i18n="team.roles.hr">CLO / HR</span>
                       <div class="social">
                         <a href=""><i class="bi bi-facebook"></i></a>
                         <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -1040,7 +1046,7 @@
                       <a href="team-profile/profile-null.html">
                         <h4>Chaiyakan Jaitrongkla (Jui)</h4>
                       </a>
-                      <span>COO</span>
+                      <span data-i18n="team.roles.coo">COO</span>
                       <div class="social">
                         <a href=""><i class="bi bi-facebook"></i></a>
                         <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -1057,7 +1063,7 @@
                       <a href="team-profile/profile-rd-aim.html">
                         <h4>Yanisa Kantaping (Aim)</h4>
                       </a>
-                      <span>CRO</span>
+                      <span data-i18n="team.roles.cro">CRO</span>
                       <div class="social">
                         <a href=""><i class="bi bi-facebook"></i></a>
                         <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -1074,7 +1080,7 @@
                       <a href="team-profile/profile-co-rd-neem.html">
                         <h4>Chanon Seubsai-on (Neem)</h4>
                       </a>
-                      <span>CMO</span>
+                      <span data-i18n="team.roles.cmo">CMO</span>
                       <div class="social">
                         <a href=""><i class="bi bi-facebook"></i></a>
                         <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -1091,7 +1097,7 @@
                       <a href="team-profile/profile-null.html">
                         <h4>Montira Jarudecha (Am)</h4>
                       </a>
-                      <span>Member</span>
+                      <span data-i18n="team.roles.member">Member</span>
                       <div class="social">
                         <a href=""><i class="bi bi-facebook"></i></a>
                         <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -1108,7 +1114,7 @@
                       <a href="team-profile/profile-null.html">
                         <h4>Jirawat Srikaewchuang (Pluem)</h4>
                       </a>
-                      <span>Member</span>
+                      <span data-i18n="team.roles.member">Member</span>
                       <div class="social">
                         <a href=""><i class="bi bi-facebook"></i></a>
                         <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -1125,7 +1131,7 @@
                       <a href="team-profile/profile-dev-beam.html">
                         <h4>Thanyarak Waenpanchai (Beam)</h4>
                       </a>
-                      <span>Member</span>
+                      <span data-i18n="team.roles.member">Member</span>
                       <div class="social">
                         <a href=""><i class="bi bi-facebook"></i></a>
                         <a href=""><i class="bi bi-whatsapp"></i></a>
@@ -1149,8 +1155,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Payment</h2>
-        <p>Secure Payment Methods</p>
+        <h2 data-i18n="payment.heading">Payment</h2>
+        <p data-i18n="payment.subheading">Secure Payment Methods</p>
       </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -1167,7 +1173,7 @@
               <img src="assets/img/bank/KBank_logo.png" alt="KBank"
                 style="width:52px;height:52px;object-fit:contain;border-radius:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.12);">
               <div style="font-size:12px;font-weight:700;color:#00a651;letter-spacing:0.5px;">KASIKORNBANK</div>
-              <div style="font-size:10px;color:#999;margin-top:2px;">Thai Bank Transfer</div>
+              <div style="font-size:10px;color:#999;margin-top:2px;" data-i18n="payment.method_thai_bank">Thai Bank Transfer</div>
             </div>
           </div>
           <!-- Krungthai -->
@@ -1180,7 +1186,7 @@
               <img src="assets/img/bank/Krunkthai_logo.jpg" alt="Krungthai"
                 style="width:52px;height:52px;object-fit:contain;border-radius:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.12);">
               <div style="font-size:12px;font-weight:700;color:#1565c0;letter-spacing:0.5px;">KRUNGTHAI BANK</div>
-              <div style="font-size:10px;color:#999;margin-top:2px;">Thai Bank Transfer</div>
+              <div style="font-size:10px;color:#999;margin-top:2px;" data-i18n="payment.method_thai_bank">Thai Bank Transfer</div>
             </div>
           </div>
           <!-- Alipay -->
@@ -1193,7 +1199,7 @@
               <div style="font-size:42px;color:#00a0e9;line-height:1;margin-bottom:10px;"><i class="bi bi-alipay"></i>
               </div>
               <div style="font-size:12px;font-weight:700;color:#00a0e9;letter-spacing:0.5px;">ALIPAY</div>
-              <div style="font-size:10px;color:#999;margin-top:2px;">Scan QR to Pay</div>
+              <div style="font-size:10px;color:#999;margin-top:2px;" data-i18n="payment.method_scan_qr">Scan QR to Pay</div>
             </div>
           </div>
           <!-- PayPal -->
@@ -1206,7 +1212,7 @@
               <div style="font-size:42px;color:#0070ba;line-height:1;margin-bottom:10px;"><i class="bi bi-paypal"></i>
               </div>
               <div style="font-size:12px;font-weight:700;color:#0070ba;letter-spacing:0.5px;">PAYPAL</div>
-              <div style="font-size:10px;color:#999;margin-top:2px;">International Transfer</div>
+              <div style="font-size:10px;color:#999;margin-top:2px;" data-i18n="payment.method_international">International Transfer</div>
             </div>
           </div>
         </div>
@@ -1225,13 +1231,12 @@
                     style="width:60px;height:60px;object-fit:contain;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
                   <div>
                     <div style="font-size:18px;font-weight:700;color:#1a1a2e;">KASIKORN BANK</div>
-                    <div style="font-size:13px;color:#00a651;font-weight:500;margin-top:2px;">&#10003; Secure Bank
-                      Transfer</div>
+                    <div style="font-size:13px;color:#00a651;font-weight:500;margin-top:2px;"><span style="margin-right:4px;">&#10003;</span> <span data-i18n="payment.secure_transfer">Secure Bank Transfer</span></div>
                   </div>
                   <div
                     style="margin-left:auto;background:#f0faf5;border-radius:10px;padding:8px 14px;text-align:center;">
-                    <div style="font-size:10px;color:#999;font-weight:600;letter-spacing:0.5px;">ACCOUNT TYPE</div>
-                    <div style="font-size:13px;font-weight:700;color:#00a651;">Savings</div>
+                    <div style="font-size:10px;color:#999;font-weight:600;letter-spacing:0.5px;" data-i18n="payment.account_type_label">ACCOUNT TYPE</div>
+                    <div style="font-size:13px;font-weight:700;color:#00a651;" data-i18n="payment.account_type_savings">Savings</div>
                   </div>
                 </div>
                 <div style="margin-bottom:20px;">
@@ -1243,7 +1248,7 @@
                       style="font-size:14px;font-weight:500;color:#666;">(Kitten Code Co., Ltd.)</span></div>
                 </div>
                 <div style="margin-bottom:20px;">
-                  <div
+                  <div data-i18n="payment.account_number"
                     style="font-size:11px;font-weight:600;color:#aaa;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">
                     Account Number</div>
                   <div
@@ -1284,13 +1289,12 @@
                     style="width:60px;height:60px;object-fit:contain;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
                   <div>
                     <div style="font-size:18px;font-weight:700;color:#1a1a2e;">KRUNGTHAI BANK</div>
-                    <div style="font-size:13px;color:#1565c0;font-weight:500;margin-top:2px;">&#10003; Secure Bank
-                      Transfer</div>
+                    <div style="font-size:13px;color:#1565c0;font-weight:500;margin-top:2px;"><span style="margin-right:4px;">&#10003;</span> <span data-i18n="payment.secure_transfer">Secure Bank Transfer</span></div>
                   </div>
                   <div
                     style="margin-left:auto;background:#eff4fb;border-radius:10px;padding:8px 14px;text-align:center;">
-                    <div style="font-size:10px;color:#999;font-weight:600;letter-spacing:0.5px;">ACCOUNT TYPE</div>
-                    <div style="font-size:13px;font-weight:700;color:#1565c0;">Savings</div>
+                    <div style="font-size:10px;color:#999;font-weight:600;letter-spacing:0.5px;" data-i18n="payment.account_type_label">ACCOUNT TYPE</div>
+                    <div style="font-size:13px;font-weight:700;color:#1565c0;" data-i18n="payment.account_type_savings">Savings</div>
                   </div>
                 </div>
                 <div style="margin-bottom:20px;">
@@ -1302,7 +1306,7 @@
                       style="font-size:14px;font-weight:500;color:#666;">(Kitten Code Co., Ltd.)</span></div>
                 </div>
                 <div style="margin-bottom:20px;">
-                  <div
+                  <div data-i18n="payment.account_number"
                     style="font-size:11px;font-weight:600;color:#aaa;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">
                     Account Number</div>
                   <div
@@ -1335,9 +1339,9 @@
             <div id="panel-alipay" class="payment-panel" style="display:none;">
               <div
                 style="background:#fff;border-radius:24px;box-shadow:0 8px 40px rgba(0,160,233,0.10);padding:40px 36px;border:1px solid #ddf0fb;text-align:center;">
-                <div style="font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:6px;">Scan QR Code to Pay via
+                <div style="font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:6px;" data-i18n="payment.alipay_prompt">Scan QR Code to Pay via
                   Alipay</div>
-                <div style="font-size:13px;color:#888;margin-bottom:24px;">Open your Alipay app and scan the QR code
+                <div style="font-size:13px;color:#888;margin-bottom:24px;" data-i18n="payment.alipay_desc">Open your Alipay app and scan the QR code
                   below</div>
                 <div
                   style="display:inline-block;padding:16px;background:#f8faff;border-radius:20px;border:2px solid #e0f0fb;box-shadow:0 4px 24px rgba(0,160,233,0.10);">
@@ -1351,9 +1355,9 @@
             <div id="panel-paypal" class="payment-panel" style="display:none;">
               <div
                 style="background:#fff;border-radius:24px;box-shadow:0 8px 40px rgba(0,112,186,0.10);padding:40px 36px;border:1px solid #d8ecf8;text-align:center;">
-                <div style="font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:6px;">Scan QR Code to Pay via
+                <div style="font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:6px;" data-i18n="payment.paypal_prompt">Scan QR Code to Pay via
                   PayPal</div>
-                <div style="font-size:13px;color:#888;margin-bottom:24px;">Open your PayPal app or scan the QR code to
+                <div style="font-size:13px;color:#888;margin-bottom:24px;" data-i18n="payment.paypal_desc">Open your PayPal app or scan the QR code to
                   complete your payment</div>
                 <div
                   style="display:inline-block;padding:16px;background:#f8faff;border-radius:20px;border:2px solid #d8ecf8;box-shadow:0 4px 24px rgba(0,112,186,0.10);">
@@ -1377,8 +1381,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Contact</h2>
-        <p>Kitten Code</p>
+        <h2 data-i18n="contact.heading">Contact</h2>
+        <p data-i18n="contact.subheading">Kitten Code</p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -1390,7 +1394,7 @@
               <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up"
                 data-aos-delay="200">
                 <i class="bi bi-geo-alt"></i>
-                <h3>Address</h3>
+                <h3 data-i18n="contact.address_title">Address</h3>
                 <p>347/11 M.3 THAPHO PHITSANULOK 65000</p>
               </div>
             </div><!-- End Info Item -->
@@ -1399,7 +1403,7 @@
               <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up"
                 data-aos-delay="300">
                 <i class="bi bi-telephone"></i>
-                <h3>Call Us</h3>
+                <h3 data-i18n="contact.call_title">Call Us</h3>
                 <p>+66 8 0885 0555</p>
               </div>
             </div><!-- End Info Item -->
@@ -1408,7 +1412,7 @@
               <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up"
                 data-aos-delay="400">
                 <i class="bi bi-envelope"></i>
-                <h3>Email Us</h3>
+                <h3 data-i18n="contact.email_title">Email Us</h3>
                 <p>kittencode.co.ltd@gmail.com</p>
               </div>
             </div><!-- End Info Item -->
@@ -1450,37 +1454,37 @@
         </div>
 
         <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Useful Links</h4>
+          <h4 data-i18n="footer.useful_links">Useful Links</h4>
           <ul>
-            <li><i class="bi bi-chevron-right"></i> <a href="#hero">Home</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#about">About us</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Services</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#hero" data-i18n="nav.home">Home</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#about" data-i18n="nav.about">About us</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="nav.services">Services</a></li>
           </ul>
         </div>
 
         <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Our Services</h4>
+          <h4 data-i18n="footer.our_services">Our Services</h4>
           <ul>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Web Application</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Mobile Application</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Chatbot Development</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">AI Training</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">ERP System</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.web_app.title">Web Application</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.mobile_app.title">Mobile Application</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.chatbot.title">Chatbot Development</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.ai_training.title">AI Training</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.erp.title">ERP System</a></li>
           </ul>
         </div>
 
         <div class="col-lg-2 col-md-12 footer-links">
           <h4>&nbsp;</h4>
           <ul>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">System Analysis</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Data Analysis & Prediction</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Multimedia & Production</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Workshops</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2">Consult</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.system_analysis.title">System Analysis</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.data_analysis.title">Data Analysis & Prediction</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.multimedia_production.title">Multimedia & Production</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.workshops.title">Workshops</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.consult.title">Consult</a></li>
           </ul>
         </div>
         <div class="col-lg-2 col-md-12 footer-links" id="adminFooterSection">
-          <h4>Admin</h4>
+          <h4 data-i18n="footer.admin">Admin</h4>
           <ul id="adminLinks">
             <!-- Links injected by JS -->
           </ul>
@@ -1493,12 +1497,17 @@
 
             if (isLoggedIn) {
               adminLinksContainer.innerHTML = `
-                <li><i class="bi bi-chevron-right"></i> <a href="#" onclick="handleLogout(event)">Logout</a></li>
+                <li><i class="bi bi-chevron-right"></i> <a href="#" onclick="handleLogout(event)" data-i18n="footer.logout">Logout</a></li>
               `;
             } else {
               adminLinksContainer.innerHTML = `
-                <li><i class="bi bi-chevron-right"></i> <a href="back-office/login.html">Login</a></li>
+                <li><i class="bi bi-chevron-right"></i> <a href="back-office/login.html" data-i18n="footer.login">Login</a></li>
               `;
+            }
+            
+            // Re-apply translations for dynamically added elements
+            if (window.currentTranslations) {
+              applyTranslations(window.currentTranslations);
             }
           });
 
@@ -1515,7 +1524,7 @@
     </div>
 
     <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">Kitten Code</strong> </p>
+      <p>© <span data-i18n="footer.copyright">Copyright</span> <strong class="px-1 sitename">Kitten Code</strong> </p>
     </div>
 
   </footer>
@@ -1539,6 +1548,9 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- i18n Logic -->
+  <script src="assets/js/i18n.js"></script>
 
 </body>
 
