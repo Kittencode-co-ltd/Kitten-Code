@@ -399,6 +399,26 @@ body {
 }
 
 /* ============================================================
+   WATERMARK REPRINT
+   ============================================================ */
+.watermark-reprint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 80px;
+  color: rgba(220, 38, 38, 0.15); /* light red */
+  font-weight: 700;
+  z-index: 1;
+  pointer-events: none;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  border: 6px solid rgba(220, 38, 38, 0.15);
+  padding: 10px 40px;
+  border-radius: 10px;
+}
+
+/* ============================================================
    DOCUMENT: HEADER
    ============================================================ */
 .header-section {

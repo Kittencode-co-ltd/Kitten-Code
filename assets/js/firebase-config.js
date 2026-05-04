@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, addDoc, getDocs, onSnapshot, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, addDoc, getDocs, getDoc, onSnapshot, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 // Load secrets securely injected at build-time by GitHub Actions
 const __ENV__ = (typeof window !== 'undefined' && window.__ENV__) || {};
@@ -37,7 +37,8 @@ export {
     doc, 
     setDoc, 
     addDoc,
-    getDocs, 
+    getDocs,
+    getDoc,
     onSnapshot,
     query, 
     limit, 

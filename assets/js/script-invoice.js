@@ -30,8 +30,28 @@ const showDraftToast = () => {
     }, 3000);
 };
 
+const showReprintToast = () => {
+    const toast = document.createElement('div');
+    toast.className = 'kc-toast-container';
+    toast.innerHTML = `
+        <i class="fas fa-print kc-toast-icon" style="color: #3b82f6"></i>
+        <div class="kc-toast-content">
+            <span class="kc-toast-title">โหมดพิมพ์ซ้ำ (Reprint Mode)</span>
+            <span class="kc-toast-message">เอกสารนี้ถูกโหลดเพื่อพิมพ์สำเนา</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 4000);
+};
+
+
 function saveDraft() {
     const draft = { state: state, inputs: {} };
+    // Intentionally omit isReprint so it does not persist across reloads
     document.querySelectorAll('.form-panel input, .form-panel textarea, .form-panel select').forEach(el => {
         if(el.id) draft.inputs[el.id] = el.value;
     });
@@ -44,12 +64,17 @@ function restoreDraft() {
         try {
             const draft = JSON.parse(saved);
             state = draft.state;
+            if (draft.isReprint) state.isReprint = true;
             Object.keys(draft.inputs).forEach(id => {
                 const el = document.getElementById(id);
                 // Sanitize upon restore to maintain security
                 if(el) el.value = escapeHTML(draft.inputs[id]);
             });
-            showDraftToast();
+            if (draft.isReprint) {
+                setTimeout(showReprintToast, 300);
+            } else {
+                showDraftToast();
+            }
         } catch(e) { console.error("Could not restore draft", e); }
     }
 }
@@ -225,6 +250,7 @@ function createPageDOM(sv) {
 
     page.innerHTML = `
         <div class="page-top-border"></div>
+        ${state.isReprint ? '<div class="watermark-reprint">ฉบับสำเนา (COPY)</div>' : ''}
         <div class="content-wrapper">
             <!-- Header -->
             <div class="header-section flex-between align-start" style="margin-bottom: 15px;">
