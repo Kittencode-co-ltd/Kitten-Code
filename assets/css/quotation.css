@@ -736,6 +736,11 @@ body {
     background: transparent !important;
   }
 
+  .content-wrapper {
+    height: 297mm !important;
+    max-height: 297mm !important;
+  }
+
   @page {
     size: A4 portrait;
     margin: 0mm;

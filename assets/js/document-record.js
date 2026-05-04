@@ -1,4 +1,4 @@
-import { db, collection, getDocs, doc, deleteDoc } from './firebase-config.js';
+import { db, collection, getDocs, doc, deleteDoc, getDoc } from './firebase-config.js';
 
 let allDocs = [];
 let currentFilter = 'all';
@@ -112,10 +112,76 @@ function renderDocuments() {
     });
 }
 
-function printDocument(colName, id) {
-    alert("Functionality to view or re-print saved documents is under construction.");
-    // This could optionally fetch the document data from Firestore, save it to localStorage (like draft data) 
-    // and redirect the user to the generator page to view/print it.
+window.printDocument = async function(colName, id) {
+    try {
+        const docRef = doc(db, colName, id);
+        const snapshot = await getDoc(docRef);
+        if (!snapshot.exists()) {
+            alert("ไม่พบเอกสารนี้ในระบบ (Document not found)");
+            return;
+        }
+        const data = snapshot.data();
+        
+        let targetPage = '';
+        let storageKey = '';
+        
+        if (colName === 'quotations') {
+            targetPage = 'quotaion.html';
+            storageKey = 'draft_quotation_data';
+        } else if (colName === 'invoices') {
+            targetPage = 'invoice.html';
+            storageKey = 'draft_invoice_data';
+        } else if (colName === 'receipts') {
+            targetPage = 'receipt.html';
+            storageKey = 'draft_receipt_data';
+        }
+        
+        // Un-escape HTML to populate inputs correctly
+        const unescapeHTML = (str) => {
+            if (!str) return '';
+            return String(str).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+        };
+
+        const draft = {
+            state: {
+                items: (data.items || []).map((item, index) => ({
+                    id: Date.now() + index,
+                    desc: unescapeHTML(item.desc),
+                    qty: item.qty,
+                    price: item.price
+                })),
+                discount: data.discountAmount || 0,
+                note: unescapeHTML(data.note || '')
+            },
+            inputs: {
+                'in-doc-no': data.docNo || '',
+                'in-doc-date': data.docDate || '',
+                'in-doc-terms': data.docTerms || '',
+                'in-doc-credit': data.docCredit || '',
+                'in-doc-vat': data.vatRate || 0,
+                'in-doc-discount': data.discountAmount || 0,
+                'in-cust-name': unescapeHTML(data.custName || ''),
+                'in-cust-addr': unescapeHTML(data.custAddr || ''),
+                'in-cust-tel': unescapeHTML(data.custTel || ''),
+                'in-cust-tax': unescapeHTML(data.custTax || ''),
+                'in-proj-name': unescapeHTML(data.projName || ''),
+                'in-proj-contact': unescapeHTML(data.projContact || ''),
+                'in-proj-tel': unescapeHTML(data.projTel || ''),
+                'in-note': unescapeHTML(data.note || ''),
+                'in-sign-buyer': unescapeHTML(data.signBuyer || ''),
+                'in-sign-prep': unescapeHTML(data.signPrep || ''),
+                'in-sign-appr': unescapeHTML(data.signAppr || '')
+            },
+            isReprint: true
+        };
+        
+        localStorage.setItem(storageKey, JSON.stringify(draft));
+        window.location.href = targetPage;
+        
+    } catch (e) {
+        console.error("Error loading document for reprint:", e);
+        alert("เกิดข้อผิดพลาดในการดึงข้อมูลเอกสาร (Error loading document)");
+    }
 }
 
 window.deleteDocument = async function(colName, id) {
