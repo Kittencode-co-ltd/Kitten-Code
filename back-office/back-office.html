@@ -49,25 +49,31 @@
                 Calendar
             </a>
 
-            <a href="#quotation" class="menu-item" data-title="Quotation">
-                <i class="bi bi-file-earmark-text"></i>
-                Quotation
-            </a>
-
-            <a href="#receipt" class="menu-item" data-title="Receipt">
-                <i class="bi bi-file-earmark-text"></i>
-                Receipt
-            </a>
-
-            <a href="#invoice" class="menu-item" data-title="Invoice">
-                <i class="bi bi-file-earmark-text"></i>
-                Invoice
-            </a>
-
-            <a href="#document-record" class="menu-item" data-title="Document Record">
-                <i class="bi bi-file-earmark-text"></i>
-                Document Record
-            </a>
+            <div class="menu-group" id="menu-group-docs">
+                <div class="menu-item menu-group-header" onclick="toggleMenuGroup('docs')">
+                    <i class="bi bi-file-earmark-text"></i>
+                    Documents
+                    <i class="bi bi-chevron-down menu-group-arrow" id="arrow-docs"></i>
+                </div>
+                <div class="menu-group-items" id="group-docs">
+                    <a href="#document-record" class="menu-item menu-sub-item" data-title="Document Record">
+                        <i class="bi bi-folder2-open"></i>
+                        Document Record
+                    </a>
+                    <a href="#quotation" class="menu-item menu-sub-item" data-title="Quotation">
+                        <i class="bi bi-file-earmark-plus"></i>
+                        Quotation
+                    </a>
+                    <a href="#receipt" class="menu-item menu-sub-item" data-title="Receipt">
+                        <i class="bi bi-receipt"></i>
+                        Receipt
+                    </a>
+                    <a href="#invoice" class="menu-item menu-sub-item" data-title="Invoice">
+                        <i class="bi bi-file-earmark-ruled"></i>
+                        Invoice
+                    </a>
+                </div>
+            </div>
 
             <a href="#user" class="menu-item" data-title="user">
                 <i class="bi bi-person"></i>
@@ -157,10 +163,20 @@
             document.getElementById('topPageTitle').innerText = titleText;
         }
 
+        // Dropdown group toggle
+        function toggleMenuGroup(groupId) {
+            const items = document.getElementById('group-' + groupId);
+            const arrow = document.getElementById('arrow-' + groupId);
+            if (!items) return;
+            items.classList.toggle('open');
+            if (arrow) arrow.classList.toggle('open');
+        }
+
         const menuItems = document.querySelectorAll('.menu-item');
         menuItems.forEach(item => {
             item.addEventListener('click', function () {
-                if (window.innerWidth <= 768) {
+                // Skip sidebar close when clicking group headers (only toggles dropdown)
+                if (window.innerWidth <= 768 && !this.classList.contains('menu-group-header')) {
                     toggleSidebar();
                 }
             });
@@ -168,7 +184,7 @@
 
         // Hash Routing Map
         const routeMap = {
-            '#dashboard': 'dashboard.html',  // Typo originates from source file name
+            '#dashboard': 'dashboard.html',
             '#quotation': 'quotaion.html',
             '#receipt': 'receipt.html',
             '#financial': 'financial.html',
@@ -180,18 +196,24 @@
         };
 
         function loadView() {
-            let hash = window.location.hash || '#quotation'; // Default to quotation
+            let hash = window.location.hash || '#quotation';
             let viewFile = routeMap[hash] || 'quotaion.html';
 
-            // Set iframe src
             document.getElementById('contentFrame').src = viewFile;
 
-            // Highlight Active Menu visually
+            menuItems.forEach(i => i.classList.remove('active'));
+
             menuItems.forEach(i => {
-                i.classList.remove('active');
                 if (i.getAttribute('href') === hash) {
                     i.classList.add('active');
                     updateTitle(i.getAttribute('data-title'));
+                    // Auto-open parent dropdown group if this item is inside one
+                    const groupItems = i.closest('.menu-group-items');
+                    if (groupItems && !groupItems.classList.contains('open')) {
+                        groupItems.classList.add('open');
+                        const arrow = groupItems.closest('.menu-group')?.querySelector('.menu-group-arrow');
+                        if (arrow) arrow.classList.add('open');
+                    }
                 }
             });
         }

@@ -170,6 +170,44 @@ body::before {
   border-radius: 0 4px 4px 0;
 }
 
+/* ── Sidebar Dropdown Group ─────────────────────────────── */
+.menu-group-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.menu-group-arrow {
+  margin-left: auto;
+  margin-right: 0 !important;
+  width: auto !important;
+  font-size: 0.7rem !important;
+  transition: transform 0.2s ease;
+  opacity: 0.6;
+}
+
+.menu-group-arrow.open {
+  transform: rotate(180deg);
+}
+
+.menu-group-items {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+.menu-group-items.open {
+  max-height: 300px;
+}
+
+.menu-sub-item {
+  padding-left: 52px !important;
+  font-size: 0.88rem !important;
+}
+
+.menu-sub-item.active::before {
+  border-radius: 0 4px 4px 0;
+}
+
 .sidebar-footer {
   padding: 20px 24px;
   border-top: 1px solid var(--border-color);
