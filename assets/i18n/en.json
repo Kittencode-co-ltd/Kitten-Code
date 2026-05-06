@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Kitten Code | Full-Stack Tech Partner",
+    "title": "KITTEN CODE Co., Ltd.",
     "description": "Expert web development, mobile apps, multimedia, and AI consulting services."
   },
   "nav": {
@@ -141,10 +141,10 @@
       "cio": "Founder / CIO",
       "cdo": "CDO / Co-Founder",
       "cto": "CTO / Co-Founder",
-      "hr": "CLO / HR",
-      "coo": "COO",
-      "cro": "CRO",
-      "cmo": "CMO",
+      "hr": "Legal & HR",
+      "coo": "Developer",
+      "cro": "Food R&D",
+      "cmo": "Business Economic Analyst",
       "member": "Member"
     }
   },
