@@ -120,7 +120,7 @@
             document.getElementById('mEmail').disabled = true;
 
             // Populate core
-            document.getElementById('docId').value = user.uid;
+            document.getElementById('docId').value = user.username;
             document.getElementById('mUsername').value = user.username || '';
             document.getElementById('mEmail').value = user.email || '';
             document.getElementById('mRole').value = user.role || 'user';
@@ -313,7 +313,7 @@
                             updated_at: serverTimestamp()
                         };
 
-                        await setDoc(doc(db, "users", uid), userData);
+                        await setDoc(doc(db, "users", username), userData);
                         localStorage.removeItem('draft_user_data');
                         loadUsers(true);
 
@@ -412,7 +412,7 @@
             <td class="text-end pe-4">
               <button class="btn btn-sm btn-outline-success me-1" onclick="preparePayrollModal('${userJson}')" title="Payroll (EXP-17)"><i class="bi bi-currency-dollar"></i></button>
               <button class="btn btn-sm btn-light me-1" onclick="prepareUpdateModal('${userJson}')"><i class="bi bi-pencil"></i></button>
-              <button class="btn btn-sm btn-outline-danger" onclick="promptDelete('${user.uid}', '${escapeHTML(fullName !== '<i>N/A</i>' ? fullName : user.username).replace(/'/g, "\\'")}')"><i class="bi bi-trash"></i></button>
+              <button class="btn btn-sm btn-outline-danger" onclick="promptDelete('${escapeHTML(user.username).replace(/'/g, "\\'")}', '${escapeHTML(fullName !== '<i>N/A</i>' ? fullName : user.username).replace(/'/g, "\\'")}')"><i class="bi bi-trash"></i></button>
             </td>
           `;
                     tbody.appendChild(tr);
