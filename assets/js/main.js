@@ -220,17 +220,22 @@ var methodColors = {
 };
 
 function switchPayment(method, el) {
+  // Reset all cards to default (CSS handles base styles)
   document.querySelectorAll('.payment-method-card').forEach(function(c) {
-    c.style.border = '2px solid #e8ecf4';
-    c.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)';
+    c.classList.remove('active');
+    c.style.borderColor = '';
+    c.style.boxShadow = '';
     var bar = c.querySelector('.method-bar');
-    if (bar) bar.style.background = '#e8ecf4';
+    if (bar) bar.style.background = '';
   });
+  // Activate selected card
   var col = methodColors[method];
-  el.style.border = '2px solid ' + col.border;
+  el.classList.add('active');
+  el.style.borderColor = col.border;
   el.style.boxShadow = '0 4px 20px ' + col.shadow;
   var bar = el.querySelector('.method-bar');
   if (bar) bar.style.background = col.bar;
+  // Show corresponding panel
   document.querySelectorAll('.payment-panel').forEach(function(p) { p.style.display = 'none'; });
   document.getElementById('panel-' + method).style.display = 'block';
 }

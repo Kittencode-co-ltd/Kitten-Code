@@ -28,6 +28,13 @@
 
   <!-- Main CSS File -->
   <link href="../assets/css/main.css" rel="stylesheet">
+  <!-- Theme: prevent FOUC -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('kittencode-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 </head>
 
 <body class="portfolio-details-page">
@@ -47,7 +54,12 @@
           <li><a href="../index.html#portfolio">Portfolio</a></li>
           <li><a href="../index.html#team" class="active">Team</a></li>
           <li><a href="../index.html#contact">Contact</a></li>
-        </ul>
+          <li class="theme-toggle-wrapper">
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+              <i class="bi bi-moon-fill theme-icon-dark"></i>
+              <i class="bi bi-sun-fill theme-icon-light" style="display:none;"></i>
+            </button>
+          </li>        </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
 
@@ -275,6 +287,8 @@
 
   <!-- Main JS File -->
   <script src="../assets/js/main.js"></script>
+  <!-- Theme Toggle -->
+  <script src="../assets/js/theme.js"></script>
 
 </body>
 

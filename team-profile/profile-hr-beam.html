@@ -28,6 +28,13 @@
 
     <!-- Main CSS File -->
     <link href="../assets/css/main.css" rel="stylesheet">
+  <!-- Theme: prevent FOUC -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('kittencode-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 </head>
 
 <body class="portfolio-details-page">
@@ -269,6 +276,8 @@
 
     <!-- Main JS File -->
     <script src="../assets/js/main.js"></script>
+  <!-- Theme Toggle -->
+  <script src="../assets/js/theme.js"></script>
 
 </body>
 

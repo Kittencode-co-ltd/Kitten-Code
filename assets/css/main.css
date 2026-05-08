@@ -2009,3 +2009,469 @@ body.i18n-loading .main {
     background-color 0.2s ease,
     box-shadow 0.2s ease;
 }
+
+/*--------------------------------------------------------------
+# Dark Mode Theme System
+--------------------------------------------------------------*/
+
+/* ── Theme Transition (smooth toggle) ───────────────────── */
+body,
+section,
+.section,
+.header,
+.footer,
+.stats .stats-item,
+.services .details,
+.services-2 .service-item,
+.team .member .member-info,
+.contact .info-item,
+.contact .php-email-form,
+.portfolio .portfolio-content .portfolio-info,
+.features .nav-link,
+.portfolio-details .portfolio-info,
+.service-details .services-list {
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+/* ── Dark Mode Variables ──────────────────────────────────── */
+[data-theme="dark"] {
+  /* Deep charcoal — avoids pure black, reduces eye strain */
+  --background-color: #0f1117;
+  --default-color: #c8cdd5;
+  --heading-color: #e8ecf2;
+  --accent-color: #ff6b42;
+  --surface-color: #1a1d27;
+  --contrast-color: #ffffff;
+
+  /* Nav overrides */
+  --nav-color: #c8cdd5;
+  --nav-hover-color: #ff6b42;
+  --nav-mobile-background-color: #1a1d27;
+  --nav-dropdown-background-color: #1a1d27;
+  --nav-dropdown-color: #c8cdd5;
+  --nav-dropdown-hover-color: #ff6b42;
+}
+
+/* ── Light-background preset in dark mode ─────────────────── */
+[data-theme="dark"] .light-background {
+  --background-color: #141720;
+  --surface-color: #1e2230;
+}
+
+/* ── Dark-background preset stays similar ─────────────────── */
+[data-theme="dark"] .dark-background {
+  --background-color: #080b10;
+  --surface-color: #1a1d27;
+}
+
+/* ── Scrolled header in dark mode ─────────────────────────── */
+[data-theme="dark"] .scrolled .header,
+[data-theme="dark"].scrolled .header {
+  --background-color: rgba(15, 17, 23, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Stats cards ──────────────────────────────────────────── */
+[data-theme="dark"] .stats .stats-item {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Services featured cards ──────────────────────────────── */
+[data-theme="dark"] .services .details {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Services 2 cards ─────────────────────────────────────── */
+[data-theme="dark"] .services-2 .service-item {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .services-2 .service-item:hover {
+  border-color: var(--accent-color);
+}
+
+/* ── Team member info ─────────────────────────────────────── */
+[data-theme="dark"] .team .member .member-info {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Client logos — boost visibility ──────────────────────── */
+[data-theme="dark"] .clients .client-logo img {
+  opacity: 0.55;
+  filter: grayscale(100%) brightness(1.8);
+}
+
+[data-theme="dark"] .clients .client-logo img:hover {
+  filter: none;
+  opacity: 1;
+}
+
+/* ── Contact section ──────────────────────────────────────── */
+[data-theme="dark"] .contact .info-item {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .contact .php-email-form {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Portfolio section ────────────────────────────────────── */
+[data-theme="dark"] .portfolio .portfolio-content .portfolio-info {
+  background: rgba(15, 17, 23, 0.85);
+}
+
+/* ── Features / Payment nav-links ─────────────────────────── */
+[data-theme="dark"] .features .nav-link {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Mobile nav overlay ───────────────────────────────────── */
+[data-theme="dark"] .mobile-nav-active .navmenu {
+  background: rgba(15, 17, 23, 0.92);
+}
+
+[data-theme="dark"] .navmenu ul {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Section title adjustment ─────────────────────────────── */
+[data-theme="dark"] .section-title h2 {
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
+/* ── Footer in dark mode ──────────────────────────────────── */
+[data-theme="dark"] .footer .footer-top {
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .footer .copyright {
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Preloader ────────────────────────────────────────────── */
+[data-theme="dark"] #preloader {
+  background: #0f1117;
+}
+
+/* ── Portfolio details ────────────────────────────────────── */
+[data-theme="dark"] .portfolio-details .portfolio-info {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Service details ──────────────────────────────────────── */
+[data-theme="dark"] .service-details .services-list {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/*--------------------------------------------------------------
+# Theme Toggle Button
+--------------------------------------------------------------*/
+.theme-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  margin-left: 6px;
+}
+
+.theme-toggle-btn {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+  color: var(--nav-color, #e5eaee);
+  font-size: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background: rgba(255, 255, 255, 0.05);
+  transform: rotate(15deg);
+}
+
+.theme-toggle-btn .theme-icon-dark,
+.theme-toggle-btn .theme-icon-light {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* When scrolled on light mode, adjust toggle visibility */
+[data-theme="light"] .scrolled .theme-toggle-btn,
+.scrolled .theme-toggle-btn {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Mobile: adjust toggle inside menu */
+@media (max-width: 1199px) {
+  .theme-toggle-wrapper {
+    margin-left: 0;
+    padding: 10px 20px;
+  }
+
+  .theme-toggle-btn {
+    border-color: rgba(0, 0, 0, 0.15);
+    color: var(--nav-dropdown-color, #444444);
+  }
+
+  [data-theme="dark"] .theme-toggle-btn {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--nav-color, #c8cdd5);
+  }
+}
+
+/*--------------------------------------------------------------
+# Payment Section — Themeable Classes
+--------------------------------------------------------------*/
+.payment-method-card {
+  cursor: pointer;
+  border-radius: 16px;
+  padding: 20px 16px;
+  text-align: center;
+  background: var(--surface-color, #fff);
+  border: 2px solid rgba(128, 128, 128, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.payment-method-card .method-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(128, 128, 128, 0.15);
+  border-radius: 16px 16px 0 0;
+}
+
+.payment-method-card .pm-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.payment-method-card .pm-sublabel {
+  font-size: 10px;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  margin-top: 2px;
+}
+
+.payment-method-card .pm-icon-wrap {
+  font-size: 42px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.payment-method-card .pm-logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* Payment Detail Panel */
+.payment-panel-card {
+  background: var(--surface-color, #fff);
+  border-radius: 24px;
+  padding: 40px 36px;
+  border: 1px solid rgba(128, 128, 128, 0.12);
+  transition: background-color 0.35s ease, border-color 0.35s ease;
+}
+
+.payment-panel-card .panel-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.12);
+}
+
+.payment-panel-card .panel-header .bank-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.payment-panel-card .panel-bank-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--heading-color);
+}
+
+.payment-panel-card .panel-secure-label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.payment-panel-card .panel-account-badge {
+  margin-left: auto;
+  background: rgba(128, 128, 128, 0.08);
+  border-radius: 10px;
+  padding: 8px 14px;
+  text-align: center;
+}
+
+.payment-panel-card .panel-badge-label {
+  font-size: 10px;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.payment-panel-card .panel-badge-value {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.payment-panel-card .panel-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.payment-panel-card .panel-holder-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--heading-color);
+}
+
+.payment-panel-card .panel-holder-sub {
+  font-size: 14px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--default-color), transparent 30%);
+}
+
+.payment-panel-card .panel-acno-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(128, 128, 128, 0.05);
+  border-radius: 12px;
+  padding: 14px 18px;
+  border: 1px solid rgba(128, 128, 128, 0.12);
+}
+
+.payment-panel-card .panel-acno {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading-color);
+  letter-spacing: 2px;
+  font-family: monospace;
+}
+
+.payment-panel-card .panel-btn-group {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.payment-panel-card .btn-show-acno {
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  background: rgba(128, 128, 128, 0.08);
+  border: 1.5px solid currentColor;
+}
+
+.payment-panel-card .btn-copy-acno {
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.payment-panel-card .copy-msg {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 6px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* QR Payment Panels */
+.payment-panel-card.qr-panel {
+  text-align: center;
+}
+
+.payment-panel-card .qr-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--heading-color);
+  margin-bottom: 6px;
+}
+
+.payment-panel-card .qr-desc {
+  font-size: 13px;
+  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  margin-bottom: 24px;
+}
+
+.payment-panel-card .qr-frame {
+  display: inline-block;
+  padding: 16px;
+  background: rgba(128, 128, 128, 0.04);
+  border-radius: 20px;
+  border: 2px solid rgba(128, 128, 128, 0.12);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.payment-panel-card .qr-frame img {
+  width: 240px;
+  height: 240px;
+  object-fit: contain;
+  border-radius: 12px;
+  display: block;
+}
+
+/* Dark mode specifics for payment */
+[data-theme="dark"] .payment-method-card {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .payment-panel-card {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .payment-panel-card .qr-frame {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
