@@ -40,22 +40,21 @@
             wrapper.appendChild(slide);
           });
 
-          // Re-initialize the Swiper instance after slides are loaded
+          // Initialize or reinitialize Swiper after slides are injected
           var swiperContainer = wrapper.closest('.init-swiper');
-          if (swiperContainer && swiperContainer.swiper) {
-            swiperContainer.swiper.update();
-            swiperContainer.swiper.slideTo(0, 0);
-          } else if (swiperContainer) {
-            // If Swiper hasn't been initialized yet, try to init it
-            var configEl = swiperContainer.querySelector('.swiper-config');
-            if (configEl) {
-              try {
-                var config = JSON.parse(configEl.textContent.trim());
-                new Swiper(swiperContainer, config);
-              } catch (e) {
-                console.warn('Portfolio loader: Could not init Swiper', e);
-              }
+          if (!swiperContainer) return;
+
+          var configEl = swiperContainer.querySelector('.swiper-config');
+          if (!configEl) return;
+
+          try {
+            var config = JSON.parse(configEl.textContent.trim());
+            if (swiperContainer.swiper) {
+              swiperContainer.swiper.destroy(true, true);
             }
+            new Swiper(swiperContainer, config);
+          } catch (e) {
+            console.warn('Portfolio loader: Could not init Swiper', e);
           }
         })
         .catch(function (err) {
