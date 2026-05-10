@@ -203,6 +203,64 @@
       -webkit-text-fill-color: white !important;
       transition: background-color 5000s ease-in-out 0s;
     }
+
+    .remember-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .remember-row input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .remember-row input[type="checkbox"]:checked {
+      background: #0099ff;
+      border-color: #0099ff;
+      box-shadow: 0 0 8px rgba(0, 153, 255, 0.4);
+    }
+
+    .remember-row input[type="checkbox"]::after {
+      content: '';
+      position: absolute;
+      display: none;
+      left: 5px;
+      top: 2px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .remember-row input[type="checkbox"]:checked::after {
+      display: block;
+    }
+
+    .remember-row label {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+      margin: 0;
+      transition: color 0.2s;
+    }
+
+    .remember-row:hover label {
+      color: rgba(255, 255, 255, 0.85);
+    }
   </style>
 </head>
 
@@ -230,6 +288,11 @@
           </div>
         </div>
 
+        <div class="remember-row">
+          <input type="checkbox" id="rememberMe">
+          <label for="rememberMe">Remember password</label>
+        </div>
+
         <button type="submit" class="btn btn-login w-100" id="signInBtn">Sign In</button>
         <div id="loginError" class="error-msg">
           <i class="bi bi-exclamation-circle me-1"></i> <span id="errorText">Invalid username or password</span>
@@ -249,6 +312,21 @@
 
     // Initialize AOS animation
     AOS.init();
+
+    // Load saved credentials on page start
+    (function loadSavedCredentials() {
+      const saved = localStorage.getItem('kc_remember');
+      if (saved) {
+        try {
+          const { username, password } = JSON.parse(saved);
+          document.getElementById('username').value = username || '';
+          document.getElementById('password').value = password || '';
+          document.getElementById('rememberMe').checked = true;
+        } catch (e) {
+          localStorage.removeItem('kc_remember');
+        }
+      }
+    })();
 
     async function formatEmail(username) {
       if (username.includes('@')) return username;
@@ -305,12 +383,20 @@
       }
 
       const email = await formatEmail(user);
+      const remember = document.getElementById('rememberMe').checked;
 
       try {
         await signInWithEmailAndPassword(auth, email, pass);
+
+        if (remember) {
+          localStorage.setItem('kc_remember', JSON.stringify({ username: user, password: pass }));
+        } else {
+          localStorage.removeItem('kc_remember');
+        }
+
         showSuccess();
         setTimeout(() => {
-          window.location.href = 'back-office.html';
+          window.location.href = 'back-office.html#calendar';
         }, 800);
       } catch (error) {
         console.error("Login error:", error);
@@ -339,7 +425,7 @@
         document.getElementById('signUpContainer').style.display = 'none';
         showSuccess();
         setTimeout(() => {
-          window.location.href = 'back-office.html';
+          window.location.href = 'back-office.html#calendar';
         }, 800);
       } catch (error) {
         console.error("Sign up error:", error);
