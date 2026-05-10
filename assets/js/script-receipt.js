@@ -70,6 +70,7 @@ function restoreDraft() {
                 if(el) el.value = escapeHTML(draft.inputs[id]);
             });
             if (draft.isReprint) {
+                localStorage.removeItem('draft_receipt_data');
                 setTimeout(showReprintToast, 300);
             } else {
                 showDraftToast();

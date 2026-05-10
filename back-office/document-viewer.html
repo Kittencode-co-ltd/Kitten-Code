@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Viewer - Kitten Code</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/quotation.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        /* ── Toolbar ── */
+        .viewer-toolbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            height: 56px;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            gap: 12px;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.75);
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-back:hover {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+
+        .doc-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .doc-type-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: rgba(99, 179, 237, 0.2);
+            color: #90cdf4;
+            border: 1px solid rgba(99, 179, 237, 0.3);
+            white-space: nowrap;
+        }
+
+        .doc-number {
+            font-size: 14px;
+            color: rgba(255,255,255,0.65);
+            font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .toolbar-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .btn-print {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #f26522;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Sarabun', sans-serif;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
+        }
+
+        .btn-print:hover { background: #d4521a; }
+        .btn-print:active { transform: scale(0.97); }
+
+        /* ── Preview area ── */
+        .viewer-body {
+            margin-top: 56px;
+            padding: 30px 20px;
+        }
+
+        /* Reuse .preview-panel styles from quotation.css but full-width */
+        #preview-panel {
+            max-width: 900px;
+            margin: 0 auto;
+            background: transparent;
+        }
+
+        /* ── Print overrides ── */
+        @media print {
+            .viewer-toolbar { display: none !important; }
+            .viewer-body { margin-top: 0; padding: 0; }
+            #preview-panel { max-width: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Toolbar (hidden on print) -->
+    <div class="viewer-toolbar no-print">
+        <div class="toolbar-left">
+            <a href="javascript:history.back()" class="btn-back">
+                <i class="fas fa-arrow-left"></i> กลับ
+            </a>
+            <span class="toolbar-title">Document Viewer</span>
+            <div class="doc-meta">
+                <span class="doc-type-badge" id="doc-type-badge">—</span>
+                <span class="doc-number" id="doc-number"></span>
+            </div>
+        </div>
+        <div class="toolbar-right">
+            <button class="btn-print" onclick="window.print()">
+                <i class="fas fa-print"></i> พิมพ์ (A4)
+            </button>
+        </div>
+    </div>
+
+    <!-- Document preview -->
+    <div class="viewer-body">
+        <div id="preview-panel"></div>
+    </div>
+
+    <script src="../assets/js/script-document-viewer.js"></script>
+    <script type="module">
+        import { onAuthStateChanged, auth } from '../assets/js/firebase-config.js';
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.replace('login.html');
+        });
+    </script>
+
+</body>
+
+</html>

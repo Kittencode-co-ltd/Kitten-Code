@@ -71,6 +71,7 @@ function restoreDraft() {
                 if(el) el.value = escapeHTML(draft.inputs[id]);
             });
             if (draft.isReprint) {
+                localStorage.removeItem('draft_quotation_data');
                 setTimeout(showReprintToast, 300);
             } else {
                 showDraftToast();
