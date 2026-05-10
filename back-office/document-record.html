@@ -9,18 +9,20 @@
     <link rel="stylesheet" href="../assets/css/finance.css">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         .badge-quote {
             background: rgba(14, 165, 233, 0.12);
             color: #0ea5e9;
             border: 1px solid rgba(14, 165, 233, 0.35);
         }
+
         .badge-invoice {
             background: rgba(139, 92, 246, 0.12);
             color: #8b5cf6;
             border: 1px solid rgba(139, 92, 246, 0.35);
         }
+
         .badge-receipt {
             background: rgba(16, 185, 129, 0.12);
             color: #10b981;
@@ -46,13 +48,8 @@
                 <div class="section">
                     <div class="section-header">
                         <div class="section-title">Document Records</div>
-                        <div style="display:flex; gap: 8px;">
-                            <a href="quotaion.html" class="action-btn" style="text-decoration:none;">+ Quotation</a>
-                            <a href="invoice.html" class="action-btn" style="text-decoration:none;">+ Invoice</a>
-                            <a href="receipt.html" class="action-btn" style="text-decoration:none;">+ Receipt</a>
-                        </div>
                     </div>
-                    
+
                     <div class="table-scroll-wrapper">
                         <table class="txn-table">
                             <thead>
@@ -67,7 +64,9 @@
                                 </tr>
                             </thead>
                             <tbody id="doc-tbody">
-                                <tr><td colspan="7" style="text-align:center;">Loading documents...</td></tr>
+                                <tr>
+                                    <td colspan="7" style="text-align:center;">Loading documents...</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
