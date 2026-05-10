@@ -115,6 +115,13 @@
         "description": "Coming Soon.",
         "price": ""
       }
+    },
+    "more_detail": "More Detail →",
+    "detail": {
+      "nav_label": "Our Services",
+      "what_we_offer": "What We Offer",
+      "contact_cta": "Get a Quote",
+      "contact_cta_desc": "Ready to start your project? Contact us today for a custom quote."
     }
   },
   "partners": {
