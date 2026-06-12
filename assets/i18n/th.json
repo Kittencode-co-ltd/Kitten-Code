@@ -136,13 +136,15 @@
       "product": "ผลิตภัณฑ์",
       "media": "สื่อ",
       "certificates": "ใบรับรอง"
-    }
+    },
+    "load_more": "ดูเพิ่มเติม"
   },
   "team": {
     "heading": "ทีมงาน",
     "subheading": "ทีมงานของเรา",
     "founder_category": "ผู้ก่อตั้งและผู้ร่วมก่อตั้ง",
     "full_team_category": "ทีมงานทั้งหมด",
+    "view_profile": "ดูโปรไฟล์",
     "roles": {
       "ceo": "CEO / Co-Founder",
       "cio": "Founder / CIO",

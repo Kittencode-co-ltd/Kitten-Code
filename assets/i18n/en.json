@@ -136,13 +136,15 @@
       "product": "Product",
       "media": "Media",
       "certificates": "Certificates"
-    }
+    },
+    "load_more": "Load More"
   },
   "team": {
     "heading": "Team",
     "subheading": "CHECK OUR TEAM",
     "founder_category": "Founder & Co-Founder",
     "full_team_category": "Our Full Team",
+    "view_profile": "View Profile",
     "roles": {
       "ceo": "CEO / Co-Founder",
       "cio": "Founder / CIO",

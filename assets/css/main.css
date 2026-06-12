@@ -13,11 +13,11 @@
 /* Fonts */
 :root {
   --default-font:
-    "Roboto", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    "Roboto", "Prompt", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Raleway", sans-serif;
-  --nav-font: "Inter", sans-serif;
+  --heading-font: "Raleway", "Prompt", sans-serif;
+  --nav-font: "Inter", "Prompt", sans-serif;
 }
 
 html[lang="th"] {
@@ -1234,10 +1234,6 @@ section,
   color: var(--accent-color);
 }
 
-.member .member-info:hover h4 {
-  color: var(--accent-color);
-}
-
 .services .service-item:hover .details .icon {
   background: var(--surface-color);
   border: 2px solid var(--accent-color);
@@ -1667,26 +1663,110 @@ section,
 /*--------------------------------------------------------------
 # Team Section
 --------------------------------------------------------------*/
+.portfolio .portfolio-load-more {
+  display: inline-block;
+  padding: 10px 36px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  background: transparent;
+  border: 2px solid var(--accent-color);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.portfolio .portfolio-load-more:hover {
+  background-color: var(--accent-color);
+  color: var(--contrast-color);
+}
+
 .team .member {
-  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface-color);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.team .member:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
 .team .member .pic {
+  display: block;
   overflow: hidden;
-  margin-bottom: 50px;
+}
+
+.team .member .pic img {
+  width: 100%;
+  transition: transform 0.4s ease;
+}
+
+.team .member:hover .pic img {
+  transform: scale(1.05);
 }
 
 .team .member .member-info {
-  background-color: var(--surface-color);
   color: color-mix(in srgb, var(--default-color), transparent 20%);
-  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  bottom: -50px;
-  left: 20px;
-  right: 20px;
-  padding: 20px 15px;
-  overflow: hidden;
-  transition: 0.5s;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.team .member .role-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.team .member .profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  color: var(--accent-color) !important;
+  background: transparent;
+  border: none;
+  text-decoration: none !important;
+  transition: font-size 0.2s ease, gap 0.2s ease;
+}
+
+.team .member .profile-link:hover {
+  font-size: 13px;
+  gap: 8px;
+}
+
+.team .member .profile-link i {
+  font-size: 18px;
+  vertical-align: -3px;
+  transition: transform 0.2s ease;
+}
+
+.team .member .profile-link:hover i {
+  transform: translateX(4px);
+}
+
+/* Equal-height cards inside the team swiper */
+.team .swiper-slide {
+  height: auto;
+}
+
+.team .swiper-slide .member {
+  height: 100%;
 }
 
 .team .member h4 {
@@ -1708,54 +1788,15 @@ section,
   left: 0;
 }
 
-.team .member span {
-  font-style: italic;
+.team .member .role-row > span {
   display: block;
   font-size: 13px;
-  padding-right: 75px; /* Reserve space for absolutely-positioned social icons */
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
 }
 
-.team .member .social {
-  position: absolute;
-  right: 15px;
-  bottom: 15px;
-}
-
-.team .member .social a {
-  transition: color 0.3s;
-  color: color-mix(in srgb, var(--default-color), transparent 70%);
-}
-
-.team .member .social a:hover {
-  color: var(--accent-color);
-}
-
-.team .member .social i {
-  font-size: 16px;
-  margin: 0 2px;
-}
-
-/* Mobile: stack position and social icons vertically to prevent overlap */
-@media (max-width: 768px) {
-  .team .member .member-info {
-    position: static;
-    margin-top: -40px;
-    left: 0;
-    right: 0;
-    padding: 15px 12px 12px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .team .member span {
-    padding-right: 0;
-    margin-bottom: 8px;
-  }
-
-  .team .member .social {
-    position: static;
-    margin-top: 6px;
-  }
+.team .member .profile-link span {
+  color: inherit;
+  font-size: inherit;
 }
 
 /*--------------------------------------------------------------
@@ -2102,7 +2143,7 @@ section,
 .stats .stats-item,
 .services .details,
 .services-2 .service-item,
-.team .member .member-info,
+.team .member,
 .contact .info-item,
 .contact .php-email-form,
 .portfolio .portfolio-content .portfolio-info,
@@ -2178,8 +2219,8 @@ section,
   border-color: var(--accent-color);
 }
 
-/* ── Team member info ─────────────────────────────────────── */
-[data-theme="dark"] .team .member .member-info {
+/* ── Team member card ─────────────────────────────────────── */
+[data-theme="dark"] .team .member {
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.06);
 }

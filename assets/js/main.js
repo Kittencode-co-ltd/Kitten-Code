@@ -143,12 +143,17 @@
     let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
     let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
 
+    // Items marked .portfolio-hidden stay collapsed until "Load More" is clicked
+    let withHidden = function(f) {
+      return isotopeItem.querySelector('.isotope-item.portfolio-hidden') ? f + ':not(.portfolio-hidden)' : f;
+    };
+
     let initIsotope;
     imagesLoaded(isotopeItem.querySelector('.isotope-container'), function() {
       initIsotope = new Isotope(isotopeItem.querySelector('.isotope-container'), {
         itemSelector: '.isotope-item',
         layoutMode: layout,
-        filter: filter,
+        filter: withHidden(filter),
         sortBy: sort
       });
     });
@@ -158,13 +163,27 @@
         isotopeItem.querySelector('.isotope-filters .filter-active').classList.remove('filter-active');
         this.classList.add('filter-active');
         initIsotope.arrange({
-          filter: this.getAttribute('data-filter')
+          filter: withHidden(this.getAttribute('data-filter'))
         });
         if (typeof aosInit === 'function') {
           aosInit();
         }
       }, false);
     });
+
+    let loadMoreBtn = isotopeItem.parentElement.querySelector('.portfolio-load-more');
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', function() {
+        isotopeItem.querySelectorAll('.isotope-item.portfolio-hidden').forEach(function(item) {
+          item.classList.remove('portfolio-hidden');
+        });
+        let activeFilter = isotopeItem.querySelector('.isotope-filters .filter-active');
+        initIsotope.arrange({
+          filter: activeFilter ? activeFilter.getAttribute('data-filter') : '*'
+        });
+        loadMoreBtn.parentElement.remove();
+      });
+    }
 
   });
 
