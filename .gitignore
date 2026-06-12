@@ -74,3 +74,6 @@ assets/js/__ENV__.js
 .agents
 .claude
 .windsurf
+
+drop_member/
+drop_port/
