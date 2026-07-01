@@ -100,7 +100,17 @@
       mirror: false
     });
   }
-  window.addEventListener('load', aosInit);
+  window.addEventListener('load', () => {
+    aosInit();
+    // Listen for image load events in capture phase to refresh AOS when lazy-loaded images load
+    document.body.addEventListener('load', (e) => {
+      if (e && e.target && e.target.tagName === 'IMG') {
+        if (typeof AOS !== 'undefined') {
+          AOS.refresh();
+        }
+      }
+    }, true);
+  });
 
   /**
    * Initiate glightbox
@@ -131,6 +141,9 @@
         new Swiper(swiperElement, config);
       }
     });
+    if (typeof AOS !== 'undefined') {
+      AOS.refresh();
+    }
   }
 
   window.addEventListener("load", initSwiper);

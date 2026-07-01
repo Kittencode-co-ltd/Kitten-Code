@@ -80,4 +80,9 @@ function applyTranslations(translations) {
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', descValue);
   }
+
+  // Refresh AOS after translations are applied and element heights shift
+  if (typeof AOS !== 'undefined' && typeof AOS.refresh === 'function') {
+    AOS.refresh();
+  }
 }

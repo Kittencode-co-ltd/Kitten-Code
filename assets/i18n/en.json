@@ -144,6 +144,7 @@
     "subheading": "CHECK OUR TEAM",
     "founder_category": "Founder & Co-Founder",
     "full_team_category": "Our Full Team",
+    "advisory_category": "Advisory Board",
     "view_profile": "View Profile",
     "roles": {
       "ceo": "CEO / Co-Founder",
@@ -154,6 +155,7 @@
       "coo": "Developer",
       "cro": "Food R&D",
       "cmo": "Business Economic Analyst",
+      "advisor": "Advisor",
       "member": "Member"
     }
   },

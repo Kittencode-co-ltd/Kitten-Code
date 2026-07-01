@@ -144,6 +144,7 @@
     "subheading": "ทีมงานของเรา",
     "founder_category": "ผู้ก่อตั้งและผู้ร่วมก่อตั้ง",
     "full_team_category": "ทีมงานทั้งหมด",
+    "advisory_category": "คณะที่ปรึกษา (Advisory Board)",
     "view_profile": "ดูโปรไฟล์",
     "roles": {
       "ceo": "CEO / Co-Founder",
@@ -154,6 +155,7 @@
       "coo": "Developer",
       "cro": "Food R&D",
       "cmo": "Business Economic Analyst",
+      "advisor": "ที่ปรึกษา (Advisor)",
       "member": "Member"
     }
   },
