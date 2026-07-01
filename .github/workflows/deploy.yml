@@ -63,6 +63,8 @@ jobs:
           mkdir public
           cp -r assets public/
           cp -r back-office public/
+          cp -r team-profile public/
+          cp -r services public/
           cp index.html public/
 
       - name: Upload artifact
