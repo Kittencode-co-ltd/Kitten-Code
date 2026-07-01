@@ -1718,7 +1718,7 @@ section,
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 20px 24px;
 }
 
 .team .member .role-row {
@@ -1760,9 +1760,34 @@ section,
   transform: translateX(4px);
 }
 
+/* Soft orange aura behind Founder & Advisory Board card rows */
+.team-glow {
+  position: relative;
+  z-index: 0;
+}
+
+.team-glow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(900px, 90%);
+  height: 340px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(255, 74, 23, 0.22) 0%, rgba(255, 74, 23, 0.08) 45%, transparent 72%);
+  filter: blur(10px);
+  z-index: -1;
+  pointer-events: none;
+}
+
 /* Equal-height cards inside the team swiper */
 .team .swiper-slide {
   height: auto;
+}
+
+/* Swiper's overflow: hidden clips card box-shadow without this */
+.team .swiper.init-swiper {
+  padding-bottom: 50px;
 }
 
 .team .swiper-slide .member {
