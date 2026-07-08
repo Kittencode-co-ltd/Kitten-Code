@@ -85,6 +85,55 @@ window.clearDraft = function() {
 };
 // ------------------------------
 
+// --- Convert-from-previous-document System ---
+const showConvertToast = (sourceLabel) => {
+    const toast = document.createElement('div');
+    toast.className = 'kc-toast-container';
+    toast.innerHTML = `
+        <i class="fas fa-file-import kc-toast-icon" style="color: #f26522"></i>
+        <div class="kc-toast-content">
+            <span class="kc-toast-title">นำเข้าข้อมูลแล้ว</span>
+            <span class="kc-toast-message">ดึงข้อมูลลูกค้า/รายการจาก ${sourceLabel} มาให้แล้ว</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 4000);
+};
+
+function applyConvertData() {
+    const raw = localStorage.getItem('kc_convert_data');
+    if (!raw) return false;
+    localStorage.removeItem('kc_convert_data');
+    try {
+        const data = JSON.parse(raw);
+        if (data.sourceType !== 'invoice') return false;
+
+        setInputValue('cust-name', data.custName);
+        setInputValue('cust-addr', data.custAddr);
+        setInputValue('cust-tax', data.custTax);
+        setInputValue('proj-name', data.projName);
+        setInputValue('doc-invoice', data.sourceDocNo);
+        setInputValue('doc-vat', data.vatRate);
+        setInputValue('special-discount', data.discount || 0);
+
+        state.discount = data.discount || 0;
+        if (data.items && data.items.length) {
+            state.items = data.items.map(item => ({ id: generateId(), desc: item.desc, qty: item.qty, price: item.price, discount: 0 }));
+        }
+
+        setTimeout(() => showConvertToast(`ใบแจ้งหนี้ ${data.sourceDocNo}`), 300);
+        return true;
+    } catch (e) {
+        console.error("Could not apply converted document data", e);
+        return false;
+    }
+}
+// ------------------------------
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     // Set default date to today
@@ -103,7 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('change', () => buildPreview());
     });
 
-    restoreDraft();
+    if (!applyConvertData()) {
+        restoreDraft();
+    }
     renderItemsForm();
 
     // Initial build
@@ -179,6 +230,11 @@ function formatQty(qty) {
 function getInputValue(id) {
     const el = document.getElementById(`in-${id}`);
     return el ? el.value : '';
+}
+
+function setInputValue(id, value) {
+    const el = document.getElementById(`in-${id}`);
+    if (el) el.value = value ?? '';
 }
 
 function getThaiDate(dateString) {

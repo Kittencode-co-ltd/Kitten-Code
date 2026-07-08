@@ -86,6 +86,57 @@ window.clearDraft = function() {
 };
 // ------------------------------
 
+// --- Convert-from-previous-document System ---
+const showConvertToast = (sourceLabel) => {
+    const toast = document.createElement('div');
+    toast.className = 'kc-toast-container';
+    toast.innerHTML = `
+        <i class="fas fa-file-import kc-toast-icon" style="color: #f26522"></i>
+        <div class="kc-toast-content">
+            <span class="kc-toast-title">นำเข้าข้อมูลแล้ว</span>
+            <span class="kc-toast-message">ดึงข้อมูลลูกค้า/รายการจาก ${sourceLabel} มาให้แล้ว</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 4000);
+};
+
+function applyConvertData() {
+    const raw = localStorage.getItem('kc_convert_data');
+    if (!raw) return false;
+    localStorage.removeItem('kc_convert_data');
+    try {
+        const data = JSON.parse(raw);
+        if (data.sourceType !== 'quotation') return false;
+
+        setInputValue('cust-name', data.custName);
+        setInputValue('cust-addr', data.custAddr);
+        setInputValue('cust-tel', data.custTel);
+        setInputValue('cust-tax', data.custTax);
+        setInputValue('proj-name', data.projName);
+        setInputValue('proj-contact', data.projContact);
+        setInputValue('quote-ref', data.sourceDocNo);
+        setInputValue('doc-vat', data.vatRate);
+        setInputValue('doc-discount', data.discount || 0);
+
+        state.discount = data.discount || 0;
+        if (data.items && data.items.length) {
+            state.items = data.items.map(item => ({ id: generateId(), desc: item.desc, qty: item.qty, price: item.price }));
+        }
+
+        setTimeout(() => showConvertToast(`ใบเสนอราคา ${data.sourceDocNo}`), 300);
+        return true;
+    } catch (e) {
+        console.error("Could not apply converted document data", e);
+        return false;
+    }
+}
+// ------------------------------
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     // Set default date to today
@@ -103,7 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('input', () => buildPreview());
     });
 
-    restoreDraft();
+    if (!applyConvertData()) {
+        restoreDraft();
+    }
     renderItemsForm();
 
     // Initial build
@@ -180,6 +233,11 @@ function formatQty(qty) {
 function getInputValue(id) {
     const el = document.getElementById(`in-${id}`);
     return el ? el.value : '';
+}
+
+function setInputValue(id, value) {
+    const el = document.getElementById(`in-${id}`);
+    if (el) el.value = value ?? '';
 }
 
 function getThaiDate(dateString) {
@@ -665,6 +723,7 @@ window.saveDocumentToFirestore = async function() {
             }
         }, 3000);
 
+        return true;
     } catch (error) {
         console.error("Error saving document:", error);
         showSaveToast(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล", "error");
@@ -673,5 +732,37 @@ window.saveDocumentToFirestore = async function() {
             btnSave.disabled = false;
             btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
         }
+        return false;
     }
+};
+
+// --- Convert to next document type ---
+window.convertToReceipt = async function() {
+    const btn = document.getElementById('btn-next-receipt');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
+    }
+
+    const ok = await window.saveDocumentToFirestore();
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-arrow-right"></i> บันทึกและไปสร้างใบเสร็จรับเงินต่อ';
+    }
+    if (!ok) return;
+
+    const payload = {
+        sourceType: 'invoice',
+        sourceDocNo: getInputValue('doc-no'),
+        custName: getInputValue('cust-name'),
+        custAddr: getInputValue('cust-addr'),
+        custTax: getInputValue('cust-tax'),
+        projName: getInputValue('proj-name'),
+        discount: state.discount || 0,
+        vatRate: Number(getInputValue('doc-vat')) || 7,
+        items: state.items.map(item => ({ desc: item.desc, qty: item.qty, price: item.price }))
+    };
+    localStorage.setItem('kc_convert_data', JSON.stringify(payload));
+    window.location.href = 'receipt.html';
 };

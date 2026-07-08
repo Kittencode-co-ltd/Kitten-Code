@@ -182,6 +182,11 @@ function getInputValue(id) {
     return el ? el.value : '';
 }
 
+function setInputValue(id, value) {
+    const el = document.getElementById(`in-${id}`);
+    if (el) el.value = value ?? '';
+}
+
 function getThaiDate(dateString) {
     if (!dateString) return '';
     const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
@@ -582,6 +587,7 @@ window.saveDocumentToFirestore = async function() {
             }
         }, 3000);
 
+        return true;
     } catch (error) {
         console.error("Error saving document:", error);
         showSaveToast(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล", "error");
@@ -590,5 +596,39 @@ window.saveDocumentToFirestore = async function() {
             btnSave.disabled = false;
             btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
         }
+        return false;
     }
+};
+
+// --- Convert to next document type ---
+window.convertToInvoice = async function() {
+    const btn = document.getElementById('btn-next-invoice');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
+    }
+
+    const ok = await window.saveDocumentToFirestore();
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-arrow-right"></i> บันทึกและไปสร้างใบแจ้งหนี้ต่อ';
+    }
+    if (!ok) return;
+
+    const payload = {
+        sourceType: 'quotation',
+        sourceDocNo: getInputValue('doc-no'),
+        custName: getInputValue('cust-name'),
+        custAddr: getInputValue('cust-addr'),
+        custTel: getInputValue('cust-tel'),
+        custTax: getInputValue('cust-tax'),
+        projName: getInputValue('proj-name'),
+        projContact: getInputValue('proj-contact'),
+        discount: state.discount || 0,
+        vatRate: Number(getInputValue('doc-vat')) || 7,
+        items: state.items.map(item => ({ desc: item.desc, qty: item.qty, price: item.price }))
+    };
+    localStorage.setItem('kc_convert_data', JSON.stringify(payload));
+    window.location.href = 'invoice.html';
 };
