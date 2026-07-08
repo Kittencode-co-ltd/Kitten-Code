@@ -196,9 +196,10 @@ body {
   min-height: 64px;
 }
 
-/* ชื่อลูกค้า — ใช้ textarea แทน input เพื่อรองรับข้อความยาว */
-#in-cust-name {
+/* ฟิลด์ชื่อ/ผู้ติดต่อ/ผู้เซ็น — ใช้ textarea แทน input เพื่อรองรับข้อความยาวและขึ้นบรรทัดใหม่ได้ */
+.textarea-compact {
   min-height: 38px;
+  resize: vertical;
 }
 
 /* --- Buttons --- */

@@ -78,18 +78,19 @@ function createPageDOM_quotation(sv) {
                     <h1 class="company-name">Kitten Code</h1>
                     <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
                     <p class="company-contact">โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; อีเมล : <span>kittencode.co.ltd@gmail.com</span></p>
+                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
                 </div>
             </div>
             <h2 class="doc-title" style="text-align:center;margin-bottom:20px;font-size:18px;">ใบเสนอราคา (Quotation)</h2>
             <div class="doc-info-section flex-between align-start" style="margin-bottom:20px;font-size:13px;align-items:flex-start;">
                 <div class="info-group" style="width:54%;">
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custName)}</span></div>
                     <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ที่อยู่ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custAddr)}</span></div>
                     <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">โทร :</span><span style="flex:1;">${escapeHTML(sv.custTel)}</span></div>
                     <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:160px;font-weight:bold;">เลขประจำตัวผู้เสียภาษีอากร :</span><span style="flex:1;">${escapeHTML(sv.custTax)}</span></div>
                     <div style="margin-top:15px;">
-                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่องาน :</span><span style="flex:1;">${escapeHTML(sv.projName)}</span></div>
-                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ผู้ติดต่อ :</span><span style="flex:1;">${escapeHTML(sv.projContact)}</span></div>
+                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่องาน :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.projName)}</span></div>
+                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ผู้ติดต่อ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.projContact)}</span></div>
                         <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">เบอร์โทร :</span><span style="flex:1;">${escapeHTML(sv.projTel)}</span></div>
                     </div>
                 </div>
@@ -134,12 +135,13 @@ function createPageDOM_invoice(sv) {
                     <h1 class="company-name">Kitten Code</h1>
                     <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
                     <p class="company-contact">โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; อีเมล : <span>kittencode.co.ltd@gmail.com</span></p>
+                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
                 </div>
             </div>
             <h2 class="doc-title" style="text-align:center;margin-bottom:20px;font-size:18px;">ใบแจ้งหนี้ (Invoice)</h2>
             <div class="doc-info-section flex-between align-start" style="margin-bottom:20px;font-size:13px;align-items:flex-start;">
                 <div class="info-group" style="width:54%;">
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custName)}</span></div>
                     <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ที่อยู่ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custAddr)}</span></div>
                     <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">โทร :</span><span style="flex:1;">${escapeHTML(sv.custTel)}</span></div>
                     <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:160px;font-weight:bold;">เลขประจำตัวผู้เสียภาษีอากร :</span><span style="flex:1;">${escapeHTML(sv.custTax)}</span></div>
@@ -186,16 +188,17 @@ function createPageDOM_receipt(sv) {
                     <h1 class="company-name">Kitten Code</h1>
                     <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
                     <p class="company-contact">โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; อีเมล : <span>kittencode.co.ltd@gmail.com</span></p>
+                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
                 </div>
             </div>
             <h2 class="doc-title" style="text-align:center;margin-bottom:20px;font-size:18px;">ใบเสร็จรับเงิน (Receipt)</h2>
             <div class="doc-info-section flex-between align-start" style="margin-bottom:20px;font-size:13px;align-items:flex-start;">
                 <div class="info-group" style="width:54%;">
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custName)}</span></div>
                     <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ที่อยู่ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custAddr)}</span></div>
                     <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:160px;font-weight:bold;">เลขประจำตัวผู้เสียภาษีอากร :</span><span style="flex:1;">${escapeHTML(sv.custTax)}</span></div>
                     <div style="margin-top:15px;">
-                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อโปรเจ็ค :</span><span style="flex:1;">${escapeHTML(sv.projName)}</span></div>
+                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อโปรเจ็ค :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.projName)}</span></div>
                     </div>
                 </div>
                 <div class="info-group" style="width:42%;margin-top:-5px;">
@@ -231,23 +234,23 @@ function createPageDOM_receipt(sv) {
 
 function signaturesHTML_quotation(sv) {
     return `<div class="signatures" style="display:flex;justify-content:space-around;margin-top:40px;text-align:center;font-size:13px;">
-        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>สั่งซื้อโดย / ผู้เจรจา</div><div style="margin-top:5px;">${escapeHTML(sv.signBuyer)}</div></div>
-        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>จัดทำโดย</div><div style="margin-top:5px;">${escapeHTML(sv.signPrep)}</div></div>
-        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>อนุมัติโดย</div><div style="margin-top:5px;">${escapeHTML(sv.signAppr)}</div></div>
+        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>สั่งซื้อโดย / ผู้เจรจา</div><div style="margin-top:5px;white-space:pre-wrap;">${escapeHTML(sv.signBuyer)}</div></div>
+        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>จัดทำโดย</div><div style="margin-top:5px;white-space:pre-wrap;">${escapeHTML(sv.signPrep)}</div></div>
+        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>อนุมัติโดย</div><div style="margin-top:5px;white-space:pre-wrap;">${escapeHTML(sv.signAppr)}</div></div>
     </div>`;
 }
 
 function signaturesHTML_invoice(sv) {
     return `<div class="signatures" style="display:flex;justify-content:space-around;margin-top:40px;text-align:center;font-size:13px;">
-        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>ผู้รับใบแจ้งหนี้ / Bill Receiver Signature</div><div style="margin-top:5px;">${escapeHTML(sv.signReceiver)}</div></div>
-        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>ผู้มีอำนาจลงนาม / Authorized Signature</div><div style="margin-top:5px;">${escapeHTML(sv.signAuth)}</div></div>
+        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>ผู้รับใบแจ้งหนี้ / Bill Receiver Signature</div><div style="margin-top:5px;white-space:pre-wrap;">${escapeHTML(sv.signReceiver)}</div></div>
+        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>ผู้มีอำนาจลงนาม / Authorized Signature</div><div style="margin-top:5px;white-space:pre-wrap;">${escapeHTML(sv.signAuth)}</div></div>
     </div>`;
 }
 
 function signaturesHTML_receipt(sv) {
     return `<div class="signatures" style="display:flex;justify-content:space-around;margin-top:40px;text-align:center;font-size:13px;">
-        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>ผู้รับเงิน / Receiver</div><div style="margin-top:5px;">${escapeHTML(sv.signReceiver)}</div></div>
-        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>ผู้มีอำนาจลงนาม / Authorized Signature</div><div style="margin-top:5px;">${escapeHTML(sv.signAuth)}</div></div>
+        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>ผู้รับเงิน / Receiver</div><div style="margin-top:5px;white-space:pre-wrap;">${escapeHTML(sv.signReceiver)}</div></div>
+        <div class="sig-box"><div style="border-bottom:1px dashed #666;width:150px;margin:0 auto 10px;"></div><div>ผู้มีอำนาจลงนาม / Authorized Signature</div><div style="margin-top:5px;white-space:pre-wrap;">${escapeHTML(sv.signAuth)}</div></div>
     </div>`;
 }
 

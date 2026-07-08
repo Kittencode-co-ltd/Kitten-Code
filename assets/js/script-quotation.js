@@ -262,9 +262,10 @@ function createPageDOM(sv) {
                     <h1 class="company-name">Kitten Code</h1>
                     <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
                     <p class="company-contact">
-                        โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; 
+                        โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp;
                         อีเมล : <span>kittencode.co.ltd@gmail.com</span>
                     </p>
+                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
                 </div>
             </div>
 
@@ -273,14 +274,14 @@ function createPageDOM(sv) {
             <!-- Flex Row for Details -->
             <div class="doc-info-section flex-between align-start" style="margin-bottom: 20px; font-size: 13px; align-items: flex-start;">
                 <div class="info-group" style="width: 54%;">
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.custName)}</span></div>
                     <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ที่อยู่ :</span> <span class="info-value line-break" style="flex: 1;">${escapeHTML(sv.custAddr)}</span></div>
                     <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">โทร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTel)}</span></div>
                     <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 160px; font-weight: bold;">เลขประจำตัวผู้เสียภาษีอากร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTax)}</span></div>
                     
                     <div class="customer-project-section" style="margin-top: 15px;">
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่องาน :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projName)}</span></div>
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ผู้ติดต่อ :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projContact)}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่องาน :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.projName)}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ผู้ติดต่อ :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.projContact)}</span></div>
                         <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">เบอร์โทร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projTel)}</span></div>
                     </div>
                 </div>
@@ -438,17 +439,17 @@ function buildPreview() {
             <div class="sig-box">
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role">สั่งซื้อโดย / ผู้เจรจา</div>
-                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signBuyer)}</div>
+                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signBuyer)}</div>
             </div>
             <div class="sig-box">
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role">จัดทำโดย</div>
-                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signPrep)}</div>
+                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signPrep)}</div>
             </div>
             <div class="sig-box">
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role">อนุมัติโดย</div>
-                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signAppr)}</div>
+                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signAppr)}</div>
             </div>
         </div>
             `;

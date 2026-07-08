@@ -267,9 +267,10 @@ function createPageDOM(sv) {
                     <h1 class="company-name">Kitten Code</h1>
                     <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
                     <p class="company-contact">
-                        โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; 
+                        โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp;
                         อีเมล : <span>kittencode.co.ltd@gmail.com</span>
                     </p>
+                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
                 </div>
             </div>
 
@@ -278,12 +279,12 @@ function createPageDOM(sv) {
             <!-- Flex Row for Details -->
             <div class="doc-info-section flex-between align-start" style="margin-bottom: 20px; font-size: 13px; align-items: flex-start;">
                 <div class="info-group" style="width: 54%;">
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.custName)}</span></div>
                     <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ที่อยู่ :</span> <span class="info-value line-break" style="flex: 1;">${escapeHTML(sv.custAddr)}</span></div>
                     <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 160px; font-weight: bold;">เลขประจำตัวผู้เสียภาษีอากร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTax)}</span></div>
                     
                     <div class="customer-project-section" style="margin-top: 15px;">
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อโปรเจ็ค :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projName)}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อโปรเจ็ค :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.projName)}</span></div>
                     </div>
                 </div>
                 
@@ -463,7 +464,7 @@ function buildPreview() {
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role" style="font-weight: bold;">ผู้รับเงิน / Bill Receiver Signature</div>
                 <div class="sig-name" style="margin-top: 5px; font-size: 11px;">วันที่ / Date ...../...../.....</div>
-                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signReceiver)}</div>
+                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signReceiver)}</div>
             </div>
             <div class="sig-box" style="display: flex; align-items: center; justify-content: center;">
                 <div style="border: 2px dashed #ccc; padding: 10px 20px; color: #aaa; font-weight: bold; font-size: 14px; transform: rotate(-5deg); border-radius: 4px;">
@@ -474,7 +475,7 @@ function buildPreview() {
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
                 <div class="sig-role" style="font-weight: bold;">ผู้มีอำนาจลงนาม / Authorized Signature</div>
                 <div class="sig-name" style="margin-top: 5px; font-size: 11px;">วันที่ / Date ...../...../.....</div>
-                <div class="sig-name" style="margin-top: 5px;">${escapeHTML(stateVars.signAuth)}</div>
+                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signAuth)}</div>
             </div>
         </div>
     `;
