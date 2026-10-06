@@ -17,7 +17,7 @@ import {
     query,
     orderBy,
     onSnapshot
-} from './firebase-config.js';
+} from '../core/firebase-config.js';
 
 // ── XSS Hardening: sanitise ALL strings from Firestore before DOM injection ──
 const escapeHTML = (str) => {

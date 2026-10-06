@@ -145,19 +145,7 @@
     "founder_category": "Founder & Co-Founder",
     "full_team_category": "Our Full Team",
     "advisory_category": "Advisory Board",
-    "view_profile": "View Profile",
-    "roles": {
-      "ceo": "CEO / Co-Founder",
-      "cio": "Founder / CIO",
-      "cdo": "CDO / Co-Founder",
-      "cto": "CTO / Co-Founder",
-      "hr": "Legal & HR",
-      "coo": "Developer",
-      "cro": "Food R&D",
-      "cmo": "Business Economic Analyst",
-      "advisor": "Advisor of Marketing and Communication",
-      "member": "Member"
-    }
+    "view_profile": "View Profile"
   },
   "payment": {
     "heading": "Payment",

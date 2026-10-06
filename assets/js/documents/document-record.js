@@ -1,4 +1,4 @@
-import { db, collection, getDocs, doc, deleteDoc, getDoc } from './firebase-config.js';
+import { db, collection, getDocs, doc, deleteDoc, getDoc } from '../core/firebase-config.js';
 
 let allDocs = [];
 let currentFilter = 'all';

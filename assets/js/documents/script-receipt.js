@@ -597,7 +597,7 @@ window.saveDocumentToFirestore = async function() {
     }
 
     try {
-        const { db, auth, doc, setDoc, serverTimestamp } = await import('./firebase-config.js');
+        const { db, auth, doc, setDoc, serverTimestamp } = await import('../core/firebase-config.js');
 
         if (!auth.currentUser) {
             throw new Error("You must be logged in to save documents.");

@@ -114,13 +114,13 @@
         <!-- Dynamic Content Iframe -->
         <section class="bo-content">
             <div class="iframe-wrapper">
-                <iframe name="contentFrame" id="contentFrame" src="quotaion.html"></iframe>
+                <iframe name="contentFrame" id="contentFrame" src="quotation.html"></iframe>
             </div>
         </section>
     </main>
 
     <script type="module">
-        import { onAuthStateChanged, auth, signOut } from '../assets/js/firebase-config.js';
+        import { onAuthStateChanged, auth, signOut } from '../assets/js/core/firebase-config.js';
 
         // Authentication Check
         onAuthStateChanged(auth, (user) => {
@@ -190,7 +190,7 @@
         // Hash Routing Map
         const routeMap = {
             '#dashboard': 'dashboard.html',
-            '#quotation': 'quotaion.html',
+            '#quotation': 'quotation.html',
             '#receipt': 'receipt.html',
             '#financial': 'financial.html',
             '#user': 'user.html',
@@ -203,7 +203,7 @@
 
         function loadView() {
             let hash = window.location.hash || '#quotation';
-            let viewFile = routeMap[hash] || 'quotaion.html';
+            let viewFile = routeMap[hash] || 'quotation.html';
 
             document.getElementById('contentFrame').src = viewFile;
 

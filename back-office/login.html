@@ -284,7 +284,8 @@
         <div class="mb-4">
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock"></i></span>
-            <input type="password" class="form-control" id="password" placeholder="Password" required>
+            <input type="password" class="form-control" id="password" placeholder="Password" required
+              autocomplete="current-password">
           </div>
         </div>
 
@@ -308,23 +309,17 @@
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/vendor/aos/aos.js"></script>
   <script type="module">
-    import { auth, db, signInWithEmailAndPassword, createUserWithEmailAndPassword, collection, query, where, getDocs } from '../assets/js/firebase-config.js';
+    import { auth, db, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, collection, query, where, getDocs } from '../assets/js/core/firebase-config.js';
 
     // Initialize AOS animation
     AOS.init();
 
-    // Load saved credentials on page start
-    (function loadSavedCredentials() {
-      const saved = localStorage.getItem('kc_remember');
-      if (saved) {
-        try {
-          const { username, password } = JSON.parse(saved);
-          document.getElementById('username').value = username || '';
-          document.getElementById('password').value = password || '';
-          document.getElementById('rememberMe').checked = true;
-        } catch (e) {
-          localStorage.removeItem('kc_remember');
-        }
+    // Only the username is ever remembered locally — never the password.
+    (function loadSavedUsername() {
+      const savedUsername = localStorage.getItem('kc_remember_username');
+      if (savedUsername) {
+        document.getElementById('username').value = savedUsername;
+        document.getElementById('rememberMe').checked = true;
       }
     })();
 
@@ -386,12 +381,16 @@
       const remember = document.getElementById('rememberMe').checked;
 
       try {
+        // Only the username is persisted locally; session persistence is
+        // handled by Firebase Auth itself (local vs. session storage of the
+        // auth token), never by storing the raw password.
+        await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
         await signInWithEmailAndPassword(auth, email, pass);
 
         if (remember) {
-          localStorage.setItem('kc_remember', JSON.stringify({ username: user, password: pass }));
+          localStorage.setItem('kc_remember_username', user);
         } else {
-          localStorage.removeItem('kc_remember');
+          localStorage.removeItem('kc_remember_username');
         }
 
         showSuccess();
@@ -405,31 +404,6 @@
         } else {
           showError(error.message);
         }
-      }
-    };
-
-    window.handleSignUp = async function () {
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value;
-
-      if (!user || !pass) {
-        showError('Please enter desired username and password');
-        return;
-      }
-
-      const email = await formatEmail(user);
-
-      try {
-        await createUserWithEmailAndPassword(auth, email, pass);
-        // Hide sign up button
-        document.getElementById('signUpContainer').style.display = 'none';
-        showSuccess();
-        setTimeout(() => {
-          window.location.href = 'back-office.html#calendar';
-        }, 800);
-      } catch (error) {
-        console.error("Sign up error:", error);
-        showError(error.message);
       }
     };
   </script>

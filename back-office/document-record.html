@@ -74,9 +74,9 @@
             </div>
         </div>
 
-        <script src="../assets/js/document-record.js" type="module"></script>
+        <script src="../assets/js/documents/document-record.js" type="module"></script>
         <script type="module">
-            import { onAuthStateChanged, auth } from '../assets/js/firebase-config.js';
+            import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
             onAuthStateChanged(auth, (user) => {
                 if (!user) { window.location.replace('login.html'); }
             });

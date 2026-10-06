@@ -55,11 +55,11 @@ function saveDraft() {
     document.querySelectorAll('.form-panel input, .form-panel textarea, .form-panel select').forEach(el => {
         if(el.id) draft.inputs[el.id] = el.value;
     });
-    localStorage.setItem('draft_quotation_data', JSON.stringify(draft));
+    localStorage.setItem('draft_invoice_data', JSON.stringify(draft));
 }
 
 function restoreDraft() {
-    const saved = localStorage.getItem('draft_quotation_data');
+    const saved = localStorage.getItem('draft_invoice_data');
     if (saved) {
         try {
             const draft = JSON.parse(saved);
@@ -71,7 +71,7 @@ function restoreDraft() {
                 if(el) el.value = escapeHTML(draft.inputs[id]);
             });
             if (draft.isReprint) {
-                localStorage.removeItem('draft_quotation_data');
+                localStorage.removeItem('draft_invoice_data');
                 setTimeout(showReprintToast, 300);
             } else {
                 showDraftToast();
@@ -81,9 +81,60 @@ function restoreDraft() {
 }
 
 window.clearDraft = function() {
-    localStorage.removeItem('draft_quotation_data');
+    localStorage.removeItem('draft_invoice_data');
     location.reload();
 };
+// ------------------------------
+
+// --- Convert-from-previous-document System ---
+const showConvertToast = (sourceLabel) => {
+    const toast = document.createElement('div');
+    toast.className = 'kc-toast-container';
+    toast.innerHTML = `
+        <i class="fas fa-file-import kc-toast-icon" style="color: #f26522"></i>
+        <div class="kc-toast-content">
+            <span class="kc-toast-title">นำเข้าข้อมูลแล้ว</span>
+            <span class="kc-toast-message">ดึงข้อมูลลูกค้า/รายการจาก ${sourceLabel} มาให้แล้ว</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 4000);
+};
+
+function applyConvertData() {
+    const raw = localStorage.getItem('kc_convert_data');
+    if (!raw) return false;
+    localStorage.removeItem('kc_convert_data');
+    try {
+        const data = JSON.parse(raw);
+        if (data.sourceType !== 'quotation') return false;
+
+        setInputValue('cust-name', data.custName);
+        setInputValue('cust-addr', data.custAddr);
+        setInputValue('cust-tel', data.custTel);
+        setInputValue('cust-tax', data.custTax);
+        setInputValue('proj-name', data.projName);
+        setInputValue('proj-contact', data.projContact);
+        setInputValue('quote-ref', data.sourceDocNo);
+        setInputValue('doc-vat', data.vatRate);
+        setInputValue('doc-discount', data.discount || 0);
+
+        state.discount = data.discount || 0;
+        if (data.items && data.items.length) {
+            state.items = data.items.map(item => ({ id: generateId(), desc: item.desc, qty: item.qty, price: item.price }));
+        }
+
+        setTimeout(() => showConvertToast(`ใบเสนอราคา ${data.sourceDocNo}`), 300);
+        return true;
+    } catch (e) {
+        console.error("Could not apply converted document data", e);
+        return false;
+    }
+}
 // ------------------------------
 
 // Initialize Application
@@ -103,7 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('input', () => buildPreview());
     });
 
-    restoreDraft();
+    if (!applyConvertData()) {
+        restoreDraft();
+    }
     renderItemsForm();
 
     // Initial build
@@ -274,7 +327,7 @@ function createPageDOM(sv) {
                 </div>
             </div>
 
-            <h2 class="doc-title" style="text-align: center; margin-bottom: 20px; font-size: 18px;">ใบเสนอราคา (Quotation)</h2>
+            <h2 class="doc-title" style="text-align: center; margin-bottom: 20px; font-size: 18px;">ใบแจ้งหนี้ (Invoice)</h2>
 
             <!-- Flex Row for Details -->
             <div class="doc-info-section flex-between align-start" style="margin-bottom: 20px; font-size: 13px; align-items: flex-start;">
@@ -285,19 +338,17 @@ function createPageDOM(sv) {
                     <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 160px; font-weight: bold;">เลขประจำตัวผู้เสียภาษีอากร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTax)}</span></div>
                     
                     <div class="customer-project-section" style="margin-top: 15px;">
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่องาน :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.projName)}</span></div>
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ผู้ติดต่อ :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.projContact)}</span></div>
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">เบอร์โทร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.projTel)}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 120px; font-weight: bold;">เลขอ้างอิง P.O. :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.docRef)}</span></div>
                     </div>
                 </div>
                 
                 <div class="info-group right-align" style="width: 42%; margin-top: -5px;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                         <colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เลขที่ใบเสนอราคา :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docNo)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เลขที่ใบแจ้งหนี้ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docNo)}</td></tr>
                         <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">วันที่ :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docDate)}</td></tr>
+                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">ครบกำหนด :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docDueDate)}</td></tr>
                         <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เงื่อนไขชำระเงิน :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docTerms)}</td></tr>
-                        <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">เครดิต :</td><td style="padding: 0 0 6px 0; white-space: nowrap;">${escapeHTML(sv.docCredit)}</td></tr>
                         <tr><td style="font-weight: bold; padding: 0 4px 6px 0; vertical-align: top;">หน้า :</td><td class="page-number-display" style="padding: 0 0 6px 0; white-space: nowrap;"></td></tr>
                     </table>
                 </div>
@@ -319,6 +370,7 @@ function createPageDOM(sv) {
             </table>
             
             <div class="tfoot-placeholder"></div>
+            <div class="payment-placeholder"></div>
             <div class="note-placeholder"></div>
             <div class="signatures-placeholder" style="margin-top: auto;"></div>
         </div>
@@ -339,18 +391,15 @@ function buildPreview() {
     const stateVars = {
         docNo: getInputValue('doc-no') || '-',
         docDate: getThaiDate(getInputValue('doc-date')),
+        docDueDate: getThaiDate(getInputValue('doc-due-date')) || '-',
         docTerms: getInputValue('doc-terms') || '-',
-        docCredit: getInputValue('doc-credit') || '-',
+        docRef: getInputValue('doc-ref') || '-',
         custName: getInputValue('cust-name') || '-',
         custAddr: getInputValue('cust-addr') || '-',
         custTel: getInputValue('cust-tel') || '-',
         custTax: getInputValue('cust-tax') || '-',
-        projName: getInputValue('proj-name') || '-',
-        projContact: getInputValue('proj-contact') || '-',
-        projTel: getInputValue('proj-tel') || '-',
-        signBuyer: getInputValue('sign-buyer') || '',
-        signPrep: getInputValue('sign-prep') || '',
-        signAppr: getInputValue('sign-appr') || ''
+        signReceiver: getInputValue('sign-receiver') || '',
+        signAuth: getInputValue('sign-auth') || ''
     };
 
     let pages = [];
@@ -405,7 +454,92 @@ function buildPreview() {
     const isDiscounted = discountAmount > 0;
     const summaryRows = 2 + (isDiscounted ? 1 : 0) + (isVatAdded ? 1 : 0);
 
-    const noteHTML = noteText ? `<div style="text-align:left; padding: 10px; font-size: 13px;"><strong>หมายเหตุ : </strong><span style="white-space: pre-wrap;">${escapeHTML(noteText)}</span></div>` : '';
+    const selectedBank = (document.getElementById('in-payment-method') || {}).value || 'none';
+
+    const BANKS = {
+        kasikorn: {
+            name: 'KASIKORN BANK',
+            color: '#138f5b',
+            colorLight: '#1db26e',
+            bg: '#f0fdf4',
+            border: '#138f5b22',
+            account: '226-3-92729-2',
+        },
+        krungthai: {
+            name: 'KRUNGTHAI BANK',
+            color: '#1a56db',
+            colorLight: '#3b82f6',
+            bg: '#eff6ff',
+            border: '#1a56db22',
+            account: '665-6-09488-0',
+        }
+    };
+
+    const renderBankCard = (bank) => `
+        <div style="
+            background: #fff;
+            border: 1.5px solid ${bank.border};
+            border-radius: 7px;
+            padding: 12px 16px;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        ">
+            <div style="
+                position: absolute; top: 0; left: 0; right: 0; height: 4px;
+                background: linear-gradient(90deg, ${bank.color}, ${bank.colorLight});
+                border-radius: 7px 7px 0 0;
+            "></div>
+            <div style="margin-top: 6px;">
+                <div style="font-weight: 700; color: ${bank.color}; font-size: 13px; margin-bottom: 6px; letter-spacing: 0.02em;">🏦 ${bank.name}</div>
+                <table style="border: none; font-size: 12px; border-collapse: collapse; width: 100%;">
+                    <tr>
+                        <td style="color: #64748b; padding: 2px 10px 2px 0; white-space: nowrap; vertical-align: top;">ชื่อบัญชี</td>
+                        <td style="font-weight: 600; color: #1e293b; padding: 2px 0;">คิทเท่น โค้ด</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #64748b; padding: 2px 10px 2px 0; white-space: nowrap; vertical-align: top;">เลขบัญชี</td>
+                        <td style="padding: 2px 0;">
+                            <span style="
+                                font-weight: 700;
+                                color: ${bank.color};
+                                font-size: 15px;
+                                letter-spacing: 0.1em;
+                                background: ${bank.bg};
+                                padding: 2px 10px;
+                                border-radius: 4px;
+                                display: inline-block;
+                            ">${bank.account}</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    `;
+
+    const paymentHTML = selectedBank !== 'none' && BANKS[selectedBank] ? `
+        <div style="
+            margin-top: 16px;
+            padding: 12px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        ">
+            <div style="
+                display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+            ">
+                <span style="
+                    background: #1e293b; color: #fff;
+                    padding: 2px 10px; border-radius: 4px;
+                    font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+                ">ช่องทางชำระเงิน</span>
+                <span style="color: #94a3b8; font-size: 11.5px;">Payment Information</span>
+            </div>
+            ${renderBankCard(BANKS[selectedBank])}
+        </div>
+    ` : '';
+
+    const noteHTML = noteText ? `<div style="text-align:left; padding: 10px 0 0 0; font-size: 13px;"><strong>หมายเหตุ : </strong><span style="white-space: pre-wrap;">${escapeHTML(noteText)}</span></div>` : '';
 
     const summaryHTML = `
             <table class="quote-table no-top-margin summary-table" style="width: 100%; border-collapse: collapse; border-top: none; margin-top: -1px;">
@@ -440,32 +574,36 @@ function buildPreview() {
             `;
 
     const signaturesHTML = `
-            <div class="signatures" style="display: flex; justify-content: space-around; margin-top: 40px; text-align: center; font-size: 13px;">
+        <div class="signatures" style="display: flex; justify-content: space-around; margin-top: 40px; text-align: center; font-size: 13px;">
             <div class="sig-box">
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
-                <div class="sig-role">สั่งซื้อโดย / ผู้เจรจา</div>
-                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signBuyer)}</div>
+                <div class="sig-role" style="font-weight: bold;">ผู้รับใบแจ้งหนี้ / Bill Receiver Signature</div>
+                <div class="sig-name" style="margin-top: 5px; font-size: 11px;">วันที่ / Date ...../...../.....</div>
+                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signReceiver)}</div>
+            </div>
+            <div class="sig-box" style="display: flex; align-items: center; justify-content: center;">
+                <div style="border: 2px dashed #ccc; padding: 10px 20px; color: #aaa; font-weight: bold; font-size: 14px; transform: rotate(-5deg); border-radius: 4px;">
+                    STAMP
+                </div>
             </div>
             <div class="sig-box">
                 <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
-                <div class="sig-role">จัดทำโดย</div>
-                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signPrep)}</div>
-            </div>
-            <div class="sig-box">
-                <div class="sig-line" style="border-bottom: 1px dashed #666; width: 150px; margin: 0 auto 10px auto;"></div>
-                <div class="sig-role">อนุมัติโดย</div>
-                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signAppr)}</div>
+                <div class="sig-role" style="font-weight: bold;">ผู้มีอำนาจลงนาม / Authorized Signature</div>
+                <div class="sig-name" style="margin-top: 5px; font-size: 11px;">วันที่ / Date ...../...../.....</div>
+                <div class="sig-name" style="margin-top: 5px; white-space: pre-wrap;">${escapeHTML(stateVars.signAuth)}</div>
             </div>
         </div>
-            `;
+    `;
 
     currentPage.querySelector('.note-placeholder').innerHTML = noteHTML;
+    currentPage.querySelector('.payment-placeholder').innerHTML = paymentHTML;
     currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML;
     currentPage.querySelector('.signatures-placeholder').innerHTML = signaturesHTML;
 
     if (wrapper.scrollHeight > wrapper.clientHeight) {
         // Doesn't fit in the current page!
         currentPage.querySelector('.note-placeholder').innerHTML = '';
+        currentPage.querySelector('.payment-placeholder').innerHTML = '';
         currentPage.querySelector('.tfoot-placeholder').innerHTML = '';
         currentPage.querySelector('.signatures-placeholder').innerHTML = '';
 
@@ -474,8 +612,9 @@ function buildPreview() {
         pages.push(currentPage);
 
         // Remove the negative margin on a new isolated page so it doesn't overlap header
+        currentPage.querySelector('.payment-placeholder').innerHTML = paymentHTML;
         currentPage.querySelector('.note-placeholder').innerHTML = noteHTML;
-            currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML.replace('margin-top: -1px;', 'margin-top: 0;');
+        currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML.replace('margin-top: -1px;', 'margin-top: 0;');
         currentPage.querySelector('.signatures-placeholder').innerHTML = signaturesHTML;
     }
 
@@ -520,7 +659,7 @@ window.saveDocumentToFirestore = async function() {
     }
 
     try {
-        const { db, auth, doc, setDoc, serverTimestamp } = await import('./firebase-config.js');
+        const { db, auth, doc, setDoc, serverTimestamp } = await import('../core/firebase-config.js');
 
         if (!auth.currentUser) {
             throw new Error("You must be logged in to save documents.");
@@ -530,7 +669,7 @@ window.saveDocumentToFirestore = async function() {
         const custName = getInputValue('cust-name');
 
         if (!docNo || !custName) {
-            throw new Error("กรุณากรอก 'เลขที่ใบเสนอราคา' และ 'ชื่อลูกค้า' (Missing Document No or Customer Name)");
+            throw new Error("กรุณากรอก 'เลขที่ใบแจ้งหนี้' และ 'ชื่อลูกค้า' (Missing Document No or Customer Name)");
         }
 
         // Calculate totals for quick querying
@@ -543,24 +682,21 @@ window.saveDocumentToFirestore = async function() {
         const vatAmount = afterDiscount * (vatRate / 100);
         const grandTotal = afterDiscount + vatAmount;
 
-        const quotationData = {
+        const invoiceData = {
             docNo,
             docDate: getInputValue('doc-date') || new Date().toISOString().split('T')[0],
+            docDueDate: getInputValue('doc-due-date'),
             docTerms: getInputValue('doc-terms'),
-            docCredit: getInputValue('doc-credit'),
+            docRef: getInputValue('doc-ref'),
             vatRate,
             discountAmount,
             custName: escapeHTML(custName),
             custAddr: escapeHTML(getInputValue('cust-addr')),
             custTel: escapeHTML(getInputValue('cust-tel')),
             custTax: escapeHTML(getInputValue('cust-tax')),
-            projName: escapeHTML(getInputValue('proj-name')),
-            projContact: escapeHTML(getInputValue('proj-contact')),
-            projTel: escapeHTML(getInputValue('proj-tel')),
             note: escapeHTML(state.note || ''),
-            signBuyer: escapeHTML(getInputValue('sign-buyer')),
-            signPrep: escapeHTML(getInputValue('sign-prep')),
-            signAppr: escapeHTML(getInputValue('sign-appr')),
+            signReceiver: escapeHTML(getInputValue('sign-receiver')),
+            signAuth: escapeHTML(getInputValue('sign-auth')),
             items: state.items.map(item => ({
                 desc: escapeHTML(item.desc),
                 qty: Number(item.qty),
@@ -568,7 +704,7 @@ window.saveDocumentToFirestore = async function() {
             })),
             amountTotal: grandTotal,
             subtotal,
-            type: 'quotation',
+            type: 'invoice',
             status: 'Pending',
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
@@ -576,9 +712,9 @@ window.saveDocumentToFirestore = async function() {
         };
 
         // Use setDoc with a custom ID (docNo) to avoid duplicates if saved multiple times
-        await setDoc(doc(db, 'quotations', docNo), quotationData);
+        await setDoc(doc(db, 'invoices', docNo), invoiceData);
 
-        showSaveToast("บันทึกใบเสนอราคาไปยังระบบเรียบร้อยแล้ว", "success");
+        showSaveToast("บันทึกใบแจ้งหนี้ไปยังระบบเรียบร้อยแล้ว", "success");
         // Reset button state
         setTimeout(() => {
             if (btnSave) {
@@ -601,8 +737,8 @@ window.saveDocumentToFirestore = async function() {
 };
 
 // --- Convert to next document type ---
-window.convertToInvoice = async function() {
-    const btn = document.getElementById('btn-next-invoice');
+window.convertToReceipt = async function() {
+    const btn = document.getElementById('btn-next-receipt');
     if (btn) {
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
@@ -612,23 +748,21 @@ window.convertToInvoice = async function() {
 
     if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-arrow-right"></i> บันทึกและไปสร้างใบแจ้งหนี้ต่อ';
+        btn.innerHTML = '<i class="fas fa-arrow-right"></i> บันทึกและไปสร้างใบเสร็จรับเงินต่อ';
     }
     if (!ok) return;
 
     const payload = {
-        sourceType: 'quotation',
+        sourceType: 'invoice',
         sourceDocNo: getInputValue('doc-no'),
         custName: getInputValue('cust-name'),
         custAddr: getInputValue('cust-addr'),
-        custTel: getInputValue('cust-tel'),
         custTax: getInputValue('cust-tax'),
         projName: getInputValue('proj-name'),
-        projContact: getInputValue('proj-contact'),
         discount: state.discount || 0,
         vatRate: Number(getInputValue('doc-vat')) || 7,
         items: state.items.map(item => ({ desc: item.desc, qty: item.qty, price: item.price }))
     };
     localStorage.setItem('kc_convert_data', JSON.stringify(payload));
-    window.location.href = 'invoice.html';
+    window.location.href = 'receipt.html';
 };

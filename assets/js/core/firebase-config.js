@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getFirestore, collection, doc, setDoc, addDoc, getDocs, getDoc, onSnapshot, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 // Load secrets securely injected at build-time by GitHub Actions
@@ -30,9 +30,12 @@ export {
     auth, 
     db, 
     onAuthStateChanged, 
-    signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
     signOut,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence,
     collection, 
     doc, 
     setDoc, 

@@ -119,6 +119,64 @@
             transition: var(--transition);
         }
 
+        .logo-options {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .logo-options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        .logo-options input[type="radio"] {
+            accent-color: var(--accent);
+            width: 18px;
+            height: 18px;
+        }
+
+        .custom-logo-wrapper {
+            display: grid;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .custom-logo-wrapper input[type="file"] {
+            width: 100%;
+            color: var(--text-main);
+        }
+
+        .custom-logo-preview {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .custom-logo-wrapper.hidden,
+        .custom-logo-preview.hidden {
+            display: none;
+        }
+
+        .custom-logo-preview img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #fff;
+        }
+
         input[type="text"] {
             width: 100%;
             padding: 14px 16px 14px 44px;
@@ -225,6 +283,9 @@
         }
 
         #qrcode {
+            position: relative;
+            width: 200px;
+            height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -233,9 +294,37 @@
         #qrcode img,
         #qrcode canvas {
             max-width: 100%;
-            height: auto;
+            max-height: 100%;
             display: block;
             border-radius: 8px;
+        }
+
+        .qr-logo {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 56px;
+            height: 56px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .qr-logo.hidden {
+            display: none;
+        }
+
+        .qr-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .btn-download {
@@ -293,6 +382,28 @@
             <i class="bi bi-link-45deg input-icon"></i>
         </div>
 
+        <div class="logo-options">
+            <label>
+                <input type="radio" name="logoOption" value="default" checked>
+                ใช้โลโก้ Kitten Code ตรงกลาง
+            </label>
+            <label>
+                <input type="radio" name="logoOption" value="custom">
+                ใช้ภาพอื่นเป็นโลโก้
+            </label>
+            <label>
+                <input type="radio" name="logoOption" value="none">
+                ไม่มีโลโก้ตรงกลาง
+            </label>
+            <div id="customLogoWrapper" class="custom-logo-wrapper hidden">
+                <input type="file" id="customLogoInput" accept="image/*">
+                <div id="customLogoPreview" class="custom-logo-preview hidden">
+                    <img id="customLogoPreviewImg" src="" alt="Custom logo preview">
+                    <span>ภาพโลโก้ที่เลือก</span>
+                </div>
+            </div>
+        </div>
+
         <button id="generateBtn" class="btn btn-primary">
             <i class="bi bi-qr-code-scan"></i>
             Generate QR Code
@@ -305,7 +416,12 @@
                 <i class="bi bi-grid-3x3"></i>
                 <span>Your QR code will appear here</span>
             </div>
-            <div id="qrcode"></div>
+            <div id="qrcode" class="qrcode">
+                <div id="qrcodeContainer"></div>
+                <div id="qrLogo" class="qr-logo hidden">
+                    <img id="qrLogoImage" src="../assets/img/LOGO-KittenCode.png" alt="Kitten Code Logo">
+                </div>
+            </div>
         </div>
 
         <button id="downloadBtn" class="btn btn-download">
@@ -318,7 +434,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             const urlInput = document.getElementById('urlInput');
             const generateBtn = document.getElementById('generateBtn');
-            const qrcodeContainer = document.getElementById('qrcode');
+            const qrcodeContainer = document.getElementById('qrcodeContainer');
+            const qrLogo = document.getElementById('qrLogo');
+            const qrLogoImage = document.getElementById('qrLogoImage');
+            const logoOptionInputs = document.querySelectorAll('input[name="logoOption"]');
+            const customLogoWrapper = document.getElementById('customLogoWrapper');
+            const customLogoInput = document.getElementById('customLogoInput');
+            const customLogoPreview = document.getElementById('customLogoPreview');
+            const customLogoPreviewImg = document.getElementById('customLogoPreviewImg');
             const qrWrapper = document.getElementById('qrWrapper');
             const placeholderContent = document.getElementById('placeholderContent');
             const downloadBtn = document.getElementById('downloadBtn');
@@ -328,6 +451,38 @@
             urlInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') generateQR();
             });
+
+            logoOptionInputs.forEach(input => input.addEventListener('change', onLogoOptionChange));
+            customLogoInput.addEventListener('change', onCustomLogoSelected);
+
+            function onLogoOptionChange() {
+                const selected = document.querySelector('input[name="logoOption"]:checked').value;
+                customLogoWrapper.classList.toggle('hidden', selected !== 'custom');
+
+                if (selected === 'custom' && customLogoInput.files.length > 0) {
+                    const file = customLogoInput.files[0];
+                    qrLogoImage.src = URL.createObjectURL(file);
+                    customLogoPreviewImg.src = qrLogoImage.src;
+                    customLogoPreview.classList.remove('hidden');
+                } else if (selected === 'default') {
+                    qrLogoImage.src = '../assets/img/LOGO-KittenCode.png';
+                    customLogoPreview.classList.add('hidden');
+                } else {
+                    customLogoPreview.classList.add('hidden');
+                }
+            }
+
+            function onCustomLogoSelected() {
+                const file = customLogoInput.files[0];
+                if (!file) {
+                    customLogoPreview.classList.add('hidden');
+                    return;
+                }
+                const objectUrl = URL.createObjectURL(file);
+                qrLogoImage.src = objectUrl;
+                customLogoPreviewImg.src = objectUrl;
+                customLogoPreview.classList.remove('hidden');
+            }
 
             function generateQR() {
                 const url = urlInput.value.trim();
@@ -349,6 +504,19 @@
                 placeholderContent.style.display = 'none';
                 qrWrapper.classList.add('has-qr');
 
+                const selected = document.querySelector('input[name="logoOption"]:checked').value;
+                const hasLogo = selected === 'default' || selected === 'custom';
+
+                if (selected === 'none') {
+                    qrLogo.classList.add('hidden');
+                } else if (selected === 'custom' && customLogoInput.files.length === 0) {
+                    // หากเลือกใช้ภาพเอง แต่ยังไม่เลือกรูป ให้ไม่แสดงโลโก้
+                    qrLogo.classList.add('hidden');
+                    customLogoPreview.classList.remove('hidden');
+                } else {
+                    qrLogo.classList.toggle('hidden', !hasLogo);
+                }
+
                 new QRCode(qrcodeContainer, {
                     text: url,
                     width: 200,
@@ -369,16 +537,31 @@
                 const img = qrcodeContainer.querySelector('img');
                 const canvas = qrcodeContainer.querySelector('canvas');
 
-                let dataUrl = '';
-                if (img && img.src && img.src.startsWith('data:image')) {
-                    dataUrl = img.src;
-                } else if (canvas) {
-                    dataUrl = canvas.toDataURL('image/png');
-                }
+                if (img || canvas) {
+                    const exportSize = 1000;
+                    const exportScale = exportSize / 200;
+                    const qrCanvas = document.createElement('canvas');
+                    qrCanvas.width = exportSize;
+                    qrCanvas.height = exportSize;
+                    const context = qrCanvas.getContext('2d');
+                    const qrImage = img || canvas;
 
-                if (dataUrl) {
+                    context.imageSmoothingEnabled = false;
+                    context.drawImage(qrImage, 0, 0, exportSize, exportSize);
+
+                    if (!qrLogo.classList.contains('hidden') && qrLogoImage.complete) {
+                        const logoSize = 56 * exportScale;
+                        const logoX = (exportSize - logoSize) / 2;
+                        const logoY = (exportSize - logoSize) / 2;
+                        context.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                        context.beginPath();
+                        context.roundRect(logoX, logoY, logoSize, logoSize, 18);
+                        context.fill();
+                        context.drawImage(qrLogoImage, logoX + 8 * exportScale, logoY + 8 * exportScale, 40 * exportScale, 40 * exportScale);
+                    }
+
                     const a = document.createElement('a');
-                    a.href = dataUrl;
+                    a.href = qrCanvas.toDataURL('image/png');
                     a.download = 'qrcode.png';
                     document.body.appendChild(a);
                     a.click();

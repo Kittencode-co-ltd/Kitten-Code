@@ -755,7 +755,7 @@
 
         async function initFirebase() {
             try {
-                const mod = await import('../assets/js/firebase-config.js');
+                const mod = await import('../assets/js/core/firebase-config.js');
                 db = mod.db;
                 firebaseAuth = mod.auth;
                 firestoreModule = mod;
@@ -1166,7 +1166,7 @@
 
     <!-- Auth Guard -->
     <script type="module">
-        import { onAuthStateChanged, auth } from '../assets/js/firebase-config.js';
+        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
         onAuthStateChanged(auth, (user) => {
             if (!user) { window.location.replace('login.html'); }
         });

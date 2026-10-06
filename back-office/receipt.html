@@ -7,7 +7,7 @@
     <title>Kitten Code Receipt Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/quotation.css">
+    <link rel="stylesheet" href="../assets/css/document.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -177,9 +177,9 @@
         </div>
     </div>
 
-    <script src="../assets/js/script-receipt.js"></script>
+    <script src="../assets/js/documents/script-receipt.js"></script>
     <script type="module">
-        import { onAuthStateChanged, auth } from '../assets/js/firebase-config.js';
+        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
         onAuthStateChanged(auth, (user) => {
             if (!user) { window.location.replace('login.html'); }
         });
