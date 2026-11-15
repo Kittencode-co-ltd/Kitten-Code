@@ -1,4 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap");
+
+/* Thai on paper = TH Sarabun New (used when installed, size-matched to the
+   fallback Sarabun). Latin on paper = Josefin Sans (it has no Thai glyphs,
+   so Thai text falls through to the Thai font automatically). */
+@font-face {
+  font-family: "KC TH Sarabun";
+  src: local("TH Sarabun New"), local("THSarabunNew");
+  font-weight: 400 500;
+  size-adjust: 118%;
+}
+@font-face {
+  font-family: "KC TH Sarabun";
+  src: local("TH Sarabun New Bold"), local("THSarabunNew-Bold"), local("THSarabunNew Bold");
+  font-weight: 600 800;
+  size-adjust: 118%;
+}
 /* ============================================================
    Paper: the printed A4 document (quotation, invoice, receipt, viewer).
    Self-contained: colours are fixed on purpose so the printout never
@@ -17,7 +33,7 @@
   --surface: #f9fafb;
   --white: #ffffff;
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.14);
-  font-family: "Sarabun", sans-serif;
+  font-family: "Josefin Sans", "KC TH Sarabun", "Sarabun", sans-serif;
   color: #000;
 }
 

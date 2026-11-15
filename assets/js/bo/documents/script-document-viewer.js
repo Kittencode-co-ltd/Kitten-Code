@@ -99,14 +99,14 @@ function createPageDOM_quotation(sv) {
             <h2 class="doc-title" style="text-align:center;margin-bottom:20px;font-size:18px;">ใบเสนอราคา (Quotation)</h2>
             <div class="doc-info-section flex-between align-start" style="margin-bottom:20px;font-size:13px;align-items:flex-start;">
                 <div class="info-group" style="width:54%;">
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custName)}</span></div>
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ที่อยู่ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custAddr)}</span></div>
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">โทร :</span><span style="flex:1;">${escapeHTML(sv.custTel)}</span></div>
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:160px;font-weight:bold;">เลขประจำตัวผู้เสียภาษีอากร :</span><span style="flex:1;">${escapeHTML(sv.custTax)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">ที่อยู่ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custAddr)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">โทร :</span><span style="flex:1;">${escapeHTML(sv.custTel)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">เลขผู้เสียภาษี :</span><span style="flex:1;">${escapeHTML(sv.custTax)}</span></div>
                     <div style="margin-top:15px;">
-                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่องาน :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.projName)}</span></div>
-                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ผู้ติดต่อ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.projContact)}</span></div>
-                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">เบอร์โทร :</span><span style="flex:1;">${escapeHTML(sv.projTel)}</span></div>
+                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">ชื่องาน :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.projName)}</span></div>
+                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">ผู้ติดต่อ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.projContact)}</span></div>
+                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">เบอร์โทร :</span><span style="flex:1;">${escapeHTML(sv.projTel)}</span></div>
                     </div>
                 </div>
                 <div class="info-group" style="width:42%;margin-top:-5px;">
@@ -163,10 +163,10 @@ function createPageDOM_invoice(sv) {
             <h2 class="doc-title" style="text-align:center;margin-bottom:20px;font-size:18px;">ใบแจ้งหนี้ (Invoice)</h2>
             <div class="doc-info-section flex-between align-start" style="margin-bottom:20px;font-size:13px;align-items:flex-start;">
                 <div class="info-group" style="width:54%;">
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custName)}</span></div>
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ที่อยู่ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custAddr)}</span></div>
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">โทร :</span><span style="flex:1;">${escapeHTML(sv.custTel)}</span></div>
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:160px;font-weight:bold;">เลขประจำตัวผู้เสียภาษีอากร :</span><span style="flex:1;">${escapeHTML(sv.custTax)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">ที่อยู่ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custAddr)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">โทร :</span><span style="flex:1;">${escapeHTML(sv.custTel)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">เลขผู้เสียภาษี :</span><span style="flex:1;">${escapeHTML(sv.custTax)}</span></div>
                 </div>
                 <div class="info-group" style="width:42%;margin-top:-5px;">
                     <table style="width:100%;border-collapse:collapse;font-size:13px;">
@@ -223,11 +223,11 @@ function createPageDOM_receipt(sv) {
             <h2 class="doc-title" style="text-align:center;margin-bottom:20px;font-size:18px;">ใบเสร็จรับเงิน (Receipt)</h2>
             <div class="doc-info-section flex-between align-start" style="margin-bottom:20px;font-size:13px;align-items:flex-start;">
                 <div class="info-group" style="width:54%;">
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custName)}</span></div>
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ที่อยู่ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custAddr)}</span></div>
-                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:160px;font-weight:bold;">เลขประจำตัวผู้เสียภาษีอากร :</span><span style="flex:1;">${escapeHTML(sv.custTax)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">ชื่อลูกค้า :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">ที่อยู่ :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.custAddr)}</span></div>
+                    <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">เลขผู้เสียภาษี :</span><span style="flex:1;">${escapeHTML(sv.custTax)}</span></div>
                     <div style="margin-top:15px;">
-                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:90px;font-weight:bold;">ชื่อโปรเจ็ค :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.projName)}</span></div>
+                        <div class="info-row" style="display:flex;margin-bottom:5px;"><span style="min-width:110px;font-weight:bold;">ชื่อโปรเจ็ค :</span><span style="flex:1;white-space:pre-wrap;">${escapeHTML(sv.projName)}</span></div>
                     </div>
                 </div>
                 <div class="info-group" style="width:42%;margin-top:-5px;">

@@ -142,13 +142,14 @@ function saveDraft() {
     localStorage.setItem(DRAFT_KEY, JSON.stringify({ inputs }));
 }
 
+const fixCoName = (s) => typeof s === 'string' ? s.replace(/คิท[เแ]ช่น/g, 'คิทเท่น').replace(/\(Kitten Code Co\., ?Ltd\.?\)/gi, '(KITTEN CODE Co.,Ltd)') : s;
 function restoreDraft() {
     const saved = localStorage.getItem(DRAFT_KEY);
     if (!saved) return;
     try {
         const draft = JSON.parse(saved);
         if (draft && draft.inputs) {
-            Object.keys(draft.inputs).forEach(id => setInputValue(id, draft.inputs[id]));
+            Object.keys(draft.inputs).forEach(id => setInputValue(id, fixCoName(draft.inputs[id])));
         }
     } catch (e) {
         console.error('Could not restore letter draft', e);

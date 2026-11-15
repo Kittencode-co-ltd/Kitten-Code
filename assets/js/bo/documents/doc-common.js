@@ -64,7 +64,7 @@
             if (SKIP_FIELDS.has(field)) return;
             const v = data[field];
             if (v === null || typeof v === 'object') return;
-            setInputValue(inputIdFor(field, col), v);
+            setInputValue(inputIdFor(field, col), typeof v === 'string' ? v.replace(/คิท[เแ]ช่น/g, 'คิทเท่น').replace(/\(Kitten Code Co\., ?Ltd\.?\)/gi, '(KITTEN CODE Co.,Ltd)') : v);
         });
         state.note = data.note || '';
         setInputValue('note', state.note);

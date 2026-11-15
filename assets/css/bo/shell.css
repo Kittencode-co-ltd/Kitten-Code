@@ -42,9 +42,27 @@ body.bo-shell {
 }
 
 .sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   color: var(--kc-text);
-  font-weight: 800;
-  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.sidebar-brand-text strong {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.sidebar-brand-text small {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--kc-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-brand-mark {

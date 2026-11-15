@@ -554,6 +554,7 @@
 
     function render(d, opts = {}) {
         d = d || {};
+        if (d.companyName) d = { ...d, companyName: String(d.companyName).replace(/คิท[เแ]ช่น/g, 'คิทเท่น').replace(/\(Kitten Code Co\., ?Ltd\.?\)/gi, '(KITTEN CODE Co.,Ltd)') };
         const defaults = buildDefaultDraft(d);
         const subject = d.subject || defaults.subject;
         const recipient = [d.recipientTitle, d.recipientOrg].filter(Boolean).join(' ') || '....................................................';

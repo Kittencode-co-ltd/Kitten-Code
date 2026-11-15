@@ -748,6 +748,7 @@
      */
     function render(d, opts = {}) {
         d = d || {};
+        if (d.companyName) d = { ...d, companyName: String(d.companyName).replace(/คิท[เแ]ช่น/g, 'คิทเท่น').replace(/\(Kitten Code Co\., ?Ltd\.?\)/gi, '(KITTEN CODE Co.,Ltd)') };
         if (isLandscapeCert(d.certType)) {
             return renderLandscape(d, opts);
         }

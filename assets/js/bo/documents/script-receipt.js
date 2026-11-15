@@ -336,12 +336,12 @@ function createPageDOM(sv) {
             <!-- Flex Row for Details -->
             <div class="doc-info-section flex-between align-start" style="margin-bottom: 20px; font-size: 13px; align-items: flex-start;">
                 <div class="info-group" style="width: 54%;">
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.custName)}</span></div>
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ที่อยู่ :</span> <span class="info-value line-break" style="flex: 1;">${escapeHTML(sv.custAddr)}</span></div>
-                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 160px; font-weight: bold;">เลขประจำตัวผู้เสียภาษีอากร :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTax)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 110px; font-weight: bold;">ชื่อลูกค้า :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.custName)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 110px; font-weight: bold;">ที่อยู่ :</span> <span class="info-value line-break" style="flex: 1;">${escapeHTML(sv.custAddr)}</span></div>
+                    <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 110px; font-weight: bold;">เลขผู้เสียภาษี :</span> <span class="info-value" style="flex: 1;">${escapeHTML(sv.custTax)}</span></div>
                     
                     <div class="customer-project-section" style="margin-top: 15px;">
-                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 90px; font-weight: bold;">ชื่อโปรเจ็ค :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.projName)}</span></div>
+                        <div class="info-row" style="display: flex; margin-bottom: 5px;"><span class="info-label" style="min-width: 110px; font-weight: bold;">ชื่อโปรเจ็ค :</span> <span class="info-value" style="flex: 1; white-space: pre-wrap;">${escapeHTML(sv.projName)}</span></div>
                     </div>
                 </div>
                 
