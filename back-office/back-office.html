@@ -37,9 +37,19 @@
             <span class="sidebar-brand-text"><strong>KITTEN CODE Co.,Ltd</strong><small>บริษัท คิทเท่น โค้ด จำกัด</small></span>
         </div>
 
+        <button type="button" class="sidebar-create" onclick="openCreatePicker()">
+            <i class="bi bi-plus-lg"></i>
+            <span data-i18n-th="สร้างเอกสาร" data-i18n-en="New document">สร้างเอกสาร</span>
+        </button>
+
         <!-- Navigation Menu -->
         <div class="sidebar-menu">
             <div class="menu-title" data-i18n-th="เมนูหลัก" data-i18n-en="Main Menu">เมนูหลัก</div>
+
+            <a href="#today" class="menu-item" data-title="วันนี้" data-title-en="Today">
+                <i class="bi bi-house-heart"></i>
+                <span data-i18n-th="วันนี้" data-i18n-en="Today">วันนี้</span>
+            </a>
 
             <a href="#dashboard" class="menu-item" data-title="ภาพรวมการเงิน" data-title-en="Financial Overview">
                 <i class="bi bi-bar-chart-line"></i>
@@ -56,43 +66,10 @@
                 <span data-i18n-th="ปฏิทินและงาน" data-i18n-en="Calendar & Tasks">ปฏิทินและงาน</span>
             </a>
 
-            <div class="menu-group" id="menu-group-docs">
-                <div class="menu-item menu-group-header" onclick="toggleMenuGroup('docs')">
-                    <i class="bi bi-file-earmark-text"></i>
-                    <span data-i18n-th="เอกสาร" data-i18n-en="Documents">เอกสาร</span>
-                    <i class="bi bi-chevron-down menu-group-arrow" id="arrow-docs"></i>
-                </div>
-                <div class="menu-group-items" id="group-docs">
-                    <a href="#document-record" class="menu-item menu-sub-item" data-title="ทะเบียนเอกสาร" data-title-en="Document Register">
-                        <i class="bi bi-folder2-open"></i>
-                        <span data-i18n-th="ทะเบียนเอกสาร" data-i18n-en="Document Register">ทะเบียนเอกสาร</span>
-                    </a>
-                    <a href="#quotation" class="menu-item menu-sub-item" data-title="ใบเสนอราคา" data-title-en="Quotation">
-                        <i class="bi bi-file-earmark-plus"></i>
-                        <span data-i18n-th="ใบเสนอราคา" data-i18n-en="Quotation">ใบเสนอราคา</span>
-                    </a>
-                    <a href="#invoice" class="menu-item menu-sub-item" data-title="ใบแจ้งหนี้" data-title-en="Invoice">
-                        <i class="bi bi-file-earmark-ruled"></i>
-                        <span data-i18n-th="ใบแจ้งหนี้" data-i18n-en="Invoice">ใบแจ้งหนี้</span>
-                    </a>
-                    <a href="#receipt" class="menu-item menu-sub-item" data-title="ใบเสร็จรับเงิน" data-title-en="Receipt">
-                        <i class="bi bi-receipt"></i>
-                        <span data-i18n-th="ใบเสร็จรับเงิน" data-i18n-en="Receipt">ใบเสร็จรับเงิน</span>
-                    </a>
-                    <a href="#voucher" class="menu-item menu-sub-item" data-title="ใบขอเบิก / ซื้อ / จ้าง / สำคัญจ่าย" data-title-en="Procurement & Payment Vouchers">
-                        <i class="bi bi-cash-stack"></i>
-                        <span data-i18n-th="ใบเบิก / ซื้อ / จ้าง" data-i18n-en="Vouchers / PR / PO">ใบเบิก / ซื้อ / จ้าง</span>
-                    </a>
-                    <a href="#certificate" class="menu-item menu-sub-item" data-title="หนังสือรับรอง & ประกาศนียบัตร" data-title-en="Certificates & Awards">
-                        <i class="bi bi-patch-check"></i>
-                        <span data-i18n-th="หนังสือรับรอง / เกียรติบัตร" data-i18n-en="Certificates & Awards">หนังสือรับรอง / เกียรติบัตร</span>
-                    </a>
-                    <a href="#letter" class="menu-item menu-sub-item" data-title="หนังสือติดต่อหน่วยงานภายนอก" data-title-en="External Correspondence">
-                        <i class="bi bi-envelope-paper"></i>
-                        <span data-i18n-th="หนังสือติดต่อภายนอก" data-i18n-en="External Letters">หนังสือติดต่อภายนอก</span>
-                    </a>
-                </div>
-            </div>
+            <a href="#document-record" class="menu-item" data-title="ทะเบียนเอกสาร" data-title-en="Document Register">
+                <i class="bi bi-folder2-open"></i>
+                <span data-i18n-th="เอกสารทั้งหมด" data-i18n-en="All documents">เอกสารทั้งหมด</span>
+            </a>
 
             <div class="menu-title menu-title-gap" data-i18n-th="เครื่องมือ" data-i18n-en="Tools">เครื่องมือ</div>
 
@@ -122,6 +99,9 @@
 
             <!-- Single Profile & Account Menu -->
             <div class="header-actions">
+                <button type="button" class="header-create" onclick="openCreatePicker()" aria-label="สร้างเอกสาร">
+                    <i class="bi bi-plus-lg"></i><span data-i18n-th="สร้างเอกสาร" data-i18n-en="New document">สร้างเอกสาร</span>
+                </button>
                 <div class="profile-menu" id="profileMenu">
                     <button type="button" class="header-profile-pill" id="profileMenuBtn"
                         aria-haspopup="menu" aria-expanded="false" onclick="toggleProfileMenu(event)">
@@ -183,9 +163,9 @@
     <nav class="bo-bottom-nav" id="bottomNav" aria-label="Mobile Navigation">
         <span class="bo-dock-pill" id="bottomDockPill"></span>
 
-        <a href="#dashboard" class="bo-tab-item" data-tab-index="0" data-routes="#dashboard">
-            <i class="bi bi-bar-chart-line"></i>
-            <span class="bo-tab-label" data-i18n-th="ภาพรวม" data-i18n-en="Overview">ภาพรวม</span>
+        <a href="#today" class="bo-tab-item" data-tab-index="0" data-routes="#today">
+            <i class="bi bi-house-heart"></i>
+            <span class="bo-tab-label" data-i18n-th="วันนี้" data-i18n-en="Today">วันนี้</span>
         </a>
 
         <a href="#financial" class="bo-tab-item" data-tab-index="1" data-routes="#financial">
@@ -205,11 +185,37 @@
         </a>
 
         <button type="button" class="bo-tab-item" id="bottomMenuBtn" data-tab-index="4"
-            data-routes="#user,#qr" onclick="toggleMobileDrawer()">
+            data-routes="#dashboard,#user,#qr,#profile" onclick="toggleMobileDrawer()">
             <i class="bi bi-grid"></i>
             <span class="bo-tab-label" data-i18n-th="เมนู" data-i18n-en="Menu">เมนู</span>
         </button>
     </nav>
+
+    <!-- Create-document picker -->
+    <div class="create-picker" id="createPicker" hidden>
+        <div class="create-picker-backdrop" onclick="closeCreatePicker()"></div>
+        <div class="create-picker-sheet" role="dialog" aria-modal="true" aria-label="สร้างเอกสาร">
+            <div class="create-picker-head">
+                <strong data-i18n-th="สร้างเอกสารใหม่" data-i18n-en="Create a document">สร้างเอกสารใหม่</strong>
+                <button type="button" class="create-picker-close" onclick="closeCreatePicker()" aria-label="ปิด"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="create-picker-group" data-i18n-th="ขายและรับเงิน" data-i18n-en="Sales">ขายและรับเงิน</div>
+            <div class="create-picker-grid">
+                <a href="#quotation" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-plus"></i><b>ใบเสนอราคา</b><small>เสนอราคาลูกค้า</small></a>
+                <a href="#invoice" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-ruled"></i><b>ใบแจ้งหนี้</b><small>เรียกเก็บเงิน</small></a>
+                <a href="#receipt" onclick="closeCreatePicker()"><i class="bi bi-receipt"></i><b>ใบเสร็จรับเงิน</b><small>รับเงินแล้ว</small></a>
+            </div>
+            <div class="create-picker-group" data-i18n-th="จัดซื้อและจ่ายเงิน" data-i18n-en="Purchasing">จัดซื้อและจ่ายเงิน</div>
+            <div class="create-picker-grid">
+                <a href="#voucher" onclick="closeCreatePicker()"><i class="bi bi-cash-stack"></i><b>ใบเบิก / ซื้อ / จ้าง</b><small>PR · PO · ใบสำคัญจ่าย</small></a>
+            </div>
+            <div class="create-picker-group" data-i18n-th="หนังสือ" data-i18n-en="Letters">หนังสือ</div>
+            <div class="create-picker-grid">
+                <a href="#certificate" onclick="closeCreatePicker()"><i class="bi bi-patch-check"></i><b>หนังสือรับรอง / เกียรติบัตร</b><small>รับรองการทำงาน · ประกาศนียบัตร</small></a>
+                <a href="#letter" onclick="closeCreatePicker()"><i class="bi bi-envelope-paper"></i><b>หนังสือติดต่อภายนอก</b><small>ถึงหน่วยงานรัฐ / เอกชน</small></a>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { onAuthStateChanged, auth, signOut, db, doc, getDoc } from '../assets/js/bo/core/firebase-config.js';
@@ -345,6 +351,7 @@
 
         // Hash Routing Map
         const routeMap = {
+            '#today': 'today.html',
             '#dashboard': 'dashboard.html',
             '#quotation': 'quotation.html',
             '#receipt': 'receipt.html',
@@ -361,6 +368,7 @@
         };
 
         const routeTitles = {
+            '#today': 'วันนี้',
             '#dashboard': 'ภาพรวมการเงิน',
             '#financial': 'บัญชีรายรับรายจ่าย',
             '#calendar': 'ปฏิทินและงาน',
@@ -377,6 +385,7 @@
         };
 
         const routeTitlesEn = {
+            '#today': 'Today',
             '#dashboard': 'Financial Overview',
             '#financial': 'Income & Expense Ledger',
             '#calendar': 'Calendar & Tasks',
@@ -406,6 +415,10 @@
             Object.entries(routeMap).map(([h, f]) => [f, h])
         );
         fileToHash['document-viewer.html'] = '#document-record';
+
+        window.openCreatePicker = function () { closeMobileDrawer(); document.getElementById('createPicker').hidden = false; };
+        window.closeCreatePicker = function () { document.getElementById('createPicker').hidden = true; };
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.closeCreatePicker(); });
 
         function isMobileViewport() {
             return window.innerWidth < 1024;
@@ -503,15 +516,15 @@
         }
 
         document.addEventListener('kc-lang-change', () => {
-            const hash = routeMap[window.location.hash] ? window.location.hash : '#calendar';
+            const hash = routeMap[window.location.hash] ? window.location.hash : '#today';
             syncNavigationState(hash);
         });
 
         let currentLoadedFile = '';
 
         function loadView() {
-            const hash = routeMap[window.location.hash] ? window.location.hash : '#calendar';
-            const viewFile = routeMap[hash] || 'calendar.html';
+            const hash = routeMap[window.location.hash] ? window.location.hash : '#today';
+            const viewFile = routeMap[hash] || 'today.html';
 
             if (currentLoadedFile !== viewFile) {
                 currentLoadedFile = viewFile;

@@ -1,0 +1,37 @@
+/* Login: one calm card on the app background, same tokens as the back office. */
+body.bo-login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: var(--kc-bg);
+}
+.login-card {
+  width: 100%;
+  max-width: 24rem;
+  padding: 2rem 1.75rem 1.5rem;
+  background: var(--kc-surface);
+  border: 1px solid var(--kc-line);
+  border-radius: var(--kc-radius-lg, 20px);
+  box-shadow: var(--kc-float-lg);
+}
+.login-brand { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.35rem; margin-bottom: 1.5rem; }
+.login-brand img { width: 3.5rem; height: 3.5rem; object-fit: contain; margin-bottom: 0.4rem; }
+.login-brand h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.02em; }
+.login-brand p { color: var(--kc-muted); font-size: 0.85rem; }
+.login-field { display: block; margin-bottom: 0.9rem; }
+.login-field > span { display: block; margin-bottom: 0.3rem; font-size: 0.82rem; font-weight: 600; }
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 2.8rem; }
+.pw-toggle { position: absolute; right: 0.4rem; top: 50%; transform: translateY(-50%); width: 2.2rem; height: 2.2rem; border: 0; border-radius: 50%; background: transparent; color: var(--kc-muted); cursor: pointer; }
+.pw-toggle:hover { background: var(--kc-bg); color: var(--kc-text); }
+.login-check { display: flex; align-items: center; gap: 0.5rem; margin: 0.2rem 0 1.1rem; font-size: 0.85rem; color: var(--kc-muted); cursor: pointer; }
+.login-check input { width: 1rem; height: 1rem; }
+.login-submit { width: 100%; min-height: 2.9rem; font-size: 0.95rem; }
+.login-error { margin-top: 0.9rem; padding: 0.6rem 0.9rem; border-radius: var(--kc-radius-sm); background: var(--kc-red-soft); color: var(--kc-red); font-size: 0.85rem; }
+.login-foot { margin-top: 1.25rem; text-align: center; font-size: 0.8rem; }
+.login-foot a { color: var(--kc-muted); text-decoration: none; }
+.login-foot a:hover { color: var(--kc-text); }
+.login-card.shake { animation: kc-shake 0.35s; }
+@keyframes kc-shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@media (prefers-reduced-motion: reduce) { .login-card.shake { animation: none; } }

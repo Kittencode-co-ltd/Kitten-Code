@@ -1,318 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
   <meta charset="utf-8">
+  <script src="../assets/js/bo/core/bo-theme.js"></script>
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Admin Login - KITTEN CODE Co.,Ltd</title>
-
-  <!-- Favicons -->
+  <title>เข้าสู่ระบบ - KITTEN CODE Co.,Ltd</title>
   <link href="../assets/img/favicon.png" rel="icon">
   <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
-
-  <!-- Main CSS File -->
-  <link href="../assets/css/main.css" rel="stylesheet">
-
-  <style>
-    body {
-      background: url('../assets/img/hero-bg.jpg') top center;
-      background-size: cover;
-      background-attachment: fixed;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0;
-      position: relative;
-    }
-
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.65);
-      z-index: 1;
-    }
-
-    .login-container {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 420px;
-      padding: 15px;
-    }
-
-    .login-card {
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
-      padding: 45px 35px;
-      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
-      transition: transform 0.1s ease-in-out;
-    }
-
-    .login-header {
-      text-align: center;
-      margin-bottom: 35px;
-    }
-
-    .login-header h1 {
-      font-family: 'Raleway', sans-serif;
-      color: #fff;
-      font-size: 32px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-
-    .login-header p {
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 15px;
-      font-weight: 300;
-      margin-bottom: 0;
-      letter-spacing: 1px;
-    }
-
-    .form-control {
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #fff;
-      border-radius: 0 14px 14px 0;
-      padding: 14px 15px;
-      font-size: 15px;
-      transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .form-control:focus {
-      background: rgba(0, 0, 0, 0.4);
-      border-color: #00b4ff;
-      color: #fff;
-      box-shadow: 0 0 0 4px rgba(0, 180, 255, 0.18);
-    }
-
-    .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.4);
-    }
-
-    .input-group-text {
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: rgba(255, 255, 255, 0.6);
-      border-right: none;
-      border-radius: 14px 0 0 14px;
-      padding-left: 18px;
-    }
-
-    .form-control {
-      border-left: none;
-      padding-left: 10px;
-    }
-
-    .btn-login {
-      background: linear-gradient(135deg, #0099ff 0%, #0066cc 100%);
-      border: none;
-      color: #fff;
-      font-weight: 600;
-      min-height: 48px;
-      padding: 13px 22px;
-      border-radius: 999px;
-      font-size: 16px;
-      letter-spacing: 0.6px;
-      transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
-      margin-top: 15px;
-      box-shadow: 0 4px 15px rgba(0, 153, 255, 0.3);
-    }
-
-    .btn-login:hover {
-      background: linear-gradient(135deg, #33adff 0%, #0073e6 100%);
-      box-shadow: 0 8px 25px rgba(0, 153, 255, 0.4);
-      color: #fff;
-    }
-
-    .btn-login:active {
-      transform: scale(0.97);
-    }
-
-    .back-home {
-      text-align: center;
-      margin-top: 25px;
-    }
-
-    .back-home a {
-      color: rgba(255, 255, 255, 0.5);
-      text-decoration: none;
-      font-size: 14px;
-      transition: all 0.3s;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .back-home a:hover {
-      color: #fff;
-      transform: translateX(-3px);
-    }
-
-    .error-msg {
-      color: #ff6b6b;
-      font-size: 13.5px;
-      margin-top: 15px;
-      text-align: center;
-      display: none;
-      background: rgba(255, 107, 107, 0.1);
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 107, 107, 0.2);
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-5px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Input autofill styling override for dark theme */
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    input:-webkit-autofill:active {
-      -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.8) inset !important;
-      -webkit-text-fill-color: white !important;
-      transition: background-color 5000s ease-in-out 0s;
-    }
-
-    .remember-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 4px;
-    }
-
-    .remember-row input[type="checkbox"] {
-      appearance: none;
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-      cursor: pointer;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 5px;
-      transition: all 0.25s ease;
-      position: relative;
-    }
-
-    .remember-row input[type="checkbox"]:checked {
-      background: #0099ff;
-      border-color: #0099ff;
-      box-shadow: 0 0 8px rgba(0, 153, 255, 0.4);
-    }
-
-    .remember-row input[type="checkbox"]::after {
-      content: '';
-      position: absolute;
-      display: none;
-      left: 5px;
-      top: 2px;
-      width: 5px;
-      height: 9px;
-      border: 2px solid #fff;
-      border-top: none;
-      border-left: none;
-      transform: rotate(45deg);
-    }
-
-    .remember-row input[type="checkbox"]:checked::after {
-      display: block;
-    }
-
-    .remember-row label {
-      color: rgba(255, 255, 255, 0.55);
-      font-size: 14px;
-      cursor: pointer;
-      user-select: none;
-      margin: 0;
-      transition: color 0.2s;
-    }
-
-    .remember-row:hover label {
-      color: rgba(255, 255, 255, 0.85);
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+  <link rel="stylesheet" href="../assets/css/bo/base.css">
+  <link rel="stylesheet" href="../assets/css/bo/components.css">
+  <link rel="stylesheet" href="../assets/css/bo/pages/login.css">
 </head>
 
-<body>
-
-  <div class="login-container">
-    <div class="login-card" data-aos="fade-up" data-aos-duration="800">
-      <div class="login-header">
-        <h1>KITTEN CODE Co.,Ltd</h1>
-        <p>Admin Portal Login</p>
-      </div>
-
-      <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
-        <div class="mb-4">
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-person"></i></span>
-            <input type="text" class="form-control" id="username" placeholder="Username" required autocomplete="off">
-          </div>
-        </div>
-
-        <div class="mb-4">
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-lock"></i></span>
-            <input type="password" class="form-control" id="password" placeholder="Password" required
-              autocomplete="current-password">
-          </div>
-        </div>
-
-        <div class="remember-row">
-          <input type="checkbox" id="rememberMe">
-          <label for="rememberMe">Remember password</label>
-        </div>
-
-        <button type="submit" class="btn btn-login w-100" id="signInBtn">Sign In</button>
-        <div id="loginError" class="error-msg">
-          <i class="bi bi-exclamation-circle me-1"></i> <span id="errorText">Invalid username or password</span>
-        </div>
-      </form>
-
-      <div class="back-home">
-        <a href="../index.html"><i class="bi bi-arrow-left me-2"></i> Back to Homepage</a>
-      </div>
+<body class="bo-login">
+  <main class="login-card">
+    <div class="login-brand">
+      <img src="../assets/img/LOGO-KittenCode.png" alt="KITTEN CODE">
+      <h1>KITTEN CODE Co.,Ltd</h1>
+      <p>บริษัท คิทเท่น โค้ด จำกัด · ระบบหลังบ้าน</p>
     </div>
-  </div>
 
-  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../assets/vendor/aos/aos.js"></script>
+    <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+      <label class="login-field">
+        <span>ชื่อผู้ใช้</span>
+        <input type="text" id="username" required autocomplete="username" autocapitalize="none" spellcheck="false" autofocus>
+      </label>
+      <label class="login-field">
+        <span>รหัสผ่าน</span>
+        <div class="pw-wrap">
+          <input type="password" id="password" required autocomplete="current-password">
+          <button type="button" class="pw-toggle" id="pwToggle" aria-label="แสดง/ซ่อนรหัสผ่าน"><i class="bi bi-eye"></i></button>
+        </div>
+      </label>
+      <label class="login-check"><input type="checkbox" id="rememberMe"> จำชื่อผู้ใช้ไว้ในเครื่องนี้</label>
+      <button type="submit" class="btn btn-primary login-submit" id="signInBtn">เข้าสู่ระบบ</button>
+      <div id="loginError" class="login-error" role="alert" hidden><i class="bi bi-exclamation-circle"></i> <span id="errorText"></span></div>
+    </form>
+
+    <div class="login-foot"><a href="../index.html"><i class="bi bi-arrow-left"></i> กลับหน้าเว็บไซต์</a></div>
+  </main>
+
   <script type="module">
     import { auth, db, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, doc, getDoc } from '../assets/js/bo/core/firebase-config.js';
 
-    // Initialize AOS animation
-    AOS.init();
 
     // Only the username is ever remembered locally — never the password.
     (function loadSavedUsername() {
@@ -345,29 +78,18 @@
     }
 
     function showError(message) {
-      const errorMsg = document.getElementById('loginError');
-      const errorText = document.getElementById('errorText');
-      errorText.textContent = message;
-      errorMsg.style.display = 'block';
-
-      // Shake effect on error
+      const box = document.getElementById('loginError');
+      document.getElementById('errorText').textContent = message;
+      box.hidden = false;
       const card = document.querySelector('.login-card');
-      card.style.transform = 'translateX(-10px)';
-      setTimeout(() => card.style.transform = 'translateX(10px)', 100);
-      setTimeout(() => card.style.transform = 'translateX(-10px)', 200);
-      setTimeout(() => card.style.transform = 'translateX(10px)', 300);
-      setTimeout(() => card.style.transform = 'translateX(0)', 400);
+      card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+      setBusy(false);
     }
 
-    function showSuccess() {
-      const errorMsg = document.getElementById('loginError');
-      errorMsg.style.display = 'none';
-
-      // Show success state on button
-      const btn = document.querySelector('.btn-login');
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Authenticating...';
-      btn.style.background = 'linear-gradient(135deg, #00b09b, #96c93d)'; // Success green color gradient
-      btn.style.boxShadow = '0 8px 25px rgba(0, 176, 155, 0.4)';
+    function setBusy(busy) {
+      const btn = document.getElementById('signInBtn');
+      btn.disabled = busy;
+      btn.textContent = busy ? 'กำลังเข้าสู่ระบบ…' : 'เข้าสู่ระบบ';
     }
 
     window.handleLogin = async function () {
@@ -375,10 +97,12 @@
       const pass = document.getElementById('password').value;
 
       if (!user || !pass) {
-        showError('Please enter username and password');
+        showError('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');
         return;
       }
 
+      document.getElementById('loginError').hidden = true;
+      setBusy(true);
       const email = await formatEmail(user);
       const remember = document.getElementById('rememberMe').checked;
 
@@ -395,19 +119,23 @@
           localStorage.removeItem('kc_remember_username');
         }
 
-        showSuccess();
-        setTimeout(() => {
-          window.location.href = 'back-office.html#calendar';
-        }, 800);
+        window.location.href = 'back-office.html#today';
       } catch (error) {
         console.error("Login error:", error);
         if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-          showError('Invalid username or password');
+          showError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
         } else {
-          showError(error.message);
+          showError('เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
         }
       }
     };
+  
+    document.getElementById('pwToggle').addEventListener('click', () => {
+      const i = document.getElementById('password');
+      const show = i.type === 'password';
+      i.type = show ? 'text' : 'password';
+      document.querySelector('#pwToggle i').className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+    });
   </script>
 </body>
 

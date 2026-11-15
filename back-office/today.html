@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>วันนี้ — KITTEN CODE Co.,Ltd</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/today.css">
+</head>
+
+<body class="bo-page">
+    <div class="today">
+        <section class="today-hello">
+            <h1 id="hello">สวัสดี</h1>
+            <p id="today-date"></p>
+        </section>
+
+        <section class="today-card">
+            <h2>เริ่มทำอะไรดี</h2>
+            <div class="quick-grid">
+                <a href="#" data-go="quotation"><i class="bi bi-file-earmark-plus"></i>ใบเสนอราคา</a>
+                <a href="#" data-go="invoice"><i class="bi bi-file-earmark-ruled"></i>ใบแจ้งหนี้</a>
+                <a href="#" data-go="receipt"><i class="bi bi-receipt"></i>ใบเสร็จรับเงิน</a>
+                <a href="#" data-go="voucher"><i class="bi bi-cash-stack"></i>ใบเบิก / ซื้อ / จ้าง</a>
+                <a href="#" data-go="calendar"><i class="bi bi-calendar-plus"></i>เพิ่มงานในปฏิทิน</a>
+                <a href="#" data-go="financial"><i class="bi bi-wallet2"></i>บันทึกรายรับรายจ่าย</a>
+            </div>
+        </section>
+
+        <div class="today-grid">
+            <section class="today-card">
+                <h2>งานของฉัน <a href="#" data-go="calendar">ดูปฏิทินทั้งหมด</a></h2>
+                <div id="my-tasks"><div class="today-empty">กำลังโหลด…</div></div>
+            </section>
+
+            <section class="today-card">
+                <h2>รอดำเนินการ <a href="#" data-go="document-record">ดูเอกสารทั้งหมด</a></h2>
+                <div id="pending"><div class="today-empty">กำลังโหลด…</div></div>
+            </section>
+        </div>
+    </div>
+    <script type="module" src="../assets/js/bo/pages/today.js"></script>
+</body>
+
+</html>
