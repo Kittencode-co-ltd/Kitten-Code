@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Studio — Kitten Code</title>
+    <title>QR Code Studio — KITTEN CODE Co.,Ltd</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="../assets/css/bo/tokens.css">
@@ -82,7 +82,7 @@
                         </div>
                         <div class="preset-bar">
                             <span class="preset-label" data-i18n-th="ทางลัด:" data-i18n-en="Presets:">ทางลัด:</span>
-                            <button type="button" class="preset-chip" data-preset-url="https://kittencode.co.th" data-preset-caption="KITTEN CODE CO., LTD.">
+                            <button type="button" class="preset-chip" data-preset-url="https://kittencode.co.th" data-preset-caption="KITTEN CODE Co.,Ltd">
                                 <i class="bi bi-globe"></i> เว็บไซต์ Kitten Code
                             </button>
                             <button type="button" class="preset-chip" data-preset-url="mailto:kittencode.co.ltd@gmail.com" data-preset-caption="kittencode.co.ltd@gmail.com">
@@ -165,7 +165,7 @@
                             </div>
                             <div class="field-group full">
                                 <label class="field-label" for="vcOrgInput" data-i18n-th="บริษัท / องค์กร" data-i18n-en="Organization">บริษัท / องค์กร</label>
-                                <input type="text" id="vcOrgInput" class="qr-input" value="บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)">
+                                <input type="text" id="vcOrgInput" class="qr-input" value="บริษัท คิทเท่น โค้ด จำกัด (KITTEN CODE Co.,Ltd)">
                             </div>
                         </div>
                     </div>
@@ -280,7 +280,7 @@
                                 <label class="field-label" for="captionInput">
                                     <span data-i18n-th="ป้ายข้อความใต้ QR (เว้นว่างได้)" data-i18n-en="Bottom Caption (Optional)">ป้ายข้อความใต้ QR (เว้นว่างได้)</span>
                                 </label>
-                                <input type="text" id="captionInput" class="qr-input" placeholder="เช่น บริษัท คิทเช่น โค้ด จำกัด" maxlength="60">
+                                <input type="text" id="captionInput" class="qr-input" placeholder="เช่น บริษัท คิทเท่น โค้ด จำกัด" maxlength="60">
                             </div>
                             <div class="field-group">
                                 <label class="field-label" for="sizeSelect">
@@ -532,7 +532,7 @@
                     if (currentMode === 'promptpay') {
                         selectLogoRadio('promptpay');
                         if (!captionInput.value.trim()) {
-                            captionInput.value = 'สแกนพร้อมเพย์ — บริษัท คิทเช่น โค้ด จำกัด';
+                            captionInput.value = 'สแกนพร้อมเพย์ — บริษัท คิทเท่น โค้ด จำกัด';
                         }
                     } else if (currentMode === 'url' && document.querySelector('input[name="logoOption"]:checked').value === 'promptpay') {
                         selectLogoRadio('default');
@@ -562,7 +562,7 @@
 
             document.getElementById('fillCompanyTaxBtn').addEventListener('click', () => {
                 ppTargetInput.value = '0655569001411';
-                captionInput.value = 'พร้อมเพย์ บริษัท คิทเช่น โค้ด จำกัด';
+                captionInput.value = 'พร้อมเพย์ บริษัท คิทเท่น โค้ด จำกัด';
                 generateQR();
             });
 

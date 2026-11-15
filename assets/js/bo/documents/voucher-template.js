@@ -138,8 +138,8 @@
                 <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
             </div>
             <div class="company-details">
-                <h1 class="company-name">Kitten Code</h1>
-                <p class="company-address">บริษัท คิทเช่น โค้ด จำกัด · 347/11 หมู่ 3 ต.ท่าโพธิ์ อ.เมืองพิษณุโลก จ.พิษณุโลก 65000</p>
+                <h1 class="company-name">บริษัท คิทเท่น โค้ด จำกัด</h1><p class="company-name-en">KITTEN CODE Co.,Ltd</p>
+                <p class="company-address">347/11 หมู่ 3 ต.ท่าโพธิ์ อ.เมืองพิษณุโลก จ.พิษณุโลก 65000</p>
                 <p class="company-contact">โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; อีเมล : <span>kittencode.co.ltd@gmail.com</span></p>
                 <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
             </div>
@@ -302,7 +302,7 @@
 
         const certifyHtml = (typeKey === 'pv' && d.certifyNoReceipt)
             ? `<div style="margin-top:10px; padding:8px 12px; border:1px dashed #94a3b8; border-radius:6px; background:#fffbeb; font-size:12px; line-height:1.55; color:#334155;">
-                <strong>คำรับรองแทนใบเสร็จรับเงิน :</strong> ข้าพเจ้าขอรับรองว่า รายจ่ายข้างต้นนี้ไม่อาจเรียกใบเสร็จรับเงินจากผู้รับได้ และข้าพเจ้าได้จ่ายไปในงานของบริษัท คิทเช่น โค้ด จำกัด โดยแท้
+                <strong>คำรับรองแทนใบเสร็จรับเงิน :</strong> ข้าพเจ้าขอรับรองว่า รายจ่ายข้างต้นนี้ไม่อาจเรียกใบเสร็จรับเงินจากผู้รับได้ และข้าพเจ้าได้จ่ายไปในงานของบริษัท คิทเท่น โค้ด จำกัด โดยแท้
                </div>`
             : '';
 

@@ -257,11 +257,11 @@
     function buildDefaultDraft(d) {
         d = d || {};
         const lType = d.letterType || 'invite_advisor';
-        const company = d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด';
+        const company = d.companyName || 'บริษัท คิทเท่น โค้ด จำกัด';
         const topic = d.topicName || 'โครงการพัฒนาระบบเทคโนโลยีดิจิทัล';
         const eventDateStr = d.eventDate ? thaiDateLong(d.eventDate) : 'วันและเวลาตามที่ท่านสะดวก';
         const timeStr = d.eventTime ? ` เวลา ${d.eventTime} น.` : '';
-        const locStr = d.eventLocation || 'ณ ห้องประชุมบริษัท คิทเช่น โค้ด จำกัด หรือผ่านระบบประชุมออนไลน์';
+        const locStr = d.eventLocation || 'ณ ห้องประชุมบริษัท คิทเท่น โค้ด จำกัด หรือผ่านระบบประชุมออนไลน์';
 
         if (isReplyType(lType)) {
             return buildReplyDraft(d, lType, company);
@@ -607,11 +607,11 @@
                     <div class="sig-space"></div>
                     <div>(${escapeHTML(d.signName || '..............................................')})</div>
                     <div>${escapeHTML(d.signPosition || 'กรรมการผู้จัดการ')}</div>
-                    <div>${escapeHTML(d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด')}</div>
+                    <div>${escapeHTML(d.companyName || 'บริษัท คิทเท่น โค้ด จำกัด')}</div>
                 </div>`;
 
         const footerLines = [
-            `<div class="let-footer-org">${escapeHTML(d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด')}</div>`
+            `<div class="let-footer-org">${escapeHTML(d.companyName || 'บริษัท คิทเท่น โค้ด จำกัด')}</div>`
         ];
         if (d.coordName) footerLines.push(`<div>ผู้ประสานงาน : ${escapeHTML(d.coordName)}</div>`);
         footerLines.push(`<div>โทรศัพท์ : ${escapeHTML(d.coordTel || '080-885-0555')}</div>`);
@@ -650,7 +650,7 @@
                 <div class="let-meta-bar">
                     <div class="let-docno"><strong>ที่</strong>&nbsp;&nbsp;${escapeHTML(d.docNo || '-')}</div>
                     <div class="let-office-addr">
-                        <div>${escapeHTML(d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด')}</div>
+                        <div>${escapeHTML(d.companyName || 'บริษัท คิทเท่น โค้ด จำกัด')}</div>
                         <div>347/11 หมู่ 3 ตำบลท่าโพธิ์</div>
                         <div>อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</div>
                     </div>

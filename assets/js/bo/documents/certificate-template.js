@@ -213,7 +213,7 @@
     const COMPANY_HEADER = `
         <div class="header-section-centered">
             <img src="../assets/img/LOGO-KittenCode.png" class="cert-logo-center" alt="Kitten Code Logo" onerror="this.style.display='none'">
-            <h1 class="cert-company-name">บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)</h1>
+            <h1 class="cert-company-name">บริษัท คิทเท่น โค้ด จำกัด (KITTEN CODE Co.,Ltd)</h1>
             <p class="cert-company-address">สำนักงานใหญ่ : 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
             <p class="cert-company-contact">
                 โทรศัพท์ : <span>+66 8 0885 0555</span> &nbsp;·&nbsp;
@@ -359,7 +359,7 @@
         const themeKey = (d.certTheme && THEMES[d.certTheme]) ? d.certTheme : 'gold';
         const th = THEMES[themeKey];
 
-        const company = d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)';
+        const company = d.companyName || 'บริษัท คิทเท่น โค้ด จำกัด (KITTEN CODE Co.,Ltd)';
         const headerTitle = d.awardHeader || defaults.awardHeader;
         const headerTitleEn = d.awardHeaderEn || defaults.awardHeaderEn;
         const leadText = d.awardLead || defaults.awardLead;

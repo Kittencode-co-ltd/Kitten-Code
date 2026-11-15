@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Company website and back-office financial management system for **Kitten Code Co., Ltd.** — a Thai digital agency. Two distinct sections:
+Company website and back-office financial management system for **KITTEN CODE Co.,Ltd (บริษัท คิทเท่น โค้ด จำกัด)** — a Thai digital agency. Two distinct sections:
 - **Public website** (`index.html` + `team-profile/`): Marketing, portfolio, team profiles
 - **Back-office** (`back-office/`): Authenticated internal tool for invoices, quotations, receipts, financial tracking, and calendaring
 

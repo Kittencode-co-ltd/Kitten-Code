@@ -73,7 +73,7 @@ function collectData() {
         letterType,
         docNo: getInputValue('doc-no'),
         docDate: getInputValue('doc-date'),
-        companyName: getInputValue('company-name') || 'บริษัท คิทเช่น โค้ด จำกัด',
+        companyName: getInputValue('company-name') || 'บริษัท คิทเท่น โค้ด จำกัด',
         subject: getInputValue('subject'),
         recipientTitle,
         recipientOrg,

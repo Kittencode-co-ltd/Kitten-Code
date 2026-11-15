@@ -89,7 +89,7 @@ function collectData() {
         showSeal: getEl('show-seal') ? getInputValue('show-seal') : true,
         docNo: getInputValue('doc-no'),
         docDate: getInputValue('doc-date'),
-        companyName: getInputValue('company-name') || 'บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)',
+        companyName: getInputValue('company-name') || 'บริษัท คิทเท่น โค้ด จำกัด (KITTEN CODE Co.,Ltd)',
         namePrefix,
         personName,
         custName: `${namePrefix || ''}${personName || ''}`.trim(),

@@ -318,7 +318,7 @@ function createPageDOM(sv) {
                     <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
                 </div>
                 <div class="company-details">
-                    <h1 class="company-name">Kitten Code</h1>
+                    <h1 class="company-name">บริษัท คิทเท่น โค้ด จำกัด</h1><p class="company-name-en">KITTEN CODE Co.,Ltd</p>
                     <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
                     <p class="company-contact">
                         โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp;
@@ -502,7 +502,7 @@ function buildPreview() {
                 <table style="border: none; font-size: 12px; border-collapse: collapse; width: 100%;">
                     <tr>
                         <td style="color: #64748b; padding: 2px 10px 2px 0; white-space: nowrap; vertical-align: top;">ชื่อบัญชี</td>
-                        <td style="font-weight: 600; color: #1e293b; padding: 2px 0;">คิทเท่น โค้ด</td>
+                        <td style="font-weight: 600; color: #1e293b; padding: 2px 0;">บริษัท คิทเท่น โค้ด จำกัด</td>
                     </tr>
                     <tr>
                         <td style="color: #64748b; padding: 2px 10px 2px 0; white-space: nowrap; vertical-align: top;">เลขบัญชี</td>
