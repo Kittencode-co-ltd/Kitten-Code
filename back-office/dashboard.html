@@ -1,30 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
-    <script src="../assets/js/core/bo-theme.js"></script>
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Kitten Code — Dark Luxury Financial Dashboard">
+    <meta name="description" content="Kitten Code — ภาพรวมการเงิน">
     <title>Dashboard — Kitten Code Financial</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
 
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
     <!-- Dashboard stylesheet -->
     <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
-    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/dashboard.css">
 </head>
 
-<body>
+<body class="bo-page">
 
     <div class="db-wrapper">
 
@@ -110,7 +105,7 @@
                 <div class="chart-card">
                     <div class="chart-title">กำไรสุทธิรายเดือน</div>
                     <div class="chart-subtitle">รายรับ รายจ่าย และกำไร — 6 เดือนล่าสุด</div>
-                    <div class="chart-canvas-wrap" style="height:280px;">
+                    <div class="chart-canvas-wrap chart-tall">
                         <canvas id="lineChart" aria-label="Monthly net profit trend line chart"></canvas>
                     </div>
                 </div>
@@ -119,7 +114,7 @@
                 <div class="chart-card">
                     <div class="chart-title">รายจ่ายแยกตามหมวด</div>
                     <div class="chart-subtitle">รายจ่ายแยกตามหมวด — <span id="donut-period-label">เดือนนี้</span></div>
-                    <div class="chart-canvas-wrap" style="height:200px;">
+                    <div class="chart-canvas-wrap chart-short">
                         <canvas id="donutChart" aria-label="Expense breakdown doughnut chart"></canvas>
                     </div>
                     <!-- Custom legend rendered by JS -->
@@ -143,14 +138,14 @@
                         <span class="data-card-title">5 รายการล่าสุด</span>
                         <a href="#" class="data-card-action" onclick="event.preventDefault(); window.parent !== window ? window.parent.location.hash = '#financial' : location.href = 'financial.html'">ดูทั้งหมด →</a>
                     </div>
-                    <div style="overflow-x:auto;">
+                    <div class="table-scroll-wrapper">
                         <table class="txn-tbl" aria-label="Last 5 Transactions">
                             <thead>
                                 <tr>
                                     <th>วันที่</th>
                                     <th>รายการ / หมวด</th>
                                     <th>สถานะ</th>
-                                    <th style="text-align:right;">จำนวนเงิน</th>
+                                    <th class="num">จำนวนเงิน</th>
                                     <th>หมวด</th>
                                 </tr>
                             </thead>
@@ -158,7 +153,7 @@
                                 <!-- Populated by dashboard.js -->
                                 <tr>
                                     <td colspan="5" class="empty-state">
-                                        <span class="skel" style="height:14px;width:60%;display:inline-block;"></span>
+                                        <span class="skel skel-line"></span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -174,7 +169,7 @@
     </div><!-- /db-wrapper -->
 
     <!-- Dashboard JS (ES Module) -->
-    <script type="module" src="../assets/js/dashboard.js"></script>
+    <script type="module" src="../assets/js/bo/pages/dashboard.js"></script>
 
 </body>
 

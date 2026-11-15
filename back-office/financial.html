@@ -3,20 +3,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <script src="../assets/js/core/bo-theme.js"></script>
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Kitten Code — ระบบติดตามงบประมาณและการเบิกจ่ายเงินกองกลาง">
     <title>Accounting — Kitten Code Financial</title>
-    <link rel="stylesheet" href="../assets/css/finance.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/finance.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 </head>
 
-<body>
+<body class="bo-page">
     <div id="vis-container">
-        <style>
-
-        </style>
 
         <div class="app">
             <div class="page-head">
@@ -33,9 +32,8 @@
                         <button class="btn-add" onclick="showAddCategory()">+ เพิ่มหมวด</button>
                     </div>
 
-                    <div id="add-cat-form"
-                        style="display:none; background:var(--bg-glass); border-radius:var(--border-radius-md); padding:1.25rem; margin-bottom:1rem; border:1px solid var(--border-glass);">
-                        <div class="form-grid" style="margin-bottom:10px;">
+                    <div id="add-cat-form" class="panel" style="display:none;">
+                        <div class="form-grid">
                             <div class="form-group">
                                 <div class="form-label">รหัสหมวด</div>
                                 <input type="text" id="cat-code" placeholder="เช่น EXP-01">
@@ -73,7 +71,7 @@
                                 <input type="date" id="cat-reset-date">
                             </div>
                         </div>
-                        <div style="display:flex;gap:8px;">
+                        <div class="btn-row">
                             <button class="btn-add" onclick="addCategory()">บันทึก</button>
                             <button class="action-btn"
                                 onclick="document.getElementById('add-cat-form').style.display='none'">ยกเลิก</button>
@@ -87,9 +85,9 @@
                                 <th>รหัส</th>
                                 <th>ชื่อหมวด</th>
                                 <th>ประเภท</th>
-                                <th style="text-align:right;">งบ (฿)</th>
-                                <th style="text-align:right;">ใช้ไป</th>
-                                <th style="text-align:right;">คงเหลือ</th>
+                                <th class="num">งบ (฿)</th>
+                                <th class="num">ใช้ไป</th>
+                                <th class="num">คงเหลือ</th>
                                 <th>รอบงบ</th>
                                 <th></th>
                             </tr>
@@ -121,9 +119,9 @@
                                     <th>หมวด</th>
                                     <th>เลขอ้างอิง</th>
                                     <th>ผู้ติดต่อ</th>
-                                    <th style="text-align:center;">สถานะ</th>
+                                    <th class="ctr">สถานะ</th>
                                     <th>วันที่จ่าย</th>
-                                    <th style="text-align:right;">จำนวนเงิน</th>
+                                    <th class="num">จำนวนเงิน</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -176,11 +174,11 @@
                             <input type="date" id="txn-paid-date">
                         </div>
                     </div>
-                    <div style="margin-top:1rem; display:flex; gap:8px;">
+                    <div class="btn-row btn-row-top">
                         <button class="btn-add" onclick="addTransaction()">บันทึก</button>
                         <button class="action-btn" onclick="switchTab('transactions')">ยกเลิก</button>
                     </div>
-                    <div id="add-msg" style="margin-top:10px;font-size:13px;"></div>
+                    <div id="add-msg" class="form-msg"></div>
                 </div>
             </div>
         </div>
@@ -263,11 +261,11 @@
                     </div>
                 </div>
 
-                <div class="modal-actions" style="justify-content: space-between;">
+                <div class="modal-actions between">
                     <div>
                         <button id="modal-delete-btn" class="action-btn row-btn-danger" onclick="confirmDeleteFromModal()">ลบ</button>
                     </div>
-                    <div style="display:flex; gap:8px;">
+                    <div class="btn-row">
                         <button class="action-btn" onclick="closeEditModal()">ยกเลิก</button>
                         <button class="btn-add" onclick="submitEdit()">บันทึก</button>
                     </div>
@@ -275,9 +273,9 @@
             </div>
         </div>
 
-        <script src="../assets/js/financial.js" type="module"></script>
+        <script src="../assets/js/bo/pages/financial.js" type="module"></script>
         <script type="module">
-            import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
+            import { onAuthStateChanged, auth } from '../assets/js/bo/core/firebase-config.js';
             onAuthStateChanged(auth, (user) => {
                 if (!user) { window.location.replace('login.html'); }
             });

@@ -3,86 +3,20 @@
 
 <head>
     <meta charset="utf-8">
-    <script src="../assets/js/core/bo-theme.js"></script>
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>User Management - Kitten Code</title>
 
     <!-- Vendor CSS Files -->
     <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-
-    <style>
-        :root {
-            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-            --dur-fast: 150ms;
-            --dur-base: 240ms;
-            --dur-slow: 420ms;
-        }
-
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Inter', sans-serif;
-            padding: 20px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .card {
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            border-radius: 18px;
-            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
-            overflow: hidden;
-        }
-
-        .btn {
-            border-radius: 999px;
-            font-weight: 600;
-            transition:
-                background-color var(--dur-fast) var(--ease-out),
-                border-color var(--dur-fast) var(--ease-out),
-                transform var(--dur-fast) var(--ease-out),
-                box-shadow var(--dur-fast) var(--ease-out);
-        }
-
-        .btn:active:not(:disabled) {
-            transform: scale(0.97);
-        }
-
-        .form-control,
-        .form-select {
-            min-height: 42px;
-            border-radius: 14px;
-            border-width: 1.5px;
-            transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.14);
-        }
-
-        .modal-content {
-            border-radius: 24px;
-            border: 1px solid rgba(15, 23, 42, 0.1);
-            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
-        }
-
-        @media (max-width: 639px) {
-            body {
-                padding: 12px;
-            }
-            .modal-dialog {
-                margin: auto 0 0 0;
-                max-width: 100%;
-            }
-            .modal-content {
-                border-radius: 24px 24px 0 0;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/profile.css">
 </head>
 
-<body>
+<body class="bo-page">
 
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -294,9 +228,9 @@
 
     <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <script src="../assets/js/user.js" type="module"></script>
+    <script src="../assets/js/bo/pages/user.js" type="module"></script>
     <script type="module">
-        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
+        import { onAuthStateChanged, auth } from '../assets/js/bo/core/firebase-config.js';
         onAuthStateChanged(auth, (user) => {
             if (!user) { window.location.replace('login.html'); }
         });

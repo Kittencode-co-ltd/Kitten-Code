@@ -3,506 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <script src="../assets/js/core/bo-theme.js"></script>
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Kitten Code — ปฏิทินและนัดหมาย">
     <title>Calendar — Kitten Code</title>
-    <link rel="stylesheet" href="../assets/css/finance.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/calendar.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        /* ── Calendar-specific styles (Original Palette + FUFU Motion & Controls) ── */
-        :root {
-            --cal-accent: var(--kc-accent);
-            --cal-accent-light: var(--kc-accent);
-            --cal-green: #10b981;
-            --cal-red: #ef4444;
-            --cal-orange: #f59e0b;
-            --cal-blue: #3b82f6;
-            --cal-purple: #a855f7;
-            --cal-pink: #ec4899;
-            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --dur-fast: 150ms;
-            --dur-base: 240ms;
-            --dur-slow: 420ms;
-        }
+    </head>
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: 'Inter', 'Sarabun', sans-serif;
-            background: var(--color-bg, var(--kc-surface));
-            color: var(--color-text, var(--kc-text));
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .cal-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        /* ── Top Bar ── */
-        .cal-nav-btn {
-            background: var(--color-card, var(--kc-line));
-            border: 1px solid var(--color-border, var(--kc-line));
-            color: var(--color-text, var(--kc-text));
-            min-height: 38px;
-            padding: 8px 16px;
-            border-radius: 999px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all var(--dur-fast) var(--ease-out);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .cal-nav-btn:hover { background: var(--cal-accent); border-color: var(--cal-accent); }
-        .cal-nav-btn:active { transform: scale(0.95); }
-
-        .cal-month-label {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--kc-text);
-            min-width: 200px;
-            text-align: center;
-        }
-
-        .cal-view-toggle {
-            display: flex;
-            gap: 4px;
-            background: var(--color-card, var(--kc-line));
-            border: 1px solid var(--color-border, var(--kc-line));
-            border-radius: 999px;
-            padding: 4px;
-        }
-
-        .view-btn {
-            min-height: 34px;
-            padding: 6px 16px;
-            border-radius: 999px;
-            border: none;
-            font-size: 0.85rem;
-            cursor: pointer;
-            background: transparent;
-            color: var(--color-text-muted, var(--kc-muted));
-            font-weight: 600;
-            transition: all var(--dur-base) var(--ease-out);
-        }
-        .view-btn:active { transform: scale(0.96); }
-        .view-btn.active {
-            background: var(--cal-accent);
-            color: #fff;
-            box-shadow: 0 2px 10px rgba(10,114,232, 0.35);
-        }
-
-        /* ── Calendar Grid ── */
-        .cal-grid-wrapper {
-            background: var(--color-card, var(--kc-line));
-            border: 1px solid var(--color-border, var(--kc-line));
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        .cal-weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            background: var(--kc-surface);
-            border-bottom: 1px solid var(--color-border, var(--kc-line));
-        }
-
-        .cal-weekday {
-            text-align: center;
-            padding: 12px 0;
-            font-size: 0.78rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--color-text-muted, var(--kc-muted));
-        }
-        .cal-weekday:first-child { color: var(--kc-red, #c8322b); }
-        .cal-weekday:last-child { color: var(--kc-accent); }
-
-        .cal-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-        }
-
-        .cal-cell {
-            min-height: 110px;
-            border-right: 1px solid var(--kc-line);
-            border-bottom: 1px solid var(--kc-line);
-            padding: 8px;
-            cursor: pointer;
-            transition: background 0.15s;
-            position: relative;
-        }
-        .cal-cell:nth-child(7n) { border-right: none; }
-        .cal-cell:hover { background: rgba(10,114,232,0.05); }
-
-        .cal-cell.other-month { opacity: 0.35; }
-
-        .cal-cell.today .cell-date {
-            background: var(--cal-accent);
-            color: #fff;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .cal-cell.selected {
-            background: rgba(10,114,232,0.08);
-        }
-
-        .cell-date {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--kc-text);
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 4px;
-        }
-
-        .cal-cell:nth-child(7n+1) .cell-date { color: var(--kc-red, #c8322b); }
-        .cal-cell:nth-child(7n) .cell-date { color: var(--kc-accent); }
-
-        /* ── Events ── */
-        .cal-event {
-            font-size: 0.72rem;
-            font-weight: 500;
-            padding: 2px 7px;
-            border-radius: 4px;
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            cursor: pointer;
-            transition: opacity 0.15s;
-        }
-        .cal-event:hover { opacity: 0.8; }
-        .cal-event.is-done { opacity: 0.45; text-decoration: line-through; }
-        .cal-event.is-doing::before {
-            content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-            background: currentColor; margin-right: 5px; vertical-align: middle;
-        }
-
-        /* Task fields */
-        .assignee-list { display: flex; flex-wrap: wrap; gap: 6px; }
-        .assignee-chip, .status-opt {
-            min-height: 34px; padding: 6px 12px; border-radius: 8px;
-            border: 1px solid var(--kc-line); background: transparent; color: var(--kc-muted);
-            font-size: 0.85rem; font-family: inherit; cursor: pointer;
-        }
-        .assignee-chip.selected, .status-opt.selected {
-            border-color: var(--cal-accent); background: rgba(10,114,232,0.15); color: var(--kc-text);
-        }
-        .assignee-chip:disabled, .status-opt:disabled { cursor: default; opacity: 0.6; }
-        .status-picker { display: flex; gap: 6px; }
-        .status-opt { flex: 1; }
-        .evt-meta { font-size: 0.78rem; color: var(--kc-muted); margin: -4px 0 12px; }
-        .empty-note { color: var(--kc-muted); font-size: 0.85rem; }
-        .task-status { font-size: 0.72rem; padding: 1px 6px; border-radius: 4px; border: 1px solid var(--kc-line); color: var(--kc-muted); }
-        .task-status.doing { border-color: var(--kc-accent); color: var(--kc-accent); }
-        .task-step {
-            flex-shrink: 0; min-height: 30px; padding: 0 12px; border-radius: 999px;
-            border: 1px solid var(--kc-line); background: var(--kc-surface); color: var(--kc-text);
-            font: inherit; font-size: 0.78rem; cursor: pointer; box-shadow: var(--kc-float);
-        }
-        .task-step:hover { border-color: var(--kc-accent); color: var(--kc-accent); }
-        .cal-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-        .cal-toolbar-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .cal-nav-btn.icon-only { width: 38px; padding: 0 !important; justify-content: center; }
-        .cal-month-label { font-size: 1.15rem; font-weight: 600; margin-left: 6px; }
-        .upcoming-event { display: flex; align-items: center; gap: 10px; }
-
-        .evt-work    { background: #eaf2fd; color: #0b4f9e; border-left: 3px solid var(--kc-accent); }
-        .evt-meet    { background: #e7f6ef; color: #146c43; border-left: 3px solid #10b981; }
-        .evt-deadline{ background: #fdecea; color: #a5281f; border-left: 3px solid #ef4444; }
-        .evt-personal{ background: #f3ecfd; color: #6b2fb3; border-left: 3px solid #a855f7; }
-        .evt-holiday { background: #fdf3e2; color: #8a5a00; border-left: 3px solid #f59e0b; }
-
-        .more-events {
-            font-size: 0.7rem;
-            color: var(--cal-accent-light);
-            cursor: pointer;
-            padding: 1px 6px;
-        }
-
-        /* ── Mini sidebar ── */
-        .cal-layout {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 20px;
-            align-items: start;
-        }
-
-        .cal-sidebar {
-            background: var(--color-card, var(--kc-line));
-            border: 1px solid var(--color-border, var(--kc-line));
-            border-radius: 16px;
-            padding: 20px;
-        }
-
-        .sidebar-section {
-            margin-bottom: 24px;
-        }
-
-        .sidebar-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--color-text-muted, var(--kc-muted));
-            margin-bottom: 12px;
-        }
-
-        /* ── Upcoming Events ── */
-        .upcoming-event {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--kc-line);
-        }
-        .upcoming-event:last-child { border-bottom: none; }
-
-        .upcoming-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-top: 4px;
-            flex-shrink: 0;
-        }
-
-        .upcoming-info {}
-        .upcoming-title { font-size: 0.88rem; font-weight: 500; }
-        .upcoming-date  { font-size: 0.75rem; color: var(--kc-muted); margin-top: 2px; }
-
-        /* ── Modal ── */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.65);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay.open { display: flex; }
-
-        .modal-box {
-            background: var(--kc-line);
-            border: 1px solid var(--kc-line);
-            border-radius: 24px;
-            padding: 28px;
-            width: 480px;
-            max-width: 95vw;
-            max-height: 92vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            animation: slideUp var(--dur-slow) var(--ease-out);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--kc-text);
-        }
-
-        .modal-close {
-            width: 36px;
-            height: 36px;
-            display: inline-grid;
-            place-items: center;
-            background: rgba(0,0,0,0.03);
-            border: 1px solid var(--kc-line);
-            color: var(--kc-muted);
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 999px;
-            transition: all var(--dur-fast) var(--ease-out);
-        }
-        .modal-close:hover { color: var(--kc-text); background: rgba(0,0,0,0.06); }
-        .modal-close:active { transform: scale(0.9); }
-
-        .form-group-cal {
-            margin-bottom: 16px;
-        }
-
-        .form-label-cal {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--kc-muted);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .form-input-cal {
-            width: 100%;
-            min-height: 42px;
-            background: var(--kc-surface);
-            border: 1.5px solid var(--kc-line);
-            border-radius: 14px;
-            padding: 10px 14px;
-            color: var(--kc-text);
-            font-size: 0.92rem;
-            font-family: inherit;
-            transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
-        }
-        .form-input-cal:focus {
-            outline: none;
-            border-color: var(--cal-accent);
-            box-shadow: 0 0 0 4px rgba(10,114,232, 0.18);
-        }
-
-        .color-picker-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .color-chip {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.15s;
-            position: relative;
-        }
-        .color-chip:hover { transform: scale(1.1); }
-        .color-chip.selected { border-color: #fff; }
-        .color-chip.selected::after {
-            content: '✓';
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #fff;
-            font-weight: 700;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 24px;
-        }
-
-        .btn-cancel {
-            flex: 1;
-            min-height: 44px;
-            background: var(--kc-surface);
-            border: 1px solid var(--kc-line);
-            color: var(--kc-muted);
-            padding: 10px 16px;
-            border-radius: 999px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--dur-fast) var(--ease-out);
-        }
-        .btn-cancel:hover { border-color: var(--kc-muted); color: var(--kc-text); }
-        .btn-cancel:active { transform: scale(0.97); }
-
-        .btn-save-evt {
-            flex: 2;
-            min-height: 44px;
-            background: linear-gradient(135deg, var(--cal-accent), var(--cal-accent-light));
-            border: none;
-            color: #fff;
-            padding: 10px 18px;
-            border-radius: 999px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--dur-fast) var(--ease-out);
-        }
-        .btn-save-evt:hover { opacity: 0.92; }
-        .btn-save-evt:active { transform: scale(0.97); }
-
-        .btn-delete-evt {
-            min-height: 44px;
-            background: rgba(239,68,68,0.15);
-            border: 1px solid rgba(239,68,68,0.3);
-            color: var(--kc-red, #c8322b);
-            padding: 10px 16px;
-            border-radius: 999px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all var(--dur-fast) var(--ease-out);
-        }
-        .btn-delete-evt:hover { background: rgba(239,68,68,0.25); }
-        .btn-delete-evt:active { transform: scale(0.95); }
-
-        /* ── Toast ── */
-        .cal-toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: var(--kc-line);
-            border: 1px solid var(--kc-line);
-            border-radius: 10px;
-            padding: 12px 18px;
-            font-size: 0.88rem;
-            color: var(--kc-text);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            transform: translateY(80px);
-            opacity: 0;
-            transition: all 0.3s;
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .cal-toast.show { transform: translateY(0); opacity: 1; }
-
-        @media (max-width: 900px) {
-            .cal-layout { grid-template-columns: 1fr; }
-            .cal-sidebar { display: block; }
-            .cal-cell { min-height: 70px; }
-        }
-
-        @media (max-width: 639px) {
-            .cal-container { padding: 14px; }
-            .modal-overlay { align-items: flex-end; }
-            .modal-box {
-                width: 100%;
-                max-width: 100vw;
-                border-radius: 24px 24px 0 0;
-                padding: 22px 18px calc(22px + env(safe-area-inset-bottom, 0px));
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
-</head>
-
-<body>
+<body class="bo-page">
     <div class="cal-container">
         <!-- Top Bar -->
         <!-- One toolbar: move in time on the left, filters and add on the right -->
@@ -551,8 +63,8 @@
                 </div>
 
                 <!-- Week View -->
-                <div id="view-week" style="display:none;">
-                    <div class="cal-grid-wrapper" id="week-view-inner" style="overflow-x:auto;"></div>
+                <div id="view-week" hidden>
+                    <div class="cal-grid-wrapper table-scroll-wrapper" id="week-view-inner"></div>
                 </div>
             </div>
 
@@ -570,7 +82,7 @@
                 <div class="sidebar-section">
                     <div class="sidebar-title">กำลังจะมาถึง</div>
                     <div id="upcoming-list">
-                        <div style="color:var(--kc-muted); font-size:0.85rem;">ยังไม่มีกิจกรรม</div>
+                        <div class="empty-note">ยังไม่มีกิจกรรม</div>
                     </div>
                 </div>
             </div>
@@ -590,7 +102,7 @@
                 <input type="text" class="form-input-cal" id="evt-title" placeholder="ระบุชื่อกิจกรรม...">
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="cal-pair">
                 <div class="form-group-cal">
                     <label class="form-label-cal">วันที่เริ่ม *</label>
                     <input type="date" class="form-input-cal" id="evt-start">
@@ -601,7 +113,7 @@
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="cal-pair">
                 <div class="form-group-cal">
                     <label class="form-label-cal">เวลาเริ่ม</label>
                     <input type="time" class="form-input-cal" id="evt-time-start">
@@ -642,16 +154,16 @@
             <div class="form-group-cal">
                 <label class="form-label-cal">ประเภท / สี</label>
                 <div class="color-picker-row" id="color-picker">
-                    <div class="color-chip selected" data-type="work"     style="background:var(--kc-accent);" title="Work"></div>
-                    <div class="color-chip" data-type="meet"     style="background:#10b981;" title="Meeting"></div>
-                    <div class="color-chip" data-type="deadline" style="background:#ef4444;" title="Deadline"></div>
-                    <div class="color-chip" data-type="personal" style="background:#a855f7;" title="Personal"></div>
-                    <div class="color-chip" data-type="holiday"  style="background:#f59e0b;" title="Holiday"></div>
+                    <div class="color-chip selected" data-type="work"     title="Work"></div>
+                    <div class="color-chip" data-type="meet"     title="Meeting"></div>
+                    <div class="color-chip" data-type="deadline" title="Deadline"></div>
+                    <div class="color-chip" data-type="personal" title="Personal"></div>
+                    <div class="color-chip" data-type="holiday"  title="Holiday"></div>
                 </div>
             </div>
 
             <div class="modal-actions">
-                <button class="btn-delete-evt" id="btn-delete-evt" style="display:none;" onclick="deleteEvent()">
+                <button class="btn-delete-evt" id="btn-delete-evt" hidden onclick="deleteEvent()">
                     <i class="fas fa-trash"></i>
                 </button>
                 <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
@@ -663,7 +175,7 @@
     </div>
 
     <!-- Toast -->
-    <div class="cal-toast" id="cal-toast"></div>
+    <div class="kc-toast" id="cal-toast"></div>
 
     <script>
         // ── State ──────────────────────────────────────────────
@@ -708,7 +220,7 @@
         let db = null, fs = null;
 
         async function initFirebase() {
-            const mod = await import('../assets/js/core/firebase-config.js');
+            const mod = await import('../assets/js/bo/core/firebase-config.js');
             db = mod.db;
             fs = mod;
             // Wait for the restored auth session before touching Firestore.
@@ -878,8 +390,7 @@
             const wrapper = document.getElementById('week-view-inner');
             const today = new Date();
 
-            let html = `<div style="display:grid; grid-template-columns: 70px repeat(7,1fr); min-width:600px;">`;
-            html += `<div style="padding:12px; border-bottom:1px solid var(--kc-line); background:var(--kc-surface);"></div>`;
+            let html = `<div class="wk-grid"><div class="wk-corner"></div>`;
 
             const days = [];
             const dayNames = ['อา','จ','อ','พ','พฤ','ศ','ส'];
@@ -888,25 +399,21 @@
                 d.setDate(weekStart.getDate() + i);
                 days.push(d);
                 const isToday = d.toDateString() === today.toDateString();
-                html += `<div style="text-align:center; padding:12px 4px; border-bottom:1px solid var(--kc-line); border-left:1px solid var(--kc-line); background:var(--kc-surface);">
-                    <div style="font-size:0.7rem; color:var(--kc-muted);">${dayNames[d.getDay()]}</div>
-                    <div style="font-size:1.1rem; font-weight:700; ${isToday ? 'background:var(--cal-accent);color:#fff;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;' : 'color:var(--kc-text);'}">${d.getDate()}</div>
-                </div>`;
+                html += `<div class="wk-head${isToday ? ' today' : ''}"><small>${dayNames[d.getDay()]}</small><b>${d.getDate()}</b></div>`;
             }
 
             const HOURS = Array.from({length: 17}, (_, i) => i + 7); // 07:00-23:00
             HOURS.forEach(h => {
-                html += `<div style="padding:8px 6px; border-bottom:1px solid var(--kc-line); font-size:0.72rem; color:var(--kc-muted); text-align:right; line-height:40px; height:50px;">${String(h).padStart(2,'0')}:00</div>`;
+                html += `<div class="wk-hour">${String(h).padStart(2,'0')}:00</div>`;
                 days.forEach(d => {
                     const dateStr = ymd(d);
                     const hourEvts = getEventsOnDate(dateStr).filter(e => e.timeStart && parseInt(e.timeStart.split(':')[0]) === h);
                     const evtsHtml = hourEvts.map(e => `
-                        <div class="${eventClass(e)}" title="${escHTML(eventTooltip(e))}" style="font-size:0.7rem; margin:1px 2px;"
+                        <div class="${eventClass(e)}" title="${escHTML(eventTooltip(e))}"
                              onclick="event.stopPropagation(); openEditModal('${escHTML(e.id)}')">
                             ${escHTML(e.timeStart)} ${escHTML(e.title)}
                         </div>`).join('');
-                    html += `<div style="border-bottom:1px solid var(--kc-line); border-left:1px solid var(--kc-line); height:50px; overflow:hidden; cursor:pointer; padding:2px;"
-                        onclick="openAddModal('${dateStr}')">${evtsHtml}</div>`;
+                    html += `<div class="wk-cell" onclick="openAddModal('${dateStr}')">${evtsHtml}</div>`;
                 });
             });
 
@@ -928,7 +435,7 @@
             }
             list.innerHTML = upcoming.map(e => `
                 <div class="upcoming-event" onclick="openEditModal('${escHTML(e.id)}')">
-                    <div class="upcoming-dot" style="background:${TYPE_COLORS[e.type] || 'var(--kc-accent)'};"></div>
+                    <div class="upcoming-dot dot-${escHTML(e.type || 'work')}"></div>
                     <div class="upcoming-info">
                         <div class="upcoming-title">${escHTML(e.title)}</div>
                         <div class="upcoming-date">${whenLabel(e.startDate)}${e.timeStart ? ' · ' + escHTML(e.timeStart) : ''} · ${TYPE_LABELS[e.type] || escHTML(e.type)}</div>
@@ -948,7 +455,7 @@
             }
             list.innerHTML = mine.map(e => `
                 <div class="upcoming-event" onclick="openEditModal('${escHTML(e.id)}')">
-                    <div class="upcoming-info" style="flex:1;">
+                    <div class="upcoming-info upcoming-info-grow">
                         <div class="upcoming-title">${escHTML(e.title)}</div>
                         <div class="upcoming-date">ครบกำหนด ${whenLabel(e.endDate || e.startDate)}${e.project ? ' · ' + escHTML(e.project) : ''}</div>
                     </div>
@@ -1013,7 +520,8 @@
 
         function showToast(msg, ok=true) {
             const t = document.getElementById('cal-toast');
-            t.innerHTML = `<i class="fas fa-${ok?'check-circle':'exclamation-circle'}" style="color:${ok?'#10b981':'#ef4444'};"></i> ${escHTML(msg)}`;
+            t.textContent = msg;
+            t.classList.toggle('error', !ok);
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 3200);
         }
@@ -1038,8 +546,8 @@
             currentView = v;
             document.getElementById('btn-month-view').classList.toggle('active', v==='month');
             document.getElementById('btn-week-view').classList.toggle('active', v==='week');
-            document.getElementById('view-month').style.display = v==='month' ? '' : 'none';
-            document.getElementById('view-week').style.display  = v==='week'  ? '' : 'none';
+            document.getElementById('view-month').hidden = v !== 'month';
+            document.getElementById('view-week').hidden  = v !== 'week';
             renderAll();
         }
 
@@ -1072,14 +580,14 @@
                 .forEach(id => { document.getElementById(id).disabled = !editable; });
             document.querySelectorAll('.status-opt').forEach(b => { b.disabled = !editable; });
             document.getElementById('color-picker').style.pointerEvents = editable ? '' : 'none';
-            document.getElementById('btn-save-evt').style.display = editable ? '' : 'none';
+            document.getElementById('btn-save-evt').hidden = !editable;
         }
 
         function openAddModal(dateStr = null) {
             if (!me) return;
             editingEventId = null;
             document.getElementById('modal-title-text').textContent = 'เพิ่มกิจกรรม';
-            document.getElementById('btn-delete-evt').style.display = 'none';
+            document.getElementById('btn-delete-evt').hidden = true;
             document.getElementById('evt-title').value = '';
             document.getElementById('evt-start').value = dateStr || ymd(new Date());
             document.getElementById('evt-end').value   = dateStr || '';
@@ -1103,7 +611,7 @@
             const editable = canEdit(evt);
             editingEventId = evt.id;
             document.getElementById('modal-title-text').textContent = editable ? 'แก้ไขกิจกรรม' : 'รายละเอียดกิจกรรม';
-            document.getElementById('btn-delete-evt').style.display = canDelete(evt) ? '' : 'none';
+            document.getElementById('btn-delete-evt').hidden = !canDelete(evt);
             document.getElementById('evt-title').value      = evt.title || '';
             document.getElementById('evt-start').value      = evt.startDate || '';
             document.getElementById('evt-end').value        = evt.endDate || '';

@@ -1,55 +1,13 @@
 /* ============================================================
-   Kitten Code Back Office — shell (sidebar, header, bottom dock)
-   Minimal light theme. Tokens shared with bo-minimal.css.
+   Shell: sidebar, header, content frame, bottom dock, profile menu.
+   Used only by back-office.html (body.bo-shell).
    ============================================================ */
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap");
-
-:root {
-  --kc-bg: #f4f4f2;
-  --kc-surface: #ffffff;
-  --kc-surface-2: #f9f9f8;
-  --kc-line: #e6e5e1;
-  --kc-line-strong: #d6d4cf;
-  --kc-text: #1c1b19;
-  --kc-muted: #74716b;
-  --kc-accent: #0a72e8;
-  --kc-accent-soft: #e8f1fd;
-  --kc-ink: #1c1b19;
-  --kc-danger: #c8322b;
-  --kc-radius: 16px;
-  --kc-float: 0 1px 2px rgba(28, 27, 25, 0.06), 0 6px 18px rgba(28, 27, 25, 0.08);
-  --kc-float-lg: 0 2px 4px rgba(28, 27, 25, 0.06), 0 14px 34px rgba(28, 27, 25, 0.12);
-  --kc-font: "IBM Plex Sans Thai", "Inter", system-ui, sans-serif;
-
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast: 150ms;
-  --dur-base: 220ms;
-  --dur-slow: 360ms;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --dock-gap: max(var(--safe-bottom), 14px);
-  --bottom-nav-h: calc(64px + var(--dock-gap) + 12px);
-  --sidebar-w: 248px;
-}
-
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html, body { margin: 0; }
-
-body {
-  font-family: var(--kc-font);
-  color: var(--kc-text);
-  background: var(--kc-bg);
+body.bo-shell {
   height: 100dvh;
   display: flex;
   overflow: hidden;
-  -webkit-font-smoothing: antialiased;
+  background: var(--kc-bg);
 }
-
-a { color: inherit; }
 
 /* ── Sidebar ──────────────────────────────────────────────── */
 .bo-sidebar {
@@ -96,7 +54,7 @@ a { color: inherit; }
   display: grid;
   place-items: center;
   background: var(--kc-ink);
-  color: #fff;
+  color: var(--kc-on-ink);
   font-size: 0.95rem;
 }
 
@@ -124,6 +82,7 @@ a { color: inherit; }
 }
 .sidebar-menu::-webkit-scrollbar { display: none; }
 
+.menu-title-gap { margin-top: 0.5rem; }
 .menu-title {
   font-size: 0.72rem;
   font-weight: 600;
@@ -147,7 +106,7 @@ a { color: inherit; }
   transition: background var(--dur-fast), color var(--dur-fast);
 }
 .menu-item i { font-size: 1.05rem; color: var(--kc-muted); width: 18px; text-align: center; }
-.menu-item:hover { background: rgba(28, 27, 25, 0.05); }
+.menu-item:hover { background: var(--kc-line); }
 .menu-item.active {
   background: var(--kc-surface);
   box-shadow: var(--kc-float);
@@ -195,7 +154,7 @@ a { color: inherit; }
   font-size: 1.25rem;
   cursor: pointer;
 }
-.menu-toggle:hover { background: rgba(28, 27, 25, 0.06); }
+.menu-toggle:hover { background: var(--kc-line); }
 
 .page-title {
   margin: 0;
@@ -269,8 +228,8 @@ button.header-profile-pill { border: none; font-family: inherit; color: var(--kc
 }
 .profile-menu-item i { color: var(--kc-muted); }
 .profile-menu-item:hover { background: var(--kc-bg); }
-.profile-menu-item.is-danger, .profile-menu-item.is-danger i { color: var(--kc-danger); }
-.profile-menu-item.is-danger:hover { background: rgba(200, 50, 43, 0.06); }
+.profile-menu-item.is-danger, .profile-menu-item.is-danger i { color: var(--kc-red); }
+.profile-menu-item.is-danger:hover { background: var(--kc-red-soft); }
 
 /* ── Content iframe ───────────────────────────────────────── */
 .bo-content {
@@ -365,7 +324,7 @@ button.header-profile-pill { border: none; font-family: inherit; color: var(--kc
 .sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(28, 27, 25, 0.28);
+  background: var(--kc-scrim);
   z-index: 38;
   opacity: 0;
   visibility: hidden;
@@ -406,60 +365,6 @@ button.header-profile-pill { border: none; font-family: inherit; color: var(--kc
   .bo-content { padding: 0 6px var(--bottom-nav-h) 6px; }
   .iframe-wrapper { border-radius: 16px; }
 }
-
-/* ── Toast ────────────────────────────────────────────────── */
-.kc-toast-container {
-  position: fixed;
-  left: 50%;
-  bottom: -100px;
-  transform: translateX(-50%);
-  background: var(--kc-ink);
-  border-radius: 999px;
-  box-shadow: var(--kc-float-lg);
-  color: #fff;
-  padding: 10px 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 9999;
-  transition: bottom var(--dur-slow) var(--ease-out), opacity var(--dur-base);
-  opacity: 0;
-  pointer-events: none;
-}
-.kc-toast-container.show { bottom: max(calc(var(--bottom-nav-h) + 8px), 24px); opacity: 1; }
-.kc-toast-icon { font-size: 1.05rem; }
-.kc-toast-content { display: flex; flex-direction: column; }
-.kc-toast-title { font-weight: 600; font-size: 0.88rem; }
-.kc-toast-message { font-size: 0.8rem; opacity: 0.75; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ── Dark theme ───────────────────────────────────────────── */
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --kc-bg: #141413;
-  --kc-surface: #1d1d1b;
-  --kc-surface-2: #252523;
-  --kc-line: #2f2e2b;
-  --kc-line-strong: #3d3c38;
-  --kc-text: #ecebe7;
-  --kc-muted: #9c9991;
-  --kc-accent: #4f9cf5;
-  --kc-accent-soft: rgba(79, 156, 245, 0.16);
-  --kc-ink: #ecebe7;
-  --kc-danger: #f0766f;
-  --kc-float: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.35);
-  --kc-float-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 14px 34px rgba(0, 0, 0, 0.5);
-}
-:root[data-theme="dark"] .sidebar-brand-mark,
-:root[data-theme="dark"] .kc-toast-container { color: #141413; }
-:root[data-theme="dark"] .menu-item:hover,
-:root[data-theme="dark"] .menu-toggle:hover { background: rgba(255, 255, 255, 0.06); }
 
 /* Theme switch in the profile menu */
 .profile-menu-sep { height: 1px; margin: 4px 8px; background: var(--kc-line); }
@@ -540,15 +445,4 @@ button.header-profile-pill { border: none; font-family: inherit; color: var(--kc
   background: var(--kc-surface);
   color: var(--kc-text);
   box-shadow: var(--kc-float);
-}
-
-/* ── Font Size Scaling (3 Levels: Small / Normal / Large) ─── */
-:root[data-fontsize="small"] {
-  font-size: 14px;
-}
-:root[data-fontsize="normal"] {
-  font-size: 16px;
-}
-:root[data-fontsize="large"] {
-  font-size: 18px;
 }

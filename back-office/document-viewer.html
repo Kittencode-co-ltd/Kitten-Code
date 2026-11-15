@@ -3,165 +3,21 @@
 
 <head>
     <meta charset="UTF-8">
-    <script src="../assets/js/core/bo-theme.js"></script>
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Viewer - Kitten Code</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/document.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background: #f0f2f5;
-            min-height: 100vh;
-        }
-
-        /* ── Toolbar ── */
-        .viewer-toolbar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            height: 56px;
-            background: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-            gap: 12px;
-        }
-
-        .toolbar-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            min-width: 0;
-        }
-
-        .toolbar-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            min-height: 36px;
-            color: rgba(255,255,255,0.85);
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.14);
-            border-radius: 999px;
-            padding: 6px 14px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
-            white-space: nowrap;
-        }
-
-        .btn-back:hover {
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-        }
-
-        .btn-back:active {
-            transform: scale(0.97);
-        }
-
-        .doc-meta {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            overflow: hidden;
-        }
-
-        .doc-type-badge {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 20px;
-            background: rgba(99, 179, 237, 0.2);
-            color: #90cdf4;
-            border: 1px solid rgba(99, 179, 237, 0.3);
-            white-space: nowrap;
-        }
-
-        .doc-number {
-            font-size: 14px;
-            color: rgba(255,255,255,0.65);
-            font-weight: 400;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .toolbar-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #fff;
-            white-space: nowrap;
-        }
-
-        .btn-print {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            min-height: 38px;
-            background: #f26522;
-            color: #fff;
-            border: none;
-            border-radius: 999px;
-            padding: 8px 18px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Sarabun', sans-serif;
-            box-shadow: 0 4px 12px rgba(242, 101, 34, 0.35);
-            transition: background 150ms, transform 150ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms;
-            white-space: nowrap;
-        }
-
-        .btn-print:hover { background: #d4521a; }
-        .btn-print:active { transform: scale(0.97); }
-
-        @media (max-width: 639px) {
-            .toolbar-title { display: none; }
-            .viewer-body { padding: 16px 8px; }
-            #preview-panel .a4-page { zoom: 0.46; }
-        }
-
-        /* ── Preview area ── */
-        .viewer-body {
-            margin-top: 56px;
-            padding: 30px 20px;
-        }
-
-        /* Reuse .preview-panel styles from document.css but full-width */
-        #preview-panel {
-            max-width: 900px;
-            margin: 0 auto;
-            background: transparent;
-        }
-
-        /* ── Print overrides ── */
-        @media print {
-            .viewer-toolbar { display: none !important; }
-            .viewer-body { margin-top: 0; padding: 0; }
-            #preview-panel { max-width: none; }
-        }
-    </style>
-    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/paper.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/viewer.css">
 </head>
 
-<body>
+<body class="bo-viewer">
 
     <!-- Toolbar (hidden on print) -->
     <div class="viewer-toolbar no-print">
@@ -190,12 +46,12 @@
         <div id="preview-panel"></div>
     </div>
 
-    <script src="../assets/js/documents/certificate-template.js"></script>
-    <script src="../assets/js/documents/voucher-template.js"></script>
-    <script src="../assets/js/documents/letter-template.js"></script>
-    <script src="../assets/js/documents/script-document-viewer.js"></script>
+    <script src="../assets/js/bo/documents/certificate-template.js"></script>
+    <script src="../assets/js/bo/documents/voucher-template.js"></script>
+    <script src="../assets/js/bo/documents/letter-template.js"></script>
+    <script src="../assets/js/bo/documents/script-document-viewer.js"></script>
     <script type="module">
-        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
+        import { onAuthStateChanged, auth } from '../assets/js/bo/core/firebase-config.js';
         onAuthStateChanged(auth, (user) => {
             if (!user) window.location.replace('login.html');
         });

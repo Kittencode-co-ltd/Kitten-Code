@@ -3,149 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <script src="../assets/js/core/bo-theme.js"></script>
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kitten Code Certificate & Diploma Studio — หนังสือรับรอง & ประกาศนียบัตร</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/document.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
-    <style>
-        .type-group-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: #64748b;
-            margin: 6px 0 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .type-tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .type-tab-btn {
-            min-height: 40px;
-            padding: 8px 10px;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 999px;
-            background: #f8fafc;
-            color: #334155;
-            font-family: inherit;
-            font-size: 0.84rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .type-tab-btn:active {
-            transform: scale(0.97);
-        }
-
-        .type-tab-btn:hover {
-            border-color: #0a72e8;
-            color: #0a72e8;
-        }
-
-        .type-tab-btn.active {
-            background: #0a72e8;
-            border-color: #0a72e8;
-            color: #ffffff;
-            box-shadow: 0 2px 8px rgba(10, 114, 232, 0.24);
-        }
-
-        .theme-chips {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 6px;
-        }
-
-        .theme-chip-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 12px;
-            border: 1.5px solid #cbd5e1;
-            background: #f8fafc;
-            color: #334155;
-            font-family: inherit;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 150ms ease;
-        }
-
-        .theme-chip-btn.active {
-            border-color: #0a72e8;
-            background: #e8f1fd;
-            color: #0a72e8;
-        }
-
-        .theme-dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
-        }
-
-        .check-inline {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            user-select: none;
-            margin-top: 4px;
-        }
-
-        .check-inline input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: #0a72e8;
-            cursor: pointer;
-        }
-
-        .helper-btn {
-            min-height: 30px;
-            padding: 4px 12px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            background: #e2e8f0;
-            color: #334155;
-            border: none;
-            border-radius: 999px;
-            cursor: pointer;
-            transition: background 0.15s ease, transform 0.15s ease;
-        }
-
-        .helper-btn:hover {
-            background: #cbd5e1;
-        }
-
-        .helper-btn:active {
-            transform: scale(0.96);
-        }
-    </style>
-    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/paper.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/editor.css">
 </head>
 
-<body>
+<body class="bo-editor">
     <div class="doc-mobile-switcher no-print">
-        <div class="doc-segment" id="docMobileSegment" style="--seg-i: 0;">
+        <div class="doc-segment" id="docMobileSegment">
             <span class="doc-segment-pill"></span>
             <button type="button" class="doc-segment-btn active" data-mode="form" onclick="switchDocMobileTab('form')">
                 <i class="fas fa-edit"></i> กรอกข้อมูล
@@ -223,33 +98,33 @@
                     </div>
 
                     <!-- Landscape Theme Selector -->
-                    <div class="only-landscape" style="display: none; margin-bottom: 14px;">
-                        <label style="font-size: 0.84rem; font-weight: 700; display: block; margin-bottom: 4px;">
+                    <div class="only-landscape" style="display: none;">
+                        <label class="field-hint-label">
                             โทนสีกรอบประกาศนียบัตร (Frame Theme)
                         </label>
                         <div class="theme-chips">
                             <button type="button" class="theme-chip-btn active" data-theme="gold"
                                 onclick="handleCertThemeChange('gold')">
-                                <span class="theme-dot" style="background: linear-gradient(135deg, #0f2942, #c59b27);"></span>
+                                <span class="theme-dot t-navy-gold"></span>
                                 ทอง-กรมท่า (Royal Gold)
                             </button>
                             <button type="button" class="theme-chip-btn" data-theme="blue"
                                 onclick="handleCertThemeChange('blue')">
-                                <span class="theme-dot" style="background: linear-gradient(135deg, #1e3a8a, #0a72e8);"></span>
+                                <span class="theme-dot t-blue"></span>
                                 น้ำเงิน Kitten Code
                             </button>
                             <button type="button" class="theme-chip-btn" data-theme="orange"
                                 onclick="handleCertThemeChange('orange')">
-                                <span class="theme-dot" style="background: linear-gradient(135deg, #1a3a5c, #f26522);"></span>
+                                <span class="theme-dot t-orange"></span>
                                 ส้ม-กรมท่า (Signature)
                             </button>
                             <button type="button" class="theme-chip-btn" data-theme="emerald"
                                 onclick="handleCertThemeChange('emerald')">
-                                <span class="theme-dot" style="background: linear-gradient(135deg, #064e3b, #059669);"></span>
+                                <span class="theme-dot t-green"></span>
                                 เขียวมรกต (Academic)
                             </button>
                         </div>
-                        <label class="check-inline" style="margin-top: 10px;">
+                        <label class="check-inline">
                             <input type="checkbox" id="in-show-seal" checked>
                             แสดงตราประทับเกียรติยศ (Official Gold Seal) บนใบประกาศนียบัตร
                         </label>
@@ -397,8 +272,8 @@
 
                 <!-- Section: Landscape Diploma Wording -->
                 <div class="form-section only-landscape" style="display: none;">
-                    <div class="flex-between" style="margin-bottom: 10px;">
-                        <h3 style="margin-bottom: 0;"><i class="fas fa-scroll"></i> ข้อความบนใบประกาศนียบัตร</h3>
+                    <div class="flex-between">
+                        <h3><i class="fas fa-scroll"></i> ข้อความบนใบประกาศนียบัตร</h3>
                         <button type="button" class="helper-btn" onclick="fillLandscapeAwardBody()">
                             <i class="fas fa-magic"></i> ร่างข้อความตามหัวข้ออัตโนมัติ
                         </button>
@@ -440,8 +315,8 @@
                                 placeholder="เช่น พัฒนาและดูแลระบบเว็บไซต์ส่วนหน้าและส่วนหลังบ้าน..."></textarea>
                         </div>
                         <div class="form-group full-width">
-                            <div class="flex-between" style="margin-bottom: 4px;">
-                                <label style="margin-bottom: 0;">ข้อความรับรองความประพฤติ / ผลการฝึกงาน</label>
+                            <div class="flex-between">
+                                <label class="mb-0">ข้อความรับรองความประพฤติ / ผลการฝึกงาน</label>
                                 <button type="button" class="helper-btn" onclick="fillDefaultEvaluation()">
                                     <i class="fas fa-magic"></i> ข้อความมาตรฐาน
                                 </button>
@@ -522,11 +397,11 @@
         };
     </script>
 
-    <script src="../assets/js/documents/doc-common.js"></script>
-    <script src="../assets/js/documents/certificate-template.js"></script>
-    <script src="../assets/js/documents/script-certificate.js"></script>
+    <script src="../assets/js/bo/documents/doc-common.js"></script>
+    <script src="../assets/js/bo/documents/certificate-template.js"></script>
+    <script src="../assets/js/bo/documents/script-certificate.js"></script>
     <script type="module">
-        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
+        import { onAuthStateChanged, auth } from '../assets/js/bo/core/firebase-config.js';
         onAuthStateChanged(auth, (user) => {
             if (!user) { window.location.replace('login.html'); }
         });

@@ -1,0 +1,57 @@
+/* ============================================================
+   Dashboard (ภาพรวมการเงิน)
+   ============================================================ */
+.db-wrapper { max-width: 1200px; margin: 0 auto; }
+.db-header { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
+.db-header-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.db-section { margin-bottom: 1.75rem; }
+.db-section-label { margin: 0 0 0.75rem; font-size: 0.85rem; font-weight: 500; color: var(--kc-muted); }
+
+/* KPI cards */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+.kpi-card { padding: 1.1rem 1.2rem; min-width: 0; }
+.kpi-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem; }
+.kpi-label { font-size: 0.85rem; color: var(--kc-muted); line-height: 1.35; }
+.kpi-period-label { font-size: 0.76rem; }
+.kpi-icon { width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; background: var(--kc-bg); color: var(--kc-muted); flex-shrink: 0; }
+.kpi-value { font-size: 1.7rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.2; overflow-wrap: anywhere; }
+.kpi-inc-val { color: var(--kc-green); }
+.kpi-exp-val { color: var(--kc-red); }
+.kpi-pend-val { color: var(--kc-amber); }
+.kpi-net-val { color: var(--kc-text); }
+.kpi-sub { margin-top: 0.4rem; font-size: 0.78rem; color: var(--kc-muted); display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+
+/* Charts */
+.charts-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1rem; }
+.chart-card { padding: 1.1rem 1.2rem; min-width: 0; }
+.chart-title { font-weight: 600; }
+.chart-subtitle { font-size: 0.78rem; color: var(--kc-muted); margin-bottom: 0.8rem; }
+.chart-canvas-wrap { position: relative; width: 100%; }
+.chart-tall { height: 17.5rem; }
+.chart-short { height: 12.5rem; }
+.donut-legend { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.8rem; }
+.donut-legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; }
+.legend-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--dot, var(--kc-muted)); flex-shrink: 0; }
+.legend-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legend-pct { color: var(--kc-muted); font-variant-numeric: tabular-nums; }
+
+/* Recent transactions */
+.bottom-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.data-card { min-width: 0; overflow: hidden; }
+.data-card-header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--kc-line); }
+.data-card-title { font-weight: 600; }
+.data-card-action { min-height: 2rem; font-size: 0.8rem; box-shadow: none; }
+.txn-tbl th, .txn-tbl td { padding-left: 1.2rem; }
+.txn-date { white-space: nowrap; color: var(--kc-muted); font-size: 0.82rem; }
+.txn-desc { font-weight: 500; }
+.txn-amount { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.txt-inc { color: var(--kc-green); }
+.txt-exp { color: var(--kc-red); }
+.txn-cat-tag { font-family: var(--kc-font-mono); font-size: 0.7rem; background: var(--kc-bg); color: var(--kc-muted); margin-top: 0.15rem; }
+.skel-line { width: 60%; height: 0.9rem; }
+
+@media (max-width: 900px) { .charts-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .kpi-grid { grid-template-columns: minmax(0, 1fr); }
+  .kpi-value { font-size: 1.5rem; }
+}

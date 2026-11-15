@@ -3,64 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <script src="../assets/js/core/bo-theme.js"></script>
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ใบขอเบิก / ซื้อ / จ้าง / ใบสำคัญจ่าย — Kitten Code</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/document.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
-    <style>
-        .type-tabs {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-        .type-tab-btn {
-            min-height: 40px;
-            padding: 8px 12px;
-            border: 1.5px solid #e2e8f0;
-            background: #f8fafc;
-            color: #475569;
-            border-radius: 999px;
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .type-tab-btn.active {
-            background: #0a72e8;
-            border-color: #0a72e8;
-            color: #fff;
-        }
-        .check-inline {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13.5px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .check-inline input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            margin: 0;
-        }
-    </style>
-    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/paper.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/editor.css">
 </head>
 
-<body>
+<body class="bo-editor">
     <div class="doc-mobile-switcher no-print">
-        <div class="doc-segment" id="docMobileSegment" style="--seg-i: 0;">
+        <div class="doc-segment" id="docMobileSegment">
             <span class="doc-segment-pill"></span>
             <button type="button" class="doc-segment-btn active" data-mode="form" onclick="switchDocMobileTab('form')">
                 <i class="fas fa-edit"></i> กรอกข้อมูล
@@ -327,11 +287,11 @@
         };
     </script>
 
-    <script src="../assets/js/documents/doc-common.js"></script>
-    <script src="../assets/js/documents/voucher-template.js"></script>
-    <script src="../assets/js/documents/script-voucher.js"></script>
+    <script src="../assets/js/bo/documents/doc-common.js"></script>
+    <script src="../assets/js/bo/documents/voucher-template.js"></script>
+    <script src="../assets/js/bo/documents/script-voucher.js"></script>
     <script type="module">
-        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
+        import { onAuthStateChanged, auth } from '../assets/js/bo/core/firebase-config.js';
         onAuthStateChanged(auth, (user) => {
             if (!user) { window.location.replace('login.html'); }
         });

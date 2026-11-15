@@ -3,147 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <script src="../assets/js/core/bo-theme.js"></script>
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>หนังสือติดต่อหน่วยงานภายนอก (รัฐ/เอกชน) — Kitten Code</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/document.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
-    <style>
-        .type-tabs {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-        .type-tab-btn {
-            min-height: 40px;
-            padding: 8px 10px;
-            border: 1.5px solid #e2e8f0;
-            background: #f8fafc;
-            color: #475569;
-            border-radius: 999px;
-            font-family: inherit;
-            font-size: 12.5px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .type-tab-btn.full-span {
-            grid-column: 1 / -1;
-        }
-        .type-group-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: #64748b;
-            margin: 4px 0 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .type-cat-tabs {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            padding-bottom: 6px;
-            margin-bottom: 10px;
-            scrollbar-width: thin;
-        }
-        .type-cat-btn {
-            flex-shrink: 0;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 999px;
-            border: 1px solid transparent;
-            background: transparent;
-            color: #64748b;
-            font-family: inherit;
-            font-size: 12.5px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .type-cat-btn:hover { background: #f1f5f9; color: #0f172a; }
-        .type-cat-btn.active {
-            background: #e8f1fd;
-            border-color: #bcd7fa;
-            color: #0a72e8;
-        }
-        .type-cat-count {
-            font-size: 10.5px;
-            min-width: 18px;
-            padding: 0 5px;
-            border-radius: 999px;
-            background: rgba(100, 116, 139, 0.14);
-            text-align: center;
-        }
-        .type-cat-btn.active .type-cat-count { background: rgba(10, 114, 232, 0.14); }
-        :root[data-theme="dark"] .type-cat-btn { color: #a8a29e; }
-        :root[data-theme="dark"] .type-cat-btn:hover { background: rgba(255, 255, 255, 0.06); color: #f5f5f4; }
-        :root[data-theme="dark"] .type-cat-btn.active { background: rgba(10, 114, 232, 0.18); border-color: rgba(10, 114, 232, 0.45); color: #8cc0ff; }
-        :root[data-theme="dark"] .type-current { color: #f5f5f4; }
-        .type-current {
-            font-size: 13px;
-            font-weight: 700;
-            color: #0f172a;
-            margin: -4px 0 14px;
-            padding-left: 10px;
-            border-left: 3px solid #0a72e8;
-        }
-        .type-tab-btn.type-tab-decline.active {
-            background: #64748b;
-            border-color: #64748b;
-        }
-        .reply-hint small {
-            display: block;
-            color: #64748b;
-            font-size: 12px;
-            line-height: 1.6;
-            background: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            border-radius: 10px;
-            padding: 8px 10px;
-        }
-        .type-tab-btn.active {
-            background: #0a72e8;
-            border-color: #0a72e8;
-            color: #fff;
-        }
-        .helper-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 999px;
-            border: 1px solid #cbd5e1;
-            background: #f8fafc;
-            color: #334155;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-        }
-        .helper-btn:hover {
-            border-color: #0a72e8;
-            color: #0a72e8;
-        }
-    </style>
-    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/paper.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/editor.css">
 </head>
 
-<body>
+<body class="bo-editor">
     <div class="doc-mobile-switcher no-print">
-        <div class="doc-segment" id="docMobileSegment" style="--seg-i: 0;">
+        <div class="doc-segment" id="docMobileSegment">
             <span class="doc-segment-pill"></span>
             <button type="button" class="doc-segment-btn active" data-mode="form" onclick="switchDocMobileTab('form')">
                 <i class="fas fa-edit"></i> กรอกข้อมูล
@@ -328,8 +205,8 @@
 
                 <!-- Section: Letter Body Paragraphs -->
                 <div class="form-section">
-                    <div class="flex-between" style="margin-bottom: 10px;">
-                        <h3 style="margin-bottom: 0;"><i class="fas fa-align-left"></i> เนื้อหาหนังสือ (3 ย่อหน้ามาตรฐาน)</h3>
+                    <div class="flex-between">
+                        <h3><i class="fas fa-align-left"></i> เนื้อหาหนังสือ (3 ย่อหน้ามาตรฐาน)</h3>
                         <button type="button" class="helper-btn" onclick="fillStandardLetterBody()">
                             <i class="fas fa-magic"></i> ร่างข้อความมาตรฐานลงช่องแก้ไข
                         </button>
@@ -413,11 +290,11 @@
         };
     </script>
 
-    <script src="../assets/js/documents/doc-common.js"></script>
-    <script src="../assets/js/documents/letter-template.js"></script>
-    <script src="../assets/js/documents/script-letter.js"></script>
+    <script src="../assets/js/bo/documents/doc-common.js"></script>
+    <script src="../assets/js/bo/documents/letter-template.js"></script>
+    <script src="../assets/js/bo/documents/script-letter.js"></script>
     <script type="module">
-        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
+        import { onAuthStateChanged, auth } from '../assets/js/bo/core/firebase-config.js';
         onAuthStateChanged(auth, (user) => {
             if (!user) { window.location.replace('login.html'); }
         });

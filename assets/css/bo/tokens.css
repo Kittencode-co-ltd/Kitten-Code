@@ -1,0 +1,110 @@
+/* ============================================================
+   Kitten Code Back Office — design tokens
+   One place for colour, type, shape and motion. Light is the
+   default; dark overrides only the colour tokens.
+   ============================================================ */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Surfaces */
+  --kc-bg: #f4f4f2;
+  --kc-surface: #ffffff;
+  --kc-surface-2: #f9f9f8;
+  --kc-line: #e6e5e1;
+  --kc-line-strong: #d6d4cf;
+
+  /* Text */
+  --kc-text: #1c1b19;
+  --kc-muted: #74716b;
+
+  /* Accent (links, focus, selection) and ink (primary buttons) */
+  --kc-accent: #0a72e8;
+  --kc-accent-soft: #e8f1fd;
+  --kc-ink: #1c1b19;
+  --kc-on-ink: #ffffff;
+
+  /* Status */
+  --kc-green: #16803c;
+  --kc-green-soft: #e6f4ea;
+  --kc-red: #c8322b;
+  --kc-red-soft: #fbeceb;
+  --kc-amber: #a15c00;
+  --kc-amber-soft: #fdf2df;
+  --kc-violet: #5b3cc4;
+  --kc-violet-soft: #f0ecfb;
+
+  /* Shape */
+  --kc-radius: 16px;
+  --kc-radius-sm: 12px;
+  --kc-pill: 999px;
+  --kc-float: 0 1px 2px rgba(28, 27, 25, 0.06), 0 6px 18px rgba(28, 27, 25, 0.08);
+  --kc-float-lg: 0 2px 4px rgba(28, 27, 25, 0.06), 0 14px 34px rgba(28, 27, 25, 0.14);
+  --kc-scrim: rgba(28, 27, 25, 0.32);
+
+  /* Type */
+  --kc-font: "IBM Plex Sans Thai", "Inter", system-ui, sans-serif;
+  --kc-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 360ms;
+
+  /* Layout */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --dock-gap: max(var(--safe-bottom), 14px);
+  --bottom-nav-h: calc(64px + var(--dock-gap) + 12px);
+  --sidebar-w: 248px;
+
+  /* Aliases for older class names still written by page scripts.
+     Remove once those scripts use --kc-* directly. */
+  --color-exp: var(--kc-red);
+  --color-inc: var(--kc-green);
+  --color-warn: var(--kc-amber);
+  --text-secondary: var(--kc-muted);
+  --text-tertiary: var(--kc-muted);
+  --accent-primary: var(--kc-accent);
+  --bg-glass: var(--kc-surface);
+  --border-glass: var(--kc-line);
+  --border-radius-md: var(--kc-radius);
+  --cal-accent: var(--kc-accent);
+  --cal-accent-light: var(--kc-accent);
+  --color-bg: var(--kc-surface);
+  --color-card: var(--kc-surface-2);
+  --color-border: var(--kc-line);
+  --color-text: var(--kc-text);
+  --color-text-muted: var(--kc-muted);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --kc-bg: #141413;
+  --kc-surface: #1d1d1b;
+  --kc-surface-2: #252523;
+  --kc-line: #2f2e2b;
+  --kc-line-strong: #3d3c38;
+  --kc-text: #ecebe7;
+  --kc-muted: #9c9991;
+  --kc-accent: #4f9cf5;
+  --kc-accent-soft: rgba(79, 156, 245, 0.16);
+  --kc-ink: #ecebe7;
+  --kc-on-ink: #141413;
+  --kc-green: #5ccb87;
+  --kc-green-soft: rgba(92, 203, 135, 0.14);
+  --kc-red: #f0766f;
+  --kc-red-soft: rgba(240, 118, 111, 0.14);
+  --kc-amber: #e8b04f;
+  --kc-amber-soft: rgba(232, 176, 79, 0.14);
+  --kc-violet: #bfadf6;
+  --kc-violet-soft: rgba(160, 135, 240, 0.16);
+  --kc-float: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.35);
+  --kc-float-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 14px 34px rgba(0, 0, 0, 0.5);
+  --kc-scrim: rgba(0, 0, 0, 0.55);
+}
+
+/* Text size (set from the profile menu) */
+:root[data-fontsize="small"]  { font-size: 14px; }
+:root[data-fontsize="normal"] { font-size: 16px; }
+:root[data-fontsize="large"]  { font-size: 18px; }

@@ -17,7 +17,7 @@ import {
     query,
     orderBy,
     onSnapshot
-} from './core/firebase-config.js';
+} from '../core/firebase-config.js';
 
 // ── XSS Hardening: sanitise ALL strings from Firestore before DOM injection ──
 const escapeHTML = (str) => {
@@ -420,7 +420,7 @@ class FinancialDashboard {
         if (legend) {
             legend.innerHTML = catTotals.map((c, i) => `
                 <div class="donut-legend-item">
-                    <span class="legend-dot" style="background:${CHART_COLORS[i] || '#8B949E'};"></span>
+                    <span class="legend-dot" style="--dot:${CHART_COLORS[i] || '#8B949E'};"></span>
                     <span class="legend-label">${escapeHTML(c.name)}</span>
                     <span class="legend-pct">${Math.round((c.total / total) * 100)}%</span>
                 </div>

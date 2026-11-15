@@ -26,7 +26,7 @@ firebase emulators:start     # run local Firebase emulators
 
 Firebase emulator ports: Firestore `8080`, Auth `9099`, Realtime DB `9000`, Data Connect `9399`.
 
-Firebase config is injected at build time via GitHub Actions secrets. For local development, `assets/js/firebase-config.js` must be configured manually (not committed — see `.gitignore`).
+Firebase config is injected at build time via GitHub Actions secrets. For local development, `assets/js/bo/core/firebase-config.js` falls back to the public web config, so no manual setup is needed.
 
 There are no npm build scripts, linting, or test suites configured.
 
@@ -44,7 +44,7 @@ Firebase rules and indexes deploy separately via `firebase deploy`.
 ### JavaScript Modules (`assets/js/`)
 
 Each page has a dedicated JS file:
-- `firebase-config.js` — Firebase SDK initialization (Auth, Firestore, Realtime DB)
+- `bo/core/firebase-config.js` — Firebase SDK initialization (Auth, Firestore); back-office code lives in `assets/js/bo/` and styles in `assets/css/bo/` (see AGENTS.md)
 - `i18n.js` — language switching; persists selection to `localStorage`
 - `main.js` — global UI (scroll behavior, mobile nav, AOS animations)
 - `dashboard.js` — Chart.js financial charts
