@@ -119,17 +119,24 @@ function createPageDOM_quotation(sv) {
                     </table>
                 </div>
             </div>
-            <table class="quote-table" style="width:100%;border-collapse:collapse;margin-bottom:0;">
+            <table class="quote-table" style="width:100%;table-layout:fixed;border-collapse:collapse;margin-bottom:0;">
+                <colgroup>
+                    <col style="width:7%;">
+                    <col style="width:49%;">
+                    <col style="width:12%;">
+                    <col style="width:15%;">
+                    <col style="width:17%;">
+                </colgroup>
                 <thead><tr>
-                    <th style="width:6%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">ลำดับ</th>
-                    <th style="width:50%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">รายละเอียดสินค้า / บริการ</th>
-                    <th style="width:12%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">จำนวน</th>
-                    <th style="width:15%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">ราคา/หน่วย</th>
-                    <th style="width:17%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">จำนวนเงิน</th>
+                    <th style="width:7%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">ลำดับ</th>
+                    <th style="width:49%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">รายละเอียดสินค้า / บริการ</th>
+                    <th style="width:12%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">จำนวน</th>
+                    <th style="width:15%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">ราคา/หน่วย</th>
+                    <th style="width:17%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">จำนวนเงิน</th>
                 </tr></thead>
                 <tbody class="table-body"></tbody>
+                <tbody class="tfoot-placeholder summary-table"></tbody>
             </table>
-            <div class="tfoot-placeholder"></div>
             <div class="note-placeholder"></div>
             <div class="signatures-placeholder" style="margin-top:auto;"></div>
         </div>`;
@@ -172,17 +179,24 @@ function createPageDOM_invoice(sv) {
                     </table>
                 </div>
             </div>
-            <table class="quote-table" style="width:100%;border-collapse:collapse;margin-bottom:0;">
+            <table class="quote-table" style="width:100%;table-layout:fixed;border-collapse:collapse;margin-bottom:0;">
+                <colgroup>
+                    <col style="width:7%;">
+                    <col style="width:49%;">
+                    <col style="width:12%;">
+                    <col style="width:15%;">
+                    <col style="width:17%;">
+                </colgroup>
                 <thead><tr>
-                    <th style="width:6%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">ลำดับ</th>
-                    <th style="width:50%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">รายละเอียดสินค้า / บริการ</th>
-                    <th style="width:12%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">จำนวน</th>
-                    <th style="width:15%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">ราคา/หน่วย</th>
-                    <th style="width:17%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">จำนวนเงิน</th>
+                    <th style="width:7%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">ลำดับ</th>
+                    <th style="width:49%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">รายละเอียดสินค้า / บริการ</th>
+                    <th style="width:12%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">จำนวน</th>
+                    <th style="width:15%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">ราคา/หน่วย</th>
+                    <th style="width:17%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">จำนวนเงิน</th>
                 </tr></thead>
                 <tbody class="table-body"></tbody>
+                <tbody class="tfoot-placeholder summary-table"></tbody>
             </table>
-            <div class="tfoot-placeholder"></div>
             <div class="note-placeholder"></div>
             <div class="signatures-placeholder" style="margin-top:auto;"></div>
         </div>`;
@@ -228,17 +242,24 @@ function createPageDOM_receipt(sv) {
                     </table>
                 </div>
             </div>
-            <table class="quote-table" style="width:100%;border-collapse:collapse;margin-bottom:0;">
+            <table class="quote-table" style="width:100%;table-layout:fixed;border-collapse:collapse;margin-bottom:0;">
+                <colgroup>
+                    <col style="width:7%;">
+                    <col style="width:49%;">
+                    <col style="width:12%;">
+                    <col style="width:15%;">
+                    <col style="width:17%;">
+                </colgroup>
                 <thead><tr>
-                    <th style="width:6%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">ลำดับ</th>
-                    <th style="width:40%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">รายละเอียดสินค้า / บริการ</th>
-                    <th style="width:9%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">จำนวน</th>
-                    <th style="width:15%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">ราคา/หน่วย</th>
-                    <th style="width:17%;border:1px solid #ddd;padding:10px;text-align:center;background:#f8f9fa;">จำนวนเงิน</th>
+                    <th style="width:7%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">ลำดับ</th>
+                    <th style="width:49%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">รายละเอียดสินค้า / บริการ</th>
+                    <th style="width:12%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">จำนวน</th>
+                    <th style="width:15%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">ราคา/หน่วย</th>
+                    <th style="width:17%;border:1px solid #cbd5e1;padding:7px 8px;text-align:center;background:#f1f5f9;color:#0f172a;">จำนวนเงิน</th>
                 </tr></thead>
                 <tbody class="table-body"></tbody>
+                <tbody class="tfoot-placeholder summary-table"></tbody>
             </table>
-            <div class="tfoot-placeholder"></div>
             <div class="note-placeholder"></div>
             <div class="signatures-placeholder" style="margin-top:auto;"></div>
         </div>`;
@@ -408,11 +429,11 @@ function buildViewer() {
         subtotal += amount;
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td style="border:1px solid #ddd;padding:8px;text-align:center;vertical-align:top;">${index + 1}</td>
-            <td style="border:1px solid #ddd;padding:8px;white-space:pre-wrap;vertical-align:top;">${escapeHTML(item.desc)}</td>
-            <td style="border:1px solid #ddd;padding:8px;text-align:center;vertical-align:top;">${formatQty(item.qty)}</td>
-            <td style="border:1px solid #ddd;padding:8px;text-align:right;vertical-align:top;">${formatMoney(item.price)}</td>
-            <td style="border:1px solid #ddd;padding:8px;text-align:right;vertical-align:top;">${formatMoney(amount)}</td>`;
+            <td class="col-no" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:center;vertical-align:top;">${index + 1}</td>
+            <td class="col-desc" style="border:1px solid #cbd5e1;padding:6px 8px;white-space:pre-wrap;vertical-align:top;">${escapeHTML(item.desc)}</td>
+            <td class="col-qty" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:center;vertical-align:top;">${formatQty(item.qty)}</td>
+            <td class="col-price" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:right;vertical-align:top;">${formatMoney(item.price)}</td>
+            <td class="col-amount" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:right;vertical-align:top;">${formatMoney(amount)}</td>`;
         tbody.appendChild(tr);
 
         if (wrapper.scrollHeight > wrapper.clientHeight && tbody.children.length > 1) {
@@ -433,28 +454,24 @@ function buildViewer() {
     const isVatAdded = vatRate > 0;
     const summaryRows = 2 + (isDiscounted ? 1 : 0) + (isVatAdded ? 1 : 0);
 
-    const noteHTML = note ? `<div style="text-align:left;padding:10px;font-size:13px;"><strong>หมายเหตุ : </strong><span style="white-space:pre-wrap;">${escapeHTML(note)}</span></div>` : '';
+    const noteHTML = note ? `<div style="text-align:left;padding:10px 0 0 0;font-size:13px;"><strong>หมายเหตุ : </strong><span style="white-space:pre-wrap;">${escapeHTML(note)}</span></div>` : '';
 
     const summaryHTML = `
-        <table class="quote-table no-top-margin summary-table" style="width:100%;border-collapse:collapse;border-top:none;margin-top:-1px;">
-            <tbody>
-                <tr>
-                    <td colspan="2" rowspan="${summaryRows}" style="width:56%;border:1px solid #ddd;padding:15px;text-align:center;vertical-align:top;background:#fafafa;">
-                        <div style="margin-top:15px;background:#eee;padding:8px;display:inline-block;border-radius:4px;width:100%;">
-                            <strong>ตัวอักษร : </strong><span>${ArabicNumberToText(grandTotal)}</span>
-                        </div>
-                    </td>
-                    <td colspan="2" style="border:1px solid #ddd;padding:8px;text-align:right;width:27%;">รวมเงิน</td>
-                    <td style="border:1px solid #ddd;padding:8px;text-align:right;width:17%;">${formatMoney(subtotal)}</td>
-                </tr>
-                ${isDiscounted ? `<tr><td colspan="2" style="border:1px solid #ddd;padding:8px;text-align:right;">ส่วนลด</td><td style="border:1px solid #ddd;padding:8px;text-align:right;">-${formatMoney(discount)}</td></tr>` : ''}
-                ${isVatAdded ? `<tr><td colspan="2" style="border:1px solid #ddd;padding:8px;text-align:right;">ภาษีมูลค่าเพิ่ม ${vatRate}%</td><td style="border:1px solid #ddd;padding:8px;text-align:right;">${formatMoney(vatAmount)}</td></tr>` : ''}
-                <tr>
-                    <td colspan="2" style="border:1px solid #ddd;padding:8px;text-align:right;"><strong>รวมราคาทั้งสิ้น</strong></td>
-                    <td style="border:1px solid #ddd;padding:8px;text-align:right;"><strong>${formatMoney(grandTotal)}</strong></td>
-                </tr>
-            </tbody>
-        </table>`;
+        <tr>
+            <td colspan="2" rowspan="${summaryRows}" class="text-amount-cell" style="border:1px solid #cbd5e1;padding:10px 12px;text-align:center;vertical-align:middle;background:#f8fafc;">
+                <div style="background:#f1f5f9;padding:7px 10px;border-radius:4px;width:100%;font-weight:700;color:#0f172a;">
+                    ตัวอักษร : (${ArabicNumberToText(grandTotal)})
+                </div>
+            </td>
+            <td colspan="2" class="summary-label" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:right;background:#f8fafc;font-weight:600;">รวมเป็นเงิน</td>
+            <td class="summary-amount" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:right;">${formatMoney(subtotal)}</td>
+        </tr>
+        ${isDiscounted ? `<tr><td colspan="2" class="summary-label" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:right;background:#f8fafc;font-weight:600;">ส่วนลด</td><td class="summary-amount" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:right;">-${formatMoney(discount)}</td></tr>` : ''}
+        ${isVatAdded ? `<tr><td colspan="2" class="summary-label" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:right;background:#f8fafc;font-weight:600;">ภาษีมูลค่าเพิ่ม ${vatRate}%</td><td class="summary-amount" style="border:1px solid #cbd5e1;padding:6px 8px;text-align:right;">${formatMoney(vatAmount)}</td></tr>` : ''}
+        <tr>
+            <td colspan="2" class="summary-label" style="border:1px solid #cbd5e1;padding:7px 8px;text-align:right;background:#fff7ed;color:#c2410c;font-weight:700;">รวมราคาทั้งสิ้น</td>
+            <td class="summary-amount" style="border:1px solid #cbd5e1;padding:7px 8px;text-align:right;background:#fff7ed;color:#c2410c;font-weight:700;">${formatMoney(grandTotal)}</td>
+        </tr>`;
 
     currentPage.querySelector('.note-placeholder').innerHTML = noteHTML;
     currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML;
@@ -468,7 +485,7 @@ function buildViewer() {
         container.appendChild(currentPage);
         pages.push(currentPage);
         currentPage.querySelector('.note-placeholder').innerHTML = noteHTML;
-        currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML.replace('margin-top:-1px;', 'margin-top:0;');
+        currentPage.querySelector('.tfoot-placeholder').innerHTML = summaryHTML;
         currentPage.querySelector('.signatures-placeholder').innerHTML = sigFn(sv);
     }
 

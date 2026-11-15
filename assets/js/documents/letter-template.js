@@ -117,16 +117,12 @@
     }
 
     const COMPANY_HEADER = `
-        <div class="header-section flex-between align-start" style="margin-bottom: 10px;">
-            <div class="logo-area">
-                <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
-            </div>
-            <div class="company-details">
-                <h1 class="company-name">Kitten Code</h1>
-                <p class="company-address">บริษัท คิทเช่น โค้ด จำกัด · 347/11 หมู่ 3 ต.ท่าโพธิ์ อ.เมืองพิษณุโลก จ.พิษณุโลก 65000</p>
-                <p class="company-contact">โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; อีเมล : <span>kittencode.co.ltd@gmail.com</span></p>
-                <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
-            </div>
+        <div class="header-section-centered">
+            <img src="../assets/img/LOGO-KittenCode.png" class="let-logo-center" alt="Kitten Code Logo" onerror="this.style.display='none'">
+            <h1 class="let-company-name">บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)</h1>
+            <p class="let-company-sub">
+                โทรศัพท์ : +66 8 0885 0555 &nbsp;·&nbsp; อีเมล : kittencode.co.ltd@gmail.com &nbsp;·&nbsp; เลขประจำตัวผู้เสียภาษีอากร : 0655569001411
+            </p>
         </div>`;
 
     function render(d, opts = {}) {
@@ -201,15 +197,21 @@
         page.className = 'a4-page letter-page';
         page.innerHTML = `
             <style>
-                .letter-page .let-meta-bar { display:flex; justify-content:space-between; font-size:14.5px; margin: 6px 0 14px; color:#1e293b; }
-                .letter-page .let-head-block { margin-bottom: 16px; font-size:15px; line-height:1.85; color:#1e293b; }
+                .letter-page .header-section-centered { text-align: center; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1.5px solid #cbd5e1; }
+                .letter-page .let-logo-center { width: 68px; height: 68px; object-fit: contain; display: block; margin: 0 auto 6px auto; }
+                .letter-page .let-company-name { font-size: 16.5px; font-weight: 700; color: #f26522; margin: 0 0 2px 0; letter-spacing: 0.01em; }
+                .letter-page .let-company-sub { font-size: 11px; color: #475569; margin: 0; line-height: 1.45; }
+                .letter-page .let-meta-bar { display:flex; justify-content:space-between; align-items:flex-start; font-size:14.5px; margin: 4px 0 6px; color:#1e293b; line-height:1.55; }
+                .letter-page .let-office-addr { width: 46%; text-align: left; font-size: 13.5px; color: #1e293b; line-height: 1.5; }
+                .letter-page .let-date-row { margin-left: 50%; margin-bottom: 12px; font-size: 14.5px; color: #1e293b; }
+                .letter-page .let-head-block { margin-bottom: 14px; font-size:15px; line-height:1.8; color:#1e293b; }
                 .letter-page .let-head-row { display:flex; align-items:flex-start; margin-bottom:4px; }
                 .letter-page .let-head-label { width: 110px; font-weight:700; flex-shrink:0; }
                 .letter-page .let-head-val { flex:1; }
-                .letter-page .let-paragraph { text-indent: 2.5em; line-height: 1.95; font-size: 15px; margin: 0 0 12px 0; color: #1e293b; text-align: justify; white-space: pre-wrap; }
-                .letter-page .let-sign { margin-left: auto; width: 290px; text-align: center; font-size: 15px; line-height: 1.8; margin-top: 28px; }
-                .letter-page .let-sign .sig-space { height: 52px; }
-                .letter-page .let-footer { margin-top: auto; padding-top: 12px; border-top: 1px solid #e2e8f0; font-size: 12.5px; color: #475569; }
+                .letter-page .let-paragraph { text-indent: 2.5em; line-height: 1.9; font-size: 15px; margin: 0 0 10px 0; color: #1e293b; text-align: justify; white-space: pre-wrap; }
+                .letter-page .let-sign { margin-left: auto; width: 290px; text-align: center; font-size: 15px; line-height: 1.8; margin-top: 24px; }
+                .letter-page .let-sign .sig-space { height: 48px; }
+                .letter-page .let-footer { margin-top: auto; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #475569; }
             </style>
             <div class="page-top-border"></div>
             ${opts.isReprint ? '<div class="watermark-reprint">ฉบับสำเนา (COPY)</div>' : ''}
@@ -217,8 +219,13 @@
                 ${COMPANY_HEADER}
                 <div class="let-meta-bar">
                     <div><strong>ที่</strong> ${escapeHTML(d.docNo || '-')}</div>
-                    <div><strong>วันที่</strong> ${escapeHTML(thaiDateLong(d.docDate) || '-')}</div>
+                    <div class="let-office-addr">
+                        <div><strong>${escapeHTML(d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด')}</strong></div>
+                        <div>347/11 หมู่ 3 ตำบลท่าโพธิ์</div>
+                        <div>อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</div>
+                    </div>
                 </div>
+                <div class="let-date-row">วันที่ ${escapeHTML(thaiDateLong(d.docDate) || '-')}</div>
                 <div class="let-head-block">
                     <div class="let-head-row">
                         <span class="let-head-label">เรื่อง</span>

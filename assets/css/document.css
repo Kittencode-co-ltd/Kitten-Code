@@ -664,18 +664,20 @@ body {
 }
 
 /* ============================================================
-   DOCUMENT: MAIN TABLE
+   DOCUMENT: MAIN TABLE & SUMMARY (Aligned 5-Column Grid)
    ============================================================ */
 .quote-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 12px;
 }
 
 .quote-table th {
-  background: var(--surface);
-  color: #000;
-  border: 1px solid var(--accent);
+  box-sizing: border-box;
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
   padding: 8px 10px;
   text-align: center;
   font-weight: 700;
@@ -684,30 +686,32 @@ body {
 }
 
 .quote-table td {
-  border: 1px solid var(--border);
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
   padding: 7px 10px;
   vertical-align: top;
   line-height: 1.5;
+  color: #1e293b;
 }
 
-.quote-table tbody tr:nth-child(even) td {
+.quote-table tbody.table-body tr:nth-child(even) td {
   background: #fafbfc;
 }
 
-.quote-table tbody tr:hover td {
+.quote-table tbody.table-body tr:hover td {
   background: var(--primary-light);
   transition: background 0.12s;
 }
 
-/* Column widths */
+/* Column widths: 7% + 49% (= 56%) | 12% + 15% (= 27%) | 17% = 100% */
 .col-no {
   text-align: center;
-  width: 6%;
+  width: 7%;
   font-variant-numeric: tabular-nums;
 }
 .col-desc {
   text-align: left;
-  width: 50%;
+  width: 49%;
   white-space: pre-wrap;
   word-break: break-word;
 }
@@ -728,29 +732,35 @@ body {
 }
 
 /* ============================================================
-   DOCUMENT: SUMMARY TABLE
+   DOCUMENT: SUMMARY ROWS (Inside .quote-table or .summary-table)
    ============================================================ */
 .summary-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
   border-top: none;
-  margin-top: -1px;
 }
 
 .summary-table td {
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
   font-size: 12px;
 }
 
 .text-amount-cell {
   text-align: center;
   vertical-align: middle;
-  background: var(--surface) !important;
+  background: #f8fafc !important;
   font-size: 12px;
   line-height: 1.6;
 }
 
 .summary-label {
   text-align: right !important;
-  padding-right: 12px !important;
-  color: #000;
+  padding-right: 10px !important;
+  background: #f8fafc;
+  color: #0f172a;
+  font-weight: 600;
   font-size: 12px;
 }
 
@@ -762,10 +772,12 @@ body {
 }
 
 /* แถวรวมราคาทั้งสิ้น */
-.summary-table tr:last-child td {
-  background: var(--accent-light);
+.summary-table tr:last-child td.summary-label,
+.summary-table tr:last-child td.summary-amount {
+  background: #fff7ed;
   font-weight: 700;
-  color: #000;
+  color: #c2410c;
+  font-size: 12.5px;
 }
 
 /* ============================================================

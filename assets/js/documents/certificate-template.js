@@ -96,19 +96,15 @@
     }
 
     const COMPANY_HEADER = `
-        <div class="header-section flex-between align-start" style="margin-bottom: 10px;">
-            <div class="logo-area">
-                <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
-            </div>
-            <div class="company-details">
-                <h1 class="company-name">Kitten Code</h1>
-                <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
-                <p class="company-contact">
-                    โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp;
-                    อีเมล : <span>kittencode.co.ltd@gmail.com</span>
-                </p>
-                <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
-            </div>
+        <div class="header-section-centered">
+            <img src="../assets/img/LOGO-KittenCode.png" class="cert-logo-center" alt="Kitten Code Logo" onerror="this.style.display='none'">
+            <h1 class="cert-company-name">บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)</h1>
+            <p class="cert-company-address">สำนักงานใหญ่ : 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
+            <p class="cert-company-contact">
+                โทรศัพท์ : <span>+66 8 0885 0555</span> &nbsp;·&nbsp;
+                อีเมล : <span>kittencode.co.ltd@gmail.com</span> &nbsp;·&nbsp;
+                เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span>
+            </p>
         </div>`;
 
     const b = (v) => `<strong>${escapeHTML(v)}</strong>`;
@@ -183,10 +179,16 @@
 
         page.innerHTML = `
             <style>
-                .cert-page .cert-paragraph { text-indent: 2.5em; line-height: 2; font-size: 15px; margin: 0 0 10px 0; color: #222; }
-                .cert-page .cert-meta { display: flex; justify-content: space-between; font-size: 14px; margin: 6px 0 22px 0; }
-                .cert-page .cert-title { text-align: center; font-size: 22px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: 0.02em; }
-                .cert-page .cert-title-en { text-align: center; font-size: 13px; color: #666; margin: 0 0 26px 0; }
+                .cert-page .header-section-centered { text-align: center; padding-bottom: 12px; margin-bottom: 10px; border-bottom: 1.5px solid #cbd5e1; }
+                .cert-page .cert-logo-center { width: 72px; height: 72px; object-fit: contain; display: block; margin: 0 auto 8px auto; }
+                .cert-page .cert-company-name { font-size: 17px; font-weight: 700; color: #f26522; margin: 0 0 3px 0; letter-spacing: 0.01em; }
+                .cert-page .cert-company-address,
+                .cert-page .cert-company-contact { font-size: 11.5px; color: #334155; margin: 0; line-height: 1.55; }
+                .cert-page .cert-company-contact span { font-weight: 600; color: #0f172a; }
+                .cert-page .cert-paragraph { text-indent: 2.5em; line-height: 2; font-size: 15px; margin: 0 0 10px 0; color: #222; text-align: justify; }
+                .cert-page .cert-meta { display: flex; justify-content: flex-end; font-size: 14px; margin: 4px 0 16px 0; color: #1e293b; }
+                .cert-page .cert-title { text-align: center; font-size: 22px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: 0.02em; color: #0f172a; }
+                .cert-page .cert-title-en { text-align: center; font-size: 12.5px; color: #64748b; margin: 0 0 24px 0; letter-spacing: 0.06em; text-transform: uppercase; }
                 .cert-page .cert-given { text-align: center; font-size: 15px; margin: 18px 0 0 0; }
                 .cert-page .cert-sign { margin-left: auto; width: 290px; text-align: center; font-size: 15px; line-height: 1.8; margin-top: 36px; }
                 .cert-page .cert-sign .sig-space { height: 60px; }
@@ -196,7 +198,7 @@
             <div class="content-wrapper">
                 ${COMPANY_HEADER}
                 <div class="cert-meta">
-                    <div><strong>ที่</strong> ${escapeHTML(d.docNo || '-')}</div>
+                    <div><strong>เลขที่</strong> ${escapeHTML(d.docNo || '-')}</div>
                 </div>
                 <h2 class="cert-title">${type.title}</h2>
                 <div class="cert-title-en">${type.titleEn}</div>
