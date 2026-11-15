@@ -63,6 +63,13 @@
         return `${d.getDate()} ${THAI_MONTHS[d.getMonth()]} พ.ศ. ${d.getFullYear() + 543}`;
     }
 
+    // รูปแบบวันเดือนปีตามระเบียบงานสารบรรณ (หนังสือภายนอก): "15 พฤศจิกายน 2569"
+    function thaiDateSaraban(s) {
+        const d = parseDate(s);
+        if (!d) return '';
+        return `${d.getDate()} ${THAI_MONTHS[d.getMonth()]} ${d.getFullYear() + 543}`;
+    }
+
     function buildDefaultDraft(d) {
         d = d || {};
         const lType = d.letterType || 'invite_advisor';
@@ -119,10 +126,6 @@
     const COMPANY_HEADER = `
         <div class="header-section-centered">
             <img src="../assets/img/LOGO-KittenCode.png" class="let-logo-center" alt="Kitten Code Logo" onerror="this.style.display='none'">
-            <h1 class="let-company-name">บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)</h1>
-            <p class="let-company-sub">
-                โทรศัพท์ : +66 8 0885 0555 &nbsp;·&nbsp; อีเมล : kittencode.co.ltd@gmail.com &nbsp;·&nbsp; เลขประจำตัวผู้เสียภาษีอากร : 0655569001411
-            </p>
         </div>`;
 
     function render(d, opts = {}) {
@@ -139,101 +142,101 @@
         if (d.refDoc) {
             optionalRows.push(`
                 <div class="let-head-row">
-                    <span class="let-head-label">อ้างถึง</span>
-                    <span class="let-head-val">${escapeHTML(d.refDoc)}</span>
+                    <span class="let-head-label">อ้างถึง</span><span class="let-head-val">${escapeHTML(d.refDoc)}</span>
                 </div>`);
         }
         if (d.enclosures) {
             optionalRows.push(`
                 <div class="let-head-row">
-                    <span class="let-head-label">สิ่งที่ส่งมาด้วย</span>
-                    <span class="let-head-val" style="white-space:pre-wrap;">${escapeHTML(d.enclosures)}</span>
+                    <span class="let-head-label">สิ่งที่ส่งมาด้วย</span><span class="let-head-val" style="white-space:pre-wrap;">${escapeHTML(d.enclosures)}</span>
                 </div>`);
         }
 
         const sigHtml = isAuth
             ? `
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px 28px; margin-top:26px; text-align:center; font-size:14px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px 28px; margin-top:28px; text-align:center; font-size:14.5px; color:#111827;">
                     <div>
-                        <div style="height:40px; border-bottom:1px dashed #64748b; width:75%; margin:0 auto 6px;"></div>
+                        <div style="height:42px; border-bottom:1px dotted #64748b; width:75%; margin:0 auto 6px;"></div>
                         <div>(${escapeHTML(d.signName || '..............................................')})</div>
                         <div style="font-weight:600;">ผู้มอบอำนาจ (${escapeHTML(d.signPosition || 'กรรมการผู้มีอำนาจ')})</div>
                     </div>
                     <div>
-                        <div style="height:40px; border-bottom:1px dashed #64748b; width:75%; margin:0 auto 6px;"></div>
+                        <div style="height:42px; border-bottom:1px dotted #64748b; width:75%; margin:0 auto 6px;"></div>
                         <div>(${escapeHTML(d.repName || '..............................................')})</div>
                         <div style="font-weight:600;">ผู้รับมอบอำนาจ${d.repPosition ? ` (${escapeHTML(d.repPosition)})` : ''}</div>
                     </div>
                     <div>
-                        <div style="height:36px; border-bottom:1px dashed #64748b; width:75%; margin:0 auto 6px;"></div>
+                        <div style="height:38px; border-bottom:1px dotted #64748b; width:75%; margin:0 auto 6px;"></div>
                         <div>(${escapeHTML(d.witness1 || '..............................................')})</div>
                         <div>พยาน</div>
                     </div>
                     <div>
-                        <div style="height:36px; border-bottom:1px dashed #64748b; width:75%; margin:0 auto 6px;"></div>
+                        <div style="height:38px; border-bottom:1px dotted #64748b; width:75%; margin:0 auto 6px;"></div>
                         <div>(${escapeHTML(d.witness2 || '..............................................')})</div>
                         <div>พยาน</div>
                     </div>
                 </div>`
             : `
                 <div class="let-sign">
-                    <div>ขอแสดงความนับถือ</div>
+                    <div class="let-closing">ขอแสดงความนับถือ</div>
                     <div class="sig-space"></div>
                     <div>(${escapeHTML(d.signName || '..............................................')})</div>
                     <div>${escapeHTML(d.signPosition || 'กรรมการผู้จัดการ')}</div>
                     <div>${escapeHTML(d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด')}</div>
                 </div>`;
 
-        const coordParts = [];
-        if (d.coordName) coordParts.push(`ผู้ประสานงาน: ${escapeHTML(d.coordName)}`);
-        if (d.coordTel) coordParts.push(`โทร. ${escapeHTML(d.coordTel)}`);
-        if (d.coordEmail) coordParts.push(`อีเมล ${escapeHTML(d.coordEmail)}`);
+        const footerLines = [
+            `<div class="let-footer-org">${escapeHTML(d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด')}</div>`
+        ];
+        if (d.coordName) footerLines.push(`<div>ผู้ประสานงาน : ${escapeHTML(d.coordName)}</div>`);
+        footerLines.push(`<div>โทรศัพท์ : ${escapeHTML(d.coordTel || '080-885-0555')}</div>`);
+        footerLines.push(`<div>อีเมล : ${escapeHTML(d.coordEmail || 'kittencode.co.ltd@gmail.com')}</div>`);
 
-        const footerHtml = coordParts.length
-            ? `<div class="let-footer">${coordParts.join(' &nbsp;·&nbsp; ')}</div>`
-            : '';
+        const footerHtml = `<div class="let-footer">${footerLines.join('')}</div>`;
 
         const page = document.createElement('div');
         page.className = 'a4-page letter-page';
         page.innerHTML = `
             <style>
-                .letter-page .header-section-centered { text-align: center; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1.5px solid #cbd5e1; }
-                .letter-page .let-logo-center { width: 68px; height: 68px; object-fit: contain; display: block; margin: 0 auto 6px auto; }
-                .letter-page .let-company-name { font-size: 16.5px; font-weight: 700; color: #f26522; margin: 0 0 2px 0; letter-spacing: 0.01em; }
-                .letter-page .let-company-sub { font-size: 11px; color: #475569; margin: 0; line-height: 1.45; }
-                .letter-page .let-meta-bar { display:flex; justify-content:space-between; align-items:flex-start; font-size:14.5px; margin: 4px 0 6px; color:#1e293b; line-height:1.55; }
-                .letter-page .let-office-addr { width: 46%; text-align: left; font-size: 13.5px; color: #1e293b; line-height: 1.5; }
-                .letter-page .let-date-row { margin-left: 50%; margin-bottom: 12px; font-size: 14.5px; color: #1e293b; }
-                .letter-page .let-head-block { margin-bottom: 14px; font-size:15px; line-height:1.8; color:#1e293b; }
-                .letter-page .let-head-row { display:flex; align-items:flex-start; margin-bottom:4px; }
-                .letter-page .let-head-label { width: 110px; font-weight:700; flex-shrink:0; }
-                .letter-page .let-head-val { flex:1; }
-                .letter-page .let-paragraph { text-indent: 2.5em; line-height: 1.9; font-size: 15px; margin: 0 0 10px 0; color: #1e293b; text-align: justify; white-space: pre-wrap; }
-                .letter-page .let-sign { margin-left: auto; width: 290px; text-align: center; font-size: 15px; line-height: 1.8; margin-top: 24px; }
-                .letter-page .let-sign .sig-space { height: 48px; }
-                .letter-page .let-footer { margin-top: auto; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #475569; }
+                .letter-page::before,
+                .letter-page .page-top-border { display: none !important; }
+                .letter-page .content-wrapper { padding: 20mm 20mm 18mm 28mm !important; color: #111827; }
+                .letter-page .header-section-centered { text-align: center; margin-bottom: 4px; }
+                .letter-page .let-logo-center { width: 78px; height: 78px; object-fit: contain; display: block; margin: 0 auto; }
+                .letter-page .let-meta-bar { display: flex; justify-content: space-between; align-items: flex-start; font-size: 15px; margin: 0 0 8px 0; color: #111827; line-height: 1.65; }
+                .letter-page .let-docno { width: 48%; padding-right: 8px; }
+                .letter-page .let-office-addr { width: 48%; text-align: left; font-size: 15px; color: #111827; line-height: 1.65; }
+                .letter-page .let-date-row { margin-left: 52%; margin-bottom: 16px; font-size: 15px; color: #111827; line-height: 1.65; }
+                .letter-page .let-head-block { margin-bottom: 14px; font-size: 15px; line-height: 1.75; color: #111827; }
+                .letter-page .let-head-row { display: flex; align-items: baseline; margin-bottom: 8px; }
+                .letter-page .let-head-label { font-weight: 700; flex-shrink: 0; margin-right: 0.75em; }
+                .letter-page .let-head-val { flex: 1; }
+                .letter-page .let-paragraph { text-indent: 2.5cm; line-height: 1.85; font-size: 15px; margin: 0 0 10px 0; color: #111827; text-align: justify; white-space: pre-wrap; }
+                .letter-page .let-sign { margin-left: 46%; width: 54%; text-align: center; font-size: 15px; line-height: 1.75; margin-top: 26px; color: #111827; }
+                .letter-page .let-sign .let-closing { margin-bottom: 4px; }
+                .letter-page .let-sign .sig-space { height: 50px; }
+                .letter-page .let-footer { margin-top: auto; padding-top: 12px; font-size: 13px; line-height: 1.6; color: #111827; text-align: left; }
+                .letter-page .let-footer-org { font-weight: 700; }
             </style>
             <div class="page-top-border"></div>
             ${opts.isReprint ? '<div class="watermark-reprint">ฉบับสำเนา (COPY)</div>' : ''}
             <div class="content-wrapper">
                 ${COMPANY_HEADER}
                 <div class="let-meta-bar">
-                    <div><strong>ที่</strong> ${escapeHTML(d.docNo || '-')}</div>
+                    <div class="let-docno"><strong>ที่</strong>&nbsp;&nbsp;${escapeHTML(d.docNo || '-')}</div>
                     <div class="let-office-addr">
-                        <div><strong>${escapeHTML(d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด')}</strong></div>
+                        <div>${escapeHTML(d.companyName || 'บริษัท คิทเช่น โค้ด จำกัด')}</div>
                         <div>347/11 หมู่ 3 ตำบลท่าโพธิ์</div>
                         <div>อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</div>
                     </div>
                 </div>
-                <div class="let-date-row">วันที่ ${escapeHTML(thaiDateLong(d.docDate) || '-')}</div>
+                <div class="let-date-row">${escapeHTML(thaiDateSaraban(d.docDate) || '-')}</div>
                 <div class="let-head-block">
                     <div class="let-head-row">
-                        <span class="let-head-label">เรื่อง</span>
-                        <span class="let-head-val"><strong>${escapeHTML(subject)}</strong></span>
+                        <span class="let-head-label">เรื่อง</span><span class="let-head-val">${escapeHTML(subject)}</span>
                     </div>
                     <div class="let-head-row">
-                        <span class="let-head-label">เรียน</span>
-                        <span class="let-head-val">${escapeHTML(recipient)}</span>
+                        <span class="let-head-label">เรียน</span><span class="let-head-val">${escapeHTML(recipient)}</span>
                     </div>
                     ${optionalRows.join('')}
                 </div>
@@ -246,5 +249,5 @@
         return page;
     }
 
-    window.KCLetter = { render, TYPES, buildDefaultDraft, thaiDateLong, escapeHTML };
+    window.KCLetter = { render, TYPES, buildDefaultDraft, thaiDateLong, thaiDateSaraban, escapeHTML };
 })();

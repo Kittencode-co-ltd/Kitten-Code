@@ -179,18 +179,21 @@
 
         page.innerHTML = `
             <style>
-                .cert-page .header-section-centered { text-align: center; padding-bottom: 12px; margin-bottom: 10px; border-bottom: 1.5px solid #cbd5e1; }
-                .cert-page .cert-logo-center { width: 72px; height: 72px; object-fit: contain; display: block; margin: 0 auto 8px auto; }
-                .cert-page .cert-company-name { font-size: 17px; font-weight: 700; color: #f26522; margin: 0 0 3px 0; letter-spacing: 0.01em; }
+                .cert-page::before,
+                .cert-page .page-top-border { display: none !important; }
+                .cert-page .content-wrapper { padding: 20mm 22mm 20mm 24mm !important; color: #111827; }
+                .cert-page .header-section-centered { text-align: center; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1.5px solid #cbd5e1; }
+                .cert-page .cert-logo-center { width: 76px; height: 76px; object-fit: contain; display: block; margin: 0 auto 8px auto; }
+                .cert-page .cert-company-name { font-size: 17px; font-weight: 700; color: #111827; margin: 0 0 3px 0; letter-spacing: 0.01em; }
                 .cert-page .cert-company-address,
                 .cert-page .cert-company-contact { font-size: 11.5px; color: #334155; margin: 0; line-height: 1.55; }
                 .cert-page .cert-company-contact span { font-weight: 600; color: #0f172a; }
-                .cert-page .cert-paragraph { text-indent: 2.5em; line-height: 2; font-size: 15px; margin: 0 0 10px 0; color: #222; text-align: justify; }
-                .cert-page .cert-meta { display: flex; justify-content: flex-end; font-size: 14px; margin: 4px 0 16px 0; color: #1e293b; }
-                .cert-page .cert-title { text-align: center; font-size: 22px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: 0.02em; color: #0f172a; }
-                .cert-page .cert-title-en { text-align: center; font-size: 12.5px; color: #64748b; margin: 0 0 24px 0; letter-spacing: 0.06em; text-transform: uppercase; }
-                .cert-page .cert-given { text-align: center; font-size: 15px; margin: 18px 0 0 0; }
-                .cert-page .cert-sign { margin-left: auto; width: 290px; text-align: center; font-size: 15px; line-height: 1.8; margin-top: 36px; }
+                .cert-page .cert-paragraph { text-indent: 2.5cm; line-height: 2; font-size: 15px; margin: 0 0 12px 0; color: #111827; text-align: justify; }
+                .cert-page .cert-meta { display: flex; justify-content: flex-end; font-size: 14.5px; margin: 4px 0 18px 0; color: #111827; }
+                .cert-page .cert-title { text-align: center; font-size: 22px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: 0.02em; color: #111827; }
+                .cert-page .cert-title-en { text-align: center; font-size: 12.5px; color: #475569; margin: 0 0 24px 0; letter-spacing: 0.06em; text-transform: uppercase; }
+                .cert-page .cert-given { text-align: center; font-size: 15px; margin: 20px 0 0 0; color: #111827; }
+                .cert-page .cert-sign { margin-left: auto; width: 290px; text-align: center; font-size: 15px; line-height: 1.8; margin-top: 36px; color: #111827; }
                 .cert-page .cert-sign .sig-space { height: 60px; }
             </style>
             <div class="page-top-border"></div>
