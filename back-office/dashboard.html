@@ -18,6 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
     <!-- Dashboard stylesheet -->
+    <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/dashboard.css">
 </head>
 
@@ -30,7 +31,7 @@
     ══════════════════════════════════════════════════════ -->
         <header class="db-header">
             <div class="db-logo">
-                <div class="db-logo-icon">📊</div>
+                <div class="db-logo-icon"><i class="bi bi-bar-chart-fill"></i></div>
                 <div class="db-logo-text">
                     <strong>Dashboard</strong>
                     <span>Kitten Code Financial — Back Office</span>
@@ -41,16 +42,13 @@
                 <!-- Period filter -->
                 <div class="period-tabs" role="group" aria-label="Period">
                     <button class="period-btn active" data-period="month" id="btn-month">This Month</button>
-                    <button class="period-btn" data-period="quarter" id="btn-quarter">This Year</button>
+                    <button class="period-btn" data-period="quarter" id="btn-quarter">This Quarter</button>
+                    <button class="period-btn" data-period="year" id="btn-year">This Year</button>
                 </div>
 
                 <!-- Back to financial management -->
                 <a href="financial.html" class="db-back-btn">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="19" y1="12" x2="5" y2="12" />
-                        <polyline points="12 19 5 12 12 5" />
-                    </svg>
+                    <i class="bi bi-wallet2"></i>
                     Financial Management
                 </a>
             </div>
@@ -68,7 +66,7 @@
                 <div class="kpi-card kpi-net" role="region" aria-label="Net Profit/Loss">
                     <div class="kpi-header">
                         <div class="kpi-label">Net Profit/Loss<br><span class="kpi-period-label">This Month</span></div>
-                        <div class="kpi-icon" aria-hidden="true">⚡</div>
+                        <div class="kpi-icon" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></div>
                     </div>
                     <div class="kpi-value kpi-net-val" id="kpi-net">—</div>
                     <div class="kpi-sub">
@@ -81,7 +79,7 @@
                 <div class="kpi-card kpi-inc" role="region" aria-label="Total Income">
                     <div class="kpi-header">
                         <div class="kpi-label">Total Income<br><span class="kpi-period-label">This Month</span></div>
-                        <div class="kpi-icon" aria-hidden="true">↑</div>
+                        <div class="kpi-icon" aria-hidden="true"><i class="bi bi-arrow-down-left"></i></div>
                     </div>
                     <div class="kpi-value kpi-inc-val" id="kpi-inc">—</div>
                     <div class="kpi-sub">Transaction Type: Income (Paid)</div>
@@ -91,7 +89,7 @@
                 <div class="kpi-card kpi-exp" role="region" aria-label="Total Expenses">
                     <div class="kpi-header">
                         <div class="kpi-label">Total Expenses<br><span class="kpi-period-label">This Month</span></div>
-                        <div class="kpi-icon" aria-hidden="true">↓</div>
+                        <div class="kpi-icon" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></div>
                     </div>
                     <div class="kpi-value kpi-exp-val" id="kpi-exp">—</div>
                     <div class="kpi-sub">Transaction Type: Expense (Paid)</div>
@@ -102,7 +100,7 @@
                     <div class="kpi-header">
                         <div class="kpi-label">Pending Reimbursements<br><span class="kpi-period-label">This
                                 Month</span></div>
-                        <div class="kpi-icon" aria-hidden="true">⏳</div>
+                        <div class="kpi-icon" aria-hidden="true"><i class="bi bi-clock-history"></i></div>
                     </div>
                     <div class="kpi-value kpi-pend-val" id="kpi-pend">—</div>
                     <div class="kpi-sub">Pending Reimbursements</div>

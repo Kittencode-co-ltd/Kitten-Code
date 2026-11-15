@@ -154,6 +154,10 @@ class FinancialDashboard {
     _getCatByCode(code) { return this._categories.find(c => c.code === code); }
 
     _filterTxns(txns) {
+        if (this._period === 'year') {
+            const currentYear = String(new Date().getFullYear());
+            return txns.filter(t => (t.date || '').startsWith(currentYear));
+        }
         const months = this._period === 'quarter'
             ? getCurrentQuarterMonths()
             : [getCurrentMonthKey()];
@@ -193,7 +197,11 @@ class FinancialDashboard {
         }
 
         // Period label
-        const label = this._period === 'quarter' ? 'This Year' : 'This Month';
+        const label = this._period === 'year'
+            ? 'This Year'
+            : this._period === 'quarter'
+                ? 'This Quarter'
+                : 'This Month';
         document.querySelectorAll('.kpi-period-label').forEach(el => { el.textContent = label; });
     }
 
@@ -455,9 +463,9 @@ class FinancialDashboard {
     }
 
     _statusBadge(status) {
-        if (status === 2) return '<span class="status-badge sb-paid">✓ Paid</span>';
-        if (status === 1) return '<span class="status-badge sb-pending">⏳ Pending</span>';
-        return '<span class="status-badge sb-rejected">✕ Rejected</span>';
+        if (status === 2) return '<span class="status-badge sb-paid"><i class="bi bi-check2"></i> Paid</span>';
+        if (status === 1) return '<span class="status-badge sb-pending"><i class="bi bi-clock"></i> Pending</span>';
+        return '<span class="status-badge sb-rejected"><i class="bi bi-x"></i> Rejected</span>';
     }
 
     // ── Security & System Panel ───────────────────────────────
