@@ -1,4 +1,5 @@
         import { app, auth, db, onAuthStateChanged, createUserWithEmailAndPassword, signOut, collection, doc, setDoc, addDoc, getDocs, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc, getDoc } from './core/firebase-config.js';
+        import { resolveTeamAvatar } from './core/team-avatars.js';
 
         // ── Username → email index (public lookup used by login.html) ──
         // Stored at usernames/{lowercased username} = { uid, email } so the
@@ -419,8 +420,19 @@
                     if (user.username && user.email) {
                         syncUsernameIndex(docSnap.id, user.username, user.email).catch(e => console.warn('username index backfill failed', e));
                     }
-                    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || '<i>N/A</i>';
-                    const rNumber = indexOffset + index + 1;
+                    const rawFullName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+                    const fullName = rawFullName || '<i>N/A</i>';
+                    const initial = (rawFullName || user.username || user.email || 'U').charAt(0).toUpperCase();
+                    const avatarUrl = resolveTeamAvatar({
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        fullName: rawFullName,
+                        email: user.email,
+                        photoURL: user.photoURL
+                    });
+                    const avatarHtml = avatarUrl
+                        ? `<img src="${escapeHTML(avatarUrl)}" alt="${escapeHTML(rawFullName || user.username)}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;border:1.5px solid #e2e8f0;" onerror="this.outerHTML='<span style=&quot;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;&quot;>${escapeHTML(initial)}</span>'">`
+                        : `<span style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">${escapeHTML(initial)}</span>`;
 
                     let roleBadge = user.role === 'admin' ? '<span class="badge bg-danger">Admin</span>' : '<span class="badge bg-secondary">User</span>';
 
@@ -430,14 +442,19 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
             <td>${escapeHTML(user.username) || 'N/A'}</td>
-            <td class="fw-bold">${escapeHTML(fullName)}</td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                ${avatarHtml}
+                <span class="fw-bold">${rawFullName ? escapeHTML(rawFullName) : '<i>N/A</i>'}</span>
+              </div>
+            </td>
             <td>${escapeHTML(user.email)}</td>
             <td>${escapeHTML(user.position) || '-'}</td>
             <td>${roleBadge}</td>
             <td class="text-end pe-4">
               <button class="btn btn-sm btn-outline-success me-1" onclick="preparePayrollModal('${userJson}')" title="Payroll (EXP-17)"><i class="bi bi-currency-dollar"></i></button>
               <button class="btn btn-sm btn-light me-1" onclick="prepareUpdateModal('${userJson}')"><i class="bi bi-pencil"></i></button>
-              <button class="btn btn-sm btn-outline-danger" onclick="promptDelete('${escapeHTML(user.uid).replace(/'/g, "\\'")}', '${escapeHTML(fullName !== '<i>N/A</i>' ? fullName : user.username).replace(/'/g, "\\'")}')"><i class="bi bi-trash"></i></button>
+              <button class="btn btn-sm btn-outline-danger" onclick="promptDelete('${escapeHTML(user.uid).replace(/'/g, "\\'")}', '${escapeHTML(rawFullName || user.username).replace(/'/g, "\\'")}')"><i class="bi bi-trash"></i></button>
             </td>
           `;
                     tbody.appendChild(tr);

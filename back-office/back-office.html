@@ -186,21 +186,40 @@
 
     <script type="module">
         import { onAuthStateChanged, auth, signOut, db, doc, getDoc } from '../assets/js/core/firebase-config.js';
+        import { resolveTeamAvatar } from '../assets/js/core/team-avatars.js';
+
+        function renderAvatarElement(el, avatarUrl, initial) {
+            if (!el) return;
+            if (avatarUrl) {
+                const img = document.createElement('img');
+                img.src = avatarUrl;
+                img.alt = initial;
+                img.onerror = () => { el.textContent = initial; };
+                el.innerHTML = '';
+                el.appendChild(img);
+            } else {
+                el.textContent = initial;
+            }
+        }
 
         async function populateUserProfile(user) {
             const fallbackName = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
             let displayName = fallbackName;
             let roleText = user.email || 'Member';
+            let profileData = {};
 
             try {
                 const snap = await getDoc(doc(db, 'users', user.uid));
                 if (snap.exists()) {
-                    const data = snap.data();
-                    if (data.username || data.name) {
-                        displayName = data.username || data.name;
+                    profileData = snap.data() || {};
+                    const fullName = `${profileData.firstName || ''} ${profileData.lastName || ''}`.trim();
+                    if (fullName) {
+                        displayName = fullName;
+                    } else if (profileData.username || profileData.name) {
+                        displayName = profileData.username || profileData.name;
                     }
-                    if (data.role) {
-                        roleText = String(data.role).toUpperCase();
+                    if (profileData.role) {
+                        roleText = String(profileData.role).toUpperCase();
                     }
                 }
             } catch (_) {
@@ -208,16 +227,24 @@
             }
 
             const initial = (displayName.trim().charAt(0) || 'K').toUpperCase();
+            const avatarUrl = resolveTeamAvatar({
+                firstName: profileData.firstName,
+                lastName: profileData.lastName,
+                fullName: displayName,
+                email: profileData.email || user.email,
+                photoURL: profileData.photoURL || user.photoURL
+            });
+
             const sidebarAvatar = document.getElementById('sidebarUserAvatar');
             const sidebarName = document.getElementById('sidebarUserName');
             const sidebarRole = document.getElementById('sidebarUserRole');
             const headerAvatar = document.getElementById('headerUserAvatar');
             const headerName = document.getElementById('headerUserName');
 
-            if (sidebarAvatar) sidebarAvatar.textContent = initial;
+            renderAvatarElement(sidebarAvatar, avatarUrl, initial);
+            renderAvatarElement(headerAvatar, avatarUrl, initial);
             if (sidebarName) sidebarName.textContent = displayName;
             if (sidebarRole) sidebarRole.textContent = roleText;
-            if (headerAvatar) headerAvatar.textContent = initial;
             if (headerName) headerName.textContent = displayName;
         }
 

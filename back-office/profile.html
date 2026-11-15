@@ -82,6 +82,17 @@
             text-transform: uppercase;
             box-shadow: 0 6px 18px rgba(242, 101, 34, 0.28);
             flex-shrink: 0;
+            overflow: hidden;
+            border: 2px solid #fff;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            border-radius: 50%;
+            display: block;
         }
 
         @media (max-width: 639px) {
@@ -172,6 +183,7 @@
 
     <script type="module">
         import { auth, db, onAuthStateChanged, doc, getDoc, updateDoc, serverTimestamp } from '../assets/js/core/firebase-config.js';
+        import { resolveTeamAvatar } from '../assets/js/core/team-avatars.js';
 
         // Editable fields: input id -> Firestore field.
         // username / email / role are intentionally read-only here
@@ -198,10 +210,32 @@
         function renderSummary(data, authUser) {
             const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim();
             const username = data.username || '';
+            const email = data.email || authUser.email || '-';
+            const initial = (fullName || username || email || '?').charAt(0).toUpperCase();
+
             document.getElementById('displayName').textContent = fullName || username || 'Unnamed user';
-            document.getElementById('displayEmail').textContent = data.email || authUser.email || '-';
+            document.getElementById('displayEmail').textContent = email;
             document.getElementById('displayUsername').textContent = username || '-';
-            document.getElementById('avatar').textContent = (fullName || username || authUser.email || '?').charAt(0);
+
+            const avatarEl = document.getElementById('avatar');
+            const avatarUrl = resolveTeamAvatar({
+                firstName: data.firstName,
+                lastName: data.lastName,
+                fullName,
+                email: data.email || authUser.email,
+                photoURL: data.photoURL
+            });
+
+            if (avatarUrl) {
+                const img = document.createElement('img');
+                img.src = avatarUrl;
+                img.alt = fullName || username || 'Profile photo';
+                img.onerror = () => { avatarEl.textContent = initial; };
+                avatarEl.innerHTML = '';
+                avatarEl.appendChild(img);
+            } else {
+                avatarEl.textContent = initial;
+            }
 
             const roleBadge = document.getElementById('displayRole');
             const isAdmin = data.role === 'admin';

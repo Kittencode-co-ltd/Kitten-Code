@@ -45,6 +45,7 @@ Firebase rules and indexes deploy separately via `firebase deploy`.
 
 Shared modules live in `assets/js/core/`:
 - `core/firebase-config.js` — Firebase SDK initialization (Auth, Firestore) and re-exports of SDK helpers; every page imports from here
+- `core/team-avatars.js` — maps back-office user profiles (`firstName`, `lastName`, `email`) to their official team portrait in `assets/img/team/`
 - `core/i18n.js` — language switching; persists selection to `localStorage`
 - `core/main.js` — global UI (scroll behavior, mobile nav, AOS animations)
 - `core/theme.js` — theme handling
