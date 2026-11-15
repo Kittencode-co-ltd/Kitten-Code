@@ -5,28 +5,12 @@
     <meta charset="UTF-8">
     <script src="../assets/js/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator</title>
+    <title>QR Code Studio — Kitten Code</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Inter:wght@300;400;500;600&family=Raleway:wght@700&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 
     <style>
-        :root {
-            --bg-body: #0f172a;
-            --bg-glass: rgba(15, 23, 42, 0.75);
-            --text-main: #ffffff;
-            --text-muted: #9ca3af;
-            --accent: #0099ff;
-            --accent-hover: #33adff;
-            --accent-glow: rgba(0, 153, 255, 0.2);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --border-active: rgba(0, 153, 255, 0.5);
-            --shadow-color: rgba(0, 0, 0, 0.4);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -34,303 +18,538 @@
         }
 
         body {
-            font-family: 'Roboto', 'Inter', sans-serif;
-            background-size: cover;
-            background-position: top center;
-            background-attachment: fixed;
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            background: var(--kc-bg) !important;
+            color: var(--kc-text);
             min-height: 100vh;
-            padding: 40px 24px;
+            padding: 24px 28px 48px;
             -webkit-font-smoothing: antialiased;
-            position: relative;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: rgba(238, 237, 237, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 0;
+        .qr-studio {
+            max-width: 1220px;
+            margin: 0 auto;
         }
 
-        .card {
-            position: relative;
-            z-index: 1;
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 40px var(--shadow-color);
-            padding: 40px 36px;
-            width: 100%;
-            max-width: 520px;
-            text-align: center;
-            transition: var(--transition);
+        /* Header */
+        .studio-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
         }
 
-        .card-header-icon {
-            width: 52px;
-            height: 52px;
-            background: var(--accent-glow);
-            border: 1px solid var(--border-active);
+        .studio-title-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .studio-icon {
+            width: 46px;
+            height: 46px;
             border-radius: 14px;
+            background: var(--kc-accent-soft);
+            color: var(--kc-accent);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 1.5rem;
-            color: var(--accent);
+            font-size: 1.35rem;
+            flex-shrink: 0;
+            border: 1px solid rgba(10, 114, 232, 0.16);
         }
 
-        h1 {
-            font-family: 'Raleway', sans-serif;
+        .studio-title-group h1 {
+            font-size: 1.35rem;
             font-weight: 700;
-            font-size: 1.6rem;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-            color: var(--text-main);
+            color: var(--kc-text);
+            margin: 0 0 2px;
+            letter-spacing: -0.01em;
         }
 
-        p.subtitle {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 28px;
-            font-weight: 300;
+        .studio-title-group p {
+            font-size: 0.86rem;
+            color: var(--kc-muted);
+            margin: 0;
         }
 
-        .input-wrapper {
+        .studio-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: var(--kc-green-soft);
+            color: var(--kc-green);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        /* Main 2-column grid */
+        .studio-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.28fr) minmax(340px, 0.92fr);
+            gap: 22px;
+            align-items: start;
+        }
+
+        .studio-card {
+            background: var(--kc-surface);
+            border: 1px solid var(--kc-line);
+            border-radius: 18px;
+            padding: 22px 24px;
+            box-shadow: var(--kc-float);
+        }
+
+        .studio-card + .studio-card {
+            margin-top: 18px;
+        }
+
+        .card-sec-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 0.96rem;
+            font-weight: 700;
+            color: var(--kc-text);
+            margin-bottom: 14px;
+        }
+
+        .card-sec-title .sec-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-sec-title i {
+            color: var(--kc-accent);
+            font-size: 1.05rem;
+        }
+
+        /* Mode Tabs (URL / PromptPay / Wi-Fi / vCard) */
+        .qr-mode-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .qr-mode-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 11px 8px;
+            border-radius: 14px;
+            border: 1.5px solid var(--kc-line);
+            background: var(--kc-surface-2);
+            color: var(--kc-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .qr-mode-btn i {
+            font-size: 1.2rem;
+        }
+
+        .qr-mode-btn:hover {
+            border-color: var(--kc-line-strong);
+            color: var(--kc-text);
+            transform: translateY(-1px);
+        }
+
+        .qr-mode-btn.active {
+            background: var(--kc-accent-soft);
+            border-color: var(--kc-accent);
+            color: var(--kc-accent);
+        }
+
+        /* Quick preset pills */
+        .preset-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .preset-label {
+            font-size: 0.76rem;
+            color: var(--kc-muted);
+            margin-right: 2px;
+        }
+
+        .preset-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--kc-line);
+            background: var(--kc-surface-2);
+            color: var(--kc-text);
+            font-size: 0.76rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 140ms ease;
+        }
+
+        .preset-chip:hover {
+            border-color: var(--kc-accent);
+            color: var(--kc-accent);
+            background: var(--kc-accent-soft);
+        }
+
+        /* Form controls */
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .field-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--kc-text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .field-label small {
+            font-weight: 400;
+            color: var(--kc-muted);
+            font-size: 0.75rem;
+        }
+
+        .input-icon-wrap {
             position: relative;
-            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
         }
 
-        .input-wrapper .input-icon {
+        .input-icon-wrap .leading-icon {
             position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
+            left: 14px;
+            color: var(--kc-muted);
             font-size: 1rem;
             pointer-events: none;
-            transition: var(--transition);
         }
 
-        .logo-options {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 18px;
-            text-align: left;
-        }
-
-        .logo-options label {
+        .input-icon-wrap .trailing-btn {
+            position: absolute;
+            right: 8px;
+            border: none;
+            background: transparent;
+            color: var(--kc-muted);
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
-            color: var(--text-main);
+            justify-content: center;
+        }
+
+        .input-icon-wrap .trailing-btn:hover {
+            background: var(--kc-surface-2);
+            color: var(--kc-text);
+        }
+
+        .qr-input,
+        .qr-select {
+            width: 100%;
+            min-height: 42px;
+            padding: 9px 14px;
+            border-radius: 12px;
+            border: 1.5px solid var(--kc-line-strong);
+            background: var(--kc-surface);
+            color: var(--kc-text);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 150ms ease, box-shadow 150ms ease;
+        }
+
+        .input-icon-wrap .qr-input {
+            padding-left: 40px;
+            padding-right: 38px;
+        }
+
+        .qr-input:focus,
+        .qr-select:focus {
+            border-color: var(--kc-accent);
+            box-shadow: 0 0 0 3px var(--kc-accent-soft);
+        }
+
+        .mode-pane {
+            display: none;
+        }
+
+        .mode-pane.active {
+            display: block;
+        }
+
+        /* Customization Controls */
+        .cust-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--kc-line);
+        }
+
+        .cust-section:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        /* Logo Choice Cards */
+        .logo-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .logo-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 6px;
+            border-radius: 12px;
+            border: 1.5px solid var(--kc-line);
+            background: var(--kc-surface-2);
             cursor: pointer;
+            text-align: center;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--kc-text);
+            transition: all 140ms ease;
         }
 
-        .logo-options input[type="radio"] {
-            accent-color: var(--accent);
-            width: 18px;
-            height: 18px;
+        .logo-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .quality-row {
+        .logo-card-thumb {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: #ffffff;
+            border: 1px solid var(--kc-line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-size: 1.1rem;
+            color: var(--kc-accent);
+        }
+
+        .logo-card-thumb img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+        }
+
+        .logo-card:hover {
+            border-color: var(--kc-line-strong);
+        }
+
+        .logo-card.active {
+            border-color: var(--kc-accent);
+            background: var(--kc-accent-soft);
+            color: var(--kc-accent);
+        }
+
+        .custom-logo-wrapper {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px dashed var(--kc-line-strong);
+            background: var(--kc-surface-2);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            margin-bottom: 20px;
-            text-align: left;
-            font-size: 0.9rem;
-            color: var(--text-muted);
+            flex-wrap: wrap;
         }
 
-        .quality-row select {
-            flex: 1;
-            min-height: 42px;
-            padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1.5px solid var(--border-color);
-            border-radius: 14px;
-            color: var(--text-main);
-            font-size: 0.9rem;
-            font-family: inherit;
-            outline: none;
-            cursor: pointer;
-            transition: border-color 150ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .quality-row select:focus {
-            border-color: var(--border-active);
-            box-shadow: 0 0 0 4px var(--accent-glow);
-        }
-
-        .quality-row select option {
-            background: #0f172a;
-            color: #ffffff;
-        }
-
-        .custom-logo-wrapper {
-            display: grid;
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        .custom-logo-wrapper input[type="file"] {
-            width: 100%;
-            color: var(--text-main);
+        .custom-logo-wrapper.hidden,
+        .custom-logo-preview.hidden {
+            display: none !important;
         }
 
         .custom-logo-preview {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-muted);
-            font-size: 0.88rem;
-        }
-
-        .custom-logo-wrapper.hidden,
-        .custom-logo-preview.hidden {
-            display: none;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--kc-muted);
         }
 
         .custom-logo-preview img {
             width: 32px;
             height: 32px;
             object-fit: contain;
-            border-radius: 8px;
+            border-radius: 6px;
             background: #fff;
+            border: 1px solid var(--kc-line);
         }
 
-        input[type="text"] {
-            width: 100%;
-            min-height: 46px;
-            padding: 13px 16px 13px 44px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1.5px solid var(--border-color);
-            border-radius: 14px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            color: var(--text-main);
-            transition: var(--transition);
-            outline: none;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--border-active);
-            background: rgba(0, 153, 255, 0.06);
-            box-shadow: 0 0 0 4px var(--accent-glow);
-        }
-
-        input[type="text"]:focus+.input-icon,
-        .input-wrapper:focus-within .input-icon {
-            color: var(--accent);
-        }
-
-        input[type="text"]::placeholder {
-            color: rgba(156, 163, 175, 0.6);
-            font-weight: 300;
-        }
-
-        .btn {
-            width: 100%;
-            min-height: 48px;
-            padding: 13px 22px;
-            border: none;
-            border-radius: 999px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
-            font-family: inherit;
-            letter-spacing: 0.3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Pattern & Resolution Segmented Pills */
+        .seg-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
         }
 
-        .btn:active:not(:disabled) {
-            transform: scale(0.97) !important;
+        .seg-pill {
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1.5px solid var(--kc-line);
+            background: var(--kc-surface-2);
+            color: var(--kc-text);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 140ms ease;
         }
 
-        .btn-primary {
-            background: var(--accent);
-            color: #ffffff;
-            box-shadow: 0 4px 15px rgba(0, 153, 255, 0.3);
+        .seg-pill:hover {
+            border-color: var(--kc-line-strong);
         }
 
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(0, 153, 255, 0.45);
+        .seg-pill.active {
+            border-color: var(--kc-accent);
+            background: var(--kc-accent-soft);
+            color: var(--kc-accent);
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
+        /* Color Swatches */
+        .color-palette-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 24px 0;
+        .color-swatches {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .qr-wrapper {
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            transition: transform 140ms ease, box-shadow 140ms ease;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.08);
+        }
+
+        .color-swatch.active {
+            box-shadow: 0 0 0 2px var(--kc-surface), 0 0 0 4px var(--kc-accent);
+        }
+
+        .custom-color-pickers {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-picker-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px 4px 6px;
+            border-radius: 999px;
+            border: 1px solid var(--kc-line);
+            background: var(--kc-surface-2);
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--kc-text);
+            cursor: pointer;
+        }
+
+        .color-picker-chip input[type="color"] {
+            width: 22px;
+            height: 22px;
+            border: none;
+            border-radius: 50%;
+            padding: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        /* Right Column: Sticky Preview Studio */
+        .preview-sticky {
+            position: sticky;
+            top: 20px;
+        }
+
+        .qr-stage {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            min-height: 320px;
-            border: 1.5px dashed var(--border-color);
+            justify-content: center;
+            padding: 26px 20px 20px;
             border-radius: 16px;
-            padding: 24px;
-            background: rgba(255, 255, 255, 0.02);
-            transition: var(--transition);
+            background:
+                radial-gradient(circle at 1px 1px, var(--kc-line) 1px, transparent 0) 0 0 / 18px 18px,
+                var(--kc-surface-2);
+            border: 1px solid var(--kc-line);
+            min-height: 330px;
             position: relative;
-        }
-
-        .qr-wrapper.has-qr {
-            border: 1.5px solid var(--border-active);
-            background: rgba(0, 153, 255, 0.04);
         }
 
         .placeholder-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            color: var(--text-muted);
+            gap: 8px;
+            color: var(--kc-muted);
+            text-align: center;
+            padding: 30px 16px;
         }
 
         .placeholder-content i {
-            font-size: 2.5rem;
-            opacity: 0.35;
-        }
-
-        .placeholder-content span {
-            font-size: 0.88rem;
-            font-weight: 300;
+            font-size: 2.6rem;
+            opacity: 0.45;
         }
 
         #qrcode {
-            position: relative;
-            width: 300px;
-            height: 300px;
+            width: 270px;
             max-width: 100%;
-            aspect-ratio: 1 / 1;
             display: none;
             justify-content: center;
             align-items: center;
@@ -342,206 +561,895 @@
 
         #qrCanvas {
             width: 100%;
-            height: 100%;
+            height: auto;
             display: block;
-            border-radius: 14px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
             background: #ffffff;
         }
 
-        .qr-meta {
-            margin-top: 12px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            display: none;
-        }
-
-        .qr-meta.active {
-            display: block;
-        }
-
-        .btn-download {
-            background: rgba(0, 153, 255, 0.12);
-            color: var(--accent);
-            border: 1px solid var(--border-active);
-            margin-top: 16px;
-            display: none;
-            opacity: 0;
-            transform: translateY(8px);
-        }
-
-        .btn-download.visible {
+        .qr-meta-badges {
             display: flex;
-            animation: fadeUp 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 14px;
         }
 
-        .btn-download:hover {
-            background: rgba(0, 153, 255, 0.22);
-            color: var(--accent-hover);
+        .meta-pill {
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: var(--kc-surface);
+            border: 1px solid var(--kc-line);
+            color: var(--kc-muted);
+        }
+
+        /* Action Buttons */
+        .action-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .action-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn-studio {
+            min-height: 44px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border: 1.5px solid var(--kc-line-strong);
+            background: var(--kc-surface);
+            color: var(--kc-text);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .btn-studio:hover:not(:disabled) {
+            border-color: var(--kc-accent);
+            color: var(--kc-accent);
             transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(0, 153, 255, 0.2);
         }
 
-        .btn-download:active {
+        .btn-studio:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .btn-studio:disabled {
+            opacity: 0.48;
+            cursor: not-allowed;
+        }
+
+        .btn-studio-primary {
+            background: var(--kc-accent) !important;
+            border-color: var(--kc-accent) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(10, 114, 232, 0.24);
+        }
+
+        .btn-studio-primary:hover:not(:disabled) {
+            filter: brightness(1.05);
+            color: #ffffff !important;
+        }
+
+        /* Recent History */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--kc-line);
+            background: var(--kc-surface-2);
+            cursor: pointer;
+            transition: all 140ms ease;
+        }
+
+        .history-item:hover {
+            border-color: var(--kc-accent);
+            background: var(--kc-accent-soft);
+        }
+
+        .history-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .history-mode-tag {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--kc-surface);
+            border: 1px solid var(--kc-line);
+            color: var(--kc-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .history-text {
+            min-width: 0;
+        }
+
+        .history-title {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--kc-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-sub {
+            font-size: 0.72rem;
+            color: var(--kc-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .toast-feedback {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--kc-float-lg);
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            transition: all 200ms ease;
+            z-index: 999;
+        }
+
+        .toast-feedback.show {
+            opacity: 1;
             transform: translateY(0);
         }
 
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        @media (max-width: 960px) {
+            body {
+                padding: 16px 14px 36px;
+            }
+            .studio-grid {
+                grid-template-columns: 1fr;
+            }
+            .preview-sticky {
+                position: static;
             }
         }
 
-        @media (max-width: 480px) {
-            .card {
-                padding: 28px 20px;
+        @media (max-width: 560px) {
+            .qr-mode-tabs,
+            .logo-cards {
+                grid-template-columns: repeat(2, 1fr);
             }
+            .field-grid,
+            .seg-row,
+            .action-row-2 {
+                grid-template-columns: 1fr;
+            }
+        }
 
+        @media print {
+            body {
+                background: #fff !important;
+                padding: 0;
+            }
+            .studio-header,
+            .studio-left-col,
+            .action-stack,
+            .history-card,
+            .qr-meta-badges {
+                display: none !important;
+            }
+            .studio-grid {
+                display: block;
+            }
+            .studio-card,
+            .qr-stage {
+                border: none !important;
+                box-shadow: none !important;
+                background: #fff !important;
+            }
             #qrcode {
-                width: 250px;
-                height: 250px;
+                width: 380px !important;
             }
         }
     </style>
-    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 </head>
 
 <body>
-
-    <div class="card">
-        <div class="card-header-icon">
-            <i class="bi bi-qr-code"></i>
+    <div class="qr-studio">
+        <!-- Studio Header -->
+        <div class="studio-header">
+            <div class="studio-title-group">
+                <div class="studio-icon">
+                    <i class="bi bi-qr-code-scan"></i>
+                </div>
+                <div>
+                    <h1 data-i18n-th="สตูดิโอสร้าง QR Code ความละเอียดสูง" data-i18n-en="High-Resolution QR Code Studio">สตูดิโอสร้าง QR Code ความละเอียดสูง</h1>
+                    <p data-i18n-th="สร้าง QR ลิงก์, พร้อมเพย์รับเงิน, Wi-Fi และนามบัตรดิจิทัล พร้อมโลโก้คมชัดระดับ 4K" data-i18n-en="Create URL, Thai PromptPay, Wi-Fi & vCard QR codes with crisp 4K output">สร้าง QR ลิงก์, พร้อมเพย์รับเงิน, Wi-Fi และนามบัตรดิจิทัล พร้อมโลโก้คมชัดระดับ 4K</p>
+                </div>
+            </div>
+            <span class="studio-badge">
+                <i class="bi bi-lightning-charge-fill"></i>
+                <span data-i18n-th="อัปเดตตัวอย่างอัตโนมัติ (Live Preview)" data-i18n-en="Instant Live Preview">อัปเดตตัวอย่างอัตโนมัติ (Live Preview)</span>
+            </span>
         </div>
-        <h1>สร้าง QR Code</h1>
-        <p class="subtitle">ใส่ลิงก์หรือข้อความ แล้วกดสร้าง</p>
 
-        <div class="input-wrapper">
-            <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off">
-            <i class="bi bi-link-45deg input-icon"></i>
-        </div>
+        <div class="studio-grid">
+            <!-- Left Column: Content & Design Controls -->
+            <div class="studio-left-col">
+                <!-- Card 1: QR Content Type & Data -->
+                <div class="studio-card">
+                    <div class="card-sec-title">
+                        <span class="sec-left">
+                            <i class="bi bi-sliders2"></i>
+                            <span data-i18n-th="1. เลือกประเภทข้อมูล QR Code" data-i18n-en="1. Choose QR Content Type">1. เลือกประเภทข้อมูล QR Code</span>
+                        </span>
+                    </div>
 
-        <div class="logo-options">
-            <label>
-                <input type="radio" name="logoOption" value="default" checked>
-                ใช้โลโก้ Kitten Code ตรงกลาง
-            </label>
-            <label>
-                <input type="radio" name="logoOption" value="custom">
-                ใช้ภาพอื่นเป็นโลโก้
-            </label>
-            <label>
-                <input type="radio" name="logoOption" value="none">
-                ไม่มีโลโก้ตรงกลาง
-            </label>
-            <div id="customLogoWrapper" class="custom-logo-wrapper hidden">
-                <input type="file" id="customLogoInput" accept="image/*">
-                <div id="customLogoPreview" class="custom-logo-preview hidden">
-                    <img id="customLogoPreviewImg" src="" alt="Custom logo preview">
-                    <span>ภาพโลโก้ที่เลือก</span>
+                    <!-- 4 Smart Modes -->
+                    <div class="qr-mode-tabs" role="tablist">
+                        <button type="button" class="qr-mode-btn active" data-mode="url">
+                            <i class="bi bi-globe2"></i>
+                            <span data-i18n-th="ลิงก์ / ข้อความ" data-i18n-en="URL / Text">ลิงก์ / ข้อความ</span>
+                        </button>
+                        <button type="button" class="qr-mode-btn" data-mode="promptpay">
+                            <i class="bi bi-cash-coin"></i>
+                            <span data-i18n-th="พร้อมเพย์รับเงิน" data-i18n-en="PromptPay">พร้อมเพย์รับเงิน</span>
+                        </button>
+                        <button type="button" class="qr-mode-btn" data-mode="wifi">
+                            <i class="bi bi-wifi"></i>
+                            <span data-i18n-th="เชื่อมต่อ Wi-Fi" data-i18n-en="Wi-Fi Access">เชื่อมต่อ Wi-Fi</span>
+                        </button>
+                        <button type="button" class="qr-mode-btn" data-mode="vcard">
+                            <i class="bi bi-person-vcard"></i>
+                            <span data-i18n-th="นามบัตรดิจิทัล" data-i18n-en="vCard Contact">นามบัตรดิจิทัล</span>
+                        </button>
+                    </div>
+
+                    <!-- Mode 1: URL / Text -->
+                    <div class="mode-pane active" id="pane-url">
+                        <div class="field-group">
+                            <label class="field-label" for="urlInput">
+                                <span data-i18n-th="ลิงก์เว็บไซต์ (URL) หรือข้อความ" data-i18n-en="Website URL or Text">ลิงก์เว็บไซต์ (URL) หรือข้อความ</span>
+                                <small id="charCountLabel">24 ตัวอักษร</small>
+                            </label>
+                            <div class="input-icon-wrap">
+                                <i class="bi bi-link-45deg leading-icon"></i>
+                                <input type="text" id="urlInput" class="qr-input" value="https://kittencode.co.th" placeholder="https://example.com หรือข้อความที่ต้องการ" autocomplete="off">
+                                <button type="button" class="trailing-btn" id="clearUrlBtn" title="ล้างข้อมูล">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="preset-bar">
+                            <span class="preset-label" data-i18n-th="ทางลัด:" data-i18n-en="Presets:">ทางลัด:</span>
+                            <button type="button" class="preset-chip" data-preset-url="https://kittencode.co.th" data-preset-caption="KITTEN CODE CO., LTD.">
+                                <i class="bi bi-globe"></i> เว็บไซต์ Kitten Code
+                            </button>
+                            <button type="button" class="preset-chip" data-preset-url="mailto:kittencode.co.ltd@gmail.com" data-preset-caption="kittencode.co.ltd@gmail.com">
+                                <i class="bi bi-envelope"></i> อีเมลบริษัท
+                            </button>
+                            <button type="button" class="preset-chip" data-preset-url="tel:0808850555" data-preset-caption="โทร 080-885-0555">
+                                <i class="bi bi-telephone"></i> เบอร์โทรบริษัท
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mode 2: Thai PromptPay EMVCo -->
+                    <div class="mode-pane" id="pane-promptpay">
+                        <div class="field-grid">
+                            <div class="field-group">
+                                <label class="field-label" for="ppTargetInput">
+                                    <span data-i18n-th="เบอร์โทรศัพท์ หรือ เลขผู้เสียภาษี (13 หลัก)" data-i18n-en="Phone (10d) or Tax/Citizen ID (13d)">เบอร์โทรศัพท์ หรือ เลขผู้เสียภาษี (13 หลัก)</span>
+                                </label>
+                                <input type="text" id="ppTargetInput" class="qr-input" value="0655569001411" placeholder="เช่น 0808850555 หรือ 0655569001411" maxlength="17">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label" for="ppAmountInput">
+                                    <span data-i18n-th="จำนวนเงิน (บาท)" data-i18n-en="Amount (THB)">จำนวนเงิน (บาท)</span>
+                                    <small data-i18n-th="เว้นว่างได้" data-i18n-en="Optional">เว้นว่างได้</small>
+                                </label>
+                                <input type="number" id="ppAmountInput" class="qr-input" placeholder="เช่น 1500.00" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="preset-bar">
+                            <span class="preset-label" data-i18n-th="บัญชีบริษัท:" data-i18n-en="Company ID:">บัญชีบริษัท:</span>
+                            <button type="button" class="preset-chip" id="fillCompanyTaxBtn">
+                                <i class="bi bi-building-check"></i> เลขผู้เสียภาษี Kitten Code (0655569001411)
+                            </button>
+                            <button type="button" class="preset-chip" id="fillCompanyPhoneBtn">
+                                <i class="bi bi-phone"></i> เบอร์บริษัท (080-885-0555)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mode 3: Wi-Fi QR -->
+                    <div class="mode-pane" id="pane-wifi">
+                        <div class="field-grid">
+                            <div class="field-group">
+                                <label class="field-label" for="wifiSsidInput" data-i18n-th="ชื่อเครือข่าย Wi-Fi (SSID)" data-i18n-en="Wi-Fi Network Name (SSID)">ชื่อเครือข่าย Wi-Fi (SSID)</label>
+                                <input type="text" id="wifiSsidInput" class="qr-input" placeholder="เช่น KittenCode_5G">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label" for="wifiPassInput" data-i18n-th="รหัสผ่าน Wi-Fi" data-i18n-en="Password">รหัสผ่าน Wi-Fi</label>
+                                <input type="text" id="wifiPassInput" class="qr-input" placeholder="รหัสผ่านเชื่อมต่อ">
+                            </div>
+                            <div class="field-group full">
+                                <label class="field-label" for="wifiAuthSelect" data-i18n-th="ประเภทการเข้ารหัส" data-i18n-en="Security Type">ประเภทการเข้ารหัส</label>
+                                <select id="wifiAuthSelect" class="qr-select">
+                                    <option value="WPA" selected>WPA / WPA2 / WPA3 (มาตรฐานทั่วไป)</option>
+                                    <option value="WEP">WEP</option>
+                                    <option value="nopass">ไม่มีรหัสผ่าน (Open Wi-Fi)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mode 4: vCard Digital Business Card -->
+                    <div class="mode-pane" id="pane-vcard">
+                        <div class="field-grid">
+                            <div class="field-group">
+                                <label class="field-label" for="vcNameInput" data-i18n-th="ชื่อ-นามสกุล" data-i18n-en="Full Name">ชื่อ-นามสกุล</label>
+                                <input type="text" id="vcNameInput" class="qr-input" placeholder="เช่น ณัฐชนน จารุธีรกัมพร">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label" for="vcRoleInput" data-i18n-th="ตำแหน่ง" data-i18n-en="Position">ตำแหน่ง</label>
+                                <input type="text" id="vcRoleInput" class="qr-input" placeholder="เช่น Managing Director">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label" for="vcPhoneInput" data-i18n-th="เบอร์โทรศัพท์" data-i18n-en="Phone">เบอร์โทรศัพท์</label>
+                                <input type="text" id="vcPhoneInput" class="qr-input" placeholder="080-885-0555">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label" for="vcEmailInput" data-i18n-th="อีเมล" data-i18n-en="Email">อีเมล</label>
+                                <input type="text" id="vcEmailInput" class="qr-input" placeholder="kittencode.co.ltd@gmail.com">
+                            </div>
+                            <div class="field-group full">
+                                <label class="field-label" for="vcOrgInput" data-i18n-th="บริษัท / องค์กร" data-i18n-en="Organization">บริษัท / องค์กร</label>
+                                <input type="text" id="vcOrgInput" class="qr-input" value="บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Visual Style, Logo & Resolution -->
+                <div class="studio-card">
+                    <div class="card-sec-title">
+                        <span class="sec-left">
+                            <i class="bi bi-palette2"></i>
+                            <span data-i18n-th="2. ปรับแต่งโลโก้ รูปแบบจุด และสี" data-i18n-en="2. Customize Logo, Pattern & Colors">2. ปรับแต่งโลโก้ รูปแบบจุด และสี</span>
+                        </span>
+                    </div>
+
+                    <!-- Center Logo Selection Cards -->
+                    <div class="cust-section">
+                        <div class="field-label" style="margin-bottom: 8px;">
+                            <span data-i18n-th="โลโก้ตรงกลาง QR Code" data-i18n-en="Center Logo">โลโก้ตรงกลาง QR Code</span>
+                        </div>
+                        <div class="logo-cards" id="logoCardsGroup">
+                            <label class="logo-card active">
+                                <input type="radio" name="logoOption" value="default" checked>
+                                <span class="logo-card-thumb">
+                                    <img src="../assets/img/LOGO-KittenCode.png" alt="Kitten Code">
+                                </span>
+                                <span data-i18n-th="Kitten Code" data-i18n-en="Kitten Code">Kitten Code</span>
+                            </label>
+                            <label class="logo-card">
+                                <input type="radio" name="logoOption" value="promptpay">
+                                <span class="logo-card-thumb" style="background:#003d6b; color:#fff; font-weight:800; font-size:0.7rem;">
+                                    ฿PP
+                                </span>
+                                <span data-i18n-th="ป้ายพร้อมเพย์" data-i18n-en="PromptPay">ป้ายพร้อมเพย์</span>
+                            </label>
+                            <label class="logo-card">
+                                <input type="radio" name="logoOption" value="custom">
+                                <span class="logo-card-thumb">
+                                    <i class="bi bi-upload"></i>
+                                </span>
+                                <span data-i18n-th="อัปโหลดเอง" data-i18n-en="Custom Image">อัปโหลดเอง</span>
+                            </label>
+                            <label class="logo-card">
+                                <input type="radio" name="logoOption" value="none">
+                                <span class="logo-card-thumb" style="color:var(--kc-muted);">
+                                    <i class="bi bi-slash-circle"></i>
+                                </span>
+                                <span data-i18n-th="ไม่ใส่โลโก้" data-i18n-en="No Logo">ไม่ใส่โลโก้</span>
+                            </label>
+                        </div>
+
+                        <div id="customLogoWrapper" class="custom-logo-wrapper hidden">
+                            <input type="file" id="customLogoInput" accept="image/*">
+                            <div id="customLogoPreview" class="custom-logo-preview hidden">
+                                <img id="customLogoPreviewImg" src="" alt="Custom logo preview">
+                                <span data-i18n-th="โลโก้ที่อัปโหลด" data-i18n-en="Uploaded logo">โลโก้ที่อัปโหลด</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dot Pattern Style -->
+                    <div class="cust-section">
+                        <div class="field-label" style="margin-bottom: 8px;">
+                            <span data-i18n-th="สไตล์ลวดลายจุด (Pattern Style)" data-i18n-en="Module Pattern Style">สไตล์ลวดลายจุด (Pattern Style)</span>
+                        </div>
+                        <div class="seg-row" id="dotStyleGroup">
+                            <button type="button" class="seg-pill active" data-dot-style="square">
+                                <i class="bi bi-grid-3x3-gap-fill"></i>
+                                <span data-i18n-th="เหลี่ยมมาตรฐาน" data-i18n-en="Sharp Square">เหลี่ยมมาตรฐาน</span>
+                            </button>
+                            <button type="button" class="seg-pill" data-dot-style="rounded">
+                                <i class="bi bi-app-indicator"></i>
+                                <span data-i18n-th="มุมมนทันสมัย" data-i18n-en="Rounded">มุมมนทันสมัย</span>
+                            </button>
+                            <button type="button" class="seg-pill" data-dot-style="dots">
+                                <i class="bi bi-three-dots"></i>
+                                <span data-i18n-th="จุดกลม" data-i18n-en="Dots">จุดกลม</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Colors -->
+                    <div class="cust-section">
+                        <div class="field-label" style="margin-bottom: 8px;">
+                            <span data-i18n-th="โทนสี QR Code" data-i18n-en="Color Theme">โทนสี QR Code</span>
+                        </div>
+                        <div class="color-palette-row">
+                            <div class="color-swatches" id="colorSwatchGroup">
+                                <button type="button" class="color-swatch active" data-fg="#0f172a" style="background:#0f172a;" title="Classic Slate"></button>
+                                <button type="button" class="color-swatch" data-fg="#0a72e8" style="background:#0a72e8;" title="Kitten Code Blue"></button>
+                                <button type="button" class="color-swatch" data-fg="#003d6b" style="background:#003d6b;" title="PromptPay Navy"></button>
+                                <button type="button" class="color-swatch" data-fg="#059669" style="background:#059669;" title="Emerald"></button>
+                                <button type="button" class="color-swatch" data-fg="#4f46e5" style="background:#4f46e5;" title="Indigo"></button>
+                                <button type="button" class="color-swatch" data-fg="#be123c" style="background:#be123c;" title="Crimson"></button>
+                            </div>
+                            <div class="custom-color-pickers">
+                                <label class="color-picker-chip">
+                                    <input type="color" id="fgColorPicker" value="#0f172a">
+                                    <span data-i18n-th="สีจุด" data-i18n-en="Dots">สีจุด</span>
+                                </label>
+                                <label class="color-picker-chip">
+                                    <input type="color" id="bgColorPicker" value="#ffffff">
+                                    <span data-i18n-th="พื้นหลัง" data-i18n-en="Background">พื้นหลัง</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Caption & Resolution -->
+                    <div class="cust-section">
+                        <div class="field-grid">
+                            <div class="field-group">
+                                <label class="field-label" for="captionInput">
+                                    <span data-i18n-th="ป้ายข้อความใต้ QR (เว้นว่างได้)" data-i18n-en="Bottom Caption (Optional)">ป้ายข้อความใต้ QR (เว้นว่างได้)</span>
+                                </label>
+                                <input type="text" id="captionInput" class="qr-input" placeholder="เช่น บริษัท คิทเช่น โค้ด จำกัด" maxlength="60">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label" for="sizeSelect">
+                                    <span data-i18n-th="ความละเอียดไฟล์ภาพ" data-i18n-en="Export Resolution">ความละเอียดไฟล์ภาพ</span>
+                                </label>
+                                <select id="sizeSelect" class="qr-select">
+                                    <option value="1024">1024 × 1024 px (HD)</option>
+                                    <option value="2048" selected>2048 × 2048 px (2K แนะนำ)</option>
+                                    <option value="4096">4096 × 4096 px (4K งานพิมพ์)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Live Preview & Export -->
+            <div class="preview-sticky">
+                <div class="studio-card">
+                    <div class="card-sec-title">
+                        <span class="sec-left">
+                            <i class="bi bi-eye"></i>
+                            <span data-i18n-th="ตัวอย่าง QR Code และการส่งออก" data-i18n-en="Live Preview & Export">ตัวอย่าง QR Code และการส่งออก</span>
+                        </span>
+                        <button type="button" id="generateBtn" class="preset-chip" title="สร้างใหม่">
+                            <i class="bi bi-arrow-repeat"></i>
+                            <span data-i18n-th="รีเฟรช" data-i18n-en="Refresh">รีเฟรช</span>
+                        </button>
+                    </div>
+
+                    <div id="qrWrapper" class="qr-stage">
+                        <div id="placeholderContent" class="placeholder-content" style="display:none;">
+                            <i class="bi bi-qr-code"></i>
+                            <span data-i18n-th="กรอกข้อมูลฝั่งซ้ายเพื่อสร้าง QR Code" data-i18n-en="Enter details on the left to generate QR">กรอกข้อมูลฝั่งซ้ายเพื่อสร้าง QR Code</span>
+                        </div>
+                        <div id="qrcode" class="active">
+                            <canvas id="qrCanvas"></canvas>
+                        </div>
+                    </div>
+
+                    <div id="qrMeta" class="qr-meta-badges">
+                        <span class="meta-pill" id="metaSizePill">2048 × 2048 px</span>
+                        <span class="meta-pill">Error Correction: H (30%)</span>
+                        <span class="meta-pill" id="metaModePill">URL / Text</span>
+                    </div>
+
+                    <div class="action-stack">
+                        <button type="button" id="downloadBtn" class="btn-studio btn-studio-primary">
+                            <i class="bi bi-download"></i>
+                            <span id="downloadBtnText">ดาวน์โหลด PNG (2048 × 2048 px)</span>
+                        </button>
+                        <div class="action-row-2">
+                            <button type="button" id="copyImgBtn" class="btn-studio">
+                                <i class="bi bi-clipboard-check"></i>
+                                <span data-i18n-th="คัดลอกรูปภาพ" data-i18n-en="Copy Image">คัดลอกรูปภาพ</span>
+                            </button>
+                            <button type="button" id="downloadSvgBtn" class="btn-studio">
+                                <i class="bi bi-filetype-svg"></i>
+                                <span data-i18n-th="ดาวน์โหลด SVG" data-i18n-en="Download SVG">ดาวน์โหลด SVG</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent History Card -->
+                <div class="studio-card history-card">
+                    <div class="card-sec-title">
+                        <span class="sec-left">
+                            <i class="bi bi-clock-history"></i>
+                            <span data-i18n-th="รายการที่บันทึกไว้ล่าสุด" data-i18n-en="Saved Recent QR Codes">รายการที่บันทึกไว้ล่าสุด</span>
+                        </span>
+                        <button type="button" class="preset-chip" id="saveHistoryBtn">
+                            <i class="bi bi-bookmark-plus"></i>
+                            <span data-i18n-th="บันทึกเก็บไว้" data-i18n-en="Save Current">บันทึกเก็บไว้</span>
+                        </button>
+                    </div>
+                    <div id="historyList" class="history-list"></div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="quality-row">
-            <label for="sizeSelect"><i class="bi bi-aspect-ratio"></i> ความละเอียดภาพ:</label>
-            <select id="sizeSelect">
-                <option value="1024">1024 × 1024 px (HD)</option>
-                <option value="2048" selected>2048 × 2048 px (2K คมชัดสูง — แนะนำ)</option>
-                <option value="4096">4096 × 4096 px (4K สำหรับงานพิมพ์)</option>
-            </select>
-        </div>
-
-        <button id="generateBtn" class="btn btn-primary">
-            <i class="bi bi-qr-code-scan"></i>
-            Generate QR Code
-        </button>
-
-        <div class="divider"></div>
-
-        <div id="qrWrapper" class="qr-wrapper">
-            <div id="placeholderContent" class="placeholder-content">
-                <i class="bi bi-grid-3x3"></i>
-                <span>QR Code จะแสดงตรงนี้</span>
-            </div>
-            <div id="qrcode">
-                <canvas id="qrCanvas"></canvas>
-            </div>
-            <div id="qrMeta" class="qr-meta"></div>
-        </div>
-
-        <button id="downloadBtn" class="btn btn-download">
-            <i class="bi bi-download"></i>
-            <span id="downloadBtnText">Download PNG (2048 × 2048 px)</span>
-        </button>
+    <div id="toastFeedback" class="toast-feedback">
+        <i class="bi bi-check-circle-fill" style="color:#4ade80;"></i>
+        <span id="toastFeedbackText">ดำเนินการสำเร็จ</span>
     </div>
 
     <script>
+        // Expose pure helper functions on window.KCQR for unit testing & reuse
+        (function () {
+            function crc16CCITT(str) {
+                let crc = 0xFFFF;
+                for (let i = 0; i < str.length; i++) {
+                    crc ^= (str.charCodeAt(i) & 0xFF) << 8;
+                    for (let b = 0; b < 8; b++) {
+                        if ((crc & 0x8000) !== 0) {
+                            crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+                        } else {
+                            crc = (crc << 1) & 0xFFFF;
+                        }
+                    }
+                }
+                return crc.toString(16).toUpperCase().padStart(4, '0');
+            }
+
+            function fTLV(id, val) {
+                const s = String(val);
+                return id + String(s.length).padStart(2, '0') + s;
+            }
+
+            function buildPromptPayPayload(rawTarget, rawAmount) {
+                const digits = String(rawTarget || '').replace(/\D/g, '');
+                if (!digits) return '';
+                let subTag = '';
+                if (digits.length === 10 && digits.startsWith('0')) {
+                    // Phone number -> 0066 + 9 digits (13 digits total)
+                    subTag = fTLV('01', '0066' + digits.slice(1));
+                } else if (digits.length === 13) {
+                    // National ID / Tax ID
+                    subTag = fTLV('02', digits);
+                } else if (digits.length === 15) {
+                    // e-Wallet ID
+                    subTag = fTLV('03', digits);
+                } else {
+                    subTag = fTLV('02', digits);
+                }
+
+                const merchantInfo = fTLV('00', 'A000000677010111') + subTag;
+                const amountNum = parseFloat(rawAmount);
+                const hasAmount = !isNaN(amountNum) && amountNum > 0;
+
+                let payload =
+                    fTLV('00', '01') +
+                    fTLV('01', hasAmount ? '12' : '11') +
+                    fTLV('29', merchantInfo) +
+                    fTLV('58', 'TH') +
+                    fTLV('53', '764');
+
+                if (hasAmount) {
+                    payload += fTLV('54', amountNum.toFixed(2));
+                }
+
+                payload += '6304';
+                return payload + crc16CCITT(payload);
+            }
+
+            function escapeWifi(s) {
+                return String(s || '').replace(/([\\;,:])/g, '\\$1');
+            }
+
+            function buildWifiPayload(ssid, password, authType) {
+                if (!ssid) return '';
+                const t = authType || 'WPA';
+                const p = t === 'nopass' ? '' : escapeWifi(password);
+                return `WIFI:T:${t};S:${escapeWifi(ssid)};P:${p};;`;
+            }
+
+            function buildVCardPayload(v) {
+                if (!v || (!v.name && !v.phone && !v.email)) return '';
+                const lines = [
+                    'BEGIN:VCARD',
+                    'VERSION:3.0',
+                    `FN:${v.name || ''}`,
+                    v.org ? `ORG:${v.org}` : '',
+                    v.role ? `TITLE:${v.role}` : '',
+                    v.phone ? `TEL;TYPE=CELL:${v.phone}` : '',
+                    v.email ? `EMAIL:${v.email}` : '',
+                    'END:VCARD'
+                ].filter(Boolean);
+                return lines.join('\n');
+            }
+
+            window.KCQR = {
+                crc16CCITT,
+                buildPromptPayPayload,
+                buildWifiPayload,
+                buildVCardPayload
+            };
+        })();
+
         document.addEventListener('DOMContentLoaded', () => {
             const DEFAULT_LOGO_SRC = '../assets/img/LOGO-KittenCode.png';
+            const HISTORY_KEY = 'kittencode_qr_history_v1';
 
             const urlInput = document.getElementById('urlInput');
+            const clearUrlBtn = document.getElementById('clearUrlBtn');
+            const charCountLabel = document.getElementById('charCountLabel');
+            const ppTargetInput = document.getElementById('ppTargetInput');
+            const ppAmountInput = document.getElementById('ppAmountInput');
+            const wifiSsidInput = document.getElementById('wifiSsidInput');
+            const wifiPassInput = document.getElementById('wifiPassInput');
+            const wifiAuthSelect = document.getElementById('wifiAuthSelect');
+            const vcNameInput = document.getElementById('vcNameInput');
+            const vcRoleInput = document.getElementById('vcRoleInput');
+            const vcPhoneInput = document.getElementById('vcPhoneInput');
+            const vcEmailInput = document.getElementById('vcEmailInput');
+            const vcOrgInput = document.getElementById('vcOrgInput');
+
             const generateBtn = document.getElementById('generateBtn');
             const sizeSelect = document.getElementById('sizeSelect');
+            const captionInput = document.getElementById('captionInput');
+            const fgColorPicker = document.getElementById('fgColorPicker');
+            const bgColorPicker = document.getElementById('bgColorPicker');
+
             const qrcodeBox = document.getElementById('qrcode');
             const qrCanvas = document.getElementById('qrCanvas');
-            const qrMeta = document.getElementById('qrMeta');
+            const qrWrapper = document.getElementById('qrWrapper');
+            const placeholderContent = document.getElementById('placeholderContent');
+            const metaSizePill = document.getElementById('metaSizePill');
+            const metaModePill = document.getElementById('metaModePill');
+
             const logoOptionInputs = document.querySelectorAll('input[name="logoOption"]');
             const customLogoWrapper = document.getElementById('customLogoWrapper');
             const customLogoInput = document.getElementById('customLogoInput');
             const customLogoPreview = document.getElementById('customLogoPreview');
             const customLogoPreviewImg = document.getElementById('customLogoPreviewImg');
-            const qrWrapper = document.getElementById('qrWrapper');
-            const placeholderContent = document.getElementById('placeholderContent');
+
             const downloadBtn = document.getElementById('downloadBtn');
             const downloadBtnText = document.getElementById('downloadBtnText');
+            const copyImgBtn = document.getElementById('copyImgBtn');
+            const downloadSvgBtn = document.getElementById('downloadSvgBtn');
+            const saveHistoryBtn = document.getElementById('saveHistoryBtn');
+            const historyList = document.getElementById('historyList');
 
+            let currentMode = 'url';
+            let dotStyle = 'square';
             let customLogoUrl = '';
             let hasGenerated = false;
+            let lastMatrix = null;
+            let lastPayload = '';
 
-            generateBtn.addEventListener('click', generateQR);
-
-            urlInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') generateQR();
-            });
-
-            logoOptionInputs.forEach(input => input.addEventListener('change', onLogoOptionChange));
-            customLogoInput.addEventListener('change', onCustomLogoSelected);
-            sizeSelect.addEventListener('change', () => {
-                if (hasGenerated && urlInput.value.trim()) generateQR();
-            });
-
-            function onLogoOptionChange() {
-                const selected = document.querySelector('input[name="logoOption"]:checked').value;
-                customLogoWrapper.classList.toggle('hidden', selected !== 'custom');
-
-                if (selected === 'custom' && customLogoUrl) {
-                    customLogoPreview.classList.remove('hidden');
-                } else {
-                    customLogoPreview.classList.add('hidden');
-                }
-
-                if (hasGenerated && urlInput.value.trim()) {
-                    generateQR();
-                }
+            function showToast(msg) {
+                const t = document.getElementById('toastFeedback');
+                const txt = document.getElementById('toastFeedbackText');
+                if (!t || !txt) return;
+                txt.textContent = msg;
+                t.classList.add('show');
+                clearTimeout(showToast._timer);
+                showToast._timer = setTimeout(() => t.classList.remove('show'), 2200);
             }
 
-            function onCustomLogoSelected() {
+            // Mode switching
+            document.querySelectorAll('.qr-mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentMode = btn.getAttribute('data-mode') || 'url';
+                    document.querySelectorAll('.qr-mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+                    document.querySelectorAll('.mode-pane').forEach(p => p.classList.toggle('active', p.id === `pane-${currentMode}`));
+
+                    if (currentMode === 'promptpay') {
+                        selectLogoRadio('promptpay');
+                        if (!captionInput.value.trim()) {
+                            captionInput.value = 'สแกนพร้อมเพย์ — บริษัท คิทเช่น โค้ด จำกัด';
+                        }
+                    } else if (currentMode === 'url' && document.querySelector('input[name="logoOption"]:checked').value === 'promptpay') {
+                        selectLogoRadio('default');
+                    }
+                    generateQR();
+                });
+            });
+
+            function selectLogoRadio(val) {
+                logoOptionInputs.forEach(r => {
+                    r.checked = (r.value === val);
+                    const card = r.closest('.logo-card');
+                    if (card) card.classList.toggle('active', r.checked);
+                });
+                customLogoWrapper.classList.toggle('hidden', val !== 'custom');
+            }
+
+            // Preset chips
+            document.querySelectorAll('[data-preset-url]').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    urlInput.value = chip.getAttribute('data-preset-url') || '';
+                    const cap = chip.getAttribute('data-preset-caption');
+                    if (cap !== null) captionInput.value = cap;
+                    generateQR();
+                });
+            });
+
+            document.getElementById('fillCompanyTaxBtn').addEventListener('click', () => {
+                ppTargetInput.value = '0655569001411';
+                captionInput.value = 'พร้อมเพย์ บริษัท คิทเช่น โค้ด จำกัด';
+                generateQR();
+            });
+
+            document.getElementById('fillCompanyPhoneBtn').addEventListener('click', () => {
+                ppTargetInput.value = '0808850555';
+                captionInput.value = 'พร้อมเพย์ 080-885-0555';
+                generateQR();
+            });
+
+            clearUrlBtn.addEventListener('click', () => {
+                urlInput.value = '';
+                urlInput.focus();
+                generateQR();
+            });
+
+            // Dot style pills
+            document.querySelectorAll('[data-dot-style]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    dotStyle = btn.getAttribute('data-dot-style') || 'square';
+                    document.querySelectorAll('[data-dot-style]').forEach(b => b.classList.toggle('active', b === btn));
+                    generateQR();
+                });
+            });
+
+            // Color swatches
+            document.querySelectorAll('.color-swatch').forEach(sw => {
+                sw.addEventListener('click', () => {
+                    const fg = sw.getAttribute('data-fg') || '#0f172a';
+                    fgColorPicker.value = fg;
+                    document.querySelectorAll('.color-swatch').forEach(s => s.classList.toggle('active', s === sw));
+                    generateQR();
+                });
+            });
+
+            fgColorPicker.addEventListener('input', () => {
+                document.querySelectorAll('.color-swatch').forEach(s => {
+                    s.classList.toggle('active', s.getAttribute('data-fg').toLowerCase() === fgColorPicker.value.toLowerCase());
+                });
+                generateQR();
+            });
+
+            bgColorPicker.addEventListener('input', generateQR);
+
+            // Logo radio cards
+            logoOptionInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    const selected = document.querySelector('input[name="logoOption"]:checked').value;
+                    document.querySelectorAll('.logo-card').forEach(card => {
+                        const r = card.querySelector('input[type="radio"]');
+                        card.classList.toggle('active', r && r.checked);
+                    });
+                    customLogoWrapper.classList.toggle('hidden', selected !== 'custom');
+                    customLogoPreview.classList.toggle('hidden', !(selected === 'custom' && customLogoUrl));
+                    generateQR();
+                });
+            });
+
+            customLogoInput.addEventListener('change', () => {
                 const file = customLogoInput.files[0];
                 if (!file) {
                     customLogoUrl = '';
                     customLogoPreview.classList.add('hidden');
-                    if (hasGenerated && urlInput.value.trim()) generateQR();
+                    generateQR();
                     return;
                 }
                 if (customLogoUrl) URL.revokeObjectURL(customLogoUrl);
                 customLogoUrl = URL.createObjectURL(file);
                 customLogoPreviewImg.src = customLogoUrl;
                 customLogoPreview.classList.remove('hidden');
+                generateQR();
+            });
 
-                if (hasGenerated && urlInput.value.trim()) {
-                    generateQR();
+            // Live input listeners
+            [
+                urlInput, ppTargetInput, ppAmountInput,
+                wifiSsidInput, wifiPassInput, wifiAuthSelect,
+                vcNameInput, vcRoleInput, vcPhoneInput, vcEmailInput, vcOrgInput,
+                captionInput, sizeSelect
+            ].forEach(el => {
+                if (!el) return;
+                el.addEventListener('input', generateQR);
+                el.addEventListener('change', generateQR);
+            });
+
+            generateBtn.addEventListener('click', () => {
+                generateQR();
+                showToast('อัปเดต QR Code เรียบร้อยแล้ว');
+            });
+
+            function getActivePayload() {
+                if (currentMode === 'url') {
+                    const v = urlInput.value.trim();
+                    charCountLabel.textContent = `${v.length} ตัวอักษร`;
+                    return v;
                 }
+                if (currentMode === 'promptpay') {
+                    return window.KCQR.buildPromptPayPayload(ppTargetInput.value, ppAmountInput.value);
+                }
+                if (currentMode === 'wifi') {
+                    return window.KCQR.buildWifiPayload(wifiSsidInput.value.trim(), wifiPassInput.value, wifiAuthSelect.value);
+                }
+                if (currentMode === 'vcard') {
+                    return window.KCQR.buildVCardPayload({
+                        name: vcNameInput.value.trim(),
+                        role: vcRoleInput.value.trim(),
+                        phone: vcPhoneInput.value.trim(),
+                        email: vcEmailInput.value.trim(),
+                        org: vcOrgInput.value.trim()
+                    });
+                }
+                return '';
             }
 
             function loadImage(src) {
@@ -568,165 +1476,376 @@
                 ctx.closePath();
             }
 
-            /**
-             * Build the QR matrix via qrcode.js and render each module directly
-             * at native target resolution with integer pixel coordinates and a
-             * 4-module quiet zone so there is zero sub-pixel anti-aliasing blur.
-             */
+            function isFinderModule(r, c, count) {
+                const inTL = r < 7 && c < 7;
+                const inTR = r < 7 && c >= count - 7;
+                const inBL = r >= count - 7 && c < 7;
+                return inTL || inTR || inBL;
+            }
+
+            function drawFinderPattern(ctx, startRow, startCol, offset, modulePx, fgColor, bgColor, style) {
+                const x = offset + startCol * modulePx;
+                const y = offset + startRow * modulePx;
+                const outerSize = 7 * modulePx;
+                const midSize = 5 * modulePx;
+                const innerSize = 3 * modulePx;
+                const rOuter = style === 'square' ? 0 : Math.round(modulePx * 1.6);
+                const rMid = style === 'square' ? 0 : Math.round(modulePx * 1.1);
+                const rInner = style === 'dots' ? Math.round(innerSize / 2) : (style === 'rounded' ? Math.round(modulePx * 0.8) : 0);
+
+                ctx.fillStyle = fgColor;
+                drawRoundedRect(ctx, x, y, outerSize, outerSize, rOuter);
+                ctx.fill();
+
+                ctx.fillStyle = bgColor;
+                drawRoundedRect(ctx, x + modulePx, y + modulePx, midSize, midSize, rMid);
+                ctx.fill();
+
+                ctx.fillStyle = fgColor;
+                drawRoundedRect(ctx, x + 2 * modulePx, y + 2 * modulePx, innerSize, innerSize, rInner);
+                ctx.fill();
+            }
+
+            function drawPromptPayBadge(ctx, boxX, boxY, boxSize) {
+                const pad = Math.round(boxSize * 0.12);
+                const innerX = boxX + pad;
+                const innerY = boxY + pad;
+                const innerSize = boxSize - pad * 2;
+                ctx.save();
+                ctx.fillStyle = '#003d6b';
+                drawRoundedRect(ctx, innerX, innerY, innerSize, innerSize, Math.round(innerSize * 0.22));
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = `700 ${Math.round(innerSize * 0.26)}px "IBM Plex Sans Thai", sans-serif`;
+                ctx.fillText('Prompt', innerX + innerSize / 2, innerY + innerSize * 0.39);
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillText('Pay', innerX + innerSize / 2, innerY + innerSize * 0.68);
+                ctx.restore();
+            }
+
             function extractQRMatrix(text) {
-                const scratch = document.createElement('div');
-                const instance = new QRCode(scratch, {
-                    text,
-                    width: 256,
-                    height: 256,
-                    colorDark: '#0f172a',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-                const model = instance && instance._oQRCode;
-                if (!model || typeof model.getModuleCount !== 'function') {
+                try {
+                    const scratch = document.createElement('div');
+                    // qrcodejs has a UTF-8 byte bug for multi-byte Thai strings unless unescape(encodeURIComponent(text)) is passed
+                    const encodedText = unescape(encodeURIComponent(text));
+                    const instance = new QRCode(scratch, {
+                        text: encodedText,
+                        width: 256,
+                        height: 256,
+                        colorDark: '#0f172a',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    const model = instance && instance._oQRCode;
+                    if (!model || typeof model.getModuleCount !== 'function') {
+                        return null;
+                    }
+                    const count = model.getModuleCount();
+                    const matrix = [];
+                    for (let r = 0; r < count; r++) {
+                        const row = [];
+                        for (let c = 0; c < count; c++) {
+                            row.push(Boolean(model.isDark(r, c)));
+                        }
+                        matrix.push(row);
+                    }
+                    return matrix;
+                } catch (e) {
+                    console.error('QR generation error:', e);
                     return null;
                 }
-                const count = model.getModuleCount();
-                const matrix = [];
-                for (let r = 0; r < count; r++) {
-                    const row = [];
-                    for (let c = 0; c < count; c++) {
-                        row.push(Boolean(model.isDark(r, c)));
-                    }
-                    matrix.push(row);
-                }
-                return matrix;
             }
 
             async function generateQR() {
-                const url = urlInput.value.trim();
+                const payload = getActivePayload();
 
-                if (!url) {
-                    urlInput.style.borderColor = '#ef4444';
-                    urlInput.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.2)';
-                    setTimeout(() => {
-                        urlInput.style.borderColor = '';
-                        urlInput.style.boxShadow = '';
-                    }, 900);
-                    urlInput.focus();
+                if (!payload) {
+                    hasGenerated = false;
+                    placeholderContent.style.display = 'flex';
+                    qrcodeBox.classList.remove('active');
+                    downloadBtn.disabled = true;
+                    copyImgBtn.disabled = true;
+                    downloadSvgBtn.disabled = true;
                     return;
                 }
+
+                const matrix = extractQRMatrix(payload);
+                if (!matrix) {
+                    return;
+                }
+
+                lastMatrix = matrix;
+                lastPayload = payload;
 
                 const targetSize = Number(sizeSelect.value) || 2048;
+                const caption = captionInput.value.trim();
+                const fgColor = fgColorPicker.value || '#0f172a';
+                const bgColor = bgColorPicker.value || '#ffffff';
                 const selectedLogo = document.querySelector('input[name="logoOption"]:checked').value;
-
-                let logoSrc = '';
-                if (selectedLogo === 'default') {
-                    logoSrc = DEFAULT_LOGO_SRC;
-                } else if (selectedLogo === 'custom' && customLogoUrl) {
-                    logoSrc = customLogoUrl;
-                }
-
-                const matrix = extractQRMatrix(url);
-                if (!matrix) {
-                    alert('ไม่สามารถสร้าง QR Code จากข้อมูลนี้ได้');
-                    return;
-                }
 
                 const moduleCount = matrix.length;
                 const quietZoneModules = 4;
                 const totalModules = moduleCount + quietZoneModules * 2;
 
-                // Use integer module size when possible, mapped cleanly into targetSize
+                const captionExtraHeight = caption ? Math.round(targetSize * 0.1) : 0;
                 qrCanvas.width = targetSize;
-                qrCanvas.height = targetSize;
+                qrCanvas.height = targetSize + captionExtraHeight;
                 const ctx = qrCanvas.getContext('2d');
 
-                // 1. Crisp white background (includes quiet zone)
                 ctx.imageSmoothingEnabled = false;
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, targetSize, targetSize);
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, qrCanvas.width, qrCanvas.height);
 
-                // Calculate integer module pixel size and centered offset so every
-                // module has identical, razor-sharp pixel dimensions.
                 const modulePx = Math.max(1, Math.floor(targetSize / totalModules));
                 const qrDrawSize = modulePx * moduleCount;
                 const offset = Math.floor((targetSize - qrDrawSize) / 2);
 
-                // 2. Draw QR modules at exact integer coordinates
-                ctx.fillStyle = '#0f172a';
+                // Draw 3 Finder Patterns cleanly
+                drawFinderPattern(ctx, 0, 0, offset, modulePx, fgColor, bgColor, dotStyle);
+                drawFinderPattern(ctx, 0, moduleCount - 7, offset, modulePx, fgColor, bgColor, dotStyle);
+                drawFinderPattern(ctx, moduleCount - 7, 0, offset, modulePx, fgColor, bgColor, dotStyle);
+
+                // Draw Data Modules
+                ctx.fillStyle = fgColor;
                 for (let r = 0; r < moduleCount; r++) {
                     const y = offset + r * modulePx;
                     for (let c = 0; c < moduleCount; c++) {
-                        if (matrix[r][c]) {
-                            const x = offset + c * modulePx;
+                        if (!matrix[r][c] || isFinderModule(r, c, moduleCount)) continue;
+                        const x = offset + c * modulePx;
+                        if (dotStyle === 'square') {
                             ctx.fillRect(x, y, modulePx, modulePx);
+                        } else if (dotStyle === 'rounded') {
+                            drawRoundedRect(ctx, x, y, modulePx, modulePx, Math.round(modulePx * 0.34));
+                            ctx.fill();
+                        } else {
+                            const radius = (modulePx * 0.46);
+                            ctx.beginPath();
+                            ctx.arc(x + modulePx / 2, y + modulePx / 2, radius, 0, Math.PI * 2);
+                            ctx.fill();
                         }
                     }
                 }
 
-                // 3. Draw high-resolution center logo (with smooth bicubic filtering)
-                if (logoSrc) {
-                    const logoImg = await loadImage(logoSrc);
-                    if (logoImg) {
-                        // ~22% of QR area is safe with Error Correction Level H (30% recovery)
-                        const boxSize = Math.round(qrDrawSize * 0.22);
-                        const boxX = Math.round((targetSize - boxSize) / 2);
-                        const boxY = Math.round((targetSize - boxSize) / 2);
-                        const pad = Math.round(boxSize * 0.14);
-                        const radius = Math.round(boxSize * 0.26);
+                // Draw Center Logo
+                if (selectedLogo !== 'none') {
+                    const boxSize = Math.round(qrDrawSize * 0.22);
+                    const boxX = Math.round((targetSize - boxSize) / 2);
+                    const boxY = Math.round((targetSize - boxSize) / 2);
+                    const pad = Math.round(boxSize * 0.14);
+                    const radius = Math.round(boxSize * 0.26);
 
-                        ctx.save();
-                        ctx.shadowColor = 'rgba(15, 23, 42, 0.18)';
-                        ctx.shadowBlur = Math.round(targetSize * 0.015);
-                        ctx.shadowOffsetY = Math.round(targetSize * 0.004);
-                        ctx.fillStyle = '#ffffff';
-                        drawRoundedRect(ctx, boxX, boxY, boxSize, boxSize, radius);
-                        ctx.fill();
-                        ctx.restore();
+                    ctx.save();
+                    ctx.shadowColor = 'rgba(15, 23, 42, 0.18)';
+                    ctx.shadowBlur = Math.round(targetSize * 0.015);
+                    ctx.shadowOffsetY = Math.round(targetSize * 0.004);
+                    ctx.fillStyle = '#ffffff';
+                    drawRoundedRect(ctx, boxX, boxY, boxSize, boxSize, radius);
+                    ctx.fill();
+                    ctx.restore();
 
-                        // Fit logo preserving aspect ratio inside the padded box
-                        const availW = boxSize - pad * 2;
-                        const availH = boxSize - pad * 2;
-                        const imgRatio = (logoImg.naturalWidth || logoImg.width) / (logoImg.naturalHeight || logoImg.height || 1);
-                        let drawW = availW;
-                        let drawH = availH;
-                        if (imgRatio > 1) {
-                            drawH = Math.round(availW / imgRatio);
-                        } else if (imgRatio < 1) {
-                            drawW = Math.round(availH * imgRatio);
+                    if (selectedLogo === 'promptpay') {
+                        drawPromptPayBadge(ctx, boxX, boxY, boxSize);
+                    } else {
+                        const logoSrc = selectedLogo === 'default' ? DEFAULT_LOGO_SRC : customLogoUrl;
+                        const logoImg = await loadImage(logoSrc);
+                        if (logoImg) {
+                            const availW = boxSize - pad * 2;
+                            const availH = boxSize - pad * 2;
+                            const imgRatio = (logoImg.naturalWidth || logoImg.width) / (logoImg.naturalHeight || logoImg.height || 1);
+                            let drawW = availW;
+                            let drawH = availH;
+                            if (imgRatio > 1) {
+                                drawH = Math.round(availW / imgRatio);
+                            } else if (imgRatio < 1) {
+                                drawW = Math.round(availH * imgRatio);
+                            }
+                            const drawX = Math.round(boxX + (boxSize - drawW) / 2);
+                            const drawY = Math.round(boxY + (boxSize - drawH) / 2);
+
+                            ctx.save();
+                            ctx.imageSmoothingEnabled = true;
+                            ctx.imageSmoothingQuality = 'high';
+                            ctx.drawImage(logoImg, drawX, drawY, drawW, drawH);
+                            ctx.restore();
                         }
-                        const drawX = Math.round(boxX + (boxSize - drawW) / 2);
-                        const drawY = Math.round(boxY + (boxSize - drawH) / 2);
-
-                        ctx.save();
-                        ctx.imageSmoothingEnabled = true;
-                        ctx.imageSmoothingQuality = 'high';
-                        ctx.drawImage(logoImg, drawX, drawY, drawW, drawH);
-                        ctx.restore();
                     }
+                }
+
+                // Draw Bottom Caption if present
+                if (caption) {
+                    ctx.save();
+                    ctx.fillStyle = fgColor;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.font = `700 ${Math.round(targetSize * 0.036)}px "IBM Plex Sans Thai", "Sarabun", sans-serif`;
+                    ctx.fillText(caption, targetSize / 2, targetSize + captionExtraHeight * 0.42);
+                    ctx.restore();
                 }
 
                 hasGenerated = true;
                 placeholderContent.style.display = 'none';
-                qrWrapper.classList.add('has-qr');
                 qrcodeBox.classList.add('active');
+                downloadBtn.disabled = false;
+                copyImgBtn.disabled = false;
+                downloadSvgBtn.disabled = false;
 
-                qrMeta.textContent = `ความละเอียดภาพ: ${targetSize} × ${targetSize} px (Error Correction: High)`;
-                qrMeta.classList.add('active');
-                downloadBtnText.textContent = `Download PNG (${targetSize} × ${targetSize} px)`;
-
-                downloadBtn.style.display = 'flex';
-                void downloadBtn.offsetWidth;
-                downloadBtn.classList.add('visible');
+                const modeLabels = {
+                    url: 'URL / Text',
+                    promptpay: 'PromptPay QR',
+                    wifi: 'Wi-Fi QR',
+                    vcard: 'vCard QR'
+                };
+                metaSizePill.textContent = `${targetSize} × ${targetSize} px`;
+                metaModePill.textContent = modeLabels[currentMode] || 'QR';
+                downloadBtnText.textContent = `ดาวน์โหลด PNG (${targetSize} × ${targetSize} px)`;
             }
 
+            // Download PNG
             downloadBtn.addEventListener('click', () => {
                 if (!hasGenerated) return;
-                const size = qrCanvas.width;
+                const size = sizeSelect.value;
                 const a = document.createElement('a');
                 a.href = qrCanvas.toDataURL('image/png');
-                a.download = `qrcode-${size}px.png`;
+                a.download = `kittencode-qr-${currentMode}-${size}px.png`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+                showToast('ดาวน์โหลดไฟล์ PNG เรียบร้อยแล้ว');
             });
+
+            // Copy Image to Clipboard
+            copyImgBtn.addEventListener('click', () => {
+                if (!hasGenerated) return;
+                qrCanvas.toBlob(async (blob) => {
+                    if (!blob) return;
+                    try {
+                        await navigator.clipboard.write([
+                            new ClipboardItem({ 'image/png': blob })
+                        ]);
+                        showToast('คัดลอกรูป QR ลงคลิปบอร์ดแล้ว (กดวาง Ctrl+V ได้เลย)');
+                    } catch (e) {
+                        showToast('เบราว์เซอร์ไม่อนุญาตคัดลอกภาพ กรุณากดดาวน์โหลด PNG');
+                    }
+                }, 'image/png');
+            });
+
+            // Download SVG Vector
+            downloadSvgBtn.addEventListener('click', () => {
+                if (!hasGenerated || !lastMatrix) return;
+                const count = lastMatrix.length;
+                const qz = 4;
+                const total = count + qz * 2;
+                const fg = fgColorPicker.value || '#0f172a';
+                const bg = bgColorPicker.value || '#ffffff';
+                let rects = '';
+                for (let r = 0; r < count; r++) {
+                    for (let c = 0; c < count; c++) {
+                        if (lastMatrix[r][c]) {
+                            const rx = dotStyle === 'dots' ? '0.45' : (dotStyle === 'rounded' ? '0.3' : '0');
+                            rects += `<rect x="${c + qz}" y="${r + qz}" width="1" height="1" rx="${rx}" fill="${fg}"/>`;
+                        }
+                    }
+                }
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}" width="2048" height="2048" shape-rendering="geometricPrecision"><rect width="100%" height="100%" fill="${bg}"/>${rects}</svg>`;
+                const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `kittencode-qr-${currentMode}.svg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                showToast('ดาวน์โหลดไฟล์ Vector SVG เรียบร้อยแล้ว');
+            });
+
+            // Recent History
+            function loadHistory() {
+                try {
+                    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function renderHistory() {
+                const list = loadHistory();
+                if (!list.length) {
+                    historyList.innerHTML = `<div style="font-size:0.8rem; color:var(--kc-muted); text-align:center; padding:12px;">ยังไม่มีรายการที่บันทึกไว้ กดปุ่ม "บันทึกเก็บไว้" เพื่อเก็บ QR ที่ใช้บ่อย</div>`;
+                    return;
+                }
+                const icons = {
+                    url: 'bi-globe2',
+                    promptpay: 'bi-cash-coin',
+                    wifi: 'bi-wifi',
+                    vcard: 'bi-person-vcard'
+                };
+                historyList.innerHTML = list.map((item, idx) => `
+                    <div class="history-item" data-idx="${idx}">
+                        <div class="history-item-left">
+                            <span class="history-mode-tag"><i class="bi ${icons[item.mode] || 'bi-qr-code'}"></i></span>
+                            <div class="history-text">
+                                <div class="history-title">${item.title}</div>
+                                <div class="history-sub">${item.sub}</div>
+                            </div>
+                        </div>
+                        <i class="bi bi-arrow-up-right-circle" style="color:var(--kc-muted);"></i>
+                    </div>
+                `).join('');
+
+                historyList.querySelectorAll('.history-item').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const item = list[Number(el.getAttribute('data-idx'))];
+                        if (!item) return;
+                        const modeBtn = document.querySelector(`.qr-mode-btn[data-mode="${item.mode}"]`);
+                        if (modeBtn) modeBtn.click();
+                        if (item.mode === 'url') urlInput.value = item.raw || '';
+                        if (item.mode === 'promptpay') {
+                            ppTargetInput.value = item.ppTarget || '';
+                            ppAmountInput.value = item.ppAmount || '';
+                        }
+                        if (item.caption !== undefined) captionInput.value = item.caption;
+                        generateQR();
+                        showToast('โหลดข้อมูล QR ที่บันทึกไว้แล้ว');
+                    });
+                });
+            }
+
+            saveHistoryBtn.addEventListener('click', () => {
+                if (!hasGenerated) return;
+                const list = loadHistory();
+                let title = captionInput.value.trim();
+                let sub = lastPayload;
+                if (currentMode === 'url') {
+                    title = title || urlInput.value.trim();
+                } else if (currentMode === 'promptpay') {
+                    title = title || `พร้อมเพย์ ${ppTargetInput.value}`;
+                    sub = ppAmountInput.value ? `ยอดเงิน ${Number(ppAmountInput.value).toLocaleString()} บาท` : 'ไม่ระบุยอดเงิน';
+                } else if (currentMode === 'wifi') {
+                    title = title || `Wi-Fi: ${wifiSsidInput.value}`;
+                } else if (currentMode === 'vcard') {
+                    title = title || `นามบัตร: ${vcNameInput.value}`;
+                }
+                list.unshift({
+                    mode: currentMode,
+                    title: title || 'QR Code',
+                    sub: String(sub).slice(0, 60),
+                    raw: urlInput.value.trim(),
+                    ppTarget: ppTargetInput.value,
+                    ppAmount: ppAmountInput.value,
+                    caption: captionInput.value.trim()
+                });
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, 5)));
+                renderHistory();
+                showToast('บันทึกรายการไว้ในประวัติแล้ว');
+            });
+
+            // Initial render
+            renderHistory();
+            generateQR();
         });
     </script>
     <script type="module">
