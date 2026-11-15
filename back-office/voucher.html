@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="../assets/js/core/bo-theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ใบขอเบิก / ซื้อ / จ้าง / ใบสำคัญจ่าย — Kitten Code</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/document.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        .type-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .type-tab-btn {
+            min-height: 40px;
+            padding: 8px 12px;
+            border: 1.5px solid #e2e8f0;
+            background: #f8fafc;
+            color: #475569;
+            border-radius: 999px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .type-tab-btn.active {
+            background: #0a72e8;
+            border-color: #0a72e8;
+            color: #fff;
+        }
+        .check-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .check-inline input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
+</head>
+
+<body>
+    <div class="doc-mobile-switcher no-print">
+        <div class="doc-segment" id="docMobileSegment" style="--seg-i: 0;">
+            <span class="doc-segment-pill"></span>
+            <button type="button" class="doc-segment-btn active" data-mode="form" onclick="switchDocMobileTab('form')">
+                <i class="fas fa-edit"></i> กรอกข้อมูล
+            </button>
+            <button type="button" class="doc-segment-btn" data-mode="preview" onclick="switchDocMobileTab('preview')">
+                <i class="fas fa-eye"></i> ดูตัวอย่าง A4
+            </button>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">
+            <i class="fas fa-print"></i> พิมพ์
+        </button>
+    </div>
+
+    <div class="app-container no-print" id="docAppContainer" data-mobile-view="form">
+
+        <!-- Left Panel: Form Input -->
+        <div class="form-panel">
+            <div class="form-header">
+                <h2><i class="fas fa-file-signature"></i> ขอเบิก / ซื้อ / จ้าง / สำคัญจ่าย</h2>
+                <button type="button" class="btn-clear-draft" onclick="clearDraft()">
+                    <i class="fas fa-rotate-left"></i> เริ่มใหม่
+                </button>
+            </div>
+
+            <form id="voucher-form" onsubmit="return false;">
+
+                <!-- Section: Document Type & Meta -->
+                <div class="form-section">
+                    <h3><i class="fas fa-folder-open"></i> ประเภทเอกสารเบิกจ่ายบริษัท</h3>
+                    <input type="hidden" id="in-voucher-type" value="pv">
+                    <div class="type-tabs">
+                        <button type="button" class="type-tab-btn" data-type="pr" onclick="handleVoucherTypeChange('pr')">
+                            <i class="fas fa-clipboard-list"></i> 1. ใบขอซื้อ/จ้าง (PR)
+                        </button>
+                        <button type="button" class="type-tab-btn" data-type="po" onclick="handleVoucherTypeChange('po')">
+                            <i class="fas fa-shopping-cart"></i> 2. ใบสั่งซื้อ/จ้าง (PO)
+                        </button>
+                        <button type="button" class="type-tab-btn" data-type="exp" onclick="handleVoucherTypeChange('exp')">
+                            <i class="fas fa-hand-holding-usd"></i> 3. ใบขอเบิกค่าใช้จ่าย
+                        </button>
+                        <button type="button" class="type-tab-btn active" data-type="pv" onclick="handleVoucherTypeChange('pv')">
+                            <i class="fas fa-file-invoice-dollar"></i> 4. ใบสำคัญจ่าย (PV)
+                        </button>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>เลขที่เอกสาร</label>
+                            <input type="text" id="in-doc-no" value="" placeholder="เช่น PV-2569-001">
+                        </div>
+                        <div class="form-group">
+                            <label>วันที่เอกสาร</label>
+                            <input type="date" id="in-doc-date" value="">
+                        </div>
+                        <div class="form-group" data-show-for="pr,po">
+                            <label>วันที่ต้องการใช้งาน / กำหนดส่งมอบ</label>
+                            <input type="date" id="in-needed-date" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>เลขอ้างอิง (PR / PO / ใบแจ้งหนี้ / ใบเสร็จ)</label>
+                            <input type="text" id="in-ref-no" value="" placeholder="เช่น PO-2569-001 หรือ INV-001">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>โครงการ / งาน / หมวดงบประมาณ</label>
+                            <input type="text" id="in-proj-name" value="" placeholder="ระบุชื่อโครงการ หรือ หมวดค่าใช้จ่ายบริษัท...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Requester / Internal Claim Info -->
+                <div class="form-section" data-show-for="pr,exp">
+                    <h3><i class="fas fa-user-check"></i> ข้อมูลผู้ขอเบิก / ผู้ขอซื้อ-ขอจ้าง</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ชื่อ-นามสกุลผู้ขอ</label>
+                            <input type="text" id="in-requester-name" value="" placeholder="ระบุชื่อพนักงาน / กรรมการ">
+                        </div>
+                        <div class="form-group">
+                            <label>ตำแหน่ง / ฝ่าย</label>
+                            <input type="text" id="in-department" value="" placeholder="เช่น ฝ่ายพัฒนาซอฟต์แวร์ / บริหาร">
+                        </div>
+                        <div class="form-group full-width" data-show-for="exp">
+                            <label>ประเภทการขอเบิก</label>
+                            <select id="in-claim-type">
+                                <option value="เบิกค่าใช้จ่ายสำรองจ่าย (Reimbursement)">เบิกค่าใช้จ่ายสำรองจ่าย (Reimbursement)</option>
+                                <option value="เบิกเงินทดรองจ่าย (Cash Advance)">เบิกเงินทดรองจ่าย (Cash Advance)</option>
+                                <option value="เคลียร์เงินทดรองจ่าย (Advance Settlement)">เคลียร์เงินทดรองจ่าย (Advance Settlement)</option>
+                                <option value="เบิกเงินสดย่อย (Petty Cash)">เบิกเงินสดย่อย (Petty Cash)</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>เหตุผลความจำเป็น / วัตถุประสงค์</label>
+                            <textarea id="in-purpose" rows="2" placeholder="ระบุเหตุผลในการขอซื้อ ขอจ้าง หรือขอเบิกค่าใช้จ่าย..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Vendor / Payee Info -->
+                <div class="form-section" data-show-for="pr,po,pv">
+                    <h3><i class="fas fa-building"></i> ข้อมูลผู้ขาย / ผู้รับจ้าง / ผู้รับเงิน (Payee)</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>ชื่อผู้รับเงิน / บริษัท / ร้านค้า / ฟรีแลนซ์</label>
+                            <input type="text" id="in-vendor-name" value="" placeholder="ระบุชื่อบริษัท หรือ ชื่อ-นามสกุลผู้รับเงิน...">
+                        </div>
+                        <div class="form-group">
+                            <label>เลขผู้เสียภาษี / เลขบัตรประชาชน</label>
+                            <input type="text" id="in-vendor-tax" value="" placeholder="เลข 13 หลัก">
+                        </div>
+                        <div class="form-group">
+                            <label>เบอร์โทรศัพท์</label>
+                            <input type="text" id="in-vendor-tel" value="" placeholder="เช่น 08x-xxx-xxxx">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ที่อยู่ผู้ขาย / ผู้รับเงิน</label>
+                            <textarea id="in-vendor-addr" rows="2" placeholder="ระบุที่อยู่สำหรับออกเอกสารทางบัญชี/ภาษี..."></textarea>
+                        </div>
+                        <div class="form-group full-width" data-show-for="po">
+                            <label>เงื่อนไขการชำระเงิน</label>
+                            <input type="text" id="in-pay-terms" value="" placeholder="เช่น โอนชำระภายใน 7 วันหลังส่งมอบงาน / มัดจำ 50%">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Payment / Bank Info -->
+                <div class="form-section" data-show-for="exp,pv">
+                    <h3><i class="fas fa-university"></i> ช่องทางการชำระเงิน / บัญชีรับโอน</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>วิธีการจ่ายเงิน</label>
+                            <select id="in-pay-method">
+                                <option value="โอนเงินผ่านธนาคาร">โอนเงินผ่านธนาคาร</option>
+                                <option value="พร้อมเพย์ (PromptPay)">พร้อมเพย์ (PromptPay)</option>
+                                <option value="เงินสด">เงินสด</option>
+                                <option value="เช็คธนาคาร">เช็คธนาคาร</option>
+                                <option value="บัตรเครดิตบริษัท">บัตรเครดิตบริษัท</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ธนาคาร</label>
+                            <input type="text" id="in-bank-name" value="" placeholder="เช่น กสิกรไทย / ไทยพาณิชย์">
+                        </div>
+                        <div class="form-group">
+                            <label>เลขที่บัญชี / พร้อมเพย์ / เลขเช็ค</label>
+                            <input type="text" id="in-bank-account" value="" placeholder="xxx-x-xxxxx-x">
+                        </div>
+                        <div class="form-group">
+                            <label>ชื่อบัญชี</label>
+                            <input type="text" id="in-bank-owner" value="" placeholder="ระบุชื่อบัญชีผู้รับโอน">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Line Items -->
+                <div class="form-section">
+                    <div class="flex-between">
+                        <h3><i class="fas fa-list-ul"></i> รายการเบิก / ซื้อ / จ้าง</h3>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addItemLine()">
+                            <i class="fas fa-plus"></i> เพิ่มรายการ
+                        </button>
+                    </div>
+                    <div id="items-container"></div>
+                </div>
+
+                <!-- Section: Tax & Summary (VAT + WHT) -->
+                <div class="form-section">
+                    <h3><i class="fas fa-calculator"></i> ภาษีและสรุปยอดเงิน</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ส่วนลด (บาท)</label>
+                            <input type="number" id="in-doc-discount" value="0" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>ภาษีมูลค่าเพิ่ม VAT (%)</label>
+                            <select id="in-doc-vat">
+                                <option value="0">ไม่มี VAT (0%)</option>
+                                <option value="7">VAT 7%</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>หักภาษี ณ ที่จ่าย — WHT (%)</label>
+                            <select id="in-doc-wht">
+                                <option value="0">ไม่หักภาษี ณ ที่จ่าย (0%)</option>
+                                <option value="1">หัก ณ ที่จ่าย 1% (ค่าขนส่ง)</option>
+                                <option value="2">หัก ณ ที่จ่าย 2% (ค่าโฆษณา)</option>
+                                <option value="3">หัก ณ ที่จ่าย 3% (ค่าจ้างทำของ / บริการวิชาชีพ / ฟรีแลนซ์)</option>
+                                <option value="5">หัก ณ ที่จ่าย 5% (ค่าเช่า / รางวัล)</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width" data-show-for="pv">
+                            <label class="check-inline">
+                                <input type="checkbox" id="in-certify-no-receipt">
+                                แสดงคำรับรองแทนใบเสร็จรับเงิน (กรณีผู้รับเงินไม่สามารถออกใบเสร็จรับเงินได้)
+                            </label>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>หมายเหตุ / รายการเอกสารแนบ</label>
+                            <textarea id="in-note" rows="2" placeholder="เช่น แนบใบเสร็จรับเงิน 2 ฉบับ, สำเนาบัตรประชาชนผู้รับเงิน..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Signatures -->
+                <div class="form-section">
+                    <h3><i class="fas fa-signature"></i> ผู้เกี่ยวข้องและการอนุมัติ</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ผู้ขอเบิก / ผู้จัดทำ</label>
+                            <input type="text" id="in-sign-requester" value="" placeholder="ชื่อผู้ขอเบิก / ผู้จัดทำ">
+                        </div>
+                        <div class="form-group" data-show-for="pr,exp,pv">
+                            <label>ผู้ตรวจสอบ</label>
+                            <input type="text" id="in-sign-reviewer" value="" placeholder="ชื่อผู้ตรวจสอบ">
+                        </div>
+                        <div class="form-group">
+                            <label>ผู้อนุมัติ (กรรมการผู้มีอำนาจ)</label>
+                            <input type="text" id="in-sign-approver" value="" placeholder="ชื่อผู้อนุมัติ">
+                        </div>
+                        <div class="form-group" data-show-for="exp">
+                            <label>ผู้จ่ายเงิน (เหรัญญิก/บัญชี)</label>
+                            <input type="text" id="in-sign-payer" value="" placeholder="ชื่อผู้จ่ายเงิน">
+                        </div>
+                        <div class="form-group" data-show-for="po,pv">
+                            <label>ผู้รับเงิน / ผู้รับใบสั่งซื้อ</label>
+                            <input type="text" id="in-sign-payee" value="" placeholder="ชื่อผู้รับเงิน / ผู้รับจ้าง">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-section print-section">
+                    <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn"
+                        onclick="window.print()">
+                        <i class="fas fa-print"></i> พิมพ์เอกสาร (A4)
+                    </button>
+                    <button type="button" id="btn-save-cloud" class="btn btn-success btn-large full-width-btn"
+                        onclick="saveDocumentToFirestore()">
+                        <i class="fas fa-check"></i> บันทึก
+                    </button>
+                    <button type="button" id="btn-next-step" class="btn btn-primary btn-large full-width-btn"
+                        onclick="convertNextStep()" style="display:none;">
+                        ออกเอกสารขั้นถัดไป <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Right Panel: A4 Preview -->
+        <div class="preview-panel" id="preview-panel"></div>
+    </div>
+
+    <script>
+        window.switchDocMobileTab = function (mode) {
+            const container = document.getElementById('docAppContainer');
+            const seg = document.getElementById('docMobileSegment');
+            if (container) container.setAttribute('data-mobile-view', mode);
+            if (seg) {
+                seg.style.setProperty('--seg-i', mode === 'preview' ? 1 : 0);
+                seg.querySelectorAll('.doc-segment-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+                });
+            }
+        };
+    </script>
+
+    <script src="../assets/js/documents/doc-common.js"></script>
+    <script src="../assets/js/documents/voucher-template.js"></script>
+    <script src="../assets/js/documents/script-voucher.js"></script>
+    <script type="module">
+        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace('login.html'); }
+        });
+    </script>
+</body>
+
+</html>

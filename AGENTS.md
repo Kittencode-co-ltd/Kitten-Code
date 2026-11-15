@@ -54,7 +54,7 @@ Page modules (import paths are relative to the file: `./core/...` from `assets/j
 - `user.js` — user management (admin), maintains the `usernames` index
 - `dashboard.js` — Chart.js financial charts
 - `financial.js` — transaction/category CRUD
-- `documents/script-invoice.js`, `documents/script-quotation.js`, `documents/script-receipt.js`, `documents/script-certificate.js`, `documents/certificate-template.js` — document & employment/internship certificate generation (store raw text; escape only at render time)
+- `documents/doc-common.js`, `documents/script-invoice.js`, `documents/script-quotation.js`, `documents/script-receipt.js`, `documents/script-voucher.js`, `documents/voucher-template.js`, `documents/script-certificate.js`, `documents/certificate-template.js`, `documents/script-letter.js`, `documents/letter-template.js` — commercial, procurement/disbursement (PR/PO/EXP/PV), employment/internship certificate, and external correspondence letter generation (store raw text; escape only at render time)
 - `documents/document-record.js`, `documents/script-document-viewer.js` — document list and re-print viewer
 
 Back-office pages are loaded inside the `back-office/back-office.html` shell via an iframe and hash routes (`routeMap`). Each page guards itself with `onAuthStateChanged` and redirects to `login.html`.
@@ -68,7 +68,7 @@ Back-office pages are loaded inside the `back-office/back-office.html` shell via
 
 ### Firestore Collections
 
-Key collections: `users`, `usernames` (public username → `{ uid, email }` index used by login; get-only, no list), `fin_categories`, `fin_transactions`, `quotations`, `invoices`, `receipts`, `certificates`, `calendar_events`.
+Key collections: `users`, `usernames` (public username → `{ uid, email }` index used by login; get-only, no list), `fin_categories`, `fin_transactions`, `quotations`, `invoices`, `receipts`, `vouchers`, `certificates`, `letters`, `calendar_events`, `staff_directory`.
 
 ### Data Connect Schema (`dataconnect/schema/schema.gql`)
 

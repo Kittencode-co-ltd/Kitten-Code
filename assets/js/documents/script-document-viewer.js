@@ -290,8 +290,22 @@ function buildViewer() {
     const type = viewDoc.type;
     const d = decodeLegacyEntities(viewDoc.data);
 
-    const colMap = { quotation: 'quotations', invoice: 'invoices', receipt: 'receipts', certificate: 'certificates' };
-    const hashMap = { quotation: '#quotation', invoice: '#invoice', receipt: '#receipt', certificate: '#certificate' };
+    const colMap = {
+        quotation: 'quotations',
+        invoice: 'invoices',
+        receipt: 'receipts',
+        voucher: 'vouchers',
+        certificate: 'certificates',
+        letter: 'letters'
+    };
+    const hashMap = {
+        quotation: '#quotation',
+        invoice: '#invoice',
+        receipt: '#receipt',
+        voucher: '#voucher',
+        certificate: '#certificate',
+        letter: '#letter'
+    };
     const editBtn = document.getElementById('btn-edit-doc');
     if (editBtn && colMap[type]) {
         editBtn.style.display = 'inline-flex';
@@ -312,7 +326,9 @@ function buildViewer() {
         quotation: 'ใบเสนอราคา',
         invoice: 'ใบแจ้งหนี้',
         receipt: 'ใบเสร็จรับเงิน',
-        certificate: d.certType === 'internship' ? 'หนังสือรับรองการฝึกงาน' : 'หนังสือรับรองการทำงาน'
+        voucher: (window.KCVoucher && window.KCVoucher.TYPES[d.voucherType]?.title) || 'ใบสำคัญจ่าย / เบิกจ่าย',
+        certificate: d.certType === 'internship' ? 'หนังสือรับรองการฝึกงาน' : 'หนังสือรับรองการทำงาน',
+        letter: (window.KCLetter && window.KCLetter.TYPES[d.letterType]?.title) || 'หนังสือติดต่อภายนอก'
     };
     if (badge) badge.textContent = labels[type] || type;
     if (docNum) docNum.textContent = d.docNo || '';
@@ -322,6 +338,14 @@ function buildViewer() {
 
     if (type === 'certificate' && window.KCCertificate) {
         container.appendChild(window.KCCertificate.render(d));
+        return;
+    }
+    if (type === 'voucher' && window.KCVoucher) {
+        container.appendChild(window.KCVoucher.render(d));
+        return;
+    }
+    if (type === 'letter' && window.KCLetter) {
+        container.appendChild(window.KCLetter.render(d));
         return;
     }
 

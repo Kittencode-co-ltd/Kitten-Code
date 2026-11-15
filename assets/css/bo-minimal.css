@@ -249,7 +249,9 @@ label, .form-label, .form-label-cal { color: var(--kc-muted) !important; font-we
 .badge-rejected, .badge-exp, .sb-rejected { background: var(--kc-red-soft) !important; color: var(--kc-red) !important; }
 .badge-quote { background: var(--kc-accent-soft) !important; color: var(--kc-accent) !important; }
 .badge-invoice { background: #f0ecfb !important; color: #5b3cc4 !important; }
+.badge-voucher { background: var(--kc-amber-soft) !important; color: var(--kc-amber) !important; }
 .badge-certificate { background: var(--kc-surface-2) !important; color: var(--kc-muted) !important; border: 1px solid var(--kc-line) !important; }
+.badge-letter { background: #e6f4f1 !important; color: #0f766e !important; }
 
 .progress-bar { background: var(--kc-bg) !important; border-radius: 999px !important; }
 .progress-fill { border-radius: 999px !important; background-image: none !important; }

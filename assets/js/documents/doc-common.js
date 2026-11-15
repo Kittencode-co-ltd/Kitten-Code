@@ -11,16 +11,33 @@
 (function () {
     'use strict';
 
-    const PREFIX = { quotations: 'QT', invoices: 'INV', receipts: 'RC', certificates: 'CERT' };
-    const TYPE_TO_COL = { quotation: 'quotations', invoice: 'invoices', receipt: 'receipts', certificate: 'certificates' };
+    const PREFIX = {
+        quotations: 'QT',
+        invoices: 'INV',
+        receipts: 'RC',
+        certificates: 'CERT',
+        vouchers: 'PV',
+        letters: 'LET'
+    };
+    const TYPE_TO_COL = {
+        quotation: 'quotations',
+        invoice: 'invoices',
+        receipt: 'receipts',
+        certificate: 'certificates',
+        voucher: 'vouchers',
+        letter: 'letters'
+    };
 
     // Saved field name → editor input id (without the "in-" prefix) where
     // the default camelCase → kebab-case rule does not apply.
     const FIELD_OVERRIDES = {
         vatRate: 'doc-vat',
+        whtRate: 'doc-wht',
+        witness1: 'witness-1',
+        witness2: 'witness-2',
         discountAmount: { receipts: 'special-discount', default: 'doc-discount' }
     };
-    const SKIP_FIELDS = new Set(['items', 'note', 'amountTotal', 'subtotal', 'type', 'status',
+    const SKIP_FIELDS = new Set(['items', 'note', 'amountTotal', 'subtotal', 'vatAmount', 'whtAmount', 'type', 'status',
         'createdAt', 'updatedAt', 'updatedBy', 'id', 'collectionName', 'ledgerTxnId']);
 
     const kebab = (k) => k.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
@@ -57,6 +74,7 @@
                 id: Date.now() + i,
                 desc: it.desc || '',
                 qty: Number(it.qty) || 0,
+                unit: it.unit || '',
                 price: Number(it.price) || 0,
                 discount: Number(it.discount) || 0
             }));
@@ -73,23 +91,24 @@
     }
 
     /** Suggest the next number when the doc-no field is empty. */
-    async function ensureDocNo(type) {
+    async function ensureDocNo(type, customPrefix) {
         const input = document.getElementById('in-doc-no');
         if (!input || input.value.trim() || editing) return;
         const col = TYPE_TO_COL[type];
         try {
             const fb = await import('../core/firebase-config.js');
             await waitForUser(fb);
-            input.value = await nextDocNo(fb, col);
+            input.value = await nextDocNo(fb, col, customPrefix);
             input.dispatchEvent(new Event('input', { bubbles: true }));
         } catch (e) {
             console.warn('Could not suggest a document number', e);
         }
     }
 
-    async function nextDocNo(fb, col) {
+    async function nextDocNo(fb, col, customPrefix) {
         const year = new Date().getFullYear() + 543;
-        const head = `${PREFIX[col]}-${year}-`;
+        const pfx = customPrefix || PREFIX[col];
+        const head = `${pfx}-${year}-`;
         const snap = await fb.getDocs(fb.collection(fb.db, col));
         let max = 0;
         snap.forEach((d) => {

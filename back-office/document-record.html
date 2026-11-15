@@ -19,7 +19,9 @@
                     <button class="tab" onclick="switchTab('quotations', this)">ใบเสนอราคา</button>
                     <button class="tab" onclick="switchTab('invoices', this)">ใบแจ้งหนี้</button>
                     <button class="tab" onclick="switchTab('receipts', this)">ใบเสร็จ</button>
+                    <button class="tab" onclick="switchTab('vouchers', this)">เบิก/ซื้อ/จ้าง/PV</button>
                     <button class="tab" onclick="switchTab('certificates', this)">หนังสือรับรอง</button>
+                    <button class="tab" onclick="switchTab('letters', this)">หนังสือภายนอก</button>
                 </div>
                 <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
                     <span class="page-sub" id="doc-count" style="margin:0;">กำลังโหลด…</span>
@@ -57,12 +59,12 @@
         </a>
     </div>
 
-    <!-- Receipt → income -->
+    <!-- Receipt / Voucher → ledger transaction -->
     <div class="kc-modal" id="ledger-modal">
         <div class="kc-modal-box">
-            <div class="kc-modal-title">ลงบัญชีรายรับ</div>
+            <div class="kc-modal-title" id="ledger-modal-title">ลงบัญชีรายรับ</div>
             <div class="kc-modal-sub" id="ledger-doc"></div>
-            <label class="kc-label" for="ledger-cat">หมวดรายรับ</label>
+            <label class="kc-label" for="ledger-cat" id="ledger-cat-label">หมวดบัญชี</label>
             <select id="ledger-cat" class="kc-input"></select>
             <div class="kc-row">
                 <div>
@@ -70,13 +72,13 @@
                     <input id="ledger-amount" type="number" min="0" step="0.01" class="kc-input">
                 </div>
                 <div>
-                    <label class="kc-label" for="ledger-date">วันที่รับเงิน</label>
+                    <label class="kc-label" for="ledger-date" id="ledger-date-label">วันที่</label>
                     <input id="ledger-date" type="date" class="kc-input">
                 </div>
             </div>
             <div class="kc-modal-actions">
                 <button class="kc-btn" onclick="closeLedger()">ยกเลิก</button>
-                <button class="kc-btn kc-btn-primary" id="ledger-confirm" onclick="confirmLedger()">บันทึกรายรับ</button>
+                <button class="kc-btn kc-btn-primary" id="ledger-confirm" onclick="confirmLedger()">บันทึกลงบัญชี</button>
             </div>
         </div>
     </div>

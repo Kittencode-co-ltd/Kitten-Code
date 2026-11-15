@@ -3,14 +3,31 @@ import { db, auth, onAuthStateChanged, collection, getDocs, doc, deleteDoc, getD
 let allDocs = [];
 let currentFilter = 'all';
 let searchText = '';
-let incomeCategories = [];
+let finCategories = [];
 let ledgerTarget = null;
 
 const TYPE_INFO = {
-    quotations:   { label: 'ใบเสนอราคา', badge: 'badge-quote',       editor: 'quotation',   hash: '#quotation' },
-    invoices:     { label: 'ใบแจ้งหนี้',  badge: 'badge-invoice',     editor: 'invoice',     hash: '#invoice' },
-    receipts:     { label: 'ใบเสร็จ',     badge: 'badge-receipt',     editor: 'receipt',     hash: '#receipt' },
-    certificates: { label: 'หนังสือรับรอง', badge: 'badge-certificate', editor: 'certificate', hash: '#certificate' }
+    quotations:   { label: 'ใบเสนอราคา',     badge: 'badge-quote',       editor: 'quotation',   hash: '#quotation' },
+    invoices:     { label: 'ใบแจ้งหนี้',      badge: 'badge-invoice',     editor: 'invoice',     hash: '#invoice' },
+    receipts:     { label: 'ใบเสร็จ',         badge: 'badge-receipt',     editor: 'receipt',     hash: '#receipt' },
+    vouchers:     { label: 'เบิก/ซื้อ/จ้าง/PV', badge: 'badge-voucher',    editor: 'voucher',     hash: '#voucher' },
+    certificates: { label: 'หนังสือรับรอง',    badge: 'badge-certificate', editor: 'certificate', hash: '#certificate' },
+    letters:      { label: 'หนังสือภายนอก',   badge: 'badge-letter',      editor: 'letter',      hash: '#letter' }
+};
+
+const VOUCHER_SUBLABELS = {
+    pr: 'ใบขอซื้อ/จ้าง (PR)',
+    po: 'ใบสั่งซื้อ/จ้าง (PO)',
+    exp: 'ใบขอเบิกเงิน (EXP)',
+    pv: 'ใบสำคัญจ่าย (PV)'
+};
+
+const LETTER_SUBLABELS = {
+    invite_advisor: 'เชิญเป็นที่ปรึกษา',
+    invite_speaker: 'เชิญเป็นวิทยากร',
+    cooperation: 'ขอความร่วมมือ/เข้าพบ',
+    authorization: 'หนังสือมอบอำนาจ',
+    delivery: 'ส่งมอบงาน/เอกสาร'
 };
 
 // Allowed statuses per document type: [value, Thai label, badge style]
@@ -18,13 +35,21 @@ const STATUSES = {
     quotations:   [['Pending', 'รออนุมัติ', 'pending'], ['Approved', 'อนุมัติแล้ว', 'paid'], ['Rejected', 'ไม่อนุมัติ', 'rejected']],
     invoices:     [['Pending', 'รอชำระ', 'pending'], ['Paid', 'ชำระแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
     receipts:     [['Completed', 'รับเงินแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
-    certificates: [['Issued', 'ออกแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']]
+    vouchers:     [['Pending', 'รออนุมัติ', 'pending'], ['Approved', 'อนุมัติแล้ว', 'paid'], ['Paid', 'จ่ายเงินแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
+    certificates: [['Issued', 'ออกแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
+    letters:      [['Issued', 'ออกหนังสือแล้ว', 'paid'], ['Sent', 'ส่งแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']]
 };
 
 // What "continue" creates next
 const NEXT_STEP = {
     quotations: { label: 'ออกใบแจ้งหนี้', to: 'invoices', sourceType: 'quotation' },
     invoices:   { label: 'ออกใบเสร็จ',   to: 'receipts', sourceType: 'invoice' }
+};
+
+const VOUCHER_NEXT = {
+    pr:  { label: 'ออกใบสั่งซื้อ (PO)', targetType: 'po' },
+    po:  { label: 'ออกใบสำคัญจ่าย (PV)', targetType: 'pv' },
+    exp: { label: 'ออกใบสำคัญจ่าย (PV)', targetType: 'pv' }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -121,7 +146,7 @@ function renderDocuments() {
     const filtered = allDocs.filter(d => {
         if (currentFilter !== 'all' && d.collectionName !== currentFilter) return false;
         if (!searchText) return true;
-        const hay = [d.docNo, d.custName, d.personName, d.projName].filter(Boolean).join(' ').toLowerCase();
+        const hay = [d.docNo, d.custName, d.personName, d.vendorName, d.requesterName, d.recipientTitle, d.recipientOrg, d.subject, d.projName].filter(Boolean).join(' ').toLowerCase();
         return hay.includes(searchText);
     });
 
@@ -138,29 +163,45 @@ function renderDocuments() {
         const [statusValue, , statusStyle] = statusInfo(d);
         const options = (STATUSES[d.collectionName] || [])
             .map(([v, label]) => `<option value="${v}"${v === statusValue ? ' selected' : ''}>${label}</option>`).join('');
-        const amount = (d.collectionName === 'certificates' && !d.amountTotal)
+        const isZeroDoc = (d.collectionName === 'certificates' || d.collectionName === 'letters') && !d.amountTotal;
+        const amount = isZeroDoc
             ? '<span class="muted">—</span>'
             : `<strong>฿${formatMoney(d.amountTotal || 0)}</strong>`;
         const key = `data-col="${d.collectionName}" data-id="${escapeHTML(d.id)}"`;
-        const next = NEXT_STEP[d.collectionName];
+        const next = d.collectionName === 'vouchers'
+            ? VOUCHER_NEXT[d.voucherType]
+            : NEXT_STEP[d.collectionName];
+
+        let badgeLabel = info.label;
+        if (d.collectionName === 'vouchers' && VOUCHER_SUBLABELS[d.voucherType]) {
+            badgeLabel = VOUCHER_SUBLABELS[d.voucherType];
+        } else if (d.collectionName === 'letters' && LETTER_SUBLABELS[d.letterType]) {
+            badgeLabel = LETTER_SUBLABELS[d.letterType];
+        }
+
+        const canLedger = d.collectionName === 'receipts' ||
+            (d.collectionName === 'vouchers' && (d.voucherType === 'pv' || d.voucherType === 'exp'));
+        const ledgerLabel = d.collectionName === 'vouchers' ? 'ลงบัญชีรายจ่าย' : 'ลงบัญชีรายรับ';
 
         const actions = [
             `<button class="row-btn" data-action="print" ${key} title="ดู / พิมพ์"><i class="fas fa-print"></i></button>`,
             info.editor ? `<button class="row-btn" data-action="edit" ${key} title="แก้ไข"><i class="fas fa-pen"></i></button>` : '',
             next ? `<button class="row-btn row-btn-text" data-action="continue" ${key}>${next.label} <i class="fas fa-arrow-right"></i></button>` : '',
-            d.collectionName === 'receipts'
+            canLedger
                 ? (d.ledgerTxnId
-                    ? `<span class="ledger-done" title="ลงบัญชีรายรับแล้ว"><i class="fas fa-check"></i> ลงบัญชีแล้ว</span>`
-                    : `<button class="row-btn row-btn-text" data-action="ledger" ${key}>ลงบัญชีรายรับ</button>`)
+                    ? `<span class="ledger-done" title="บันทึกบัญชีแล้ว"><i class="fas fa-check"></i> ลงบัญชีแล้ว</span>`
+                    : `<button class="row-btn row-btn-text" data-action="ledger" ${key}>${ledgerLabel}</button>`)
                 : '',
             `<button class="row-btn row-btn-danger" data-action="delete" ${key} title="ลบ"><i class="fas fa-trash"></i></button>`
         ].join('');
 
+        const party = d.custName || d.vendorName || d.requesterName || d.personName || d.recipientOrg || '-';
+
         return `<tr>
             <td>${escapeHTML(d.docDate || '-')}</td>
             <td><strong>${escapeHTML(d.docNo || d.id)}</strong></td>
-            <td><span class="badge ${info.badge}">${info.label}</span></td>
-            <td>${escapeHTML(d.custName || d.personName || '-')}</td>
+            <td><span class="badge ${info.badge}">${escapeHTML(badgeLabel)}</span></td>
+            <td>${escapeHTML(party)}</td>
             <td style="text-align:right;">${amount}</td>
             <td><select class="status-select status-${statusStyle}" ${key}>${options}</select></td>
             <td><div class="row-actions">${actions}</div></td>
@@ -215,6 +256,38 @@ async function editDocument(colName, id) {
 }
 
 async function continueDocument(colName, id) {
+    if (colName === 'vouchers') {
+        try {
+            const d = await fetchFresh(colName, id);
+            const vNext = VOUCHER_NEXT[d.voucherType];
+            if (!vNext) return;
+            localStorage.setItem('kc_convert_voucher', JSON.stringify({
+                targetType: vNext.targetType,
+                sourceDocNo: d.docNo || id,
+                projName: d.projName || '',
+                requesterName: d.requesterName || '',
+                department: d.department || '',
+                purpose: d.purpose || '',
+                vendorName: d.vendorName || d.requesterName || '',
+                vendorTax: d.vendorTax || '',
+                vendorTel: d.vendorTel || '',
+                vendorAddr: d.vendorAddr || '',
+                payMethod: d.payMethod || '',
+                bankName: d.bankName || '',
+                bankAccount: d.bankAccount || '',
+                bankOwner: d.bankOwner || '',
+                discountAmount: Number(d.discountAmount) || 0,
+                vatRate: Number(d.vatRate) || 0,
+                whtRate: Number(d.whtRate) || 0,
+                items: (d.items || []).map(it => ({ desc: it.desc, qty: it.qty, unit: it.unit || 'รายการ', price: it.price }))
+            }));
+            goTo('#voucher', 'voucher.html');
+        } catch (e) {
+            toast(e.message, false);
+        }
+        return;
+    }
+
     const next = NEXT_STEP[colName];
     if (!next) return;
     try {
@@ -243,7 +316,14 @@ async function continueDocument(colName, id) {
 async function printDocument(colName, id) {
     try {
         const data = await fetchFresh(colName, id);
-        const typeMap = { quotations: 'quotation', invoices: 'invoice', receipts: 'receipt', certificates: 'certificate' };
+        const typeMap = {
+            quotations: 'quotation',
+            invoices: 'invoice',
+            receipts: 'receipt',
+            vouchers: 'voucher',
+            certificates: 'certificate',
+            letters: 'letter'
+        };
         localStorage.setItem('kc_view_doc', JSON.stringify({ type: typeMap[colName] || colName, data: { ...data } }));
         window.location.href = 'document-viewer.html';
     } catch (e) {
@@ -266,28 +346,42 @@ async function deleteDocument(colName, id) {
     }
 }
 
-// ── Receipt → income transaction ──────────────────────────────
+// ── Receipt → income / Voucher → expense transaction ──────────
 async function openLedger(colName, id) {
     const d = findDoc(colName, id);
     if (!d) return;
     ledgerTarget = d;
-    if (!incomeCategories.length) {
+    const isExpense = colName === 'vouchers';
+    const wantType = isExpense ? 2 : 1;
+
+    if (!finCategories.length) {
         try {
             const snap = await getDocs(collection(db, 'fin_categories'));
-            incomeCategories = snap.docs.map(s => s.data()).filter(c => c.type === 1)
+            finCategories = snap.docs.map(s => s.data())
                 .sort((a, b) => String(a.code).localeCompare(String(b.code)));
         } catch (e) {
-            toast('โหลดหมวดรายรับไม่สำเร็จ: ' + e.message, false);
+            toast('โหลดหมวดบัญชีไม่สำเร็จ: ' + e.message, false);
             return;
         }
     }
-    if (!incomeCategories.length) {
-        toast('ยังไม่มีหมวดรายรับ — เพิ่มที่หน้าบัญชีก่อน', false);
+    const matchingCats = finCategories.filter(c => Number(c.type) === wantType);
+    if (!matchingCats.length) {
+        toast(`ยังไม่มีหมวด${isExpense ? 'รายจ่าย' : 'รายรับ'} — เพิ่มที่หน้าบัญชีก่อน`, false);
         return;
     }
-    document.getElementById('ledger-cat').innerHTML = incomeCategories
+
+    const titleEl = document.getElementById('ledger-modal-title');
+    const catLabelEl = document.getElementById('ledger-cat-label');
+    const dateLabelEl = document.getElementById('ledger-date-label');
+    const confirmBtn = document.getElementById('ledger-confirm');
+    if (titleEl) titleEl.textContent = isExpense ? 'ลงบัญชีรายจ่าย' : 'ลงบัญชีรายรับ';
+    if (catLabelEl) catLabelEl.textContent = isExpense ? 'หมวดรายจ่าย' : 'หมวดรายรับ';
+    if (dateLabelEl) dateLabelEl.textContent = isExpense ? 'วันที่จ่ายเงิน' : 'วันที่รับเงิน';
+    if (confirmBtn) confirmBtn.textContent = isExpense ? 'บันทึกรายจ่าย' : 'บันทึกรายรับ';
+
+    document.getElementById('ledger-cat').innerHTML = matchingCats
         .map(c => `<option value="${escapeHTML(c.code)}">${escapeHTML(c.code)} · ${escapeHTML(c.name)}</option>`).join('');
-    document.getElementById('ledger-doc').textContent = `${d.docNo || d.id} · ${d.custName || '-'}`;
+    document.getElementById('ledger-doc').textContent = `${d.docNo || d.id} · ${d.custName || d.vendorName || d.requesterName || '-'}`;
     document.getElementById('ledger-amount').value = Number(d.amountTotal || 0).toFixed(2);
     document.getElementById('ledger-date').value = d.docDate || new Date().toISOString().slice(0, 10);
     document.getElementById('ledger-modal').classList.add('open');
@@ -301,6 +395,7 @@ function closeLedger() {
 async function confirmLedger() {
     const d = ledgerTarget;
     if (!d) return;
+    const isExpense = d.collectionName === 'vouchers';
     const amount = parseFloat(document.getElementById('ledger-amount').value);
     const date = document.getElementById('ledger-date').value;
     const catCode = document.getElementById('ledger-cat').value;
@@ -309,20 +404,24 @@ async function confirmLedger() {
     const btn = document.getElementById('ledger-confirm');
     btn.disabled = true;
     try {
+        const party = d.custName || d.vendorName || d.requesterName || '';
+        const prefixDesc = isExpense
+            ? `จ่ายเงินตามเอกสาร ${d.docNo || d.id}`
+            : `รับเงินตามใบเสร็จ ${d.docNo || d.id}`;
         const ref = await addDoc(collection(db, 'fin_transactions'), {
             date, catCode, amount,
-            desc: `รับเงินตามใบเสร็จ ${d.docNo || d.id}${d.custName ? ' — ' + d.custName : ''}`.slice(0, 500),
+            desc: `${prefixDesc}${party ? ' — ' + party : ''}`.slice(0, 500),
             ref: d.docNo || d.id,
-            contact: d.custName || '',
+            contact: party,
             payment_status: 2,
             paid_date: date,
             created_at: serverTimestamp()
         });
-        await updateDoc(doc(db, 'receipts', d.id), { ledgerTxnId: ref.id });
+        await updateDoc(doc(db, d.collectionName, d.id), { ledgerTxnId: ref.id });
         d.ledgerTxnId = ref.id;
         closeLedger();
         renderDocuments();
-        toast('ลงบัญชีรายรับแล้ว');
+        toast(isExpense ? 'ลงบัญชีรายจ่ายแล้ว' : 'ลงบัญชีรายรับแล้ว');
     } catch (e) {
         console.error('Ledger post failed', e);
         toast('ลงบัญชีไม่สำเร็จ: ' + e.message, false);

@@ -76,21 +76,29 @@
                         <i class="bi bi-receipt"></i>
                         ใบเสร็จรับเงิน
                     </a>
-                    <a href="#certificate" class="menu-item menu-sub-item" data-title="หนังสือรับรอง" style="--i: 8">
+                    <a href="#voucher" class="menu-item menu-sub-item" data-title="ใบขอเบิก / ซื้อ / จ้าง / สำคัญจ่าย" style="--i: 8">
+                        <i class="bi bi-cash-stack"></i>
+                        ใบเบิก / ซื้อ / จ้าง
+                    </a>
+                    <a href="#certificate" class="menu-item menu-sub-item" data-title="หนังสือรับรอง" style="--i: 9">
                         <i class="bi bi-patch-check"></i>
                         หนังสือรับรอง
+                    </a>
+                    <a href="#letter" class="menu-item menu-sub-item" data-title="หนังสือติดต่อหน่วยงานภายนอก" style="--i: 10">
+                        <i class="bi bi-envelope-paper"></i>
+                        หนังสือติดต่อภายนอก
                     </a>
                 </div>
             </div>
 
             <div class="menu-title" style="margin-top: 8px;">เครื่องมือ</div>
 
-            <a href="#user" class="menu-item" data-title="จัดการผู้ใช้" style="--i: 9">
+            <a href="#user" class="menu-item" data-title="จัดการผู้ใช้" style="--i: 11">
                 <i class="bi bi-people"></i>
                 ผู้ใช้
             </a>
 
-            <a href="#qr" class="menu-item" data-title="สร้าง QR Code" style="--i: 10">
+            <a href="#qr" class="menu-item" data-title="สร้าง QR Code" style="--i: 12">
                 <i class="bi bi-qr-code-scan"></i>
                 QR Code
             </a>
@@ -165,7 +173,7 @@
         </a>
 
         <a href="#document-record" class="bo-tab-item" data-tab-index="3"
-            data-routes="#document-record,#quotation,#invoice,#receipt,#certificate">
+            data-routes="#document-record,#quotation,#invoice,#receipt,#voucher,#certificate,#letter">
             <i class="bi bi-file-earmark-text"></i>
             <span class="bo-tab-label">เอกสาร</span>
         </a>
@@ -300,6 +308,7 @@
             '#dashboard': 'dashboard.html',
             '#quotation': 'quotation.html',
             '#receipt': 'receipt.html',
+            '#voucher': 'voucher.html',
             '#financial': 'financial.html',
             '#user': 'user.html',
             '#profile': 'profile.html',
@@ -307,6 +316,7 @@
             '#document-record': 'document-record.html',
             '#invoice': 'invoice.html',
             '#certificate': 'certificate.html',
+            '#letter': 'letter.html',
             '#qr': 'qr-gen.html'
         };
 
@@ -318,7 +328,9 @@
             '#quotation': 'ใบเสนอราคา',
             '#invoice': 'ใบแจ้งหนี้',
             '#receipt': 'ใบเสร็จรับเงิน',
+            '#voucher': 'ใบขอเบิก / ซื้อ / จ้าง / สำคัญจ่าย',
             '#certificate': 'หนังสือรับรอง',
+            '#letter': 'หนังสือติดต่อหน่วยงานภายนอก',
             '#user': 'จัดการผู้ใช้',
             '#qr': 'สร้าง QR Code',
             '#profile': 'โปรไฟล์ของฉัน'
