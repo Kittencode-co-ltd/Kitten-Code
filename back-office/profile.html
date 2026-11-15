@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <script src="../assets/js/core/bo-theme.js"></script>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>My Profile - Kitten Code</title>
 
@@ -99,11 +100,12 @@
             body { padding: 12px; }
         }
     </style>
+    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 </head>
 
 <body>
     <div class="container-fluid" style="max-width: 960px;">
-        <h2 class="h4 mb-4">My Profile</h2>
+        <h2 class="h4 mb-4">โปรไฟล์ของฉัน</h2>
 
         <div id="loading" class="text-center py-5 text-muted">
             <span class="spinner-border spinner-border-sm me-2"></span> Loading profile...
@@ -118,7 +120,7 @@
                         <div class="h5 mb-1" id="displayName">-</div>
                         <div class="text-muted small"><i class="bi bi-envelope me-1"></i><span id="displayEmail">-</span></div>
                         <div class="mt-1">
-                            <span class="badge bg-secondary" id="displayRole">User</span>
+                            <span class="badge bg-secondary" id="displayRole">ผู้ใช้</span>
                             <span class="text-muted small ms-2"><i class="bi bi-person me-1"></i><span id="displayUsername">-</span></span>
                         </div>
                     </div>
@@ -130,49 +132,49 @@
                 <div class="card-body">
                     <div id="alertBox" class="alert d-none" role="alert"></div>
                     <form id="profileForm" novalidate>
-                        <h6 class="text-muted mb-3">Personal Information</h6>
+                        <h6 class="text-muted mb-3">ข้อมูลส่วนตัว</h6>
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label" for="pFirstName">First Name</label>
+                                <label class="form-label" for="pFirstName">ชื่อ</label>
                                 <input type="text" class="form-control" id="pFirstName" maxlength="100">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="pLastName">Last Name</label>
+                                <label class="form-label" for="pLastName">นามสกุล</label>
                                 <input type="text" class="form-control" id="pLastName" maxlength="100">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="pPosition">Position</label>
+                                <label class="form-label" for="pPosition">ตำแหน่ง</label>
                                 <input type="text" class="form-control" id="pPosition" maxlength="100">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="pBirthDate">Birth Date</label>
+                                <label class="form-label" for="pBirthDate">วันเกิด</label>
                                 <input type="date" class="form-control" id="pBirthDate">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="pPhone">Phone</label>
+                                <label class="form-label" for="pPhone">เบอร์โทร</label>
                                 <input type="tel" class="form-control" id="pPhone" maxlength="30">
                             </div>
                         </div>
 
-                        <h6 class="text-muted mb-3">Bank Account</h6>
+                        <h6 class="text-muted mb-3">บัญชีรับเงิน</h6>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
-                                <label class="form-label" for="pBankAccountName">Account Name</label>
+                                <label class="form-label" for="pBankAccountName">ชื่อบัญชี</label>
                                 <input type="text" class="form-control" id="pBankAccountName" maxlength="150">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="pBankName">Bank</label>
+                                <label class="form-label" for="pBankName">ธนาคาร</label>
                                 <input type="text" class="form-control" id="pBankName" maxlength="100">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="pBankAccountNumber">Account Number</label>
+                                <label class="form-label" for="pBankAccountNumber">เลขที่บัญชี</label>
                                 <input type="text" class="form-control" id="pBankAccountNumber" maxlength="30">
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary" id="btnSave">
-                                <i class="bi bi-save me-2"></i>Save Changes
+                                <i class="bi bi-check2 me-2"></i>บันทึก
                             </button>
                         </div>
                     </form>
@@ -288,7 +290,7 @@
                 showAlert('danger', 'Failed to save profile: ' + e.message);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-save me-2"></i>Save Changes';
+                btn.innerHTML = '<i class="bi bi-check2 me-2"></i>บันทึก';
             }
         });
 

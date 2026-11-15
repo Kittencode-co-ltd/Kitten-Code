@@ -154,10 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('input', () => buildPreview());
     });
 
-    if (!applyConvertData()) {
+    if (!window.KCDoc.applyEditData('invoice', state, setInputValue) && !applyConvertData()) {
         restoreDraft();
     }
     renderItemsForm();
+    window.KCDoc.ensureDocNo('invoice');
 
     // Initial build
     document.fonts.ready.then(() => {
@@ -655,7 +656,7 @@ window.saveDocumentToFirestore = async function() {
     const btnSave = document.getElementById('btn-save-cloud');
     if (btnSave) {
         btnSave.disabled = true;
-        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก…';
     }
 
     try {
@@ -694,6 +695,11 @@ window.saveDocumentToFirestore = async function() {
             custAddr: getInputValue('cust-addr'),
             custTel: getInputValue('cust-tel'),
             custTax: getInputValue('cust-tax'),
+            projName: getInputValue('proj-name'),
+            projContact: getInputValue('proj-contact'),
+            salesName: getInputValue('sales-name'),
+            quoteRef: getInputValue('quote-ref'),
+            paymentMethod: getInputValue('payment-method'),
             note: state.note || '',
             signReceiver: getInputValue('sign-receiver'),
             signAuth: getInputValue('sign-auth'),
@@ -712,14 +718,14 @@ window.saveDocumentToFirestore = async function() {
         };
 
         // Use setDoc with a custom ID (docNo) to avoid duplicates if saved multiple times
-        await setDoc(doc(db, 'invoices', docNo), invoiceData);
+        await window.KCDoc.save('invoice', docNo, invoiceData);
 
         showSaveToast("บันทึกใบแจ้งหนี้ไปยังระบบเรียบร้อยแล้ว", "success");
         // Reset button state
         setTimeout(() => {
             if (btnSave) {
                 btnSave.disabled = false;
-                btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+                btnSave.innerHTML = '<i class="fas fa-check"></i> บันทึก';
             }
         }, 3000);
 
@@ -730,7 +736,7 @@ window.saveDocumentToFirestore = async function() {
         alert("Error: " + (error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล"));
         if (btnSave) {
             btnSave.disabled = false;
-            btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+            btnSave.innerHTML = '<i class="fas fa-check"></i> บันทึก';
         }
         return false;
     }
@@ -748,7 +754,7 @@ window.convertToReceipt = async function() {
 
     if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-arrow-right"></i> บันทึกและไปสร้างใบเสร็จรับเงินต่อ';
+        btn.innerHTML = 'ออกใบเสร็จต่อ <i class="fas fa-arrow-right"></i>';
     }
     if (!ok) return;
 

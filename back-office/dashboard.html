@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="../assets/js/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Kitten Code — Dark Luxury Financial Dashboard">
     <title>Dashboard — Kitten Code Financial</title>
@@ -20,6 +21,7 @@
     <!-- Dashboard stylesheet -->
     <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 </head>
 
 <body>
@@ -30,27 +32,15 @@
          HEADER
     ══════════════════════════════════════════════════════ -->
         <header class="db-header">
-            <div class="db-logo">
-                <div class="db-logo-icon"><i class="bi bi-bar-chart-fill"></i></div>
-                <div class="db-logo-text">
-                    <strong>Dashboard</strong>
-                    <span>Kitten Code Financial — Back Office</span>
-                </div>
-            </div>
-
             <div class="db-header-right">
                 <!-- Period filter -->
                 <div class="period-tabs" role="group" aria-label="Period">
-                    <button class="period-btn active" data-period="month" id="btn-month">This Month</button>
-                    <button class="period-btn" data-period="quarter" id="btn-quarter">This Quarter</button>
-                    <button class="period-btn" data-period="year" id="btn-year">This Year</button>
+                    <button class="period-btn active" data-period="month" id="btn-month">เดือนนี้</button>
+                    <button class="period-btn" data-period="quarter" id="btn-quarter">ไตรมาสนี้</button>
+                    <button class="period-btn" data-period="year" id="btn-year">ปีนี้</button>
                 </div>
 
-                <!-- Back to financial management -->
-                <a href="financial.html" class="db-back-btn">
-                    <i class="bi bi-wallet2"></i>
-                    Financial Management
-                </a>
+                
             </div>
         </header>
 
@@ -58,52 +48,51 @@
          SECTION 1 — KPI CARDS
     ══════════════════════════════════════════════════════ -->
         <section class="db-section" aria-label="KPI Overview">
-            <div class="db-section-label">Key Performance Indicators</div>
+            <div class="db-section-label">สรุปตัวเลข</div>
 
             <div class="kpi-grid">
 
                 <!-- Net Profit/Loss -->
                 <div class="kpi-card kpi-net" role="region" aria-label="Net Profit/Loss">
                     <div class="kpi-header">
-                        <div class="kpi-label">Net Profit/Loss<br><span class="kpi-period-label">This Month</span></div>
+                        <div class="kpi-label">กำไร / ขาดทุน<br><span class="kpi-period-label">เดือนนี้</span></div>
                         <div class="kpi-icon" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></div>
                     </div>
                     <div class="kpi-value kpi-net-val" id="kpi-net">—</div>
                     <div class="kpi-sub">
-                        Income − Expenses (Paid)
-                        <span id="kpi-net-badge" class="kpi-badge badge-pos" aria-live="polite">▲ Profit</span>
+                        รายรับ − รายจ่าย (เฉพาะที่จ่ายแล้ว)
+                        <span id="kpi-net-badge" class="kpi-badge badge-pos" aria-live="polite">▲ กำไร</span>
                     </div>
                 </div>
 
                 <!-- Total Income -->
                 <div class="kpi-card kpi-inc" role="region" aria-label="Total Income">
                     <div class="kpi-header">
-                        <div class="kpi-label">Total Income<br><span class="kpi-period-label">This Month</span></div>
+                        <div class="kpi-label">รายรับ<br><span class="kpi-period-label">เดือนนี้</span></div>
                         <div class="kpi-icon" aria-hidden="true"><i class="bi bi-arrow-down-left"></i></div>
                     </div>
                     <div class="kpi-value kpi-inc-val" id="kpi-inc">—</div>
-                    <div class="kpi-sub">Transaction Type: Income (Paid)</div>
+                    <div class="kpi-sub">เฉพาะที่รับเงินแล้ว</div>
                 </div>
 
                 <!-- Total Expenses -->
                 <div class="kpi-card kpi-exp" role="region" aria-label="Total Expenses">
                     <div class="kpi-header">
-                        <div class="kpi-label">Total Expenses<br><span class="kpi-period-label">This Month</span></div>
+                        <div class="kpi-label">รายจ่าย<br><span class="kpi-period-label">เดือนนี้</span></div>
                         <div class="kpi-icon" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></div>
                     </div>
                     <div class="kpi-value kpi-exp-val" id="kpi-exp">—</div>
-                    <div class="kpi-sub">Transaction Type: Expense (Paid)</div>
+                    <div class="kpi-sub">เฉพาะที่จ่ายแล้ว</div>
                 </div>
 
                 <!-- Pending Reimbursements -->
                 <div class="kpi-card kpi-pend" role="region" aria-label="Pending Reimbursements">
                     <div class="kpi-header">
-                        <div class="kpi-label">Pending Reimbursements<br><span class="kpi-period-label">This
-                                Month</span></div>
+                        <div class="kpi-label">รอจ่าย<br><span class="kpi-period-label">เดือนนี้</span></div>
                         <div class="kpi-icon" aria-hidden="true"><i class="bi bi-clock-history"></i></div>
                     </div>
                     <div class="kpi-value kpi-pend-val" id="kpi-pend">—</div>
-                    <div class="kpi-sub">Pending Reimbursements</div>
+                    <div class="kpi-sub">รายการที่ยังไม่จ่าย</div>
                 </div>
 
             </div>
@@ -113,14 +102,14 @@
          SECTION 2 — CHARTS
     ══════════════════════════════════════════════════════ -->
         <section class="db-section" aria-label="Charts">
-            <div class="db-section-label">Visualisations</div>
+            <div class="db-section-label">กราฟ</div>
 
             <div class="charts-grid">
 
                 <!-- Line Chart: Monthly Trend -->
                 <div class="chart-card">
-                    <div class="chart-title">Monthly Net Profit Trend</div>
-                    <div class="chart-subtitle">Income / Expense / Net Profit — Last 6 Months</div>
+                    <div class="chart-title">กำไรสุทธิรายเดือน</div>
+                    <div class="chart-subtitle">รายรับ รายจ่าย และกำไร — 6 เดือนล่าสุด</div>
                     <div class="chart-canvas-wrap" style="height:280px;">
                         <canvas id="lineChart" aria-label="Monthly net profit trend line chart"></canvas>
                     </div>
@@ -128,9 +117,8 @@
 
                 <!-- Doughnut Chart: Expense Breakdown -->
                 <div class="chart-card">
-                    <div class="chart-title">Expense Breakdown by Category</div>
-                    <div class="chart-subtitle">Expense Breakdown by Category (<span id="donut-period-label">This
-                            Month</span>)</div>
+                    <div class="chart-title">รายจ่ายแยกตามหมวด</div>
+                    <div class="chart-subtitle">รายจ่ายแยกตามหมวด — <span id="donut-period-label">เดือนนี้</span></div>
                     <div class="chart-canvas-wrap" style="height:200px;">
                         <canvas id="donutChart" aria-label="Expense breakdown doughnut chart"></canvas>
                     </div>
@@ -145,25 +133,25 @@
          SECTION 3 — TRANSACTIONS + SECURITY
     ══════════════════════════════════════════════════════ -->
         <section class="db-section" aria-label="Recent Transactions & System Status">
-            <div class="db-section-label">Data &amp; Security</div>
+            <div class="db-section-label">รายการล่าสุด</div>
 
             <div class="bottom-grid">
 
                 <!-- Recent Transactions -->
                 <div class="data-card">
                     <div class="data-card-header">
-                        <span class="data-card-title">Last 5 Transactions</span>
-                        <a href="financial.html" class="data-card-action">View All →</a>
+                        <span class="data-card-title">5 รายการล่าสุด</span>
+                        <a href="#" class="data-card-action" onclick="event.preventDefault(); window.parent !== window ? window.parent.location.hash = '#financial' : location.href = 'financial.html'">ดูทั้งหมด →</a>
                     </div>
                     <div style="overflow-x:auto;">
                         <table class="txn-tbl" aria-label="Last 5 Transactions">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Transaction / Category</th>
-                                    <th>Status</th>
-                                    <th style="text-align:right;">Amount</th>
-                                    <th>Type</th>
+                                    <th>วันที่</th>
+                                    <th>รายการ / หมวด</th>
+                                    <th>สถานะ</th>
+                                    <th style="text-align:right;">จำนวนเงิน</th>
+                                    <th>หมวด</th>
                                 </tr>
                             </thead>
                             <tbody id="txn-tbody">
@@ -178,28 +166,7 @@
                     </div>
                 </div>
 
-                <!-- System & Security Status -->
-                <div class="data-card">
-                    <div class="data-card-header">
-                        <span class="data-card-title">System &amp; Security Status</span>
-                        <a href="https://github.com/Kittencode-co-ltd/Kitten-Code/security" target="_blank"
-                            rel="noopener noreferrer" class="data-card-action">GitHub →</a>
-                    </div>
-                    <div id="sec-panel" aria-label="Security panel" aria-live="polite">
-                        <!-- Populated by dashboard.js after auth -->
-                        <div class="sec-list">
-                            <div class="sec-item">
-                                <span class="sec-dot dot-info"></span>
-                                <div class="sec-content">
-                                    <div class="sec-label">Loading</div>
-                                    <div class="sec-value">
-                                        <span class="skel" style="height:13px;width:80%;display:inline-block;"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
 
             </div>
         </section>

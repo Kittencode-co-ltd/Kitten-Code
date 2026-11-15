@@ -278,7 +278,7 @@ window.saveDocumentToFirestore = async function () {
         setTimeout(() => {
             if (btnSave) {
                 btnSave.disabled = false;
-                btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+                btnSave.innerHTML = '<i class="fas fa-check"></i> บันทึก';
             }
         }, 2500);
         return true;
@@ -288,7 +288,7 @@ window.saveDocumentToFirestore = async function () {
         alert('Error: ' + (error.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'));
         if (btnSave) {
             btnSave.disabled = false;
-            btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+            btnSave.innerHTML = '<i class="fas fa-check"></i> บันทึก';
         }
         return false;
     }

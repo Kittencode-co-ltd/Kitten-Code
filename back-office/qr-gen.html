@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="../assets/js/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -403,6 +404,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 </head>
 
 <body>
@@ -411,8 +413,8 @@
         <div class="card-header-icon">
             <i class="bi bi-qr-code"></i>
         </div>
-        <h1>QR Generator</h1>
-        <p class="subtitle">Enter a link or text to generate a high-resolution QR code</p>
+        <h1>สร้าง QR Code</h1>
+        <p class="subtitle">ใส่ลิงก์หรือข้อความ แล้วกดสร้าง</p>
 
         <div class="input-wrapper">
             <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off">
@@ -460,7 +462,7 @@
         <div id="qrWrapper" class="qr-wrapper">
             <div id="placeholderContent" class="placeholder-content">
                 <i class="bi bi-grid-3x3"></i>
-                <span>Your QR code will appear here</span>
+                <span>QR Code จะแสดงตรงนี้</span>
             </div>
             <div id="qrcode">
                 <canvas id="qrCanvas"></canvas>

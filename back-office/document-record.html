@@ -1,94 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="th">
 <head>
     <meta charset="UTF-8">
+    <script src="../assets/js/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Kitten Code — Document Records">
     <title>Document Records — Kitten Code</title>
     <link rel="stylesheet" href="../assets/css/finance.css">
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <style>
-        .badge-quote {
-            background: rgba(14, 165, 233, 0.12);
-            color: #0ea5e9;
-            border: 1px solid rgba(14, 165, 233, 0.35);
-        }
-
-        .badge-invoice {
-            background: rgba(139, 92, 246, 0.12);
-            color: #8b5cf6;
-            border: 1px solid rgba(139, 92, 246, 0.35);
-        }
-
-        .badge-receipt {
-            background: rgba(16, 185, 129, 0.12);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.35);
-        }
-
-        .badge-certificate {
-            background: rgba(242, 101, 34, 0.12);
-            color: #f26522;
-            border: 1px solid rgba(242, 101, 34, 0.35);
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 </head>
-
 <body>
     <div id="vis-container">
         <div class="app">
-            <div class="header">
-                <div class="logo">Kitten<span>Documents</span></div>
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('all')">All Documents</button>
-                    <button class="tab" onclick="switchTab('quotations')">Quotations</button>
-                    <button class="tab" onclick="switchTab('invoices')">Invoices</button>
-                    <button class="tab" onclick="switchTab('receipts')">Receipts</button>
-                    <button class="tab" onclick="switchTab('certificates')">Certificates</button>
+            <div class="page-head">
+                <div>
+                    <h1 class="page-h1">ทะเบียนเอกสาร</h1>
+                    <div class="page-sub" id="doc-count">กำลังโหลด…</div>
                 </div>
+                <input type="search" id="doc-search" class="kc-search" placeholder="ค้นหาเลขที่ ลูกค้า หรือโปรเจกต์">
             </div>
 
-            <div id="page-records" class="page active">
-                <div class="section">
-                    <div class="section-header">
-                        <div class="section-title">Document Records</div>
-                    </div>
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('all', this)">ทั้งหมด</button>
+                <button class="tab" onclick="switchTab('quotations', this)">ใบเสนอราคา</button>
+                <button class="tab" onclick="switchTab('invoices', this)">ใบแจ้งหนี้</button>
+                <button class="tab" onclick="switchTab('receipts', this)">ใบเสร็จ</button>
+                <button class="tab" onclick="switchTab('certificates', this)">หนังสือรับรอง</button>
+            </div>
 
-                    <div class="table-scroll-wrapper">
-                        <table class="txn-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Doc No.</th>
-                                    <th style="text-align:center;">Type</th>
-                                    <th>Customer</th>
-                                    <th style="text-align:right;">Total Amount</th>
-                                    <th style="text-align:center;">Status</th>
-                                    <th style="text-align:center;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="doc-tbody">
-                                <tr>
-                                    <td colspan="7" style="text-align:center;">Loading documents...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="section">
+                <div class="table-scroll-wrapper">
+                    <table class="txn-table doc-table">
+                        <thead>
+                            <tr>
+                                <th>วันที่</th>
+                                <th>เลขที่</th>
+                                <th>ประเภท</th>
+                                <th>ลูกค้า / ผู้รับ</th>
+                                <th style="text-align:right;">ยอดรวม</th>
+                                <th>สถานะ</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="doc-tbody">
+                            <tr><td colspan="7"><div class="empty-state">กำลังโหลดเอกสาร…</div></td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-
-        <script src="../assets/js/documents/document-record.js" type="module"></script>
-        <script type="module">
-            import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
-            onAuthStateChanged(auth, (user) => {
-                if (!user) { window.location.replace('login.html'); }
-            });
-        </script>
     </div>
-</body>
 
+    <!-- New document: floating button -->
+    <div class="kc-fab-group">
+        <a class="kc-fab" href="#" onclick="event.preventDefault(); (window.parent !== window ? window.parent.location.hash = '#quotation' : location.href = 'quotation.html')">
+            <i class="fas fa-plus"></i> สร้างใบเสนอราคา
+        </a>
+    </div>
+
+    <!-- Receipt → income -->
+    <div class="kc-modal" id="ledger-modal">
+        <div class="kc-modal-box">
+            <div class="kc-modal-title">ลงบัญชีรายรับ</div>
+            <div class="kc-modal-sub" id="ledger-doc"></div>
+            <label class="kc-label" for="ledger-cat">หมวดรายรับ</label>
+            <select id="ledger-cat" class="kc-input"></select>
+            <div class="kc-row">
+                <div>
+                    <label class="kc-label" for="ledger-amount">จำนวนเงิน (บาท)</label>
+                    <input id="ledger-amount" type="number" min="0" step="0.01" class="kc-input">
+                </div>
+                <div>
+                    <label class="kc-label" for="ledger-date">วันที่รับเงิน</label>
+                    <input id="ledger-date" type="date" class="kc-input">
+                </div>
+            </div>
+            <div class="kc-modal-actions">
+                <button class="kc-btn" onclick="closeLedger()">ยกเลิก</button>
+                <button class="kc-btn kc-btn-primary" id="ledger-confirm" onclick="confirmLedger()">บันทึกรายรับ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="kc-toast" id="doc-toast"></div>
+
+    <script src="../assets/js/documents/document-record.js" type="module"></script>
+    <script type="module">
+        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace('login.html'); }
+        });
+    </script>
+</body>
 </html>

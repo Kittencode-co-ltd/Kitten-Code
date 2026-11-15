@@ -3,10 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="../assets/js/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Kitten Code — ระบบติดตามงบประมาณและการเบิกจ่ายเงินกองกลาง">
     <title>Accounting — Kitten Code Financial</title>
     <link rel="stylesheet" href="../assets/css/finance.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 </head>
 
 <body>
@@ -16,13 +19,10 @@
         </style>
 
         <div class="app">
-            <div class="header">
-                <div class="logo">Kitten<span>Financial</span></div>
+            <div class="page-head">
                 <div class="tabs">
-                    <a href="dashboard.html" class="tab">Overview</a>
-                    <button class="tab active" onclick="switchTab('register')">Control Account</button>
-                    <button class="tab" onclick="switchTab('transactions')">Transactions</button>
-                    <button class="tab" onclick="switchTab('add')">+ Record</button>
+                    <button class="tab active" data-tab="transactions" onclick="switchTab('transactions')">รายการเงิน</button>
+                    <button class="tab" data-tab="register" onclick="switchTab('register')">หมวดและงบประมาณ</button>
                 </div>
             </div>
 
@@ -71,57 +71,57 @@
                 </div>
             </div>
 
-            <div id="page-register" class="page active">
+            <div id="page-register" class="page">
                 <div class="section">
                     <div class="section-header">
-                        <div class="section-title">Category Control Account</div>
-                        <button class="btn-add" onclick="showAddCategory()">+ Add Category</button>
+                        <div class="section-title">หมวดและงบประมาณ</div>
+                        <button class="btn-add" onclick="showAddCategory()">+ เพิ่มหมวด</button>
                     </div>
 
                     <div id="add-cat-form"
                         style="display:none; background:var(--bg-glass); border-radius:var(--border-radius-md); padding:1.25rem; margin-bottom:1rem; border:1px solid var(--border-glass);">
                         <div class="form-grid" style="margin-bottom:10px;">
                             <div class="form-group">
-                                <div class="form-label">Category Code</div>
-                                <input type="text" id="cat-code" placeholder="e.g., EXP-01">
+                                <div class="form-label">รหัสหมวด</div>
+                                <input type="text" id="cat-code" placeholder="เช่น EXP-01">
                             </div>
                             <div class="form-group">
-                                <div class="form-label">Type</div>
+                                <div class="form-label">ประเภท</div>
                                 <select id="cat-type">
-                                    <option value="1">1 = Income</option>
-                                    <option value="2">2 = Expense</option>
+                                    <option value="1">รายรับ</option>
+                                    <option value="2">รายจ่าย</option>
                                 </select>
                             </div>
                             <div class="form-group full">
-                                <div class="form-label">Category Name</div>
-                                <input type="text" id="cat-name" placeholder="e.g., Server Hosting">
+                                <div class="form-label">ชื่อหมวด</div>
+                                <input type="text" id="cat-name" placeholder="เช่น ค่าเซิร์ฟเวอร์">
                             </div>
                             <div class="form-group full">
-                                <div class="form-label">Budget Limit — 0 = Unlimited</div>
+                                <div class="form-label">งบประมาณ (ใส่ 0 = ไม่จำกัด)</div>
                                 <input type="number" id="cat-budget" placeholder="0">
                             </div>
                             <div class="form-group">
-                                <div class="form-label">Quota Frequency</div>
-                                <input type="number" id="cat-quota-value" placeholder="e.g., 7, 1, 30" min="1">
+                                <div class="form-label">รอบงบทุก ๆ</div>
+                                <input type="number" id="cat-quota-value" placeholder="เช่น 1" min="1">
                             </div>
                             <div class="form-group">
-                                <div class="form-label">Quota Unit</div>
+                                <div class="form-label">หน่วยรอบ</div>
                                 <select id="cat-quota-unit">
-                                    <option value="">— No cycle (One-time) —</option>
-                                    <option value="days">Days</option>
-                                    <option value="months">Months</option>
-                                    <option value="years">Years</option>
+                                    <option value="">ไม่มีรอบ (ครั้งเดียว)</option>
+                                    <option value="days">วัน</option>
+                                    <option value="months">เดือน</option>
+                                    <option value="years">ปี</option>
                                 </select>
                             </div>
                             <div class="form-group full" id="cat-reset-date-group" style="display:none;">
-                                <div class="form-label">Current Quota Start Date</div>
+                                <div class="form-label">วันเริ่มรอบปัจจุบัน</div>
                                 <input type="date" id="cat-reset-date">
                             </div>
                         </div>
                         <div style="display:flex;gap:8px;">
-                            <button class="btn-add" onclick="addCategory()">Save</button>
+                            <button class="btn-add" onclick="addCategory()">บันทึก</button>
                             <button class="action-btn"
-                                onclick="document.getElementById('add-cat-form').style.display='none'">Cancel</button>
+                                onclick="document.getElementById('add-cat-form').style.display='none'">ยกเลิก</button>
                         </div>
                     </div>
 
@@ -129,13 +129,13 @@
                     <table class="register-table">
                         <thead>
                             <tr>
-                                <th>Code</th>
-                                <th>Category Name</th>
-                                <th>Type</th>
-                                <th style="text-align:right;">Budget (฿)</th>
-                                <th style="text-align:right;">Spent</th>
-                                <th style="text-align:right;">Balance</th>
-                                <th>Quota Cycle</th>
+                                <th>รหัส</th>
+                                <th>ชื่อหมวด</th>
+                                <th>ประเภท</th>
+                                <th style="text-align:right;">งบ (฿)</th>
+                                <th style="text-align:right;">ใช้ไป</th>
+                                <th style="text-align:right;">คงเหลือ</th>
+                                <th>รอบงบ</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -144,17 +144,16 @@
                 </div>
             </div>
 
-            <div id="page-transactions" class="page">
+            <div id="page-transactions" class="page active">
                 <div class="section">
                     <div class="section-header">
-                        <div class="section-title">All Transactions</div>
-                        <button class="btn-add" onclick="switchTab('add')">+ Record Transaction</button>
+                        <div class="section-title">รายการเงินทั้งหมด</div>
                     </div>
                     <div class="filter-row">
                         <select id="filter-type" onchange="renderTxns()">
-                            <option value="">All Types</option>
-                            <option value="1">Income</option>
-                            <option value="2">Expense</option>
+                            <option value="">รายรับและรายจ่าย</option>
+                            <option value="1">รายรับ</option>
+                            <option value="2">รายจ่าย</option>
                         </select>
                         <input type="month" id="filter-month" onchange="renderTxns()">
                     </div>
@@ -162,15 +161,15 @@
                         <table class="txn-table">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Transaction</th>
-                                    <th>Category</th>
-                                    <th>Ref No.</th>
-                                    <th>Contact</th>
-                                    <th style="text-align:center;">Status</th>
-                                    <th>Paid Date</th>
-                                    <th style="text-align:right;">Amount</th>
-                                    <th style="text-align:center;">Actions</th>
+                                    <th>วันที่</th>
+                                    <th>รายการ</th>
+                                    <th>หมวด</th>
+                                    <th>เลขอ้างอิง</th>
+                                    <th>ผู้ติดต่อ</th>
+                                    <th style="text-align:center;">สถานะ</th>
+                                    <th>วันที่จ่าย</th>
+                                    <th style="text-align:right;">จำนวนเงิน</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="txn-tbody"></tbody>
@@ -182,60 +181,64 @@
             <div id="page-add" class="page">
                 <div class="section">
                     <div class="section-header">
-                        <div class="section-title">Record Transaction</div>
+                        <div class="section-title">บันทึกรายการเงิน</div>
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <div class="form-label">Transaction Date</div>
+                            <div class="form-label">วันที่</div>
                             <input type="date" id="txn-date">
                         </div>
                         <div class="form-group">
-                            <div class="form-label">Category</div>
+                            <div class="form-label">หมวด</div>
                             <select id="txn-cat"></select>
                         </div>
                         <div class="form-group full">
-                            <div class="form-label">Description</div>
-                            <input type="text" id="txn-desc" placeholder="e.g., AWS Cloud Hosting - Feb">
+                            <div class="form-label">รายละเอียด</div>
+                            <input type="text" id="txn-desc" placeholder="เช่น ค่า AWS เดือน ก.พ.">
                         </div>
                         <div class="form-group">
-                            <div class="form-label">Amount</div>
+                            <div class="form-label">จำนวนเงิน (บาท)</div>
                             <input type="number" id="txn-amount" placeholder="0.00">
                         </div>
                         <div class="form-group">
-                            <div class="form-label">Doc Ref / INV No.</div>
-                            <input type="text" id="txn-ref" placeholder="e.g., INV-2024-001">
+                            <div class="form-label">เลขที่เอกสารอ้างอิง</div>
+                            <input type="text" id="txn-ref" placeholder="เช่น INV-2569-001">
                         </div>
                         <div class="form-group full">
-                            <div class="form-label">Contact Name (Optional)</div>
-                            <input type="text" id="txn-contact" placeholder="e.g., AWS Thailand Co., Ltd.">
+                            <div class="form-label">ผู้ติดต่อ (ไม่บังคับ)</div>
+                            <input type="text" id="txn-contact" placeholder="เช่น บริษัท ABC จำกัด">
                         </div>
                         <div class="form-group">
-                            <div class="form-label">Payment Status</div>
+                            <div class="form-label">สถานะ</div>
                             <select id="txn-status">
-                                <option value="1" selected>Pending</option>
-                                <option value="2">Paid</option>
-                                <option value="0">Rejected</option>
+                                <option value="1" selected>รอจ่าย</option>
+                                <option value="2">จ่ายแล้ว</option>
+                                <option value="0">ปฏิเสธ</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <div class="form-label">Actual Paid Date</div>
+                            <div class="form-label">วันที่จ่ายจริง</div>
                             <input type="date" id="txn-paid-date">
                         </div>
                     </div>
                     <div style="margin-top:1rem; display:flex; gap:8px;">
-                        <button class="btn-add" onclick="addTransaction()">Save Record</button>
-                        <button class="action-btn" onclick="switchTab('transactions')">View All Transactions</button>
+                        <button class="btn-add" onclick="addTransaction()">บันทึก</button>
+                        <button class="action-btn" onclick="switchTab('transactions')">ยกเลิก</button>
                     </div>
                     <div id="add-msg" style="margin-top:10px;font-size:13px;"></div>
                 </div>
             </div>
         </div>
 
+        <div class="kc-fab-group" id="txn-fab">
+            <button class="kc-fab" onclick="switchTab('add')"><i class="fas fa-plus"></i> บันทึกรายการ</button>
+        </div>
+
         <!-- Edit Modal Overlay -->
         <div id="edit-modal" class="modal-overlay">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="modal-title">Edit Record</div>
+                    <div class="modal-title">แก้ไข</div>
                 </div>
                 <input type="hidden" id="edit-doc-id">
                 <input type="hidden" id="edit-col-name">
@@ -243,39 +246,39 @@
                 <!-- Transaction Fields -->
                 <div id="edit-txn-fields" style="display:none;" class="form-grid">
                     <div class="form-group full">
-                        <div class="form-label">Transaction Date</div>
+                        <div class="form-label">วันที่</div>
                         <input type="date" id="edit-txn-date">
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Category</div>
+                        <div class="form-label">หมวด</div>
                         <select id="edit-txn-cat"></select>
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Description</div>
+                        <div class="form-label">รายละเอียด</div>
                         <input type="text" id="edit-txn-desc">
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Ref No.</div>
+                        <div class="form-label">เลขอ้างอิง</div>
                         <input type="text" id="edit-txn-ref">
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Contact</div>
+                        <div class="form-label">ผู้ติดต่อ</div>
                         <input type="text" id="edit-txn-contact">
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Status</div>
+                        <div class="form-label">สถานะ</div>
                         <select id="edit-txn-status">
-                            <option value="1">Pending</option>
-                            <option value="2">Paid</option>
-                            <option value="0">Rejected</option>
+                            <option value="1">รอจ่าย</option>
+                            <option value="2">จ่ายแล้ว</option>
+                            <option value="0">ปฏิเสธ</option>
                         </select>
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Paid Date</div>
+                        <div class="form-label">วันที่จ่าย</div>
                         <input type="date" id="edit-txn-paid-date">
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Amount</div>
+                        <div class="form-label">จำนวนเงิน</div>
                         <input type="number" id="edit-txn-amount" step="0.01">
                     </div>
                 </div>
@@ -283,35 +286,35 @@
                 <!-- Category Fields -->
                 <div id="edit-cat-fields" style="display:none;" class="form-grid">
                     <div class="form-group full">
-                        <div class="form-label">Category Name</div>
+                        <div class="form-label">ชื่อหมวด</div>
                         <input type="text" id="edit-cat-name">
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Budget Limit (0 = Unlimited)</div>
+                        <div class="form-label">งบประมาณ (0 = ไม่จำกัด)</div>
                         <input type="number" id="edit-cat-budget" step="0.01">
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Quota Frequency</div>
+                        <div class="form-label">รอบงบทุก ๆ</div>
                         <input type="number" id="edit-cat-quota-value" min="1">
                     </div>
                     <div class="form-group full">
-                        <div class="form-label">Quota Unit</div>
+                        <div class="form-label">หน่วยรอบ</div>
                         <select id="edit-cat-quota-unit">
-                            <option value="">— No cycle (One-time) —</option>
-                            <option value="days">Days</option>
-                            <option value="months">Months</option>
-                            <option value="years">Years</option>
+                            <option value="">ไม่มีรอบ (ครั้งเดียว)</option>
+                            <option value="days">วัน</option>
+                            <option value="months">เดือน</option>
+                            <option value="years">ปี</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="modal-actions" style="justify-content: space-between;">
                     <div>
-                        <button id="modal-delete-btn" class="action-btn" style="background:#dc2626; color:white; border:none;" onclick="confirmDeleteFromModal()">ลบ (Delete)</button>
+                        <button id="modal-delete-btn" class="action-btn row-btn-danger" onclick="confirmDeleteFromModal()">ลบ</button>
                     </div>
                     <div style="display:flex; gap:8px;">
-                        <button class="action-btn" onclick="closeEditModal()">ยกเลิก (Cancel)</button>
-                        <button class="btn-add" onclick="submitEdit()">บันทึกการแก้ไข (Update)</button>
+                        <button class="action-btn" onclick="closeEditModal()">ยกเลิก</button>
+                        <button class="btn-add" onclick="submitEdit()">บันทึก</button>
                     </div>
                 </div>
             </div>

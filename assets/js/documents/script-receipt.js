@@ -152,10 +152,11 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('change', () => buildPreview());
     });
 
-    if (!applyConvertData()) {
+    if (!window.KCDoc.applyEditData('receipt', state, setInputValue) && !applyConvertData()) {
         restoreDraft();
     }
     renderItemsForm();
+    window.KCDoc.ensureDocNo('receipt');
 
     // Initial build
     document.fonts.ready.then(() => {
@@ -593,7 +594,7 @@ window.saveDocumentToFirestore = async function() {
     const btnSave = document.getElementById('btn-save-cloud');
     if (btnSave) {
         btnSave.disabled = true;
-        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก…';
     }
 
     try {
@@ -655,7 +656,7 @@ window.saveDocumentToFirestore = async function() {
         };
 
         // Use setDoc with docNo as document ID to prevent duplicates
-        await setDoc(doc(db, 'receipts', docNo), receiptData);
+        await window.KCDoc.save('receipt', docNo, receiptData);
 
         showSaveToast("บันทึกใบเสร็จรับเงินไปยังระบบเรียบร้อยแล้ว", "success");
         
@@ -670,7 +671,7 @@ window.saveDocumentToFirestore = async function() {
         showSaveToast(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล", "error");
         if (btnSave) {
             btnSave.disabled = false;
-            btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+            btnSave.innerHTML = '<i class="fas fa-check"></i> บันทึก';
         }
     }
 };

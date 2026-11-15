@@ -3,17 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="../assets/js/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Kitten Code — ปฏิทินและนัดหมาย">
     <title>Calendar — Kitten Code</title>
     <link rel="stylesheet" href="../assets/css/finance.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         /* ── Calendar-specific styles (Original Palette + FUFU Motion & Controls) ── */
         :root {
-            --cal-accent: #6366f1;
-            --cal-accent-light: #818cf8;
+            --cal-accent: var(--kc-accent);
+            --cal-accent-light: var(--kc-accent);
             --cal-green: #10b981;
             --cal-red: #ef4444;
             --cal-orange: #f59e0b;
@@ -31,8 +31,8 @@
 
         body {
             font-family: 'Inter', 'Sarabun', sans-serif;
-            background: var(--color-bg, #0f172a);
-            color: var(--color-text, #e2e8f0);
+            background: var(--color-bg, var(--kc-surface));
+            color: var(--color-text, var(--kc-text));
             min-height: 100vh;
             margin: 0;
         }
@@ -62,21 +62,18 @@
         .cal-title {
             font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #c7d2fe, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--kc-text);
         }
 
         .cal-subtitle {
             font-size: 0.85rem;
-            color: var(--color-text-muted, #94a3b8);
+            color: var(--color-text-muted, var(--kc-muted));
         }
 
         .cal-nav-btn {
-            background: var(--color-card, #1e293b);
-            border: 1px solid var(--color-border, #334155);
-            color: var(--color-text, #e2e8f0);
+            background: var(--color-card, var(--kc-line));
+            border: 1px solid var(--color-border, var(--kc-line));
+            color: var(--color-text, var(--kc-text));
             min-height: 38px;
             padding: 8px 16px;
             border-radius: 999px;
@@ -94,7 +91,7 @@
         .cal-month-label {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #c7d2fe;
+            color: var(--kc-text);
             min-width: 200px;
             text-align: center;
         }
@@ -102,8 +99,8 @@
         .cal-view-toggle {
             display: flex;
             gap: 4px;
-            background: var(--color-card, #1e293b);
-            border: 1px solid var(--color-border, #334155);
+            background: var(--color-card, var(--kc-line));
+            border: 1px solid var(--color-border, var(--kc-line));
             border-radius: 999px;
             padding: 4px;
         }
@@ -116,7 +113,7 @@
             font-size: 0.85rem;
             cursor: pointer;
             background: transparent;
-            color: var(--color-text-muted, #94a3b8);
+            color: var(--color-text-muted, var(--kc-muted));
             font-weight: 600;
             transition: all var(--dur-base) var(--ease-out);
         }
@@ -124,7 +121,7 @@
         .view-btn.active {
             background: var(--cal-accent);
             color: #fff;
-            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.35);
+            box-shadow: 0 2px 10px rgba(10,114,232, 0.35);
         }
 
         .btn-add-event {
@@ -141,10 +138,10 @@
             align-items: center;
             gap: 8px;
             transition: all var(--dur-fast) var(--ease-out);
-            box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+            box-shadow: 0 4px 12px rgba(10,114,232,0.3);
         }
         .btn-add-event:hover {
-            box-shadow: 0 6px 16px rgba(99,102,241,0.45);
+            box-shadow: 0 6px 16px rgba(10,114,232,0.45);
         }
         .btn-add-event:active {
             transform: scale(0.97);
@@ -152,8 +149,8 @@
 
         /* ── Calendar Grid ── */
         .cal-grid-wrapper {
-            background: var(--color-card, #1e293b);
-            border: 1px solid var(--color-border, #334155);
+            background: var(--color-card, var(--kc-line));
+            border: 1px solid var(--color-border, var(--kc-line));
             border-radius: 16px;
             overflow: hidden;
         }
@@ -161,8 +158,8 @@
         .cal-weekdays {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            background: #0f172a;
-            border-bottom: 1px solid var(--color-border, #334155);
+            background: var(--kc-surface);
+            border-bottom: 1px solid var(--color-border, var(--kc-line));
         }
 
         .cal-weekday {
@@ -172,10 +169,10 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: var(--color-text-muted, #94a3b8);
+            color: var(--color-text-muted, var(--kc-muted));
         }
-        .cal-weekday:first-child { color: #f87171; }
-        .cal-weekday:last-child { color: #60a5fa; }
+        .cal-weekday:first-child { color: var(--kc-red, #c8322b); }
+        .cal-weekday:last-child { color: var(--kc-accent); }
 
         .cal-grid {
             display: grid;
@@ -184,15 +181,15 @@
 
         .cal-cell {
             min-height: 110px;
-            border-right: 1px solid #1e293b;
-            border-bottom: 1px solid #1e293b;
+            border-right: 1px solid var(--kc-line);
+            border-bottom: 1px solid var(--kc-line);
             padding: 8px;
             cursor: pointer;
             transition: background 0.15s;
             position: relative;
         }
         .cal-cell:nth-child(7n) { border-right: none; }
-        .cal-cell:hover { background: rgba(99,102,241,0.05); }
+        .cal-cell:hover { background: rgba(10,114,232,0.05); }
 
         .cal-cell.other-month { opacity: 0.35; }
 
@@ -209,13 +206,13 @@
         }
 
         .cal-cell.selected {
-            background: rgba(99,102,241,0.08);
+            background: rgba(10,114,232,0.08);
         }
 
         .cell-date {
             font-size: 0.85rem;
             font-weight: 500;
-            color: #e2e8f0;
+            color: var(--kc-text);
             width: 28px;
             height: 28px;
             display: flex;
@@ -224,8 +221,8 @@
             margin-bottom: 4px;
         }
 
-        .cal-cell:nth-child(7n+1) .cell-date { color: #f87171; }
-        .cal-cell:nth-child(7n) .cell-date { color: #60a5fa; }
+        .cal-cell:nth-child(7n+1) .cell-date { color: var(--kc-red, #c8322b); }
+        .cal-cell:nth-child(7n) .cell-date { color: var(--kc-accent); }
 
         /* ── Events ── */
         .cal-event {
@@ -241,12 +238,46 @@
             transition: opacity 0.15s;
         }
         .cal-event:hover { opacity: 0.8; }
+        .cal-event.is-done { opacity: 0.45; text-decoration: line-through; }
+        .cal-event.is-doing::before {
+            content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+            background: currentColor; margin-right: 5px; vertical-align: middle;
+        }
 
-        .evt-work    { background: rgba(99,102,241,0.25); color: #a5b4fc; border-left: 3px solid #6366f1; }
-        .evt-meet    { background: rgba(16,185,129,0.2);  color: #6ee7b7; border-left: 3px solid #10b981; }
-        .evt-deadline{ background: rgba(239,68,68,0.2);   color: #fca5a5; border-left: 3px solid #ef4444; }
-        .evt-personal{ background: rgba(168,85,247,0.2);  color: #d8b4fe; border-left: 3px solid #a855f7; }
-        .evt-holiday { background: rgba(245,158,11,0.2);  color: #fcd34d; border-left: 3px solid #f59e0b; }
+        /* Task fields */
+        .assignee-list { display: flex; flex-wrap: wrap; gap: 6px; }
+        .assignee-chip, .status-opt {
+            min-height: 34px; padding: 6px 12px; border-radius: 8px;
+            border: 1px solid var(--kc-line); background: transparent; color: var(--kc-muted);
+            font-size: 0.85rem; font-family: inherit; cursor: pointer;
+        }
+        .assignee-chip.selected, .status-opt.selected {
+            border-color: var(--cal-accent); background: rgba(10,114,232,0.15); color: var(--kc-text);
+        }
+        .assignee-chip:disabled, .status-opt:disabled { cursor: default; opacity: 0.6; }
+        .status-picker { display: flex; gap: 6px; }
+        .status-opt { flex: 1; }
+        .evt-meta { font-size: 0.78rem; color: var(--kc-muted); margin: -4px 0 12px; }
+        .empty-note { color: var(--kc-muted); font-size: 0.85rem; }
+        .task-status { font-size: 0.72rem; padding: 1px 6px; border-radius: 4px; border: 1px solid var(--kc-line); color: var(--kc-muted); }
+        .task-status.doing { border-color: var(--kc-accent); color: var(--kc-accent); }
+        .task-step {
+            flex-shrink: 0; min-height: 30px; padding: 0 12px; border-radius: 999px;
+            border: 1px solid var(--kc-line); background: var(--kc-surface); color: var(--kc-text);
+            font: inherit; font-size: 0.78rem; cursor: pointer; box-shadow: var(--kc-float);
+        }
+        .task-step:hover { border-color: var(--kc-accent); color: var(--kc-accent); }
+        .cal-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .cal-toolbar-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .cal-nav-btn.icon-only { width: 38px; padding: 0 !important; justify-content: center; }
+        .cal-month-label { font-size: 1.15rem; font-weight: 600; margin-left: 6px; }
+        .upcoming-event { display: flex; align-items: center; gap: 10px; }
+
+        .evt-work    { background: #eaf2fd; color: #0b4f9e; border-left: 3px solid var(--kc-accent); }
+        .evt-meet    { background: #e7f6ef; color: #146c43; border-left: 3px solid #10b981; }
+        .evt-deadline{ background: #fdecea; color: #a5281f; border-left: 3px solid #ef4444; }
+        .evt-personal{ background: #f3ecfd; color: #6b2fb3; border-left: 3px solid #a855f7; }
+        .evt-holiday { background: #fdf3e2; color: #8a5a00; border-left: 3px solid #f59e0b; }
 
         .more-events {
             font-size: 0.7rem;
@@ -264,8 +295,8 @@
         }
 
         .cal-sidebar {
-            background: var(--color-card, #1e293b);
-            border: 1px solid var(--color-border, #334155);
+            background: var(--color-card, var(--kc-line));
+            border: 1px solid var(--color-border, var(--kc-line));
             border-radius: 16px;
             padding: 20px;
         }
@@ -279,7 +310,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: var(--color-text-muted, #94a3b8);
+            color: var(--color-text-muted, var(--kc-muted));
             margin-bottom: 12px;
         }
 
@@ -303,7 +334,7 @@
         .mini-nav {
             background: none;
             border: none;
-            color: #94a3b8;
+            color: var(--kc-muted);
             cursor: pointer;
             padding: 2px 6px;
             border-radius: 4px;
@@ -322,7 +353,7 @@
         .mini-day-label {
             font-size: 0.65rem;
             font-weight: 600;
-            color: #64748b;
+            color: var(--kc-muted);
             padding: 4px 0;
             text-transform: uppercase;
         }
@@ -334,7 +365,7 @@
             cursor: pointer;
             transition: background 0.15s;
         }
-        .mini-day:hover { background: rgba(99,102,241,0.15); }
+        .mini-day:hover { background: rgba(10,114,232,0.15); }
         .mini-day.today-mini { background: var(--cal-accent); color: #fff; font-weight: 700; border-radius: 50%; }
         .mini-day.other-mini { opacity: 0.3; }
         .mini-day.has-event { position: relative; }
@@ -356,7 +387,7 @@
             align-items: flex-start;
             gap: 12px;
             padding: 10px 0;
-            border-bottom: 1px solid #1e293b;
+            border-bottom: 1px solid var(--kc-line);
         }
         .upcoming-event:last-child { border-bottom: none; }
 
@@ -370,7 +401,7 @@
 
         .upcoming-info {}
         .upcoming-title { font-size: 0.88rem; font-weight: 500; }
-        .upcoming-date  { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+        .upcoming-date  { font-size: 0.75rem; color: var(--kc-muted); margin-top: 2px; }
 
         /* ── Legend ── */
         .legend-item {
@@ -402,8 +433,8 @@
         .modal-overlay.open { display: flex; }
 
         .modal-box {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: var(--kc-line);
+            border: 1px solid var(--kc-line);
             border-radius: 24px;
             padding: 28px;
             width: 480px;
@@ -429,7 +460,7 @@
         .modal-title {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #c7d2fe;
+            color: var(--kc-text);
         }
 
         .modal-close {
@@ -437,15 +468,15 @@
             height: 36px;
             display: inline-grid;
             place-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid #334155;
-            color: #94a3b8;
+            background: rgba(0,0,0,0.03);
+            border: 1px solid var(--kc-line);
+            color: var(--kc-muted);
             font-size: 1rem;
             cursor: pointer;
             border-radius: 999px;
             transition: all var(--dur-fast) var(--ease-out);
         }
-        .modal-close:hover { color: #e2e8f0; background: rgba(255, 255, 255, 0.1); }
+        .modal-close:hover { color: var(--kc-text); background: rgba(0,0,0,0.06); }
         .modal-close:active { transform: scale(0.9); }
 
         .form-group-cal {
@@ -456,7 +487,7 @@
             display: block;
             font-size: 0.8rem;
             font-weight: 600;
-            color: #94a3b8;
+            color: var(--kc-muted);
             margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -465,11 +496,11 @@
         .form-input-cal {
             width: 100%;
             min-height: 42px;
-            background: #0f172a;
-            border: 1.5px solid #334155;
+            background: var(--kc-surface);
+            border: 1.5px solid var(--kc-line);
             border-radius: 14px;
             padding: 10px 14px;
-            color: #e2e8f0;
+            color: var(--kc-text);
             font-size: 0.92rem;
             font-family: inherit;
             transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
@@ -477,7 +508,7 @@
         .form-input-cal:focus {
             outline: none;
             border-color: var(--cal-accent);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18);
+            box-shadow: 0 0 0 4px rgba(10,114,232, 0.18);
         }
 
         .color-picker-row {
@@ -518,9 +549,9 @@
         .btn-cancel {
             flex: 1;
             min-height: 44px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: #94a3b8;
+            background: var(--kc-surface);
+            border: 1px solid var(--kc-line);
+            color: var(--kc-muted);
             padding: 10px 16px;
             border-radius: 999px;
             font-size: 0.9rem;
@@ -528,7 +559,7 @@
             cursor: pointer;
             transition: all var(--dur-fast) var(--ease-out);
         }
-        .btn-cancel:hover { border-color: #475569; color: #e2e8f0; }
+        .btn-cancel:hover { border-color: var(--kc-muted); color: var(--kc-text); }
         .btn-cancel:active { transform: scale(0.97); }
 
         .btn-save-evt {
@@ -551,7 +582,7 @@
             min-height: 44px;
             background: rgba(239,68,68,0.15);
             border: 1px solid rgba(239,68,68,0.3);
-            color: #f87171;
+            color: var(--kc-red, #c8322b);
             padding: 10px 16px;
             border-radius: 999px;
             font-size: 0.9rem;
@@ -566,12 +597,12 @@
             position: fixed;
             bottom: 24px;
             right: 24px;
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: var(--kc-line);
+            border: 1px solid var(--kc-line);
             border-radius: 10px;
             padding: 12px 18px;
             font-size: 0.88rem;
-            color: #e2e8f0;
+            color: var(--kc-text);
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
             transform: translateY(80px);
             opacity: 0;
@@ -585,7 +616,7 @@
 
         @media (max-width: 900px) {
             .cal-layout { grid-template-columns: 1fr; }
-            .cal-sidebar { display: none; }
+            .cal-sidebar { display: block; }
             .cal-cell { min-height: 70px; }
         }
 
@@ -600,35 +631,35 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 </head>
 
 <body>
     <div class="cal-container">
         <!-- Top Bar -->
-        <div class="cal-topbar">
-            <div class="cal-title-group">
-                <div>
-                    <div class="cal-title"><i class="fas fa-calendar-alt" style="font-size:1.3rem; margin-right:8px;"></i>ปฏิทิน</div>
-                    <div class="cal-subtitle">Calendar & Events — Kitten Code</div>
-                </div>
+        <!-- One toolbar: move in time on the left, filters and add on the right -->
+        <div class="cal-toolbar">
+            <div class="cal-toolbar-group">
+                <button class="cal-nav-btn icon-only" onclick="navigate(-1)" aria-label="ก่อนหน้า"><i class="fas fa-chevron-left"></i></button>
+                <button class="cal-nav-btn" onclick="goToday()">วันนี้</button>
+                <button class="cal-nav-btn icon-only" onclick="navigate(1)" aria-label="ถัดไป"><i class="fas fa-chevron-right"></i></button>
+                <span class="cal-month-label" id="month-label"></span>
             </div>
-            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div class="cal-toolbar-group">
                 <div class="cal-view-toggle">
-                    <button class="view-btn active" id="btn-month-view" onclick="setView('month')">Month</button>
-                    <button class="view-btn" id="btn-week-view" onclick="setView('week')">Week</button>
+                    <button class="view-btn active" id="btn-filter-all" onclick="setFilter(false)">ทุกคน</button>
+                    <button class="view-btn" id="btn-filter-mine" onclick="setFilter(true)">ของฉัน</button>
                 </div>
-                <button class="btn-add-event" onclick="openAddModal()">
-                    <i class="fas fa-plus"></i> เพิ่มกิจกรรม
-                </button>
+                <div class="cal-view-toggle">
+                    <button class="view-btn active" id="btn-month-view" onclick="setView('month')">เดือน</button>
+                    <button class="view-btn" id="btn-week-view" onclick="setView('week')">สัปดาห์</button>
+                </div>
             </div>
         </div>
 
-        <!-- Navigation -->
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
-            <button class="cal-nav-btn" onclick="navigate(-1)"><i class="fas fa-chevron-left"></i></button>
-            <button class="cal-nav-btn" onclick="goToday()"><i class="fas fa-dot-circle"></i> วันนี้</button>
-            <button class="cal-nav-btn" onclick="navigate(1)"><i class="fas fa-chevron-right"></i></button>
-            <span class="cal-month-label" id="month-label"></span>
+        <!-- Floating add button -->
+        <div class="kc-fab-group">
+            <button class="kc-fab" onclick="openAddModal()"><i class="fas fa-plus"></i> เพิ่มงาน</button>
         </div>
 
         <!-- Layout: Grid + Sidebar -->
@@ -659,35 +690,20 @@
 
             <!-- Sidebar -->
             <div class="cal-sidebar">
-                <!-- Mini Calendar -->
+                <!-- My open tasks -->
                 <div class="sidebar-section">
-                    <div class="sidebar-title">📅 Mini Calendar</div>
-                    <div class="mini-cal">
-                        <div class="mini-cal-header">
-                            <button class="mini-nav" onclick="miniNav(-1)"><i class="fas fa-chevron-left"></i></button>
-                            <span class="mini-cal-title" id="mini-label"></span>
-                            <button class="mini-nav" onclick="miniNav(1)"><i class="fas fa-chevron-right"></i></button>
-                        </div>
-                        <div class="mini-cal-grid" id="mini-cal-grid"></div>
+                    <div class="sidebar-title">งานของฉันที่ยังไม่เสร็จ</div>
+                    <div id="my-tasks-list">
+                        <div class="empty-note">ยังไม่มีงานที่มอบหมายให้คุณ</div>
                     </div>
                 </div>
 
                 <!-- Upcoming Events -->
                 <div class="sidebar-section">
-                    <div class="sidebar-title">⏰ กิจกรรมที่จะมาถึง</div>
+                    <div class="sidebar-title">กำลังจะมาถึง</div>
                     <div id="upcoming-list">
-                        <div style="color:#64748b; font-size:0.85rem;">ยังไม่มีกิจกรรม</div>
+                        <div style="color:var(--kc-muted); font-size:0.85rem;">ยังไม่มีกิจกรรม</div>
                     </div>
-                </div>
-
-                <!-- Legend -->
-                <div class="sidebar-section">
-                    <div class="sidebar-title">🏷️ ประเภทกิจกรรม</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#6366f1;"></div> งาน / Work</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div> ประชุม / Meeting</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> กำหนดส่ง / Deadline</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#a855f7;"></div> ส่วนตัว / Personal</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div> วันหยุด / Holiday</div>
                 </div>
             </div>
         </div>
@@ -697,7 +713,7 @@
     <div class="modal-overlay" id="event-modal">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title" id="modal-title-text">✨ เพิ่มกิจกรรม</div>
+                <div class="modal-title" id="modal-title-text">เพิ่มกิจกรรม</div>
                 <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
             </div>
 
@@ -734,9 +750,31 @@
             </div>
 
             <div class="form-group-cal">
+                <label class="form-label-cal">โปรเจกต์ / ลูกค้า</label>
+                <input type="text" class="form-input-cal" id="evt-project" list="project-options" placeholder="พิมพ์หรือเลือกจากใบเสนอราคา">
+                <datalist id="project-options"></datalist>
+            </div>
+
+            <div class="form-group-cal">
+                <label class="form-label-cal">ผู้รับผิดชอบ</label>
+                <div class="assignee-list" id="assignee-list"></div>
+            </div>
+
+            <div class="form-group-cal">
+                <label class="form-label-cal">สถานะ</label>
+                <div class="status-picker" id="status-picker">
+                    <button type="button" class="status-opt" data-status="todo">รอทำ</button>
+                    <button type="button" class="status-opt" data-status="doing">กำลังทำ</button>
+                    <button type="button" class="status-opt" data-status="done">เสร็จแล้ว</button>
+                </div>
+            </div>
+
+            <div class="evt-meta" id="evt-meta"></div>
+
+            <div class="form-group-cal">
                 <label class="form-label-cal">ประเภท / สี</label>
                 <div class="color-picker-row" id="color-picker">
-                    <div class="color-chip selected" data-type="work"     style="background:#6366f1;" title="Work"></div>
+                    <div class="color-chip selected" data-type="work"     style="background:var(--kc-accent);" title="Work"></div>
                     <div class="color-chip" data-type="meet"     style="background:#10b981;" title="Meeting"></div>
                     <div class="color-chip" data-type="deadline" style="background:#ef4444;" title="Deadline"></div>
                     <div class="color-chip" data-type="personal" style="background:#a855f7;" title="Personal"></div>
@@ -749,7 +787,7 @@
                     <i class="fas fa-trash"></i>
                 </button>
                 <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
-                <button class="btn-save-evt" onclick="saveEvent()">
+                <button class="btn-save-evt" id="btn-save-evt" onclick="saveEvent()">
                     <i class="fas fa-save"></i> บันทึก
                 </button>
             </div>
@@ -769,7 +807,7 @@
         let selectedType = 'work';
 
         const TYPE_COLORS = {
-            work:     '#6366f1',
+            work:     '#0a72e8',
             meet:     '#10b981',
             deadline: '#ef4444',
             personal: '#a855f7',
@@ -790,64 +828,102 @@
         const THAI_MONTHS_SHORT = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
                                    'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 
+        const STATUS_LABELS = { todo: 'รอทำ', doing: 'กำลังทำ', done: 'เสร็จแล้ว' };
+
+        // ── Session / task state ───────────────────────────────
+        let me = null;              // { uid, name, isAdmin }
+        let staff = [];             // [{ uid, name }] from staff_directory
+        let filterMine = false;
+        let selectedAssignees = new Set();
+        let selectedStatus = 'todo';
+
         // ── Firestore ──────────────────────────────────────────
-        let db = null, firebaseAuth = null, firestoreModule = null;
+        let db = null, fs = null;
 
         async function initFirebase() {
-            try {
-                const mod = await import('../assets/js/core/firebase-config.js');
-                db = mod.db;
-                firebaseAuth = mod.auth;
-                firestoreModule = mod;
-                await loadEventsFromFirestore();
-            } catch (e) {
-                console.warn('Firebase unavailable, using localStorage', e);
-                loadEventsFromLocal();
-            }
-        }
-
-        async function loadEventsFromFirestore() {
-            if (!db || !firebaseAuth.currentUser) { loadEventsFromLocal(); return; }
-            try {
-                const { collection, getDocs, query, orderBy } = firestoreModule;
-                const q = query(collection(db, 'calendar_events'), orderBy('startDate'));
-                const snap = await getDocs(q);
-                events = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            const mod = await import('../assets/js/core/firebase-config.js');
+            db = mod.db;
+            fs = mod;
+            // Wait for the restored auth session before touching Firestore.
+            mod.onAuthStateChanged(mod.auth, async (user) => {
+                if (!user) { window.location.replace('login.html'); return; }
+                try {
+                    await loadMe(user);
+                    await Promise.all([loadStaff(), loadEvents(), loadProjectOptions()]);
+                } catch (e) {
+                    console.error('Calendar init error', e);
+                    showToast('โหลดข้อมูลปฏิทินไม่สำเร็จ: ' + e.message, false);
+                }
                 renderAll();
-            } catch (e) {
-                console.error('Load events error', e);
-                loadEventsFromLocal();
+            });
+        }
+
+        async function loadMe(user) {
+            const { doc, getDoc, setDoc } = fs;
+            const snap = await getDoc(doc(db, 'users', user.uid));
+            const u = snap.exists() ? snap.data() : {};
+            me = { uid: user.uid, name: displayName(u, user.email), isAdmin: u.role === 'admin' };
+            // Keep my entry in the shared staff list (name only — no private fields).
+            await setDoc(doc(db, 'staff_directory', user.uid), { uid: user.uid, name: me.name });
+        }
+
+        function displayName(u, fallbackEmail) {
+            const full = [u.firstName, u.lastName].filter(Boolean).join(' ').trim();
+            return full || u.username || (fallbackEmail || '').split('@')[0] || 'ไม่ระบุชื่อ';
+        }
+
+        async function loadStaff() {
+            const { collection, getDocs, doc, setDoc, deleteDoc } = fs;
+            if (me.isAdmin) {
+                // Admin keeps the directory in sync with the users collection.
+                const users = await getDocs(collection(db, 'users'));
+                const live = new Set();
+                for (const d of users.docs) {
+                    live.add(d.id);
+                    await setDoc(doc(db, 'staff_directory', d.id), { uid: d.id, name: displayName(d.data(), d.data().email) });
+                }
+                const dir = await getDocs(collection(db, 'staff_directory'));
+                for (const d of dir.docs) if (!live.has(d.id)) await deleteDoc(d.ref);
             }
+            const dir = await getDocs(collection(db, 'staff_directory'));
+            staff = dir.docs.map(d => d.data()).sort((a, b) => a.name.localeCompare(b.name, 'th'));
         }
 
-        function loadEventsFromLocal() {
+        async function loadEvents() {
+            const { collection, getDocs, query, orderBy } = fs;
+            const snap = await getDocs(query(collection(db, 'calendar_events'), orderBy('startDate')));
+            events = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+        }
+
+        async function loadProjectOptions() {
+            const { collection, getDocs } = fs;
             try {
-                events = JSON.parse(localStorage.getItem('kc_events') || '[]');
-            } catch { events = []; }
-            renderAll();
+                const snap = await getDocs(collection(db, 'quotations'));
+                const names = new Set();
+                snap.forEach(d => {
+                    const q = d.data();
+                    const label = [q.projName, q.custName].filter(Boolean).join(' — ');
+                    if (label) names.add(label);
+                });
+                document.getElementById('project-options').innerHTML =
+                    [...names].sort().map(n => `<option value="${escHTML(n)}"></option>`).join('');
+            } catch (e) { console.warn('Project list unavailable', e); }
         }
 
-        function saveToLocal() {
-            localStorage.setItem('kc_events', JSON.stringify(events));
+        // ── Permissions (mirror firestore.rules) ─────────────────
+        function canEdit(evt) {
+            if (!evt) return true;
+            return me.isAdmin || !evt.createdBy || evt.createdBy === me.uid || (evt.assignees || []).includes(me.uid);
         }
-
-        async function persistEvent(evt) {
-            saveToLocal();
-            if (!db || !firebaseAuth.currentUser) return;
-            try {
-                const { collection, doc, setDoc, serverTimestamp } = firestoreModule;
-                const ref = doc(collection(db, 'calendar_events'), evt.id);
-                await setDoc(ref, { ...evt, updatedAt: serverTimestamp() });
-            } catch(e) { console.error('Persist event error', e); }
+        function canDelete(evt) {
+            return !!evt && (me.isAdmin || evt.createdBy === me.uid);
         }
-
-        async function removeFromFirestore(id) {
-            saveToLocal();
-            if (!db || !firebaseAuth.currentUser) return;
-            try {
-                const { collection, doc, deleteDoc } = firestoreModule;
-                await deleteDoc(doc(collection(db, 'calendar_events'), id));
-            } catch(e) { console.error('Delete event error', e); }
+        function isMine(evt) {
+            const a = evt.assignees || [];
+            return a.includes(me.uid) || (a.length === 0 && evt.createdBy === me.uid);
+        }
+        function staffName(uid) {
+            return (staff.find(s => s.uid === uid) || {}).name || 'ไม่ทราบชื่อ';
         }
 
         // ── Render ──────────────────────────────────────────────
@@ -855,6 +931,18 @@
             renderMonthGrid();
             renderMiniCal();
             renderUpcoming();
+            renderMyTasks();
+            if (currentView === 'week') renderWeekView();
+        }
+
+        function eventClass(evt) {
+            return `cal-event evt-${evt.type}` + (evt.status === 'done' ? ' is-done' : evt.status === 'doing' ? ' is-doing' : '');
+        }
+
+        function eventTooltip(evt) {
+            const who = (evt.assignees || []).map(staffName).join(', ');
+            return [evt.title, evt.project, who && 'ผู้รับผิดชอบ: ' + who, evt.status && 'สถานะ: ' + STATUS_LABELS[evt.status]]
+                .filter(Boolean).join('\n');
         }
 
         function renderMonthGrid() {
@@ -873,21 +961,21 @@
 
             const today = new Date();
 
-            // Fill grid cells
             let cells = [];
             for (let i = firstDay - 1; i >= 0; i--) {
-                cells.push({ day: daysInPrev - i, month: month - 1, year: month === 0 ? year - 1 : year, other: true });
+                cells.push({ date: new Date(year, month - 1, daysInPrev - i), other: true });
             }
             for (let d = 1; d <= daysInMonth; d++) {
-                cells.push({ day: d, month, year, other: false });
+                cells.push({ date: new Date(year, month, d), other: false });
             }
+            let next = 1;
             while (cells.length % 7 !== 0) {
-                cells.push({ day: cells.length - daysInMonth - firstDay + 1, month: month + 1, year: month === 11 ? year + 1 : year, other: true });
+                cells.push({ date: new Date(year, month + 1, next++), other: true });
             }
 
             cells.forEach(c => {
-                const dateStr = `${c.year}-${String(c.month + 1).padStart(2,'0')}-${String(c.day).padStart(2,'0')}`;
-                const isToday = !c.other && c.day === today.getDate() && c.month === today.getMonth() && c.year === today.getFullYear();
+                const dateStr = ymd(c.date);
+                const isToday = !c.other && c.date.toDateString() === today.toDateString();
                 const dayEvents = getEventsOnDate(dateStr);
 
                 const cell = document.createElement('div');
@@ -896,15 +984,16 @@
 
                 const dateEl = document.createElement('div');
                 dateEl.className = 'cell-date';
-                dateEl.textContent = c.day;
+                dateEl.textContent = c.date.getDate();
                 cell.appendChild(dateEl);
 
                 const MAX_SHOW = 3;
                 dayEvents.slice(0, MAX_SHOW).forEach(evt => {
                     const evEl = document.createElement('div');
-                    evEl.className = `cal-event evt-${evt.type}`;
+                    evEl.className = eventClass(evt);
+                    evEl.title = eventTooltip(evt);
                     evEl.textContent = (evt.timeStart ? evt.timeStart + ' ' : '') + evt.title;
-                    evEl.onclick = (e) => { e.stopPropagation(); openEditModal(evt); };
+                    evEl.onclick = (e) => { e.stopPropagation(); openEditModal(evt.id); };
                     cell.appendChild(evEl);
                 });
                 if (dayEvents.length > MAX_SHOW) {
@@ -919,46 +1008,38 @@
         }
 
         function renderWeekView() {
-            const year  = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const day   = currentDate.getDate();
-            const dow   = currentDate.getDay();
-            const weekStart = new Date(year, month, day - dow);
-
+            const weekStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
             const wrapper = document.getElementById('week-view-inner');
             const today = new Date();
 
             let html = `<div style="display:grid; grid-template-columns: 70px repeat(7,1fr); min-width:600px;">`;
-            html += `<div style="padding:12px; border-bottom:1px solid #1e293b; background:#0f172a;"></div>`;
+            html += `<div style="padding:12px; border-bottom:1px solid var(--kc-line); background:var(--kc-surface);"></div>`;
 
             const days = [];
+            const dayNames = ['อา','จ','อ','พ','พฤ','ศ','ส'];
             for (let i = 0; i < 7; i++) {
                 const d = new Date(weekStart);
                 d.setDate(weekStart.getDate() + i);
                 days.push(d);
                 const isToday = d.toDateString() === today.toDateString();
-                const dayNames = ['อา','จ','อ','พ','พฤ','ศ','ส'];
-                html += `<div style="text-align:center; padding:12px 4px; border-bottom:1px solid #1e293b; border-left:1px solid #1e293b; background:#0f172a;">
-                    <div style="font-size:0.7rem; color:#64748b; text-transform:uppercase;">${dayNames[d.getDay()]}</div>
-                    <div style="font-size:1.1rem; font-weight:700; ${isToday ? 'background:var(--cal-accent);color:#fff;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;' : 'color:#e2e8f0;'}">${d.getDate()}</div>
+                html += `<div style="text-align:center; padding:12px 4px; border-bottom:1px solid var(--kc-line); border-left:1px solid var(--kc-line); background:var(--kc-surface);">
+                    <div style="font-size:0.7rem; color:var(--kc-muted);">${dayNames[d.getDay()]}</div>
+                    <div style="font-size:1.1rem; font-weight:700; ${isToday ? 'background:var(--cal-accent);color:#fff;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;' : 'color:var(--kc-text);'}">${d.getDate()}</div>
                 </div>`;
             }
 
             const HOURS = Array.from({length: 17}, (_, i) => i + 7); // 07:00-23:00
             HOURS.forEach(h => {
-                const timeLabel = `${String(h).padStart(2,'0')}:00`;
-                html += `<div style="padding:8px 6px; border-bottom:1px solid #1e293b; font-size:0.72rem; color:#475569; text-align:right; line-height:40px; height:50px;">${timeLabel}</div>`;
+                html += `<div style="padding:8px 6px; border-bottom:1px solid var(--kc-line); font-size:0.72rem; color:var(--kc-muted); text-align:right; line-height:40px; height:50px;">${String(h).padStart(2,'0')}:00</div>`;
                 days.forEach(d => {
-                    const dateStr = d.toISOString().split('T')[0];
-                    const hourEvts = getEventsOnDate(dateStr).filter(e => {
-                        if (!e.timeStart) return false;
-                        return parseInt(e.timeStart.split(':')[0]) === h;
-                    });
-                    let evtsHtml = hourEvts.map(e => `
-                        <div class="cal-event evt-${e.type}" style="font-size:0.7rem; margin:1px 2px;" onclick="openEditModal(${JSON.stringify(e).replace(/"/g,'&quot;')})">
-                            ${e.timeStart} ${e.title}
+                    const dateStr = ymd(d);
+                    const hourEvts = getEventsOnDate(dateStr).filter(e => e.timeStart && parseInt(e.timeStart.split(':')[0]) === h);
+                    const evtsHtml = hourEvts.map(e => `
+                        <div class="${eventClass(e)}" title="${escHTML(eventTooltip(e))}" style="font-size:0.7rem; margin:1px 2px;"
+                             onclick="event.stopPropagation(); openEditModal('${escHTML(e.id)}')">
+                            ${escHTML(e.timeStart)} ${escHTML(e.title)}
                         </div>`).join('');
-                    html += `<div style="border-bottom:1px solid #1e293b; border-left:1px solid #1e293b; height:50px; overflow:hidden; cursor:pointer; padding:2px;"
+                    html += `<div style="border-bottom:1px solid var(--kc-line); border-left:1px solid var(--kc-line); height:50px; overflow:hidden; cursor:pointer; padding:2px;"
                         onclick="openAddModal('${dateStr}')">${evtsHtml}</div>`;
                 });
             });
@@ -968,6 +1049,7 @@
         }
 
         function renderMiniCal() {
+            if (!document.getElementById('mini-cal-grid')) return;
             const year  = miniDate.getFullYear();
             const month = miniDate.getMonth();
             document.getElementById('mini-label').textContent = `${THAI_MONTHS_SHORT[month]} ${year + 543}`;
@@ -995,7 +1077,7 @@
             }
 
             for (let d = 1; d <= daysInMonth; d++) {
-                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const dateStr = ymd(new Date(year, month, d));
                 const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
                 const hasEvt  = getEventsOnDate(dateStr).length > 0;
 
@@ -1011,77 +1093,128 @@
         }
 
         function renderUpcoming() {
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            const upcoming = events
-                .filter(e => {
-                    const d = new Date(e.startDate + 'T00:00:00');
-                    return d >= today;
-                })
+            const todayStr = ymd(new Date());
+            const upcoming = visibleEvents()
+                .filter(e => (e.endDate || e.startDate) >= todayStr && e.status !== 'done')
                 .sort((a,b) => a.startDate.localeCompare(b.startDate))
                 .slice(0, 6);
 
             const list = document.getElementById('upcoming-list');
             if (upcoming.length === 0) {
-                list.innerHTML = '<div style="color:#64748b; font-size:0.85rem;">ยังไม่มีกิจกรรม</div>';
+                list.innerHTML = '<div class="empty-note">ยังไม่มีกิจกรรม</div>';
                 return;
             }
+            list.innerHTML = upcoming.map(e => `
+                <div class="upcoming-event" onclick="openEditModal('${escHTML(e.id)}')">
+                    <div class="upcoming-dot" style="background:${TYPE_COLORS[e.type] || 'var(--kc-accent)'};"></div>
+                    <div class="upcoming-info">
+                        <div class="upcoming-title">${escHTML(e.title)}</div>
+                        <div class="upcoming-date">${whenLabel(e.startDate)}${e.timeStart ? ' · ' + escHTML(e.timeStart) : ''} · ${TYPE_LABELS[e.type] || escHTML(e.type)}</div>
+                    </div>
+                </div>`).join('');
+        }
 
-            list.innerHTML = upcoming.map(e => {
-                const d = new Date(e.startDate + 'T00:00:00');
-                const diffDays = Math.round((d - today) / 86400000);
-                const whenLabel = diffDays === 0 ? 'วันนี้' : diffDays === 1 ? 'พรุ่งนี้' : `${d.getDate()} ${THAI_MONTHS_SHORT[d.getMonth()]}`;
-                return `
-                    <div class="upcoming-event" onclick="openEditModal(${JSON.stringify(e).replace(/"/g,'&quot;')})">
-                        <div class="upcoming-dot" style="background:${TYPE_COLORS[e.type] || '#6366f1'};"></div>
-                        <div class="upcoming-info">
-                            <div class="upcoming-title">${escHTML(e.title)}</div>
-                            <div class="upcoming-date">${whenLabel}${e.timeStart ? ' · '+e.timeStart : ''} · ${TYPE_LABELS[e.type]||e.type}</div>
-                        </div>
-                    </div>`;
-            }).join('');
+        function renderMyTasks() {
+            const list = document.getElementById('my-tasks-list');
+            if (!me) return;
+            const mine = events
+                .filter(e => isMine(e) && e.status && e.status !== 'done')
+                .sort((a, b) => (a.endDate || a.startDate).localeCompare(b.endDate || b.startDate));
+            if (mine.length === 0) {
+                list.innerHTML = '<div class="empty-note">ไม่มีงานค้าง</div>';
+                return;
+            }
+            list.innerHTML = mine.map(e => `
+                <div class="upcoming-event" onclick="openEditModal('${escHTML(e.id)}')">
+                    <div class="upcoming-info" style="flex:1;">
+                        <div class="upcoming-title">${escHTML(e.title)}</div>
+                        <div class="upcoming-date">ครบกำหนด ${whenLabel(e.endDate || e.startDate)}${e.project ? ' · ' + escHTML(e.project) : ''}</div>
+                    </div>
+                    <button type="button" class="task-step" title="เลื่อนสถานะ"
+                        onclick="event.stopPropagation(); advanceStatus('${escHTML(e.id)}')">
+                        ${e.status === 'todo' ? 'เริ่มทำ' : 'ทำเสร็จ'}
+                    </button>
+                </div>`).join('');
+        }
+
+        // One tap moves a task forward: รอทำ → กำลังทำ → เสร็จแล้ว
+        async function advanceStatus(id) {
+            const evt = events.find(e => e.id === id);
+            if (!evt || !canEdit(evt)) return;
+            const next = evt.status === 'todo' ? 'doing' : 'done';
+            const prev = evt.status;
+            evt.status = next;
+            renderAll();
+            try {
+                const { doc, setDoc, serverTimestamp } = fs;
+                await setDoc(doc(db, 'calendar_events', id), { status: next, updatedAt: serverTimestamp(), updatedBy: me.uid }, { merge: true });
+                showToast(next === 'done' ? `ปิดงาน "${evt.title}" แล้ว` : `เริ่มทำ "${evt.title}"`);
+            } catch (e) {
+                evt.status = prev;
+                renderAll();
+                showToast('อัปเดตสถานะไม่สำเร็จ: ' + e.message, false);
+            }
         }
 
         // ── Helpers ─────────────────────────────────────────────
+        // Local-time YYYY-MM-DD (toISOString would shift the date in UTC+7).
+        function ymd(d) {
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        function whenLabel(dateStr) {
+            const today = new Date(); today.setHours(0,0,0,0);
+            const d = new Date(dateStr + 'T00:00:00');
+            const diff = Math.round((d - today) / 86400000);
+            if (diff === 0) return 'วันนี้';
+            if (diff === 1) return 'พรุ่งนี้';
+            if (diff === -1) return 'เมื่อวาน';
+            return `${d.getDate()} ${THAI_MONTHS_SHORT[d.getMonth()]}`;
+        }
+
+        function visibleEvents() {
+            return filterMine && me ? events.filter(isMine) : events;
+        }
+
         function getEventsOnDate(dateStr) {
-            return events.filter(e => {
+            return visibleEvents().filter(e => {
                 if (!e.endDate || e.startDate === e.endDate) return e.startDate === dateStr;
                 return e.startDate <= dateStr && e.endDate >= dateStr;
             }).sort((a,b) => (a.timeStart||'').localeCompare(b.timeStart||''));
         }
 
         function escHTML(s) {
-            return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         }
 
         function genId() { return Date.now() + '_' + Math.random().toString(36).slice(2,7); }
 
         function showToast(msg, ok=true) {
             const t = document.getElementById('cal-toast');
-            t.innerHTML = `<i class="fas fa-${ok?'check-circle':'exclamation-circle'}" style="color:${ok?'#10b981':'#ef4444'};"></i> ${msg}`;
+            t.innerHTML = `<i class="fas fa-${ok?'check-circle':'exclamation-circle'}" style="color:${ok?'#10b981':'#ef4444'};"></i> ${escHTML(msg)}`;
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2800);
+            setTimeout(() => t.classList.remove('show'), 3200);
         }
 
         // ── Navigation ───────────────────────────────────────────
         function navigate(dir) {
             if (currentView === 'month') {
+                currentDate.setDate(1);
                 currentDate.setMonth(currentDate.getMonth() + dir);
             } else {
                 currentDate.setDate(currentDate.getDate() + dir * 7);
             }
             renderAll();
-            if (currentView === 'week') renderWeekView();
         }
 
         function goToday() {
             currentDate = new Date();
             miniDate = new Date();
             renderAll();
-            if (currentView === 'week') renderWeekView();
         }
 
         function miniNav(dir) {
+            miniDate.setDate(1);
             miniDate.setMonth(miniDate.getMonth() + dir);
             renderMiniCal();
         }
@@ -1092,38 +1225,85 @@
             document.getElementById('btn-week-view').classList.toggle('active', v==='week');
             document.getElementById('view-month').style.display = v==='month' ? '' : 'none';
             document.getElementById('view-week').style.display  = v==='week'  ? '' : 'none';
-            if (v==='week') renderWeekView();
+            renderAll();
+        }
+
+        function setFilter(mine) {
+            filterMine = mine;
+            document.getElementById('btn-filter-all').classList.toggle('active', !mine);
+            document.getElementById('btn-filter-mine').classList.toggle('active', mine);
+            renderAll();
         }
 
         // ── Modal ─────────────────────────────────────────────────
+        function renderAssignees(editable) {
+            const box = document.getElementById('assignee-list');
+            if (staff.length === 0) {
+                box.innerHTML = '<div class="empty-note">ยังไม่มีรายชื่อพนักงาน</div>';
+                return;
+            }
+            box.innerHTML = staff.map(s => `
+                <button type="button" class="assignee-chip${selectedAssignees.has(s.uid) ? ' selected' : ''}"
+                        data-uid="${escHTML(s.uid)}" ${editable ? '' : 'disabled'}>${escHTML(s.name)}${s.uid === me.uid ? ' (ฉัน)' : ''}</button>`).join('');
+        }
+
+        function selectStatus(status) {
+            selectedStatus = status;
+            document.querySelectorAll('.status-opt').forEach(b => b.classList.toggle('selected', b.dataset.status === status));
+        }
+
+        function setFormEditable(editable) {
+            ['evt-title','evt-start','evt-end','evt-time-start','evt-time-end','evt-note','evt-project']
+                .forEach(id => { document.getElementById(id).disabled = !editable; });
+            document.querySelectorAll('.status-opt').forEach(b => { b.disabled = !editable; });
+            document.getElementById('color-picker').style.pointerEvents = editable ? '' : 'none';
+            document.getElementById('btn-save-evt').style.display = editable ? '' : 'none';
+        }
+
         function openAddModal(dateStr = null) {
+            if (!me) return;
             editingEventId = null;
-            document.getElementById('modal-title-text').textContent = '✨ เพิ่มกิจกรรม';
+            document.getElementById('modal-title-text').textContent = 'เพิ่มกิจกรรม';
             document.getElementById('btn-delete-evt').style.display = 'none';
             document.getElementById('evt-title').value = '';
-            document.getElementById('evt-start').value = dateStr || new Date().toISOString().split('T')[0];
+            document.getElementById('evt-start').value = dateStr || ymd(new Date());
             document.getElementById('evt-end').value   = dateStr || '';
             document.getElementById('evt-time-start').value = '';
             document.getElementById('evt-time-end').value   = '';
             document.getElementById('evt-note').value  = '';
+            document.getElementById('evt-project').value = '';
+            document.getElementById('evt-meta').textContent = '';
+            selectedAssignees = new Set([me.uid]);
+            renderAssignees(true);
+            selectStatus('todo');
             selectType('work');
+            setFormEditable(true);
             document.getElementById('event-modal').classList.add('open');
             setTimeout(() => document.getElementById('evt-title').focus(), 100);
         }
 
-        function openEditModal(evt) {
-            // evt may be a string if passed via onclick attr
-            if (typeof evt === 'string') try { evt = JSON.parse(evt); } catch {}
+        function openEditModal(id) {
+            const evt = events.find(e => e.id === id);
+            if (!evt || !me) return;
+            const editable = canEdit(evt);
             editingEventId = evt.id;
-            document.getElementById('modal-title-text').textContent = '✏️ แก้ไขกิจกรรม';
-            document.getElementById('btn-delete-evt').style.display = '';
+            document.getElementById('modal-title-text').textContent = editable ? 'แก้ไขกิจกรรม' : 'รายละเอียดกิจกรรม';
+            document.getElementById('btn-delete-evt').style.display = canDelete(evt) ? '' : 'none';
             document.getElementById('evt-title').value      = evt.title || '';
             document.getElementById('evt-start').value      = evt.startDate || '';
             document.getElementById('evt-end').value        = evt.endDate || '';
             document.getElementById('evt-time-start').value = evt.timeStart || '';
             document.getElementById('evt-time-end').value   = evt.timeEnd || '';
             document.getElementById('evt-note').value       = evt.note || '';
+            document.getElementById('evt-project').value    = evt.project || '';
+            document.getElementById('evt-meta').textContent = evt.createdBy
+                ? `สร้างโดย ${staffName(evt.createdBy)}` + (editable ? '' : ' · คุณดูได้อย่างเดียว')
+                : '';
+            selectedAssignees = new Set(evt.assignees || []);
+            renderAssignees(editable);
+            selectStatus(evt.status || 'todo');
             selectType(evt.type || 'work');
+            setFormEditable(editable);
             document.getElementById('event-modal').classList.add('open');
         }
 
@@ -1139,10 +1319,20 @@
             });
         }
 
-        // chip click
         document.getElementById('color-picker').addEventListener('click', e => {
             const chip = e.target.closest('.color-chip');
             if (chip) selectType(chip.dataset.type);
+        });
+        document.getElementById('status-picker').addEventListener('click', e => {
+            const opt = e.target.closest('.status-opt');
+            if (opt && !opt.disabled) selectStatus(opt.dataset.status);
+        });
+        document.getElementById('assignee-list').addEventListener('click', e => {
+            const chip = e.target.closest('.assignee-chip');
+            if (!chip || chip.disabled) return;
+            const uid = chip.dataset.uid;
+            selectedAssignees.has(uid) ? selectedAssignees.delete(uid) : selectedAssignees.add(uid);
+            chip.classList.toggle('selected');
         });
 
         // ── CRUD ──────────────────────────────────────────────────
@@ -1150,48 +1340,74 @@
             const title = document.getElementById('evt-title').value.trim();
             const startDate = document.getElementById('evt-start').value;
             if (!title || !startDate) { showToast('กรุณากรอกชื่อกิจกรรมและวันที่', false); return; }
+            let endDate = document.getElementById('evt-end').value || startDate;
+            if (endDate < startDate) { showToast('วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่ม', false); return; }
 
+            const existing = editingEventId ? events.find(e => e.id === editingEventId) : null;
             const evt = {
-                id:        editingEventId || genId(),
+                id:        existing ? existing.id : genId(),
                 title,
                 startDate,
-                endDate:   document.getElementById('evt-end').value || startDate,
+                endDate,
                 timeStart: document.getElementById('evt-time-start').value,
                 timeEnd:   document.getElementById('evt-time-end').value,
                 note:      document.getElementById('evt-note').value.trim(),
+                project:   document.getElementById('evt-project').value.trim(),
+                assignees: [...selectedAssignees],
+                status:    selectedStatus,
                 type:      selectedType
             };
-
-            if (editingEventId) {
-                events = events.map(e => e.id === editingEventId ? evt : e);
+            // createdBy never changes; old events without an owner stay ownerless.
+            if (existing) {
+                if (existing.createdBy) evt.createdBy = existing.createdBy;
             } else {
-                events.push(evt);
+                evt.createdBy = me.uid;
             }
 
-            await persistEvent(evt);
-            closeModal();
-            renderAll();
-            if (currentView === 'week') renderWeekView();
-            showToast(editingEventId ? 'อัปเดตกิจกรรมแล้ว ✅' : 'เพิ่มกิจกรรมแล้ว ✅');
+            const btn = document.getElementById('btn-save-evt');
+            btn.disabled = true;
+            try {
+                const { doc, setDoc, serverTimestamp } = fs;
+                const payload = { ...evt, updatedAt: serverTimestamp(), updatedBy: me.uid };
+                if (!existing) payload.createdAt = serverTimestamp();
+                if (existing) {
+                    await setDoc(doc(db, 'calendar_events', evt.id), payload, { merge: true });
+                    events = events.map(e => e.id === evt.id ? { ...e, ...evt } : e);
+                } else {
+                    await setDoc(doc(db, 'calendar_events', evt.id), payload);
+                    events.push(evt);
+                }
+                closeModal();
+                renderAll();
+                showToast(existing ? 'อัปเดตกิจกรรมแล้ว' : 'เพิ่มกิจกรรมแล้ว');
+            } catch (e) {
+                console.error('Save event error', e);
+                showToast(e.code === 'permission-denied' ? 'คุณไม่มีสิทธิ์แก้ไขกิจกรรมนี้' : 'บันทึกไม่สำเร็จ: ' + e.message, false);
+            } finally {
+                btn.disabled = false;
+            }
         }
 
         async function deleteEvent() {
             if (!editingEventId) return;
             if (!confirm('ต้องการลบกิจกรรมนี้หรือไม่?')) return;
-            events = events.filter(e => e.id !== editingEventId);
-            await removeFromFirestore(editingEventId);
-            closeModal();
-            renderAll();
-            if (currentView === 'week') renderWeekView();
-            showToast('ลบกิจกรรมแล้ว');
+            try {
+                const { doc, deleteDoc } = fs;
+                await deleteDoc(doc(db, 'calendar_events', editingEventId));
+                events = events.filter(e => e.id !== editingEventId);
+                closeModal();
+                renderAll();
+                showToast('ลบกิจกรรมแล้ว');
+            } catch (e) {
+                console.error('Delete event error', e);
+                showToast(e.code === 'permission-denied' ? 'ลบได้เฉพาะผู้สร้างหรือแอดมิน' : 'ลบไม่สำเร็จ: ' + e.message, false);
+            }
         }
 
-        // close on overlay click
         document.getElementById('event-modal').addEventListener('click', e => {
             if (e.target === document.getElementById('event-modal')) closeModal();
         });
 
-        // keyboard shortcut
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeModal();
             if ((e.ctrlKey || e.metaKey) && e.key === 'ArrowLeft') { navigate(-1); e.preventDefault(); }
@@ -1199,16 +1415,10 @@
         });
 
         // ── Init ─────────────────────────────────────────────────
-        document.addEventListener('DOMContentLoaded', () => {
-            initFirebase();
-        });
-    </script>
-
-    <!-- Auth Guard -->
-    <script type="module">
-        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
-        onAuthStateChanged(auth, (user) => {
-            if (!user) { window.location.replace('login.html'); }
+        renderAll();
+        initFirebase().catch(e => {
+            console.error('Firebase unavailable', e);
+            showToast('เชื่อมต่อระบบไม่สำเร็จ', false);
         });
     </script>
 </body>

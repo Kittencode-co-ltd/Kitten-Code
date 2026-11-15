@@ -116,11 +116,34 @@ service cloud.firestore {
     }
 
     // ── Calendar Events ───────────────────────────────────────
+    // Events/tasks: anyone signed in can read and create (as themselves).
+    // Creator, assignees and admins can edit; only creator or admin can delete.
+    // Older events with no createdBy stay editable by everyone, deletable by admin.
     match /calendar_events/{evtId} {
+      function ownerOf(data)   { return data.get('createdBy', null); }
+      function isCreator()     { return ownerOf(resource.data) == request.auth.uid; }
+      function isAssignee()    { return request.auth.uid in resource.data.get('assignees', []); }
+      function isLegacy()      { return ownerOf(resource.data) == null; }
+
       allow read:   if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
+      allow create: if isAuthenticated()
+                       && request.resource.data.createdBy == request.auth.uid
+                       && request.resource.data.get('assignees', []) is list
+                       && request.resource.data.get('status', 'todo') in ['todo', 'doing', 'done'];
+      allow update: if isAuthenticated()
+                       && (isAdmin() || isCreator() || isAssignee() || isLegacy())
+                       && ownerOf(request.resource.data) == ownerOf(resource.data)
+                       && request.resource.data.get('assignees', []) is list
+                       && request.resource.data.get('status', 'todo') in ['todo', 'doing', 'done'];
+      allow delete: if isAuthenticated() && (isAdmin() || isCreator());
+    }
+
+    // Name-only staff list for picking assignees (no bank/phone data).
+    match /staff_directory/{uid} {
+      allow read:  if isAuthenticated();
+      allow write: if isAuthenticated() && (request.auth.uid == uid || isAdmin())
+                      && (request.resource == null
+                          || request.resource.data.keys().hasOnly(['uid', 'name']));
     }
   }
 }

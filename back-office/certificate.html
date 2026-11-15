@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="../assets/js/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kitten Code Certificate Generator — หนังสือรับรองการทำงาน/ฝึกงาน</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
@@ -91,6 +92,7 @@
             transform: scale(0.96);
         }
     </style>
+    <link rel="stylesheet" href="../assets/css/bo-minimal.css">
 </head>
 
 <body>
@@ -116,7 +118,7 @@
             <div class="form-header">
                 <h2><i class="fas fa-award"></i> สร้างหนังสือรับรอง</h2>
                 <button type="button" class="btn-clear-draft" onclick="clearDraft()">
-                    <i class="fas fa-eraser"></i> Clear Draft
+                    <i class="fas fa-rotate-left"></i> เริ่มใหม่
                 </button>
             </div>
 
@@ -301,7 +303,7 @@
                     </button>
                     <button type="button" id="btn-save-cloud" class="btn btn-success btn-large full-width-btn"
                         onclick="saveDocumentToFirestore()">
-                        <i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)
+                        <i class="fas fa-check"></i> บันทึก
                     </button>
                 </div>
 

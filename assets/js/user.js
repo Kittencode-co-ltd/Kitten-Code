@@ -114,7 +114,7 @@
         window.prepareCreateModal = () => {
             document.getElementById('userForm').reset();
             document.getElementById('docId').value = '';
-            document.getElementById('userModalLabel').innerText = 'Add New User';
+            document.getElementById('userModalLabel').innerText = 'เพิ่มผู้ใช้';
             document.getElementById('passwordGroup').style.display = 'block';
             document.getElementById('mPassword').required = true;
             document.getElementById('mEmail').disabled = false;
@@ -126,7 +126,7 @@
         window.prepareUpdateModal = (userJson) => {
             const user = JSON.parse(decodeURIComponent(userJson));
             document.getElementById('userForm').reset();
-            document.getElementById('userModalLabel').innerText = 'Edit User Details';
+            document.getElementById('userModalLabel').innerText = 'แก้ไขผู้ใช้';
             document.getElementById('modalAlert').classList.add('d-none');
 
             // Password not updatable here, Email is disabled to prevent Auth mismatches
@@ -357,7 +357,7 @@
                     alertBox.classList.remove('d-none');
                 } finally {
                     btnSave.disabled = false;
-                    btnSave.innerHTML = 'Save User';
+                    btnSave.innerHTML = 'บันทึก';
                 }
 
             });
@@ -470,10 +470,10 @@
 
         function setPaginationInfo(count) {
             if (count === 0) {
-                document.getElementById('paginationInfo').innerText = `Showing 0 records`;
+                document.getElementById('paginationInfo').innerText = `ไม่มีผู้ใช้`;
             } else {
                 const start = ((currentPage - 1) * PAGE_LIMIT) + 1;
                 const end = start + count - 1;
-                document.getElementById('paginationInfo').innerText = `Showing ${start}-${end} records (Page ${currentPage})`;
+                document.getElementById('paginationInfo').innerText = `รายการที่ ${start}–${end} (หน้า ${currentPage})`;
             }
         }

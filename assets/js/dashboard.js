@@ -185,24 +185,24 @@ class FinancialDashboard {
         // Pending: show count + amount
         const pendEl = document.getElementById('kpi-pend');
         if (pendEl) pendEl.innerHTML = `
-            <span style="display:block;">${pendCount} Items</span>
+            <span style="display:block;">${pendCount} รายการ</span>
             <span style="font-size:16px;font-weight:600;opacity:0.7;">${fmtTHB(pend)}</span>
         `;
 
         // Net badge
         const badge = document.getElementById('kpi-net-badge');
         if (badge) {
-            badge.textContent = net >= 0 ? '▲ Profit' : '▼ Loss';
+            badge.textContent = net >= 0 ? '▲ กำไร' : '▼ ขาดทุน';
             badge.className = 'kpi-badge ' + (net >= 0 ? 'badge-pos' : 'badge-neg');
         }
 
         // Period label
         const label = this._period === 'year'
-            ? 'This Year'
+            ? 'ปีนี้'
             : this._period === 'quarter'
-                ? 'This Quarter'
-                : 'This Month';
-        document.querySelectorAll('.kpi-period-label').forEach(el => { el.textContent = label; });
+                ? 'ไตรมาสนี้'
+                : 'เดือนนี้';
+        document.querySelectorAll('.kpi-period-label, #donut-period-label').forEach(el => { el.textContent = label; });
     }
 
     // Smooth number animation
@@ -262,7 +262,7 @@ class FinancialDashboard {
                 labels,
                 datasets: [
                     {
-                        label: 'Income',
+                        label: 'รายรับ',
                         data: incByMonth,
                         borderColor: '#10B981',
                         backgroundColor: 'rgba(16,185,129,0.08)',
@@ -275,7 +275,7 @@ class FinancialDashboard {
                         borderWidth: 2.5
                     },
                     {
-                        label: 'Expenses',
+                        label: 'รายจ่าย',
                         data: expByMonth,
                         borderColor: '#F97316',
                         backgroundColor: 'rgba(249,115,22,0.06)',
@@ -288,7 +288,7 @@ class FinancialDashboard {
                         borderWidth: 2.5
                     },
                     {
-                        label: 'Net Profit',
+                        label: 'กำไรสุทธิ',
                         data: netByMonth,
                         borderColor: '#00A3FF',
                         backgroundColor: 'rgba(0,163,255,0.08)',
@@ -315,7 +315,7 @@ class FinancialDashboard {
                         align: 'end',
                         labels: {
                             color: '#475569',
-                            font: { size: 11, family: "'Inter', sans-serif" },
+                            font: { size: 11, family: "'IBM Plex Sans Thai', sans-serif" },
                             boxWidth: 12, boxHeight: 12,
                             padding: 16,
                             usePointStyle: true, pointStyle: 'circle'
@@ -372,7 +372,7 @@ class FinancialDashboard {
 
         if (!catTotals.length) {
             const wrap = document.getElementById('donut-legend');
-            if (wrap) wrap.innerHTML = '<div class="empty-state">No expense data</div>';
+            if (wrap) wrap.innerHTML = '<div class="empty-state">ยังไม่มีรายจ่าย</div>';
             return;
         }
 
@@ -438,7 +438,7 @@ class FinancialDashboard {
             .slice(0, 5);
 
         if (!recent.length) {
-            tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No transactions yet</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="empty-state">ยังไม่มีรายการ</td></tr>`;
             return;
         }
 
@@ -463,9 +463,9 @@ class FinancialDashboard {
     }
 
     _statusBadge(status) {
-        if (status === 2) return '<span class="status-badge sb-paid"><i class="bi bi-check2"></i> Paid</span>';
-        if (status === 1) return '<span class="status-badge sb-pending"><i class="bi bi-clock"></i> Pending</span>';
-        return '<span class="status-badge sb-rejected"><i class="bi bi-x"></i> Rejected</span>';
+        if (status === 2) return '<span class="status-badge sb-paid"><i class="bi bi-check2"></i> จ่ายแล้ว</span>';
+        if (status === 1) return '<span class="status-badge sb-pending"><i class="bi bi-clock"></i> รอจ่าย</span>';
+        return '<span class="status-badge sb-rejected"><i class="bi bi-x"></i> ปฏิเสธ</span>';
     }
 
     // ── Security & System Panel ───────────────────────────────

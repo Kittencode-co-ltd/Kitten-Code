@@ -11,6 +11,7 @@ import {
     onAuthStateChanged,
     collection,
     doc,
+    getDoc,
     addDoc,
     updateDoc,
     deleteDoc,
@@ -168,9 +169,9 @@ function getPending(catCode) {
 }
 
 function statusBadge(status) {
-    if (status === 2) return '<span class="badge badge-paid">Paid</span>';
-    if (status === 1) return '<span class="badge badge-pending">Pending</span>';
-    return '<span class="badge badge-rejected">Rejected</span>';
+    if (status === 2) return '<span class="badge badge-paid">จ่ายแล้ว</span>';
+    if (status === 1) return '<span class="badge badge-pending">รอจ่าย</span>';
+    return '<span class="badge badge-rejected">ปฏิเสธ</span>';
 }
 
 // ── Tab Switching ─────────────────────────────────────────────
@@ -178,10 +179,15 @@ function switchTab(t) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
     document.getElementById('page-' + t).classList.add('active');
-    const tabs = ['dashboard', 'register', 'transactions', 'add'];
-    const idx = tabs.indexOf(t);
-    if (idx >= 0) document.querySelectorAll('.tab')[idx].classList.add('active');
-    if (t === 'add') renderAddForm();
+    const tab = document.querySelector(`.tab[data-tab="${t}"]`);
+    if (tab) tab.classList.add('active');
+    // The floating "record" button is only useful on the list views
+    const fab = document.getElementById('txn-fab');
+    if (fab) fab.style.display = t === 'add' ? 'none' : '';
+    if (t === 'add') {
+        renderAddForm();
+        setTimeout(() => document.getElementById('txn-desc')?.focus(), 50);
+    }
 }
 window.switchTab = switchTab;
 
@@ -250,7 +256,7 @@ function renderDashboard() {
 function renderRegister() {
     const tbody = document.getElementById('cat-tbody');
     if (!_categories.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No categories available.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">ยังไม่มีหมวด — กด "+ เพิ่มหมวด"</td></tr>';
         return;
     }
     const today = new Date();
@@ -267,19 +273,19 @@ function renderRegister() {
         if (c.quota_unit && c.quota_value && c.last_reset_date) {
             const endDate   = calcQuotaEnd(c.last_reset_date, c.quota_value, c.quota_unit);
             const isExpired = endDate < today;
-            const endStr    = endDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-            const unitLabel = c.quota_unit === 'days' ? 'days' : c.quota_unit === 'months' ? 'months' : 'years';
+            const endStr    = endDate.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+            const unitLabel = c.quota_unit === 'days' ? 'วัน' : c.quota_unit === 'months' ? 'เดือน' : 'ปี';
 
             quotaCell = `
               <div style="line-height:1.6;">
                 <span class="quota-period-tag">${c.quota_value} ${unitLabel}</span>
                 <div style="font-size:11px;margin-top:4px;color:${isExpired ? 'var(--color-exp)' : 'var(--text-secondary)'}">
                   ${isExpired
-                    ? '<span style="color:var(--color-exp);font-weight:600;">Expired</span>'
-                    : `Ends: <span style="color:var(--accent-primary);">${escapeHTML(endStr)}</span>`}
+                    ? '<span style="color:var(--color-exp);font-weight:600;">หมดรอบแล้ว</span>'
+                    : `ถึง <span style="color:var(--accent-primary);">${escapeHTML(endStr)}</span>`}
                 </div>
                 ${isExpired
-                  ? `<button class="btn-reset-quota" onclick="resetQuota('${c.id}')">↺ Reset Period</button>`
+                  ? `<button class="btn-reset-quota" onclick="resetQuota('${c.id}')">เริ่มรอบใหม่</button>`
                   : ''}
               </div>`;
         }
@@ -287,8 +293,8 @@ function renderRegister() {
         return `<tr>
         <td><span class="tag-code">${escapeHTML(c.code)}</span></td>
         <td>${escapeHTML(c.name)}</td>
-        <td><span class="badge ${c.type === 1 ? 'badge-inc' : 'badge-exp'}">${c.type === 1 ? 'Income' : 'Expense'}</span></td>
-        <td style="text-align:right;">${c.budget > 0 ? fmtNum(c.budget) : '<span style="color:var(--text-tertiary);font-size:11px;">Unlimited</span>'}</td>
+        <td><span class="badge ${c.type === 1 ? 'badge-inc' : 'badge-exp'}">${c.type === 1 ? 'รายรับ' : 'รายจ่าย'}</span></td>
+        <td style="text-align:right;">${c.budget > 0 ? fmtNum(c.budget) : '<span style="color:var(--text-tertiary);font-size:11px;">ไม่จำกัด</span>'}</td>
         <td style="text-align:right;color:#993C1D;font-weight:500;">${fmtNum(used)}</td>
         <td style="text-align:right;">${remaining !== null
             ? `<span style="color:${remaining < 0 ? '#D85A30' : '#0F6E56'};font-weight:500;">${fmtNum(remaining)}</span>
@@ -297,7 +303,7 @@ function renderRegister() {
         <td>${quotaCell}</td>
         <td>
           <div style="display:flex;gap:4px;justify-content:center;">
-             <button class="action-btn" onclick="openEditModal('${c.id}', '${CATS_COL}')" title="Edit">Edit</button>
+             <button class="action-btn" onclick="openEditModal('${c.id}', '${CATS_COL}')" title="แก้ไข">แก้ไข</button>
           </div>
         </td>
       </tr>`;
@@ -314,21 +320,22 @@ function renderTxns() {
     txns.sort((a, b) => b.date.localeCompare(a.date));
 
     const tbody = document.getElementById('txn-tbody');
-    if (!txns.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No transactions found.</td></tr>'; return; }
+    if (!txns.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">ไม่มีรายการในช่วงนี้</td></tr>'; return; }
     tbody.innerHTML = txns.map(t => {
         const cat  = getCatByCode(t.catCode);
         const cls  = cat?.type === 1 ? 'amount-inc' : 'amount-exp';
         const sign = cat?.type === 1 ? '+' : '-';
 
-        const actionBtns = t.payment_status === 1
+        // Approving or rejecting a payment is admin-only (firestore.rules)
+        const actionBtns = t.payment_status === 1 && _isAdmin
             ? `<div style="display:flex;gap:6px;justify-content:center;">
                 <button class="btn-txn-action btn-mark-paid" onclick="updateDisbursementStatus('${t.id}', 2, '')" title="ยืนยันการจ่ายเงิน">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  Verify Payment
+                  อนุมัติจ่าย
                 </button>
-                <button class="btn-txn-action btn-mark-rejected" onclick="updateDisbursementStatus('${t.id}', 0, '')" title="Reject this transaction">
+                <button class="btn-txn-action btn-mark-rejected" onclick="updateDisbursementStatus('${t.id}', 0, '')" title="ปฏิเสธรายการนี้">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                  Reject
+                  ปฏิเสธ
                 </button>
                </div>`
             : '';
@@ -344,7 +351,7 @@ function renderTxns() {
         <td style="text-align:right;" class="${cls}">${sign}${fmt(t.amount)}</td>
         <td style="text-align:center;min-width:160px;">
             <div style="display:flex;gap:4px;justify-content:center;margin-bottom:${t.payment_status === 1 ? '6px' : '0'};">
-                <button class="action-btn" onclick="openEditModal('${t.id}', '${TXNS_COL}')" title="Edit">Edit</button>
+                <button class="action-btn" onclick="openEditModal('${t.id}', '${TXNS_COL}')" title="แก้ไข">แก้ไข</button>
             </div>
             ${actionBtns}
         </td>
@@ -363,7 +370,7 @@ function renderAddForm() {
     
     // Remember current value before wiping innerHTML to rebuild options
     const prevCat = sel.value; 
-    sel.innerHTML = _categories.map(c => `<option value="${c.code}">[${c.type === 1 ? 'Income' : 'Expense'}] ${c.name}</option>`).join('');
+    sel.innerHTML = _categories.map(c => `<option value="${escapeHTML(c.code)}">${c.type === 1 ? 'รายรับ' : 'รายจ่าย'} · ${escapeHTML(c.name)}</option>`).join('');
     if (prevCat) sel.value = prevCat;
 
     if (!_txnDraftRestored) {
@@ -431,7 +438,7 @@ window.resetQuota = async function (catId) {
 window.deleteCategory = async function (id) {
     const cat  = _categories.find(c => c.id === id);
     const inUse = _transactions.some(t => t.catCode === cat?.code);
-    if (inUse) { alert('Cannot delete: This category is in use by transactions.'); return; }
+    if (inUse) { alert('ลบไม่ได้: หมวดนี้มีรายการเงินใช้อยู่'); return; }
     try {
         await deleteDoc(doc(db, CATS_COL, id));
     } catch (e) { alert('An error occurred: ' + e.message); }
@@ -450,16 +457,17 @@ window.addTransaction = async function () {
 
     const msgEl = document.getElementById('add-msg');
     if (!date || !desc || !amount || !catCode) {
-        msgEl.innerHTML = '<span style="color:#D85A30;">Please fill in all required fields.</span>';
+        msgEl.innerHTML = '<span style="color:var(--color-exp);">กรอกวันที่ หมวด รายละเอียด และจำนวนเงินให้ครบ</span>';
         return;
     }
     try {
         await addDoc(collection(db, TXNS_COL), {
             date, catCode, desc, amount, ref, contact,
-            payment_status, paid_date,
+            payment_status, paid_date: payment_status === 2 ? (paid_date || date) : paid_date,
             created_at: serverTimestamp()
         });
-        msgEl.innerHTML = '<span style="color:#0F6E56;">Transaction saved successfully!</span>';
+        msgEl.innerHTML = '';
+        showFinToast('บันทึกรายการแล้ว');
         ['txn-desc', 'txn-amount', 'txn-ref', 'txn-contact'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';
@@ -471,9 +479,10 @@ window.addTransaction = async function () {
         // Clear autosaved draft heavily
         localStorage.removeItem('draft_financial_data');
         _txnDraftRestored = false;
+        switchTab('transactions');
         
     } catch (e) {
-        msgEl.innerHTML = `<span style="color:#D85A30;">An error occurred: ${e.message}</span>`;
+        msgEl.innerHTML = `<span style="color:var(--color-exp);">บันทึกไม่สำเร็จ: ${escapeHTML(e.message)}</span>`;
     }
 };
 
@@ -489,12 +498,12 @@ window.updateDisbursementStatus = async function (txnId, newStatus, paidDate) {
         await updateDoc(doc(db, TXNS_COL, txnId), updateData);
         // onSnapshot will auto-refresh all views
     } catch (e) {
-        alert('Failed to update status: ' + e.message);
+        alert(e.code === 'permission-denied' ? 'เปลี่ยนสถานะการจ่ายได้เฉพาะแอดมิน' : 'อัปเดตสถานะไม่สำเร็จ: ' + e.message);
     }
 };
 
 window.deleteTransaction = async function(id) {
-    if (!confirm('Are you sure you want to delete this transaction? This action cannot be undone.')) return;
+    if (!confirm('ลบรายการนี้? ลบแล้วกู้คืนไม่ได้')) return;
     try {
         await deleteDoc(doc(db, TXNS_COL, id));
     } catch(e) {
@@ -666,8 +675,36 @@ window.renderTxns = renderTxns;
 // Firestore rules require request.auth != null on all collections.
 // onAuthStateChanged fires once with the current user (or null),
 // so the page never makes an unauthenticated Firestore request.
+let _isAdmin = false;
+
+function showFinToast(msg) {
+    let t = document.getElementById('fin-toast');
+    if (!t) { t = document.createElement('div'); t.id = 'fin-toast'; t.className = 'kc-toast'; document.body.appendChild(t); }
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(showFinToast._t);
+    showFinToast._t = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// "Paid date" only matters once a record is paid
+function bindPaidDateToggle(statusId, dateId) {
+    const st = document.getElementById(statusId);
+    const group = document.getElementById(dateId)?.closest('.form-group');
+    if (!st || !group) return;
+    const sync = () => { group.style.display = st.value === '2' ? '' : 'none'; };
+    st.addEventListener('change', sync);
+    sync();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    bindPaidDateToggle('txn-status', 'txn-paid-date');
+    bindPaidDateToggle('edit-txn-status', 'edit-txn-paid-date');
+});
+
 onAuthStateChanged(auth, user => {
     if (user) {
+        getDoc(doc(db, 'users', user.uid))
+            .then(snap => { _isAdmin = snap.exists() && snap.data().role === 'admin'; renderTxns(); })
+            .catch(() => {});
         initRealtimeListeners();
     } else {
         // Not signed in — display a clear error instead of raw Firestore exception

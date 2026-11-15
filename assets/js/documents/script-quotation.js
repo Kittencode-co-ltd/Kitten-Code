@@ -103,8 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('input', () => buildPreview());
     });
 
-    restoreDraft();
+    if (!window.KCDoc.applyEditData('quotation', state, setInputValue)) restoreDraft();
     renderItemsForm();
+    window.KCDoc.ensureDocNo('quotation');
 
     // Initial build
     document.fonts.ready.then(() => {
@@ -516,7 +517,7 @@ window.saveDocumentToFirestore = async function() {
     const btnSave = document.getElementById('btn-save-cloud');
     if (btnSave) {
         btnSave.disabled = true;
-        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก…';
     }
 
     try {
@@ -576,14 +577,14 @@ window.saveDocumentToFirestore = async function() {
         };
 
         // Use setDoc with a custom ID (docNo) to avoid duplicates if saved multiple times
-        await setDoc(doc(db, 'quotations', docNo), quotationData);
+        await window.KCDoc.save('quotation', docNo, quotationData);
 
         showSaveToast("บันทึกใบเสนอราคาไปยังระบบเรียบร้อยแล้ว", "success");
         // Reset button state
         setTimeout(() => {
             if (btnSave) {
                 btnSave.disabled = false;
-                btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+                btnSave.innerHTML = '<i class="fas fa-check"></i> บันทึก';
             }
         }, 3000);
 
@@ -594,7 +595,7 @@ window.saveDocumentToFirestore = async function() {
         alert("Error: " + (error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล"));
         if (btnSave) {
             btnSave.disabled = false;
-            btnSave.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)';
+            btnSave.innerHTML = '<i class="fas fa-check"></i> บันทึก';
         }
         return false;
     }
@@ -612,7 +613,7 @@ window.convertToInvoice = async function() {
 
     if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-arrow-right"></i> บันทึกและไปสร้างใบแจ้งหนี้ต่อ';
+        btn.innerHTML = 'ออกใบแจ้งหนี้ต่อ <i class="fas fa-arrow-right"></i>';
     }
     if (!ok) return;
 
