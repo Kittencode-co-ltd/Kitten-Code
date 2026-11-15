@@ -27,7 +27,28 @@ const LETTER_SUBLABELS = {
     invite_speaker: 'เชิญเป็นวิทยากร',
     cooperation: 'ขอความร่วมมือ/เข้าพบ',
     authorization: 'หนังสือมอบอำนาจ',
-    delivery: 'ส่งมอบงาน/เอกสาร'
+    delivery: 'ส่งมอบงาน/เอกสาร',
+    invite_event: 'เชิญเข้าร่วมงาน',
+    request_reference: 'ขอหนังสือรับรองผลงาน',
+    vendor_register: 'ขอขึ้นทะเบียนผู้ค้า',
+    site_access: 'ขอเข้าปฏิบัติงาน',
+    proposal: 'เสนอราคา/ข้อเสนอ',
+    extension: 'ขอขยายระยะเวลา',
+    clarification: 'ชี้แจงข้อเท็จจริง',
+    ma_renewal: 'สิ้นสุดประกัน/เสนอ MA',
+    termination: 'บอกเลิกสัญญา',
+    billing: 'ขอเบิกเงินค่าจ้าง',
+    payment_reminder: 'ติดตามการชำระเงิน',
+    guarantee_return: 'ขอคืนหลักประกัน',
+    notify_change: 'แจ้งเปลี่ยนแปลงข้อมูล',
+    service_notice: 'แจ้งปิดปรับปรุงระบบ',
+    thanks: 'หนังสือขอบคุณ',
+    reply_speaker: 'ตอบรับเป็นวิทยากร',
+    reply_advisor: 'ตอบรับเป็นที่ปรึกษา',
+    reply_committee: 'ตอบรับเป็นกรรมการ',
+    reply_attend: 'ตอบรับเข้าร่วมงาน',
+    reply_cooperation: 'ตอบรับความอนุเคราะห์',
+    decline: 'ปฏิเสธคำเชิญ'
 };
 
 // Allowed statuses per document type: [value, Thai label, badge style]

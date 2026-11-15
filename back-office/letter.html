@@ -39,6 +39,81 @@
         .type-tab-btn.full-span {
             grid-column: 1 / -1;
         }
+        .type-group-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            margin: 4px 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .type-cat-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+            scrollbar-width: thin;
+        }
+        .type-cat-btn {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #64748b;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .type-cat-btn:hover { background: #f1f5f9; color: #0f172a; }
+        .type-cat-btn.active {
+            background: #e8f1fd;
+            border-color: #bcd7fa;
+            color: #0a72e8;
+        }
+        .type-cat-count {
+            font-size: 10.5px;
+            min-width: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: rgba(100, 116, 139, 0.14);
+            text-align: center;
+        }
+        .type-cat-btn.active .type-cat-count { background: rgba(10, 114, 232, 0.14); }
+        :root[data-theme="dark"] .type-cat-btn { color: #a8a29e; }
+        :root[data-theme="dark"] .type-cat-btn:hover { background: rgba(255, 255, 255, 0.06); color: #f5f5f4; }
+        :root[data-theme="dark"] .type-cat-btn.active { background: rgba(10, 114, 232, 0.18); border-color: rgba(10, 114, 232, 0.45); color: #8cc0ff; }
+        :root[data-theme="dark"] .type-current { color: #f5f5f4; }
+        .type-current {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: -4px 0 14px;
+            padding-left: 10px;
+            border-left: 3px solid #0a72e8;
+        }
+        .type-tab-btn.type-tab-decline.active {
+            background: #64748b;
+            border-color: #64748b;
+        }
+        .reply-hint small {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.6;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
         .type-tab-btn.active {
             background: #0a72e8;
             border-color: #0a72e8;
@@ -99,28 +174,10 @@
                 <div class="form-section">
                     <h3><i class="fas fa-layer-group"></i> ประเภทหนังสือติดต่อราชการ / เอกชน</h3>
                     <input type="hidden" id="in-letter-type" value="invite_advisor">
-                    <div class="type-tabs">
-                        <button type="button" class="type-tab-btn active" data-type="invite_advisor"
-                            onclick="handleLetterTypeChange('invite_advisor')">
-                            <i class="fas fa-user-graduate"></i> เชิญเป็นที่ปรึกษา
-                        </button>
-                        <button type="button" class="type-tab-btn" data-type="invite_speaker"
-                            onclick="handleLetterTypeChange('invite_speaker')">
-                            <i class="fas fa-chalkboard-teacher"></i> เชิญเป็นวิทยากรบรรยาย
-                        </button>
-                        <button type="button" class="type-tab-btn" data-type="cooperation"
-                            onclick="handleLetterTypeChange('cooperation')">
-                            <i class="fas fa-handshake"></i> ขอความอนุเคราะห์ / เข้าพบ
-                        </button>
-                        <button type="button" class="type-tab-btn" data-type="authorization"
-                            onclick="handleLetterTypeChange('authorization')">
-                            <i class="fas fa-id-badge"></i> หนังสือมอบอำนาจ
-                        </button>
-                        <button type="button" class="type-tab-btn full-span" data-type="delivery"
-                            onclick="handleLetterTypeChange('delivery')">
-                            <i class="fas fa-box-open"></i> หนังสือส่งมอบงาน / นำส่งเอกสารทางการ
-                        </button>
-                    </div>
+                    <div class="type-cat-tabs" id="letterCategoryTabs" role="tablist" aria-label="หมวดหนังสือ"></div>
+                    <div class="type-tabs" id="letterTypeTabs"></div>
+                    <div class="type-current" id="letterTypeTitle"></div>
+
 
                     <div class="form-grid">
                         <div class="form-group">
@@ -183,14 +240,66 @@
                             <label>วันที่จัดงาน / วันที่เริ่มมีผล (เว้นว่างได้)</label>
                             <input type="date" id="in-event-date" value="">
                         </div>
-                        <div class="form-group" data-show-for="invite_speaker,cooperation">
+                        <div class="form-group" data-show-for="invite_speaker,cooperation,invite_event,site_access,service_notice,thanks,reply">
                             <label>ช่วงเวลา (เว้นว่างได้)</label>
                             <input type="text" id="in-event-time" value="" placeholder="เช่น 09.00 – 12.00">
                         </div>
-                        <div class="form-group full-width" data-show-for="invite_speaker,cooperation">
+                        <div class="form-group full-width" data-show-for="invite_speaker,cooperation,invite_event,site_access,service_notice,thanks,reply">
                             <label>สถานที่จัดงาน / ช่องทางออนไลน์</label>
                             <input type="text" id="in-event-location" value=""
                                 placeholder="เช่น ณ ห้องประชุมบริษัท คิทเช่น โค้ด จำกัด หรือผ่านระบบ Zoom">
+                        </div>
+
+                        <!-- Contract / finance fields (outgoing letters) -->
+                        <div class="form-group" data-show-for="billing,payment_reminder,extension,guarantee_return,request_reference,site_access,service_notice,ma_renewal,termination" style="display:none;">
+                            <label>เลขที่สัญญา / ใบสั่งจ้าง</label>
+                            <input type="text" id="in-contract-no" value="" placeholder="เช่น 12/2569">
+                        </div>
+                        <div class="form-group" data-show-for="proposal,billing,payment_reminder,guarantee_return,request_reference,ma_renewal" style="display:none;">
+                            <label>จำนวนเงิน (บาท)</label>
+                            <input type="text" id="in-amount" value="" inputmode="decimal" placeholder="เช่น 53500">
+                        </div>
+                        <div class="form-group" data-show-for="billing,payment_reminder" style="display:none;">
+                            <label>งวดที่</label>
+                            <input type="text" id="in-installment" value="" placeholder="เช่น 2 (งวดสุดท้าย)">
+                        </div>
+                        <div class="form-group" data-show-for="proposal,invite_event,payment_reminder,extension,guarantee_return,ma_renewal" style="display:none;">
+                            <label>วันครบกำหนด (ยืนราคา / ตอบรับ / ครบชำระ / กำหนดเดิม / สิ้นสุดประกัน)</label>
+                            <input type="date" id="in-due-date" value="">
+                        </div>
+                        <div class="form-group" data-show-for="payment_reminder,extension" style="display:none;">
+                            <label>วันที่ใหม่ (ขอขยายถึง / ขอให้ชำระภายใน)</label>
+                            <input type="date" id="in-new-date" value="">
+                        </div>
+                        <div class="form-group full-width" data-show-for="invite_event,request_reference,vendor_register,site_access,proposal,extension,clarification,ma_renewal,termination,billing,payment_reminder,guarantee_return,notify_change,service_notice,thanks" style="display:none;">
+                            <label id="lbl-extra-detail">รายละเอียดเพิ่มเติม</label>
+                            <textarea id="in-extra-detail" rows="3" placeholder=""></textarea>
+                        </div>
+
+                        <!-- Reply / acceptance specific fields -->
+                        <div class="form-group" data-show-for="reply" style="display:none;">
+                            <label>เลขที่หนังสือเชิญของต้นทาง</label>
+                            <input type="text" id="in-inv-ref-no" value="" placeholder="เช่น อว 0603.1/1234">
+                        </div>
+                        <div class="form-group" data-show-for="reply" style="display:none;">
+                            <label>ลงวันที่ (หนังสือเชิญ)</label>
+                            <input type="date" id="in-inv-ref-date" value="">
+                        </div>
+                        <div class="form-group" data-show-for="reply" style="display:none;">
+                            <label>ผู้ได้รับเชิญ / ผู้แทนบริษัท (เว้นว่าง = บริษัท)</label>
+                            <input type="text" id="in-invitee-name" value="" placeholder="เช่น นายณัฐชนน จารุธีรกัมพร">
+                        </div>
+                        <div class="form-group" data-show-for="reply" style="display:none;">
+                            <label>ตำแหน่งผู้ได้รับเชิญ</label>
+                            <input type="text" id="in-invitee-position" value="" placeholder="เช่น ประธานเจ้าหน้าที่ฝ่ายเทคโนโลยี">
+                        </div>
+                        <div class="form-group full-width" data-show-for="reply" style="display:none;">
+                            <label>เงื่อนไข / หมายเหตุ (กรณีปฏิเสธ = เหตุผล)</label>
+                            <input type="text" id="in-reply-note" value=""
+                                placeholder="เช่น ขอความอนุเคราะห์จัดเตรียมเครื่องฉายภาพ / ติดภารกิจตามสัญญาโครงการกับลูกค้า">
+                        </div>
+                        <div class="form-group full-width reply-hint" data-show-for="reply" style="display:none;">
+                            <small><i class="fas fa-circle-info"></i> ช่อง "เรียน" ให้ระบุผู้ลงนามในหนังสือเชิญ และ "หน่วยงาน" ให้ระบุหน่วยงานต้นทาง — ระบบจะสร้างบรรทัด "อ้างถึง" ให้อัตโนมัติจากเลขที่และวันที่หนังสือเชิญ (หากกรอกช่อง "อ้างถึง" เอง จะใช้ข้อความที่กรอกแทน)</small>
                         </div>
 
                         <!-- Authorization specific fields -->

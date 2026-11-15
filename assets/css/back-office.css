@@ -69,9 +69,24 @@ a { color: inherit; }
   align-items: center;
   gap: 10px;
   padding: 4px 10px 18px;
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.01em;
+  font-weight: 800;
+  font-size: 1.02rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sidebar-brand-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+}
+
+.sidebar-brand-text {
+  color: var(--kc-text);
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
 .sidebar-brand-mark {
@@ -474,3 +489,66 @@ button.header-profile-pill { border: none; font-family: inherit; color: var(--kc
 [aria-checked="true"] > .theme-switch::after { transform: translateX(14px); }
 
 .header-profile-name { white-space: nowrap; }
+
+/* ── Profile Menu Preferences (Language & Font Size) ──────── */
+.profile-menu-list {
+  min-width: 248px;
+}
+
+.profile-pref-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 12px;
+  font-size: 0.84rem;
+  color: var(--kc-text);
+}
+
+.profile-pref-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--kc-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.profile-seg {
+  display: inline-flex;
+  align-items: center;
+  background: var(--kc-bg);
+  padding: 2px;
+  border-radius: 999px;
+  gap: 2px;
+}
+
+.profile-seg-btn {
+  border: none;
+  background: transparent;
+  color: var(--kc-muted);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--dur-fast), color var(--dur-fast), box-shadow var(--dur-fast);
+}
+
+.profile-seg-btn.active {
+  background: var(--kc-surface);
+  color: var(--kc-text);
+  box-shadow: var(--kc-float);
+}
+
+/* ── Font Size Scaling (3 Levels: Small / Normal / Large) ─── */
+:root[data-fontsize="small"] {
+  font-size: 14px;
+}
+:root[data-fontsize="normal"] {
+  font-size: 16px;
+}
+:root[data-fontsize="large"] {
+  font-size: 18px;
+}

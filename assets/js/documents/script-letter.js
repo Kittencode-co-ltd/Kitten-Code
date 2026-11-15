@@ -29,6 +29,17 @@ const INPUT_IDS = [
     'rep-position',
     'witness-1',
     'witness-2',
+    'inv-ref-no',
+    'inv-ref-date',
+    'invitee-name',
+    'invitee-position',
+    'reply-note',
+    'contract-no',
+    'amount',
+    'installment',
+    'due-date',
+    'new-date',
+    'extra-detail',
     'para-reason',
     'para-detail',
     'para-closing',
@@ -79,6 +90,17 @@ function collectData() {
         repPosition: getInputValue('rep-position'),
         witness1: getInputValue('witness-1'),
         witness2: getInputValue('witness-2'),
+        invRefNo: getInputValue('inv-ref-no'),
+        invRefDate: getInputValue('inv-ref-date'),
+        inviteeName: getInputValue('invitee-name'),
+        inviteePosition: getInputValue('invitee-position'),
+        replyNote: getInputValue('reply-note'),
+        contractNo: getInputValue('contract-no'),
+        amount: getInputValue('amount'),
+        installment: getInputValue('installment'),
+        dueDate: getInputValue('due-date'),
+        newDate: getInputValue('new-date'),
+        extraDetail: getInputValue('extra-detail'),
         paraReason: getInputValue('para-reason'),
         paraDetail: getInputValue('para-detail'),
         paraClosing: getInputValue('para-closing'),
@@ -139,17 +161,90 @@ window.clearDraft = function () {
     location.reload();
 };
 
+// ป้ายกำกับ/ตัวอย่างของช่อง "รายละเอียดเพิ่มเติม" ตามประเภทหนังสือ
+const EXTRA_HINTS = {
+    invite_event: ['วัตถุประสงค์ของงาน (เว้นว่างได้)', 'เช่น นำเสนอผลงานระบบ AI และสร้างเครือข่ายความร่วมมือ'],
+    request_reference: ['หมายเหตุเพิ่มเติม (เว้นว่างได้)', 'เช่น ขอรับหนังสือภายในวันที่ ... เพื่อใช้ยื่นประกวดราคา'],
+    vendor_register: ['หมายเหตุเพิ่มเติม (เว้นว่างได้)', 'เช่น บริษัทฯ จดทะเบียนในระบบ e-GP เรียบร้อยแล้ว'],
+    site_access: ['รายชื่อผู้ปฏิบัติงาน (บรรทัดละ 1 คน)', '1. นาย ก ... ตำแหน่ง วิศวกรระบบ\n2. นางสาว ข ... ตำแหน่ง ผู้ประสานงาน'],
+    proposal: ['เงื่อนไขเพิ่มเติม (เว้นว่างได้)', 'เช่น ระยะเวลาดำเนินงาน 120 วัน รับประกัน 1 ปี'],
+    extension: ['เหตุผลที่ขอขยายเวลา', 'เช่น หน่วยงานขอเพิ่มขอบเขตงานโมดูลรายงาน ระหว่างการดำเนินงาน'],
+    clarification: ['ประเด็นชี้แจง (บรรทัดละ 1 ข้อ)', '1. ...\n2. ...'],
+    ma_renewal: ['ขอบเขตบริการเพิ่มเติม (เว้นว่างได้)', 'เช่น บริการตอบสนองภายใน 4 ชั่วโมงในวันทำการ'],
+    termination: ['เหตุผลการบอกเลิกสัญญา', 'เช่น คู่สัญญาผิดนัดชำระเงินเกินกว่า 90 วัน'],
+    billing: ['หมายเหตุเพิ่มเติม (เว้นว่างได้)', 'เช่น ธนาคารกสิกรไทย เลขที่บัญชี ...'],
+    payment_reminder: ['หมายเหตุเพิ่มเติม (เว้นว่างได้)', 'เช่น หากพ้นกำหนด บริษัทฯ ขอสงวนสิทธิ์คิดดอกเบี้ยตามสัญญา'],
+    guarantee_return: ['หมายเหตุเพิ่มเติม (เว้นว่างได้)', 'เช่น หนังสือค้ำประกันธนาคาร ... เลขที่ ...'],
+    notify_change: ['รายละเอียดการเปลี่ยนแปลง (บรรทัดละ 1 ข้อ)', '1. ที่อยู่เดิม ... ที่อยู่ใหม่ ...\n2. เลขที่บัญชีธนาคารใหม่ ...'],
+    service_notice: ['สาเหตุ / วัตถุประสงค์การปิดระบบ (เว้นว่างได้)', 'เช่น ย้ายระบบไปยังเซิร์ฟเวอร์ใหม่'],
+    thanks: ['ข้อความขอบคุณเพิ่มเติม (เว้นว่างได้)', 'เช่น การศึกษาดูงานครั้งนี้ช่วยให้ทีมพัฒนาเข้าใจกระบวนการทำงานจริง']
+};
+
+function renderTypePicker() {
+    const catWrap = document.getElementById('letterCategoryTabs');
+    const typeWrap = document.getElementById('letterTypeTabs');
+    if (!catWrap || !typeWrap || !window.KCLetter) return;
+    const { GROUPS, TYPES, escapeHTML } = window.KCLetter;
+    catWrap.innerHTML = GROUPS.map(g => {
+        const count = Object.values(TYPES).filter(t => t.group === g.key).length;
+        return `<button type="button" class="type-cat-btn" data-cat="${g.key}" onclick="handleLetterCategoryChange('${g.key}')">
+            <i class="fas ${g.icon}"></i> ${escapeHTML(g.label)} <span class="type-cat-count">${count}</span>
+        </button>`;
+    }).join('');
+    typeWrap.innerHTML = Object.entries(TYPES).map(([key, t]) =>
+        `<button type="button" class="type-tab-btn${key === 'decline' ? ' type-tab-decline' : ''}" data-type="${key}" data-group="${t.group}"
+            onclick="handleLetterTypeChange('${key}')" title="${escapeHTML(t.title)}">
+            <i class="fas ${t.icon}"></i> ${escapeHTML(t.short)}
+        </button>`
+    ).join('');
+}
+
+function showCategory(cat) {
+    document.querySelectorAll('.type-cat-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cat === cat);
+    });
+    document.querySelectorAll('#letterTypeTabs .type-tab-btn').forEach(btn => {
+        btn.style.display = btn.dataset.group === cat ? '' : 'none';
+    });
+}
+
+window.handleLetterCategoryChange = function (cat) {
+    const current = getInputValue('letter-type');
+    const types = window.KCLetter.TYPES;
+    if (types[current] && types[current].group === cat) {
+        showCategory(cat);
+        return;
+    }
+    const first = Object.keys(types).find(k => types[k].group === cat);
+    if (first) window.handleLetterTypeChange(first);
+};
+
 window.handleLetterTypeChange = function (type) {
-    const letterType = type || getInputValue('letter-type') || 'invite_advisor';
+    const types = window.KCLetter ? window.KCLetter.TYPES : {};
+    let letterType = type || getInputValue('letter-type') || 'invite_advisor';
+    if (!types[letterType]) letterType = 'invite_advisor';
     setInputValue('letter-type', letterType);
 
     document.querySelectorAll('.type-tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.type === letterType);
     });
+    if (types[letterType]) showCategory(types[letterType].group);
+
+    const titleEl = document.getElementById('letterTypeTitle');
+    if (titleEl && types[letterType]) titleEl.textContent = types[letterType].title;
+
+    const hint = EXTRA_HINTS[letterType];
+    const extraLabel = document.getElementById('lbl-extra-detail');
+    const extraInput = getEl('extra-detail');
+    if (hint && extraLabel && extraInput) {
+        extraLabel.textContent = hint[0];
+        extraInput.placeholder = hint[1];
+    }
 
     document.querySelectorAll('[data-show-for]').forEach(el => {
         const list = (el.getAttribute('data-show-for') || '').split(',');
-        el.style.display = list.includes(letterType) ? '' : 'none';
+        const isReply = window.KCLetter && window.KCLetter.isReplyType(letterType);
+        el.style.display = (list.includes(letterType) || (isReply && list.includes('reply'))) ? '' : 'none';
     });
 
     buildPreview();
@@ -237,6 +332,7 @@ window.saveDocumentToFirestore = async function () {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    renderTypePicker();
     const dateInput = getEl('doc-date');
     if (dateInput && !dateInput.value) {
         const today = new Date();

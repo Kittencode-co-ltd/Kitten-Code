@@ -615,3 +615,39 @@ select { max-width: 100%; }
 }
 
 #sizeSelect { width: 100%; min-width: 0; box-sizing: border-box; }
+
+/* ── Font Size Scaling (3 Levels: Small / Normal / Large) ─── */
+:root[data-fontsize="small"] {
+  font-size: 14px;
+}
+:root[data-fontsize="normal"] {
+  font-size: 16px;
+}
+:root[data-fontsize="large"] {
+  font-size: 18px;
+}
+
+:root[data-fontsize="small"] body:not(.print-only) {
+  font-size: 0.875rem;
+}
+:root[data-fontsize="large"] body:not(.print-only) {
+  font-size: 1.08rem;
+}
+
+:root[data-fontsize="small"] .form-panel,
+:root[data-fontsize="small"] .form-panel input,
+:root[data-fontsize="small"] .form-panel select,
+:root[data-fontsize="small"] .form-panel textarea,
+:root[data-fontsize="small"] .form-panel label,
+:root[data-fontsize="small"] .form-panel .btn {
+  font-size: 12.5px !important;
+}
+
+:root[data-fontsize="large"] .form-panel,
+:root[data-fontsize="large"] .form-panel input,
+:root[data-fontsize="large"] .form-panel select,
+:root[data-fontsize="large"] .form-panel textarea,
+:root[data-fontsize="large"] .form-panel label,
+:root[data-fontsize="large"] .form-panel .btn {
+  font-size: 15.5px !important;
+}
