@@ -22,6 +22,17 @@ const VOUCHER_SUBLABELS = {
     pv: 'ใบสำคัญจ่าย (PV)'
 };
 
+const CERT_SUBLABELS = {
+    employment: 'รับรองการทำงาน',
+    internship: 'รับรองการฝึกงาน',
+    award_training: 'ประกาศนียบัตรอบรม',
+    award_speaker: 'เกียรติบัตรวิทยากร',
+    award_competition: 'เกียรติบัตรรางวัล',
+    award_participation: 'เกียรติบัตรเข้าร่วมงาน',
+    award_partner: 'เกียรติบัตรพันธมิตร',
+    award_intern_excellence: 'ประกาศนียบัตรฝึกงาน'
+};
+
 const LETTER_SUBLABELS = {
     invite_advisor: 'เชิญเป็นที่ปรึกษา',
     invite_speaker: 'เชิญเป็นวิทยากร',
@@ -196,6 +207,8 @@ function renderDocuments() {
         let badgeLabel = info.label;
         if (d.collectionName === 'vouchers' && VOUCHER_SUBLABELS[d.voucherType]) {
             badgeLabel = VOUCHER_SUBLABELS[d.voucherType];
+        } else if (d.collectionName === 'certificates' && CERT_SUBLABELS[d.certType]) {
+            badgeLabel = CERT_SUBLABELS[d.certType];
         } else if (d.collectionName === 'letters' && LETTER_SUBLABELS[d.letterType]) {
             badgeLabel = LETTER_SUBLABELS[d.letterType];
         }

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <script src="../assets/js/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kitten Code Certificate Generator — หนังสือรับรองการทำงาน/ฝึกงาน</title>
+    <title>Kitten Code Certificate & Diploma Studio — หนังสือรับรอง & ประกาศนียบัตร</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/document.css">
@@ -13,22 +13,32 @@
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <style>
+        .type-group-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            margin: 6px 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .type-tabs {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-top: 6px;
+            margin-bottom: 12px;
         }
 
         .type-tab-btn {
-            min-height: 42px;
-            padding: 10px 14px;
+            min-height: 40px;
+            padding: 8px 10px;
             border: 1.5px solid #cbd5e1;
             border-radius: 999px;
             background: #f8fafc;
             color: #334155;
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.84rem;
             font-weight: 700;
             cursor: pointer;
             transition: all var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
@@ -43,15 +53,53 @@
         }
 
         .type-tab-btn:hover {
-            border-color: #f26522;
-            color: #f26522;
+            border-color: #0a72e8;
+            color: #0a72e8;
         }
 
         .type-tab-btn.active {
-            background: #f26522;
-            border-color: #f26522;
+            background: #0a72e8;
+            border-color: #0a72e8;
             color: #ffffff;
-            box-shadow: 0 2px 8px rgba(242, 101, 34, 0.28);
+            box-shadow: 0 2px 8px rgba(10, 114, 232, 0.24);
+        }
+
+        .theme-chips {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .theme-chip-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1.5px solid #cbd5e1;
+            background: #f8fafc;
+            color: #334155;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 150ms ease;
+        }
+
+        .theme-chip-btn.active {
+            border-color: #0a72e8;
+            background: #e8f1fd;
+            color: #0a72e8;
+        }
+
+        .theme-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
         }
 
         .check-inline {
@@ -67,7 +115,7 @@
         .check-inline input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: #f26522;
+            accent-color: #0a72e8;
             cursor: pointer;
         }
 
@@ -106,8 +154,8 @@
                 <i class="fas fa-eye"></i> ดูตัวอย่าง A4
             </button>
         </div>
-        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">
-            <i class="fas fa-print"></i> พิมพ์
+        <button type="button" class="btn btn-primary btn-sm" onclick="exportCertPDF()">
+            <i class="fas fa-file-pdf"></i> ส่งออก PDF
         </button>
     </div>
 
@@ -116,7 +164,7 @@
         <!-- Left Panel: Form Input -->
         <div class="form-panel">
             <div class="form-header">
-                <h2><i class="fas fa-award"></i> สร้างหนังสือรับรอง</h2>
+                <h2><i class="fas fa-award"></i> หนังสือรับรอง & ประกาศนียบัตร</h2>
                 <button type="button" class="btn-clear-draft" onclick="clearDraft()">
                     <i class="fas fa-rotate-left"></i> เริ่มใหม่
                 </button>
@@ -126,9 +174,14 @@
 
                 <!-- Section: Certificate Type & Document Info -->
                 <div class="form-section">
-                    <h3><i class="fas fa-file-signature"></i> ประเภทและข้อมูลเอกสาร</h3>
+                    <h3><i class="fas fa-file-signature"></i> ประเภทและรูปแบบเอกสาร</h3>
                     <input type="hidden" id="in-cert-type" value="employment">
-                    <div class="type-tabs" style="margin-bottom: 14px;">
+                    <input type="hidden" id="in-cert-theme" value="gold">
+
+                    <div class="type-group-label">
+                        <i class="fas fa-file-alt"></i> หนังสือรับรองแนวตั้ง (A4 Portrait)
+                    </div>
+                    <div class="type-tabs">
                         <button type="button" class="type-tab-btn active" data-type="employment"
                             onclick="handleCertTypeChange('employment')">
                             <i class="fas fa-user-tie"></i> รับรองการทำงาน
@@ -139,17 +192,80 @@
                         </button>
                     </div>
 
+                    <div class="type-group-label">
+                        <i class="fas fa-certificate"></i> ประกาศนียบัตร / เกียรติบัตร แนวนอน (A4 Landscape — PDF)
+                    </div>
+                    <div class="type-tabs">
+                        <button type="button" class="type-tab-btn" data-type="award_training"
+                            onclick="handleCertTypeChange('award_training')">
+                            <i class="fas fa-graduation-cap"></i> ผ่านการอบรม / เวิร์กชอป
+                        </button>
+                        <button type="button" class="type-tab-btn" data-type="award_speaker"
+                            onclick="handleCertTypeChange('award_speaker')">
+                            <i class="fas fa-chalkboard-teacher"></i> ขอบคุณวิทยากร / ที่ปรึกษา
+                        </button>
+                        <button type="button" class="type-tab-btn" data-type="award_competition"
+                            onclick="handleCertTypeChange('award_competition')">
+                            <i class="fas fa-trophy"></i> รางวัลการแข่งขัน / ดีเด่น
+                        </button>
+                        <button type="button" class="type-tab-btn" data-type="award_participation"
+                            onclick="handleCertTypeChange('award_participation')">
+                            <i class="fas fa-certificate"></i> เข้าร่วมโครงการ / สัมมนา
+                        </button>
+                        <button type="button" class="type-tab-btn" data-type="award_partner"
+                            onclick="handleCertTypeChange('award_partner')">
+                            <i class="fas fa-handshake"></i> ขอบคุณหน่วยงานพันธมิตร
+                        </button>
+                        <button type="button" class="type-tab-btn" data-type="award_intern_excellence"
+                            onclick="handleCertTypeChange('award_intern_excellence')">
+                            <i class="fas fa-medal"></i> สำเร็จการฝึกงาน (แนวนอน)
+                        </button>
+                    </div>
+
+                    <!-- Landscape Theme Selector -->
+                    <div class="only-landscape" style="display: none; margin-bottom: 14px;">
+                        <label style="font-size: 0.84rem; font-weight: 700; display: block; margin-bottom: 4px;">
+                            โทนสีกรอบประกาศนียบัตร (Frame Theme)
+                        </label>
+                        <div class="theme-chips">
+                            <button type="button" class="theme-chip-btn active" data-theme="gold"
+                                onclick="handleCertThemeChange('gold')">
+                                <span class="theme-dot" style="background: linear-gradient(135deg, #0f2942, #c59b27);"></span>
+                                ทอง-กรมท่า (Royal Gold)
+                            </button>
+                            <button type="button" class="theme-chip-btn" data-theme="blue"
+                                onclick="handleCertThemeChange('blue')">
+                                <span class="theme-dot" style="background: linear-gradient(135deg, #1e3a8a, #0a72e8);"></span>
+                                น้ำเงิน Kitten Code
+                            </button>
+                            <button type="button" class="theme-chip-btn" data-theme="orange"
+                                onclick="handleCertThemeChange('orange')">
+                                <span class="theme-dot" style="background: linear-gradient(135deg, #1a3a5c, #f26522);"></span>
+                                ส้ม-กรมท่า (Signature)
+                            </button>
+                            <button type="button" class="theme-chip-btn" data-theme="emerald"
+                                onclick="handleCertThemeChange('emerald')">
+                                <span class="theme-dot" style="background: linear-gradient(135deg, #064e3b, #059669);"></span>
+                                เขียวมรกต (Academic)
+                            </button>
+                        </div>
+                        <label class="check-inline" style="margin-top: 10px;">
+                            <input type="checkbox" id="in-show-seal" checked>
+                            แสดงตราประทับเกียรติยศ (Official Gold Seal) บนใบประกาศนียบัตร
+                        </label>
+                    </div>
+
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>เลขที่เอกสาร (ที่)</label>
-                            <input type="text" id="in-doc-no" value="" placeholder="เช่น KC-CERT-2569/001">
+                            <label>เลขที่เอกสาร / เลขที่เกียรติบัตร</label>
+                            <input type="text" id="in-doc-no" value="" placeholder="เช่น CERT-2569-001">
                         </div>
                         <div class="form-group">
-                            <label>วันที่ออกหนังสือ</label>
+                            <label>วันที่ออก / วันที่มอบ</label>
                             <input type="date" id="in-doc-date" value="">
                         </div>
                         <div class="form-group full-width">
-                            <label>ชื่อบริษัทผู้ออกหนังสือ</label>
+                            <label>ชื่อบริษัท / หน่วยงานผู้มอบ</label>
                             <input type="text" id="in-company-name"
                                 value="บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)"
                                 placeholder="ระบุชื่อบริษัท...">
@@ -159,7 +275,7 @@
 
                 <!-- Section: Recipient Info -->
                 <div class="form-section">
-                    <h3><i class="fas fa-id-card"></i> ข้อมูลผู้รับรอง</h3>
+                    <h3><i class="fas fa-id-card"></i> ข้อมูลผู้รับรอง / ผู้รับมอบประกาศนียบัตร</h3>
                     <div class="form-grid">
                         <div class="form-group">
                             <label>คำนำหน้าชื่อ</label>
@@ -168,12 +284,22 @@
                                 <option value="นางสาว">นางสาว</option>
                                 <option value="นาง">นาง</option>
                                 <option value="คุณ">คุณ</option>
-                                <option value="">(ไม่ระบุ)</option>
+                                <option value="ดร.">ดร.</option>
+                                <option value="ผศ.ดร.">ผศ.ดร.</option>
+                                <option value="รศ.ดร.">รศ.ดร.</option>
+                                <option value="">(ไม่ระบุ / ชื่อหน่วยงาน)</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>ชื่อ - นามสกุล</label>
+                            <label>ชื่อ - นามสกุล / ชื่อหน่วยงานผู้รับ</label>
                             <input type="text" id="in-person-name" value="" placeholder="เช่น สมชาย ใจดี">
+                        </div>
+
+                        <!-- Landscape only: Subtitle under recipient name -->
+                        <div class="form-group full-width only-landscape" style="display: none;">
+                            <label>ตำแหน่ง / สังกัด / สถาบันของผู้รับมอบ (แสดงใต้ชื่อผู้รับ — เว้นว่างได้)</label>
+                            <input type="text" id="in-recipient-sub" value=""
+                                placeholder="เช่น นักศึกษาสาขาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยนเรศวร">
                         </div>
 
                         <!-- Employment only -->
@@ -202,25 +328,42 @@
                     </div>
                 </div>
 
+                <!-- Section: Landscape Event / Award Context -->
+                <div class="form-section only-landscape" style="display: none;">
+                    <h3><i class="fas fa-trophy"></i> ข้อมูลหลักสูตร / โครงการ / รางวัล</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>ชื่อหลักสูตร / โครงการ / งานกิจกรรม</label>
+                            <input type="text" id="in-event-title" value=""
+                                placeholder="เช่น โครงการอบรมเชิงปฏิบัติการ AI & Full-Stack Web Development">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ชื่อรางวัล / บทบาท (เช่น รางวัลชนะเลิศ / วิทยากรผู้ทรงคุณวุฒิ — เว้นว่างได้)</label>
+                            <input type="text" id="in-award-rank" value=""
+                                placeholder="เช่น รางวัลชนะเลิศอันดับ 1 / วิทยากรผู้ทรงคุณวุฒิ">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Section: Position & Period -->
                 <div class="form-section">
                     <h3><i class="fas fa-briefcase"></i> ตำแหน่งและระยะเวลา</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>ตำแหน่ง</label>
+                            <label>ตำแหน่ง (เว้นว่างได้สำหรับเกียรติบัตรทั่วไป)</label>
                             <input type="text" id="in-position" value=""
                                 placeholder="เช่น Full-Stack Developer">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group only-portrait">
                             <label>ฝ่าย / แผนก (เว้นว่างได้)</label>
                             <input type="text" id="in-department" value="" placeholder="เช่น พัฒนาซอฟต์แวร์">
                         </div>
                         <div class="form-group">
-                            <label>วันที่เริ่มงาน / เริ่มฝึกงาน</label>
+                            <label>วันที่เริ่มงาน / วันจัดงาน</label>
                             <input type="date" id="in-start-date" value="">
                         </div>
                         <div class="form-group">
-                            <label>วันที่สิ้นสุด</label>
+                            <label>วันที่สิ้นสุด (เว้นว่างได้หากจัดวันเดียว)</label>
                             <input type="date" id="in-end-date" value="">
                         </div>
 
@@ -244,16 +387,51 @@
                                 placeholder="เช่น 25000">
                         </div>
 
-                        <!-- Internship: total hours -->
-                        <div class="form-group full-width only-internship" style="display: none;">
-                            <label>จำนวนชั่วโมงฝึกงานรวม (ชั่วโมง — เว้นว่างได้)</label>
-                            <input type="text" id="in-total-hours" value="" placeholder="เช่น 420">
+                        <!-- Total hours (used in internship & landscape training/internship) -->
+                        <div class="form-group full-width">
+                            <label>จำนวนชั่วโมงรวม (ชั่วโมงอบรม / ฝึกงาน — เว้นว่างได้)</label>
+                            <input type="text" id="in-total-hours" value="" placeholder="เช่น 30 หรือ 420">
                         </div>
                     </div>
                 </div>
 
-                <!-- Section: Duties, Evaluation & Purpose -->
-                <div class="form-section">
+                <!-- Section: Landscape Diploma Wording -->
+                <div class="form-section only-landscape" style="display: none;">
+                    <div class="flex-between" style="margin-bottom: 10px;">
+                        <h3 style="margin-bottom: 0;"><i class="fas fa-scroll"></i> ข้อความบนใบประกาศนียบัตร</h3>
+                        <button type="button" class="helper-btn" onclick="fillLandscapeAwardBody()">
+                            <i class="fas fa-magic"></i> ร่างข้อความตามหัวข้ออัตโนมัติ
+                        </button>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>หัวเรื่องใหญ่ (ไทย)</label>
+                            <input type="text" id="in-award-header" value="" placeholder="เช่น ประกาศนียบัตร / เกียรติบัตร">
+                        </div>
+                        <div class="form-group">
+                            <label>หัวเรื่องรอง (อังกฤษ)</label>
+                            <input type="text" id="in-award-header-en" value="" placeholder="เช่น CERTIFICATE OF COMPLETION">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ข้อความนำ (เหนือชื่อผู้รับมอบ)</label>
+                            <input type="text" id="in-award-lead" value=""
+                                placeholder="ขอมอบประกาศนียบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ข้อความประกาศเกียรติคุณ / เหตุผลที่มอบ (เว้นว่างเพื่อใช้ข้อความอัตโนมัติ)</label>
+                            <textarea id="in-award-reason" rows="2"
+                                placeholder="ได้ผ่านการอบรมและพัฒนาทักษะในหลักสูตร..."></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>คำอวยพร / คำขอบคุณปิดท้าย (เว้นว่างเพื่อใช้ข้อความอัตโนมัติ)</label>
+                            <textarea id="in-award-blessing" rows="2"
+                                placeholder="ขอให้มีความเจริญก้าวหน้าในวิชาชีพ และประสบความสำเร็จสืบไป"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Portrait Duties, Evaluation & Purpose -->
+                <div class="form-section only-portrait">
                     <h3><i class="fas fa-tasks"></i> รายละเอียดงาน / คำรับรองเพิ่มเติม</h3>
                     <div class="form-grid">
                         <div class="form-group full-width">
@@ -279,18 +457,32 @@
                     </div>
                 </div>
 
-                <!-- Section: Authorized Signatory -->
+                <!-- Section: Authorized Signatory (1 or 2 Signatories) -->
                 <div class="form-section">
                     <h3><i class="fas fa-signature"></i> ผู้มีอำนาจลงนาม</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>ชื่อผู้ลงนาม</label>
+                            <label>ชื่อผู้ลงนามหลัก (คนที่ 1)</label>
                             <input type="text" id="in-sign-name" value="" placeholder="ระบุชื่อ-นามสกุลผู้มีอำนาจลงนาม">
                         </div>
                         <div class="form-group">
-                            <label>ตำแหน่งผู้ลงนาม</label>
+                            <label>ตำแหน่งผู้ลงนามหลัก</label>
                             <input type="text" id="in-sign-position" value="กรรมการผู้จัดการ (Managing Director)"
                                 placeholder="เช่น กรรมการผู้จัดการ">
+                        </div>
+
+                        <!-- Co-Signatory for Landscape Certificates -->
+                        <div class="form-group only-landscape" style="display: none;">
+                            <label>ชื่อผู้ลงนามร่วม คนที่ 2 (เว้นว่างได้)</label>
+                            <input type="text" id="in-co-sign-name" value="" placeholder="เช่น ประธานโครงการ / คณบดี">
+                        </div>
+                        <div class="form-group only-landscape" style="display: none;">
+                            <label>ตำแหน่งผู้ลงนามร่วม คนที่ 2</label>
+                            <input type="text" id="in-co-sign-position" value="" placeholder="เช่น ประธานการจัดงาน / วิทยากรหลัก">
+                        </div>
+                        <div class="form-group full-width only-landscape" style="display: none;">
+                            <label>หน่วยงานของผู้ลงนามร่วม คนที่ 2 (เว้นว่างได้)</label>
+                            <input type="text" id="in-co-sign-org" value="" placeholder="เช่น คณะวิศวกรรมศาสตร์ มหาวิทยาลัยนเรศวร">
                         </div>
                     </div>
                 </div>
@@ -298,12 +490,12 @@
                 <!-- Actions -->
                 <div class="form-section print-section">
                     <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn"
-                        onclick="window.print()">
-                        <i class="fas fa-print"></i> พิมพ์หนังสือรับรอง (A4)
+                        onclick="exportCertPDF()">
+                        <i class="fas fa-file-pdf"></i> ส่งออกไฟล์ PDF / พิมพ์เอกสาร (A4)
                     </button>
                     <button type="button" id="btn-save-cloud" class="btn btn-success btn-large full-width-btn"
                         onclick="saveDocumentToFirestore()">
-                        <i class="fas fa-check"></i> บันทึก
+                        <i class="fas fa-check"></i> บันทึกลงทะเบียนเอกสาร
                     </button>
                 </div>
 
@@ -312,7 +504,7 @@
 
         <!-- Right Panel: A4 Preview -->
         <div class="preview-panel" id="preview-panel">
-            <!-- JavaScript will render the A4 certificate preview here -->
+            <!-- JavaScript will render the A4 Portrait or Landscape certificate preview here -->
         </div>
     </div>
 

@@ -348,7 +348,7 @@ function buildViewer() {
         invoice: 'ใบแจ้งหนี้',
         receipt: 'ใบเสร็จรับเงิน',
         voucher: (window.KCVoucher && window.KCVoucher.TYPES[d.voucherType]?.title) || 'ใบสำคัญจ่าย / เบิกจ่าย',
-        certificate: d.certType === 'internship' ? 'หนังสือรับรองการฝึกงาน' : 'หนังสือรับรองการทำงาน',
+        certificate: (window.KCCertificate && window.KCCertificate.TYPES[d.certType]?.short) || (d.certType === 'internship' ? 'หนังสือรับรองการฝึกงาน' : 'หนังสือรับรองการทำงาน'),
         letter: (window.KCLetter && window.KCLetter.TYPES[d.letterType]?.title) || 'หนังสือติดต่อภายนอก'
     };
     if (badge) badge.textContent = labels[type] || type;

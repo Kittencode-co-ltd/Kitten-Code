@@ -1,8 +1,11 @@
 // ============================================================
-//  script-certificate.js — Kitten Code Certificate Generator
+//  script-certificate.js — Kitten Code Certificate & Diploma Studio
 //  Supports:
-//   - หนังสือรับรองการทำงาน (employment)
-//   - หนังสือรับรองการฝึกงาน (internship)
+//   1) หนังสือรับรองแนวตั้ง (A4 Portrait):
+//      - employment, internship
+//   2) ประกาศนียบัตร / เกียรติบัตร แนวนอน (A4 Landscape PDF):
+//      - award_training, award_speaker, award_competition,
+//        award_participation, award_partner, award_intern_excellence
 //  Requires certificate-template.js (window.KCCertificate)
 // ============================================================
 
@@ -17,11 +20,14 @@ let state = {
 
 const INPUT_IDS = [
     'cert-type',
+    'cert-theme',
+    'show-seal',
     'doc-no',
     'doc-date',
     'company-name',
     'name-prefix',
     'person-name',
+    'recipient-sub',
     'id-card',
     'student-id',
     'institution',
@@ -38,8 +44,18 @@ const INPUT_IDS = [
     'duties',
     'evaluation',
     'purpose',
+    'event-title',
+    'award-rank',
+    'award-header',
+    'award-header-en',
+    'award-lead',
+    'award-reason',
+    'award-blessing',
     'sign-name',
-    'sign-position'
+    'sign-position',
+    'co-sign-name',
+    'co-sign-position',
+    'co-sign-org'
 ];
 
 function getEl(id) {
@@ -69,12 +85,15 @@ function collectData() {
     const personName = getInputValue('person-name');
     return {
         certType,
+        certTheme: getInputValue('cert-theme') || 'gold',
+        showSeal: getEl('show-seal') ? getInputValue('show-seal') : true,
         docNo: getInputValue('doc-no'),
         docDate: getInputValue('doc-date'),
         companyName: getInputValue('company-name') || 'บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)',
         namePrefix,
         personName,
         custName: `${namePrefix || ''}${personName || ''}`.trim(),
+        recipientSub: getInputValue('recipient-sub'),
         idCard: getInputValue('id-card'),
         studentId: getInputValue('student-id'),
         institution: getInputValue('institution'),
@@ -91,8 +110,18 @@ function collectData() {
         duties: getInputValue('duties'),
         evaluation: getInputValue('evaluation'),
         purpose: getInputValue('purpose'),
+        eventTitle: getInputValue('event-title'),
+        awardRank: getInputValue('award-rank'),
+        awardHeader: getInputValue('award-header'),
+        awardHeaderEn: getInputValue('award-header-en'),
+        awardLead: getInputValue('award-lead'),
+        awardReason: getInputValue('award-reason'),
+        awardBlessing: getInputValue('award-blessing'),
         signName: getInputValue('sign-name'),
-        signPosition: getInputValue('sign-position')
+        signPosition: getInputValue('sign-position'),
+        coSignName: getInputValue('co-sign-name'),
+        coSignPosition: getInputValue('co-sign-position'),
+        coSignOrg: getInputValue('co-sign-org')
     };
 }
 
@@ -172,15 +201,60 @@ window.clearDraft = function () {
     location.reload();
 };
 
+window.handleCertThemeChange = function (themeKey) {
+    setInputValue('cert-theme', themeKey);
+    document.querySelectorAll('.theme-chip-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === themeKey);
+    });
+    buildPreview();
+};
+
+window.fillLandscapeAwardBody = function () {
+    if (!window.KCCertificate) return;
+    const d = collectData();
+    const draft = window.KCCertificate.buildLandscapeDraft(d);
+    setInputValue('award-header', draft.awardHeader);
+    setInputValue('award-header-en', draft.awardHeaderEn);
+    setInputValue('award-lead', draft.awardLead);
+    setInputValue('award-reason', draft.awardReason);
+    setInputValue('award-blessing', draft.awardBlessing);
+    buildPreview();
+};
+
+window.exportCertPDF = function () {
+    const d = collectData();
+    const prevTitle = document.title;
+    const cleanName = (d.personName || 'Recipient').replace(/[\\/:*?"<>|]/g, '_');
+    const cleanNo = (d.docNo || 'CERT').replace(/[\\/:*?"<>|]/g, '-');
+    document.title = `${cleanNo}-${cleanName}`;
+    window.print();
+    setTimeout(() => {
+        document.title = prevTitle;
+    }, 600);
+};
+
 // --- Mode & Conditional Field Visibility ---
 window.handleCertTypeChange = function (type) {
     const certType = type || getInputValue('cert-type') || 'employment';
     setInputValue('cert-type', certType);
 
+    const isLandscape = window.KCCertificate && window.KCCertificate.isLandscapeCert(certType);
+
     document.querySelectorAll('.type-tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.type === certType);
     });
 
+    const curTheme = getInputValue('cert-theme') || 'gold';
+    document.querySelectorAll('.theme-chip-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === curTheme);
+    });
+
+    document.querySelectorAll('.only-portrait').forEach(el => {
+        el.style.display = !isLandscape ? '' : 'none';
+    });
+    document.querySelectorAll('.only-landscape').forEach(el => {
+        el.style.display = isLandscape ? '' : 'none';
+    });
     document.querySelectorAll('.only-employment').forEach(el => {
         el.style.display = certType === 'employment' ? '' : 'none';
     });
@@ -188,23 +262,28 @@ window.handleCertTypeChange = function (type) {
         el.style.display = certType === 'internship' ? '' : 'none';
     });
 
-    // Update end-date disabled state if stillEmployed is checked in employment mode
     const endDateEl = getEl('end-date');
     const stillEmp = getInputValue('still-employed');
     if (endDateEl) {
         endDateEl.disabled = (certType === 'employment' && stillEmp);
     }
 
-    // Update salary input visibility
     const salaryGroup = document.getElementById('salary-input-group');
     if (salaryGroup) {
         salaryGroup.style.display = (certType === 'employment' && getInputValue('show-salary')) ? '' : 'none';
     }
 
-    // Pre-fill default internship evaluation text if switching to internship and empty
     const evalEl = getEl('evaluation');
     if (certType === 'internship' && evalEl && !evalEl.value.trim()) {
         evalEl.value = DEFAULT_EVALUATION_INTERN;
+    }
+
+    // Update print button label dynamically
+    const btnPrint = document.getElementById('btn-print');
+    if (btnPrint) {
+        btnPrint.innerHTML = isLandscape
+            ? '<i class="fas fa-file-pdf"></i> ส่งออกไฟล์ PDF / พิมพ์ประกาศนียบัตร (A4 แนวนอน)'
+            : '<i class="fas fa-print"></i> ส่งออกไฟล์ PDF / พิมพ์หนังสือรับรอง (A4 แนวตั้ง)';
     }
 
     buildPreview();
@@ -256,7 +335,7 @@ window.saveDocumentToFirestore = async function () {
 
         const data = collectData();
         if (!data.docNo || !data.personName) {
-            throw new Error("กรุณากรอก 'เลขที่เอกสาร' และ 'ชื่อ-นามสกุลผู้รับรอง' (Missing Document No or Recipient Name)");
+            throw new Error("กรุณากรอก 'เลขที่เอกสาร' และ 'ชื่อ-นามสกุลผู้รับรอง/ผู้รับมอบ' (Missing Document No or Recipient Name)");
         }
 
         const docDate = data.docDate || new Date().toISOString().split('T')[0];
@@ -279,7 +358,7 @@ window.saveDocumentToFirestore = async function () {
             await setDoc(doc(db, 'certificates', data.docNo), record);
         }
 
-        showSaveToast('บันทึกหนังสือรับรองไปยังระบบเรียบร้อยแล้ว', 'success');
+        showSaveToast('บันทึกเอกสารไปยังระบบเรียบร้อยแล้ว', 'success');
         setTimeout(() => {
             if (btnSave) {
                 btnSave.disabled = false;
