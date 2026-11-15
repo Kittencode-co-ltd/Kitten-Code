@@ -52,21 +52,27 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: rgba(255,255,255,0.75);
+            min-height: 36px;
+            color: rgba(255,255,255,0.85);
             background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 999px;
             padding: 6px 14px;
             font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
             white-space: nowrap;
         }
 
         .btn-back:hover {
             background: rgba(255,255,255,0.15);
             color: #fff;
+        }
+
+        .btn-back:active {
+            transform: scale(0.97);
         }
 
         .doc-meta {
@@ -107,21 +113,29 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
+            min-height: 38px;
             background: #f26522;
             color: #fff;
             border: none;
-            border-radius: 6px;
+            border-radius: 999px;
             padding: 8px 18px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             font-family: 'Sarabun', sans-serif;
-            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(242, 101, 34, 0.35);
+            transition: background 150ms, transform 150ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms;
             white-space: nowrap;
         }
 
         .btn-print:hover { background: #d4521a; }
         .btn-print:active { transform: scale(0.97); }
+
+        @media (max-width: 639px) {
+            .toolbar-title { display: none; }
+            .viewer-body { padding: 16px 8px; }
+            #preview-panel .a4-page { zoom: 0.46; }
+        }
 
         /* ── Preview area ── */
         .viewer-body {

@@ -10,16 +10,62 @@
     <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
     <style>
+        :root {
+            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+            --dur-fast: 150ms;
+            --dur-base: 240ms;
+            --dur-slow: 420ms;
+        }
+
+        @keyframes fufu-rise {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: none; }
+        }
+
         body {
             background-color: #f8f9fa;
             font-family: 'Inter', sans-serif;
             padding: 20px;
+            -webkit-font-smoothing: antialiased;
         }
 
         .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+            animation: fufu-rise var(--dur-slow) var(--ease-out) both;
+        }
+
+        .btn {
+            min-height: 42px;
+            padding: 8px 22px;
+            border-radius: 999px;
+            font-weight: 600;
+            transition:
+                background-color var(--dur-fast) var(--ease-out),
+                border-color var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out),
+                box-shadow var(--dur-fast) var(--ease-out);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .form-control {
+            min-height: 42px;
+            border-radius: 14px;
+            border-width: 1.5px;
+            transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.14);
+        }
+
+        .badge {
+            border-radius: 999px;
+            padding: 5px 12px;
         }
 
         .avatar {
@@ -29,11 +75,17 @@
             background: linear-gradient(135deg, #f26522, #ff9a5a);
             color: #fff;
             font-size: 28px;
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
             text-transform: uppercase;
+            box-shadow: 0 6px 18px rgba(242, 101, 34, 0.28);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 639px) {
+            body { padding: 12px; }
         }
     </style>
 </head>

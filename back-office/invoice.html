@@ -14,14 +14,28 @@
 </head>
 
 <body>
-    <div class="app-container no-print">
+    <div class="doc-mobile-switcher no-print">
+        <div class="doc-segment" id="docMobileSegment" style="--seg-i: 0;">
+            <span class="doc-segment-pill"></span>
+            <button type="button" class="doc-segment-btn active" data-mode="form" onclick="switchDocMobileTab('form')">
+                <i class="fas fa-edit"></i> กรอกข้อมูล
+            </button>
+            <button type="button" class="doc-segment-btn" data-mode="preview" onclick="switchDocMobileTab('preview')">
+                <i class="fas fa-eye"></i> ดูตัวอย่าง A4
+            </button>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">
+            <i class="fas fa-print"></i> พิมพ์
+        </button>
+    </div>
+
+    <div class="app-container no-print" id="docAppContainer" data-mobile-view="form">
 
         <!-- Left Panel: Form Input -->
         <div class="form-panel">
-            <div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="form-header">
                 <h2><i class="fas fa-file-invoice-dollar"></i> สร้างใบแจ้งหนี้ (Invoice)</h2>
-                <button type="button" onclick="clearDraft()"
-                    style="padding: 6px 12px; font-size: 0.85rem; background: #dc2626; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                <button type="button" class="btn-clear-draft" onclick="clearDraft()">
                     <i class="fas fa-eraser"></i> Clear Draft
                 </button>
             </div>
@@ -148,7 +162,7 @@
                     <h3><i class="fas fa-university"></i> ช่องทางชำระเงิน & หมายเหตุ</h3>
                     <div class="form-group full-width">
                         <label>ช่องทางชำระเงิน (Payment Method)</label>
-                        <select id="in-payment-method" onchange="buildPreview()" style="width:100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--input-bg, #1e293b); color: var(--text-primary, #f1f5f9); font-size: 0.95rem; cursor: pointer;">
+                        <select id="in-payment-method" onchange="buildPreview()">
                             <option value="none">— ไม่แสดงช่องทางชำระเงิน —</option>
                             <option value="kasikorn">🏦 KASIKORN BANK (226-3-92729-2)</option>
                             <option value="krungthai">🏦 KRUNGTHAI BANK (665-6-09488-0)</option>
@@ -181,17 +195,15 @@
                 <!-- Print Action -->
                 <div class="form-section print-section">
                     <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn"
-                        onclick="window.print()" style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px;">
+                        onclick="window.print()">
                         <i class="fas fa-print"></i> พิมพ์ใบแจ้งหนี้ (A4)
                     </button>
                     <button type="button" id="btn-save-cloud" class="btn btn-success btn-large full-width-btn"
-                        onclick="saveDocumentToFirestore()"
-                        style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px; background-color: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                        onclick="saveDocumentToFirestore()">
                         <i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)
                     </button>
-                    <button type="button" id="btn-next-receipt" class="btn btn-large full-width-btn"
-                        onclick="convertToReceipt()"
-                        style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px; background-color: #f26522; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                    <button type="button" id="btn-next-receipt" class="btn btn-primary btn-large full-width-btn"
+                        onclick="convertToReceipt()">
                         <i class="fas fa-arrow-right"></i> บันทึกและไปสร้างใบเสร็จรับเงินต่อ
                     </button>
                 </div>
@@ -204,6 +216,20 @@
             <!-- JavaScript will render the paginated preview here -->
         </div>
     </div>
+
+    <script>
+        window.switchDocMobileTab = function (mode) {
+            const container = document.getElementById('docAppContainer');
+            const seg = document.getElementById('docMobileSegment');
+            if (container) container.setAttribute('data-mobile-view', mode);
+            if (seg) {
+                seg.style.setProperty('--seg-i', mode === 'preview' ? 1 : 0);
+                seg.querySelectorAll('.doc-segment-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+                });
+            }
+        };
+    </script>
 
     <script src="../assets/js/documents/script-invoice.js"></script>
     <script type="module">

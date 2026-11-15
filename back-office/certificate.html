@@ -20,20 +20,25 @@
         }
 
         .type-tab-btn {
-            padding: 10px 12px;
+            min-height: 42px;
+            padding: 10px 14px;
             border: 1.5px solid #cbd5e1;
-            border-radius: 6px;
+            border-radius: 999px;
             background: #f8fafc;
             color: #334155;
             font-family: inherit;
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.18s ease;
+            transition: all var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
+        }
+
+        .type-tab-btn:active {
+            transform: scale(0.97);
         }
 
         .type-tab-btn:hover {
@@ -66,30 +71,51 @@
         }
 
         .helper-btn {
-            padding: 4px 10px;
+            min-height: 30px;
+            padding: 4px 12px;
             font-size: 0.78rem;
+            font-weight: 700;
             background: #e2e8f0;
             color: #334155;
             border: none;
-            border-radius: 4px;
+            border-radius: 999px;
             cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease;
         }
 
         .helper-btn:hover {
             background: #cbd5e1;
         }
+
+        .helper-btn:active {
+            transform: scale(0.96);
+        }
     </style>
 </head>
 
 <body>
-    <div class="app-container no-print">
+    <div class="doc-mobile-switcher no-print">
+        <div class="doc-segment" id="docMobileSegment" style="--seg-i: 0;">
+            <span class="doc-segment-pill"></span>
+            <button type="button" class="doc-segment-btn active" data-mode="form" onclick="switchDocMobileTab('form')">
+                <i class="fas fa-edit"></i> กรอกข้อมูล
+            </button>
+            <button type="button" class="doc-segment-btn" data-mode="preview" onclick="switchDocMobileTab('preview')">
+                <i class="fas fa-eye"></i> ดูตัวอย่าง A4
+            </button>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">
+            <i class="fas fa-print"></i> พิมพ์
+        </button>
+    </div>
+
+    <div class="app-container no-print" id="docAppContainer" data-mobile-view="form">
 
         <!-- Left Panel: Form Input -->
         <div class="form-panel">
-            <div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="form-header">
                 <h2><i class="fas fa-award"></i> สร้างหนังสือรับรอง</h2>
-                <button type="button" onclick="clearDraft()"
-                    style="padding: 6px 12px; font-size: 0.85rem; background: #dc2626; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                <button type="button" class="btn-clear-draft" onclick="clearDraft()">
                     <i class="fas fa-eraser"></i> Clear Draft
                 </button>
             </div>
@@ -270,12 +296,11 @@
                 <!-- Actions -->
                 <div class="form-section print-section">
                     <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn"
-                        onclick="window.print()" style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px;">
+                        onclick="window.print()">
                         <i class="fas fa-print"></i> พิมพ์หนังสือรับรอง (A4)
                     </button>
                     <button type="button" id="btn-save-cloud" class="btn btn-success btn-large full-width-btn"
-                        onclick="saveDocumentToFirestore()"
-                        style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px; background-color: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                        onclick="saveDocumentToFirestore()">
                         <i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)
                     </button>
                 </div>
@@ -288,6 +313,20 @@
             <!-- JavaScript will render the A4 certificate preview here -->
         </div>
     </div>
+
+    <script>
+        window.switchDocMobileTab = function (mode) {
+            const container = document.getElementById('docAppContainer');
+            const seg = document.getElementById('docMobileSegment');
+            if (container) container.setAttribute('data-mobile-view', mode);
+            if (seg) {
+                seg.style.setProperty('--seg-i', mode === 'preview' ? 1 : 0);
+                seg.querySelectorAll('.doc-segment-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+                });
+            }
+        };
+    </script>
 
     <script src="../assets/js/documents/certificate-template.js"></script>
     <script src="../assets/js/documents/script-certificate.js"></script>

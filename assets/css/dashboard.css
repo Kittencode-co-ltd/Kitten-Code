@@ -63,10 +63,12 @@
   --shadow-cyan: 0 0 20px rgba(0, 163, 255, 0.18);
   --shadow-hover: 0 8px 32px rgba(15, 23, 42, 0.14);
 
-  /* ── Transitions ── */
-  --t-fast: 0.15s ease;
-  --t-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --t-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ── Transitions (FUFU Motion Tokens) ── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  --t-normal: 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  --t-slow: 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ============================================================
@@ -181,8 +183,9 @@ body::before {
 
 .period-btn {
   font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 14.5px;
+  font-weight: 600;
+  min-height: 36px;
   padding: 6px 18px;
   border-radius: var(--r-pill);
   border: none;
@@ -191,6 +194,10 @@ body::before {
   cursor: pointer;
   transition: all var(--t-normal);
   white-space: nowrap;
+}
+
+.period-btn:active {
+  transform: scale(0.96);
 }
 
 .period-btn.active,
@@ -202,15 +209,16 @@ body::before {
 
 /* Back button */
 .db-back-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 38px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-secondary);
   text-decoration: none;
-  padding: 8px 14px;
-  border-radius: var(--r-md);
+  padding: 8px 16px;
+  border-radius: var(--r-pill);
   border: 1px solid var(--border-default);
   background: var(--bg-surface);
   transition: all var(--t-normal);
@@ -219,7 +227,10 @@ body::before {
 .db-back-btn:hover {
   color: var(--text-primary);
   border-color: var(--border-muted);
-  transform: translateX(-2px);
+}
+
+.db-back-btn:active {
+  transform: scale(0.97);
 }
 
 /* ── Grid Sections ─── */
@@ -838,9 +849,25 @@ body::before {
   }
   .db-header-right {
     width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
     justify-content: space-between;
+  }
+  .period-tabs {
+    overflow-x: auto;
+    max-width: 100%;
   }
   .kpi-value {
     font-size: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

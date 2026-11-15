@@ -11,16 +11,71 @@
     <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
     <style>
+        :root {
+            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+            --dur-fast: 150ms;
+            --dur-base: 240ms;
+            --dur-slow: 420ms;
+        }
+
         body {
             background-color: #f8f9fa;
             font-family: 'Inter', sans-serif;
             padding: 20px;
+            -webkit-font-smoothing: antialiased;
         }
 
         .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+        }
+
+        .btn {
+            border-radius: 999px;
+            font-weight: 600;
+            transition:
+                background-color var(--dur-fast) var(--ease-out),
+                border-color var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out),
+                box-shadow var(--dur-fast) var(--ease-out);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 42px;
+            border-radius: 14px;
+            border-width: 1.5px;
+            transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.14);
+        }
+
+        .modal-content {
+            border-radius: 24px;
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+        }
+
+        @media (max-width: 639px) {
+            body {
+                padding: 12px;
+            }
+            .modal-dialog {
+                margin: auto 0 0 0;
+                max-width: 100%;
+            }
+            .modal-content {
+                border-radius: 24px 24px 0 0;
+            }
         }
     </style>
 </head>
