@@ -7,10 +7,10 @@ let incomeCategories = [];
 let ledgerTarget = null;
 
 const TYPE_INFO = {
-    quotations:   { label: 'ใบเสนอราคา', badge: 'badge-quote',       editor: 'quotation', hash: '#quotation' },
-    invoices:     { label: 'ใบแจ้งหนี้',  badge: 'badge-invoice',     editor: 'invoice',   hash: '#invoice' },
-    receipts:     { label: 'ใบเสร็จ',     badge: 'badge-receipt',     editor: 'receipt',   hash: '#receipt' },
-    certificates: { label: 'หนังสือรับรอง', badge: 'badge-certificate', editor: null,        hash: '#certificate' }
+    quotations:   { label: 'ใบเสนอราคา', badge: 'badge-quote',       editor: 'quotation',   hash: '#quotation' },
+    invoices:     { label: 'ใบแจ้งหนี้',  badge: 'badge-invoice',     editor: 'invoice',     hash: '#invoice' },
+    receipts:     { label: 'ใบเสร็จ',     badge: 'badge-receipt',     editor: 'receipt',     hash: '#receipt' },
+    certificates: { label: 'หนังสือรับรอง', badge: 'badge-certificate', editor: 'certificate', hash: '#certificate' }
 };
 
 // Allowed statuses per document type: [value, Thai label, badge style]
@@ -29,6 +29,7 @@ const NEXT_STEP = {
 
 document.addEventListener('DOMContentLoaded', () => {
     window.switchTab = switchTab;
+    window.createNewDocument = createNewDocument;
     window.deleteDocument = deleteDocument;
     window.printDocument = printDocument;
     window.editDocument = editDocument;
@@ -94,7 +95,17 @@ function sortKey(d) {
 function switchTab(tabId, btn) {
     document.querySelectorAll('.tabs .tab').forEach(b => b.classList.toggle('active', b === btn));
     currentFilter = tabId;
+    const labelEl = document.getElementById('btn-new-doc-label');
+    if (labelEl) {
+        const targetInfo = TYPE_INFO[tabId] || TYPE_INFO.quotations;
+        labelEl.textContent = `สร้าง${targetInfo.label}`;
+    }
     renderDocuments();
+}
+
+function createNewDocument() {
+    const targetInfo = TYPE_INFO[currentFilter] || TYPE_INFO.quotations;
+    goTo(targetInfo.hash, targetInfo.editor + '.html');
 }
 
 function statusInfo(d) {

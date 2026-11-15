@@ -44,32 +44,6 @@
         }
 
         /* ── Top Bar ── */
-        .cal-topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .cal-title-group {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .cal-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--kc-text);
-        }
-
-        .cal-subtitle {
-            font-size: 0.85rem;
-            color: var(--color-text-muted, var(--kc-muted));
-        }
-
         .cal-nav-btn {
             background: var(--color-card, var(--kc-line));
             border: 1px solid var(--color-border, var(--kc-line));
@@ -122,29 +96,6 @@
             background: var(--cal-accent);
             color: #fff;
             box-shadow: 0 2px 10px rgba(10,114,232, 0.35);
-        }
-
-        .btn-add-event {
-            background: linear-gradient(135deg, var(--cal-accent), var(--cal-accent-light));
-            border: none;
-            color: #fff;
-            min-height: 40px;
-            padding: 10px 20px;
-            border-radius: 999px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all var(--dur-fast) var(--ease-out);
-            box-shadow: 0 4px 12px rgba(10,114,232,0.3);
-        }
-        .btn-add-event:hover {
-            box-shadow: 0 6px 16px rgba(10,114,232,0.45);
-        }
-        .btn-add-event:active {
-            transform: scale(0.97);
         }
 
         /* ── Calendar Grid ── */
@@ -314,73 +265,6 @@
             margin-bottom: 12px;
         }
 
-        /* ── Mini Calendar ── */
-        .mini-cal {
-            width: 100%;
-        }
-
-        .mini-cal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .mini-cal-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .mini-nav {
-            background: none;
-            border: none;
-            color: var(--kc-muted);
-            cursor: pointer;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            transition: color 0.15s;
-        }
-        .mini-nav:hover { color: var(--cal-accent-light); }
-
-        .mini-cal-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            text-align: center;
-        }
-
-        .mini-day-label {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: var(--kc-muted);
-            padding: 4px 0;
-            text-transform: uppercase;
-        }
-
-        .mini-day {
-            font-size: 0.78rem;
-            padding: 5px 2px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-        .mini-day:hover { background: rgba(10,114,232,0.15); }
-        .mini-day.today-mini { background: var(--cal-accent); color: #fff; font-weight: 700; border-radius: 50%; }
-        .mini-day.other-mini { opacity: 0.3; }
-        .mini-day.has-event { position: relative; }
-        .mini-day.has-event::after {
-            content: '';
-            position: absolute;
-            bottom: 1px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: var(--cal-accent);
-        }
-
         /* ── Upcoming Events ── */
         .upcoming-event {
             display: flex;
@@ -402,22 +286,6 @@
         .upcoming-info {}
         .upcoming-title { font-size: 0.88rem; font-weight: 500; }
         .upcoming-date  { font-size: 0.75rem; color: var(--kc-muted); margin-top: 2px; }
-
-        /* ── Legend ── */
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            margin-bottom: 6px;
-            cursor: pointer;
-        }
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 3px;
-            flex-shrink: 0;
-        }
 
         /* ── Modal ── */
         .modal-overlay {
@@ -800,9 +668,8 @@
     <script>
         // ── State ──────────────────────────────────────────────
         let currentDate = new Date();
-        let miniDate   = new Date();
         let currentView = 'month';
-        let events = [];          // loaded from Firestore / localStorage fallback
+        let events = [];          // loaded from Firestore
         let editingEventId = null;
         let selectedType = 'work';
 
@@ -929,7 +796,6 @@
         // ── Render ──────────────────────────────────────────────
         function renderAll() {
             renderMonthGrid();
-            renderMiniCal();
             renderUpcoming();
             renderMyTasks();
             if (currentView === 'week') renderWeekView();
@@ -1046,50 +912,6 @@
 
             html += `</div>`;
             wrapper.innerHTML = html;
-        }
-
-        function renderMiniCal() {
-            if (!document.getElementById('mini-cal-grid')) return;
-            const year  = miniDate.getFullYear();
-            const month = miniDate.getMonth();
-            document.getElementById('mini-label').textContent = `${THAI_MONTHS_SHORT[month]} ${year + 543}`;
-
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = new Date();
-
-            const grid = document.getElementById('mini-cal-grid');
-            grid.innerHTML = '';
-
-            ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d => {
-                const el = document.createElement('div');
-                el.className = 'mini-day-label';
-                el.textContent = d;
-                grid.appendChild(el);
-            });
-
-            const prevDays = new Date(year, month, 0).getDate();
-            for (let i = firstDay - 1; i >= 0; i--) {
-                const el = document.createElement('div');
-                el.className = 'mini-day other-mini';
-                el.textContent = prevDays - i;
-                grid.appendChild(el);
-            }
-
-            for (let d = 1; d <= daysInMonth; d++) {
-                const dateStr = ymd(new Date(year, month, d));
-                const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-                const hasEvt  = getEventsOnDate(dateStr).length > 0;
-
-                const el = document.createElement('div');
-                el.className = 'mini-day' + (isToday ? ' today-mini' : '') + (hasEvt ? ' has-event' : '');
-                el.textContent = d;
-                el.onclick = () => {
-                    currentDate = new Date(year, month, d);
-                    renderAll();
-                };
-                grid.appendChild(el);
-            }
         }
 
         function renderUpcoming() {
@@ -1209,14 +1031,7 @@
 
         function goToday() {
             currentDate = new Date();
-            miniDate = new Date();
             renderAll();
-        }
-
-        function miniNav(dir) {
-            miniDate.setDate(1);
-            miniDate.setMonth(miniDate.getMonth() + dir);
-            renderMiniCal();
         }
 
         function setView(v) {

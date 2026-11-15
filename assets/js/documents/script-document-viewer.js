@@ -282,7 +282,6 @@ function buildViewer() {
     let viewDoc;
     try {
         viewDoc = JSON.parse(raw);
-        localStorage.removeItem('kc_view_doc');
     } catch (e) {
         console.error('Invalid kc_view_doc', e);
         return;
@@ -290,6 +289,21 @@ function buildViewer() {
 
     const type = viewDoc.type;
     const d = decodeLegacyEntities(viewDoc.data);
+
+    const colMap = { quotation: 'quotations', invoice: 'invoices', receipt: 'receipts', certificate: 'certificates' };
+    const hashMap = { quotation: '#quotation', invoice: '#invoice', receipt: '#receipt', certificate: '#certificate' };
+    const editBtn = document.getElementById('btn-edit-doc');
+    if (editBtn && colMap[type]) {
+        editBtn.style.display = 'inline-flex';
+        window.editCurrentDoc = function () {
+            localStorage.setItem('kc_edit_doc', JSON.stringify({ col: colMap[type], data: d }));
+            if (window.parent !== window && window.parent.location.pathname.endsWith('back-office.html')) {
+                window.parent.location.hash = hashMap[type];
+            } else {
+                window.location.href = `${type}.html`;
+            }
+        };
+    }
 
     // Update header badge
     const badge = document.getElementById('doc-type-badge');

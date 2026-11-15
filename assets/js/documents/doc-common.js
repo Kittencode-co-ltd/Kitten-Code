@@ -11,8 +11,8 @@
 (function () {
     'use strict';
 
-    const PREFIX = { quotations: 'QT', invoices: 'INV', receipts: 'RC' };
-    const TYPE_TO_COL = { quotation: 'quotations', invoice: 'invoices', receipt: 'receipts' };
+    const PREFIX = { quotations: 'QT', invoices: 'INV', receipts: 'RC', certificates: 'CERT' };
+    const TYPE_TO_COL = { quotation: 'quotations', invoice: 'invoices', receipt: 'receipts', certificate: 'certificates' };
 
     // Saved field name → editor input id (without the "in-" prefix) where
     // the default camelCase → kebab-case rule does not apply.

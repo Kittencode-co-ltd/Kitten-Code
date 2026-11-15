@@ -14,19 +14,17 @@
     <div id="vis-container">
         <div class="app">
             <div class="page-head">
-                <div>
-                    <h1 class="page-h1">ทะเบียนเอกสาร</h1>
-                    <div class="page-sub" id="doc-count">กำลังโหลด…</div>
+                <div class="tabs" style="margin-bottom:0;">
+                    <button class="tab active" onclick="switchTab('all', this)">ทั้งหมด</button>
+                    <button class="tab" onclick="switchTab('quotations', this)">ใบเสนอราคา</button>
+                    <button class="tab" onclick="switchTab('invoices', this)">ใบแจ้งหนี้</button>
+                    <button class="tab" onclick="switchTab('receipts', this)">ใบเสร็จ</button>
+                    <button class="tab" onclick="switchTab('certificates', this)">หนังสือรับรอง</button>
                 </div>
-                <input type="search" id="doc-search" class="kc-search" placeholder="ค้นหาเลขที่ ลูกค้า หรือโปรเจกต์">
-            </div>
-
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('all', this)">ทั้งหมด</button>
-                <button class="tab" onclick="switchTab('quotations', this)">ใบเสนอราคา</button>
-                <button class="tab" onclick="switchTab('invoices', this)">ใบแจ้งหนี้</button>
-                <button class="tab" onclick="switchTab('receipts', this)">ใบเสร็จ</button>
-                <button class="tab" onclick="switchTab('certificates', this)">หนังสือรับรอง</button>
+                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <span class="page-sub" id="doc-count" style="margin:0;">กำลังโหลด…</span>
+                    <input type="search" id="doc-search" class="kc-search" placeholder="ค้นหาเลขที่ ลูกค้า หรือโปรเจกต์">
+                </div>
             </div>
 
             <div class="section">
@@ -54,8 +52,8 @@
 
     <!-- New document: floating button -->
     <div class="kc-fab-group">
-        <a class="kc-fab" href="#" onclick="event.preventDefault(); (window.parent !== window ? window.parent.location.hash = '#quotation' : location.href = 'quotation.html')">
-            <i class="fas fa-plus"></i> สร้างใบเสนอราคา
+        <a class="kc-fab" id="btn-new-doc" href="#" onclick="event.preventDefault(); createNewDocument()">
+            <i class="fas fa-plus"></i> <span id="btn-new-doc-label">สร้างใบเสนอราคา</span>
         </a>
     </div>
 

@@ -168,6 +168,7 @@ function restoreDraft() {
 
 window.clearDraft = function () {
     localStorage.removeItem(DRAFT_KEY);
+    if (window.KCDoc) window.KCDoc.resetEditing('certificate');
     location.reload();
 };
 
@@ -272,7 +273,11 @@ window.saveDocumentToFirestore = async function () {
             updatedBy: auth.currentUser.uid
         };
 
-        await setDoc(doc(db, 'certificates', data.docNo), record);
+        if (window.KCDoc) {
+            await window.KCDoc.save('certificate', data.docNo, record);
+        } else {
+            await setDoc(doc(db, 'certificates', data.docNo), record);
+        }
 
         showSaveToast('บันทึกหนังสือรับรองไปยังระบบเรียบร้อยแล้ว', 'success');
         setTimeout(() => {
@@ -305,7 +310,12 @@ document.addEventListener('DOMContentLoaded', () => {
         dateInput.value = `${yyyy}-${mm}-${dd}`;
     }
 
-    restoreDraft();
+    if (!window.KCDoc || !window.KCDoc.applyEditData('certificate', state, setInputValue)) {
+        restoreDraft();
+    }
+    if (window.KCDoc) {
+        window.KCDoc.ensureDocNo('certificate');
+    }
 
     document.querySelectorAll('.form-panel input, .form-panel textarea, .form-panel select').forEach(el => {
         el.addEventListener('input', () => window.handleCertTypeChange());

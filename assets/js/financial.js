@@ -26,6 +26,19 @@ const escapeHTML = (str) => {
     return String(str).replace(/[&<>'"]/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[match]));
 };
 
+const decodeLegacyEntities = (val) => {
+    if (typeof val === 'string') {
+        return val.replace(/&(amp|lt|gt|quot|#39);/g, (m, e) => ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'" }[e]));
+    }
+    if (Array.isArray(val)) return val.map(decodeLegacyEntities);
+    if (val && typeof val === 'object' && val.constructor === Object) {
+        const out = {};
+        for (const k in val) out[k] = decodeLegacyEntities(val[k]);
+        return out;
+    }
+    return val;
+};
+
 const showDraftToast = () => {
     if(document.getElementById('kcToast')) return;
     const toast = document.createElement('div');
@@ -67,7 +80,7 @@ function restoreDraftTxn() {
     if (saved) {
         try {
             const draft = JSON.parse(saved);
-            const bind = (id, val) => { if(val && document.getElementById(id)) document.getElementById(id).value = escapeHTML(val); };
+            const bind = (id, val) => { if (val && document.getElementById(id)) document.getElementById(id).value = val; };
             bind('txn-date', draft.date);
             bind('txn-cat', draft.cat);
             bind('txn-desc', draft.desc);
@@ -98,23 +111,6 @@ const TXNS_COL   = 'fin_transactions';
 // ── In-memory cache (filled by onSnapshot) ──────────────────
 let _categories   = [];
 let _transactions  = [];
-let _isLoading    = true;  // skeleton state flag
-
-// ── Skeleton Helpers ────────────────────────────────────────
-function showSkeleton(containerId, rows = 3, cols = 4) {
-    const el = document.getElementById(containerId);
-    if (!el) return;
-    const skRow = `<tr>${Array.from({ length: cols }, () =>
-        `<td><div class="skeleton" style="height:16px;border-radius:4px;"></div></td>`
-    ).join('')}</tr>`;
-    el.innerHTML = Array(rows).fill(skRow).join('');
-}
-
-function showMetricSkeleton() {
-    document.querySelectorAll('.metric-value').forEach(el =>
-        el.innerHTML = '<div class="skeleton" style="width:120px;height:32px;border-radius:6px;"></div>'
-    );
-}
 
 // ── Helpers ──────────────────────────────────────────────────
 function fmt(n)    { return '฿' + Math.round(n).toLocaleString('en-US'); }
@@ -190,67 +186,6 @@ function switchTab(t) {
     }
 }
 window.switchTab = switchTab;
-
-// ── Dashboard ─────────────────────────────────────────────────
-function renderDashboard() {
-    const incTxns = _transactions.filter(t => getCatByCode(t.catCode)?.type === 1 && t.payment_status === 2);
-    const expTxns = _transactions.filter(t => getCatByCode(t.catCode)?.type === 2 && t.payment_status === 2);
-    const pendTxns = _transactions.filter(t => getCatByCode(t.catCode)?.type === 2 && t.payment_status === 1);
-
-    const inc  = incTxns.reduce((s, t) => s + t.amount, 0);
-    const exp  = expTxns.reduce((s, t) => s + t.amount, 0);
-    const pend = pendTxns.reduce((s, t) => s + t.amount, 0);
-
-    document.getElementById('total-inc').textContent     = fmt(inc);
-    document.getElementById('total-exp').textContent     = fmt(exp);
-    document.getElementById('total-bal').textContent     = fmt(inc - exp);
-    document.getElementById('total-pending').textContent = fmt(pend);
-
-    // Budget overview
-    const budgetEl = document.getElementById('budget-overview');
-    const expCats  = _categories.filter(c => c.type === 2 && c.budget > 0);
-    if (!expCats.length) {
-        budgetEl.innerHTML = '<div class="empty-state">No expense categories with a budget set yet.</div>';
-    } else {
-        budgetEl.innerHTML = expCats.map(c => {
-            const used       = getUsed(c.code);
-            const pendingAmt = getPending(c.code);
-            const pct        = Math.min(100, Math.round((used / c.budget) * 100));
-            const fillClass  = pct >= 90 ? 'fill-over' : pct >= 70 ? 'fill-warn' : 'fill-ok';
-            const pendNote   = pendingAmt > 0
-                ? `<span style="font-size:11px;color:var(--color-warn);"> + ${fmt(pendingAmt)} pending</span>`
-                : '';
-            return `<div style="margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
-            <span style="font-size:14px;">${c.name}</span>
-            <span style="font-size:14px;color:var(--text-secondary);">${fmtNum(used)} / ${fmtNum(c.budget)} THB${pendNote}</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill ${fillClass}" style="width:${pct}%"></div></div>
-          <div class="pct">Paid ${pct}% — Remaining ${fmt(c.budget - used)}</div>
-        </div>`;
-        }).join('');
-    }
-
-    // Recent transactions (last 5)
-    const recentEl = document.getElementById('recent-txns');
-    const recent = [..._transactions].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
-    if (!recent.length) {
-        recentEl.innerHTML = '<div class="empty-state">No recent transactions.</div>';
-        return;
-    }
-    recentEl.innerHTML = `<table class="txn-table"><thead><tr><th>Date</th><th>Description</th><th style="text-align:center;">Status</th><th style="text-align:right;">Amount</th></tr></thead><tbody>` +
-        recent.map(t => {
-            const cat  = getCatByCode(t.catCode);
-            const cls  = cat?.type === 1 ? 'amount-inc' : 'amount-exp';
-            const sign = cat?.type === 1 ? '+'           : '-';
-            return `<tr>
-          <td style="color:var(--text-secondary);font-size:12px;">${t.date}</td>
-          <td>${t.desc}<br><span class="tag-code">${cat?.code || ''}</span></td>
-          <td style="text-align:center;">${statusBadge(t.payment_status)}</td>
-          <td style="text-align:right;" class="${cls}">${sign}${fmt(t.amount)}</td>
-        </tr>`;
-        }).join('') + '</tbody></table>';
-}
 
 // ── Register Table ────────────────────────────────────────────
 function renderRegister() {
@@ -546,18 +481,20 @@ window.openEditModal = function(docId, collectionName) {
         
         const txn = _transactions.find(t => t.id === docId);
         if (txn) {
-            document.getElementById('edit-txn-date').value = escapeHTML(txn.date);
-            document.getElementById('edit-txn-desc').value = escapeHTML(txn.desc);
+            document.getElementById('edit-txn-date').value = txn.date || '';
+            document.getElementById('edit-txn-desc').value = txn.desc || '';
             document.getElementById('edit-txn-amount').value = txn.amount;
-            document.getElementById('edit-txn-ref').value = escapeHTML(txn.ref || '');
-            document.getElementById('edit-txn-contact').value = escapeHTML(txn.contact || '');
-            document.getElementById('edit-txn-status').value = txn.payment_status?.toString() || '1';
-            document.getElementById('edit-txn-paid-date').value = escapeHTML(txn.paid_date || '');
+            document.getElementById('edit-txn-ref').value = txn.ref || '';
+            document.getElementById('edit-txn-contact').value = txn.contact || '';
+            const statusEl = document.getElementById('edit-txn-status');
+            statusEl.value = txn.payment_status?.toString() || '1';
+            document.getElementById('edit-txn-paid-date').value = txn.paid_date || '';
+            statusEl.dispatchEvent(new Event('change'));
             
             // Populate categories in the select
             const sel = document.getElementById('edit-txn-cat');
-            sel.innerHTML = _categories.map(c => `<option value="${c.code}">[${c.type === 1 ? 'Income' : 'Expense'}] ${c.name}</option>`).join('');
-            sel.value = escapeHTML(txn.catCode);
+            sel.innerHTML = _categories.map(c => `<option value="${escapeHTML(c.code)}">${c.type === 1 ? 'รายรับ' : 'รายจ่าย'} · ${escapeHTML(c.name)}</option>`).join('');
+            sel.value = txn.catCode || '';
         }
     } else if (collectionName === CATS_COL) {
         document.getElementById('edit-txn-fields').style.display = 'none';
@@ -565,7 +502,7 @@ window.openEditModal = function(docId, collectionName) {
         
         const cat = _categories.find(c => c.id === docId);
         if (cat) {
-            document.getElementById('edit-cat-name').value = escapeHTML(cat.name);
+            document.getElementById('edit-cat-name').value = cat.name || '';
             document.getElementById('edit-cat-budget').value = cat.budget;
             document.getElementById('edit-cat-quota-value').value = cat.quota_value || '';
             document.getElementById('edit-cat-quota-unit').value = cat.quota_unit || '';
@@ -579,7 +516,7 @@ window.closeEditModal = function() {
 
 window.submitEdit = async function() {
     if (!auth.currentUser) {
-        alert("You must be logged in to update data.");
+        alert("กรุณาเข้าสู่ระบบก่อนแก้ไขข้อมูล");
         return;
     }
     const docId = document.getElementById('edit-doc-id').value;
@@ -597,18 +534,18 @@ window.submitEdit = async function() {
         const paid_date = document.getElementById('edit-txn-paid-date').value;
         
         if (!date || !catCode || !desc || isNaN(amount) || amount <= 0) {
-            alert("Please fill in all transaction fields correctly.");
+            alert("กรุณากรอกข้อมูลรายการให้ครบถ้วนและถูกต้อง");
             return;
         }
         updatedData = {
-           date: escapeHTML(date),
-           catCode: escapeHTML(catCode),
-           desc: escapeHTML(desc),
-           amount: amount,
-           ref: escapeHTML(ref),
-           contact: escapeHTML(contact),
-           payment_status: payment_status,
-           paid_date: escapeHTML(paid_date),
+           date,
+           catCode,
+           desc,
+           amount,
+           ref,
+           contact,
+           payment_status,
+           paid_date: payment_status === 2 ? (paid_date || date) : '',
            updated_at: serverTimestamp()
         };
     } else if (collectionName === CATS_COL) {
@@ -618,15 +555,14 @@ window.submitEdit = async function() {
         const quotaUnit = document.getElementById('edit-cat-quota-unit').value || null;
         
         if (!name || isNaN(budget) || budget < 0) {
-            alert("Please fill in a valid Category Name and Budget.");
+            alert("กรุณากรอกชื่อหมวดและงบประมาณให้ถูกต้อง");
             return;
         }
         updatedData = {
-           name: escapeHTML(name),
-           budget: budget,
+           name,
+           budget,
            quota_value: quotaUnit ? quotaVal : null,
            quota_unit: quotaUnit || null,
-           // Note: if quota is modified, we leave last_reset_date untouched to avoid resetting the cycle artificially
            updated_at: serverTimestamp()
         };
     }
@@ -634,9 +570,9 @@ window.submitEdit = async function() {
     try {
         await updateDoc(doc(db, collectionName, docId), updatedData);
         closeEditModal();
-        // Since we are using real-time listeners (onSnapshot), the table and dashboard will automatically refresh and calculate the new balances!
+        showFinToast('บันทึกการแก้ไขแล้ว');
     } catch(e) {
-        alert("Error updating document: " + e.message);
+        alert("บันทึกไม่สำเร็จ: " + e.message);
     }
 };
 
@@ -646,8 +582,7 @@ function initRealtimeListeners() {
     onSnapshot(
         query(collection(db, CATS_COL), orderBy('created_at', 'asc')),
         snapshot => {
-            _categories = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            renderDashboard();
+            _categories = snapshot.docs.map(d => ({ id: d.id, ...decodeLegacyEntities(d.data()) }));
             renderRegister();
             renderTxns();
             renderAddForm();
@@ -659,8 +594,7 @@ function initRealtimeListeners() {
     onSnapshot(
         query(collection(db, TXNS_COL), orderBy('created_at', 'asc')),
         snapshot => {
-            _transactions = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            renderDashboard();
+            _transactions = snapshot.docs.map(d => ({ id: d.id, ...decodeLegacyEntities(d.data()) }));
             renderRegister();
             renderTxns();
         },
@@ -698,6 +632,17 @@ function bindPaidDateToggle(statusId, dateId) {
 document.addEventListener('DOMContentLoaded', () => {
     bindPaidDateToggle('txn-status', 'txn-paid-date');
     bindPaidDateToggle('edit-txn-status', 'edit-txn-paid-date');
+    const editModal = document.getElementById('edit-modal');
+    if (editModal) {
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) window.closeEditModal();
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && editModal && editModal.style.display === 'flex') {
+            window.closeEditModal();
+        }
+    });
 });
 
 onAuthStateChanged(auth, user => {
@@ -707,8 +652,6 @@ onAuthStateChanged(auth, user => {
             .catch(() => {});
         initRealtimeListeners();
     } else {
-        // Not signed in — display a clear error instead of raw Firestore exception
-        _isLoading = false;
         const errHtml = `
           <tr><td colspan="10" style="text-align:center;padding:2.5rem;color:var(--color-exp);">
             <strong>\u26a0 Please Sign In to access the Financial Management system.</strong><br>

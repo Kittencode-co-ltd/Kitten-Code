@@ -105,10 +105,8 @@
 
 <body>
     <div class="container-fluid" style="max-width: 960px;">
-        <h2 class="h4 mb-4">โปรไฟล์ของฉัน</h2>
-
         <div id="loading" class="text-center py-5 text-muted">
-            <span class="spinner-border spinner-border-sm me-2"></span> Loading profile...
+            <span class="spinner-border spinner-border-sm me-2"></span> กำลังโหลดข้อมูลโปรไฟล์...
         </div>
 
         <div id="profileContent" class="d-none">
@@ -284,7 +282,10 @@
 
                 const snap = await getDoc(doc(db, 'users', currentUid));
                 renderSummary(snap.data() || {}, auth.currentUser);
-                showAlert('success', 'Profile updated successfully.');
+                if (window.parent && window.parent !== window && typeof window.parent.refreshHeaderProfile === 'function') {
+                    window.parent.refreshHeaderProfile();
+                }
+                showAlert('success', 'บันทึกข้อมูลโปรไฟล์เรียบร้อยแล้ว');
             } catch (e) {
                 console.error('Error saving profile', e);
                 showAlert('danger', 'Failed to save profile: ' + e.message);

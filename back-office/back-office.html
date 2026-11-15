@@ -34,15 +34,6 @@
             <span>Kitten Code</span>
         </div>
 
-        <!-- User Profile Card -->
-        <a href="#profile" class="user-profile" id="sidebarUserProfile" title="แก้ไขข้อมูลส่วนตัว">
-            <div class="user-avatar" id="sidebarUserAvatar">K</div>
-            <div class="user-info">
-                <div class="name" id="sidebarUserName">Loading...</div>
-                <div class="role" id="sidebarUserRole">Back Office</div>
-            </div>
-        </a>
-
         <!-- Navigation Menu -->
         <div class="sidebar-menu">
             <div class="menu-title">เมนูหลัก</div>
@@ -103,11 +94,6 @@
                 <i class="bi bi-qr-code-scan"></i>
                 QR Code
             </a>
-
-            <a href="#profile" class="menu-item" data-title="โปรไฟล์ของฉัน" style="--i: 11">
-                <i class="bi bi-person-gear"></i>
-                โปรไฟล์
-            </a>
         </div>
 
     </aside>
@@ -123,10 +109,7 @@
                 <h1 class="page-title" id="topPageTitle"></h1>
             </div>
 
-            <!-- FUFU Context Workflow Step Bar -->
-            <nav class="flow-steps" id="flowSteps" aria-label="Workflow Steps" hidden></nav>
-
-            <!-- Quick Profile Pill -->
+            <!-- Single Profile & Account Menu -->
             <div class="header-actions">
                 <div class="profile-menu" id="profileMenu">
                     <button type="button" class="header-profile-pill" id="profileMenuBtn"
@@ -188,7 +171,7 @@
         </a>
 
         <button type="button" class="bo-tab-item" id="bottomMenuBtn" data-tab-index="4"
-            data-routes="#user,#qr,#profile" onclick="toggleMobileDrawer()">
+            data-routes="#user,#qr" onclick="toggleMobileDrawer()">
             <i class="bi bi-grid"></i>
             <span class="bo-tab-label">เมนู</span>
         </button>
@@ -215,7 +198,6 @@
         async function populateUserProfile(user) {
             const fallbackName = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
             let displayName = fallbackName;
-            let roleText = user.email || 'Member';
             let profileData = {};
 
             try {
@@ -227,9 +209,6 @@
                         displayName = fullName;
                     } else if (profileData.username || profileData.name) {
                         displayName = profileData.username || profileData.name;
-                    }
-                    if (profileData.role) {
-                        roleText = String(profileData.role).toUpperCase();
                     }
                 }
             } catch (_) {
@@ -245,18 +224,15 @@
                 photoURL: profileData.photoURL || user.photoURL
             });
 
-            const sidebarAvatar = document.getElementById('sidebarUserAvatar');
-            const sidebarName = document.getElementById('sidebarUserName');
-            const sidebarRole = document.getElementById('sidebarUserRole');
             const headerAvatar = document.getElementById('headerUserAvatar');
             const headerName = document.getElementById('headerUserName');
 
-            renderAvatarElement(sidebarAvatar, avatarUrl, initial);
             renderAvatarElement(headerAvatar, avatarUrl, initial);
-            if (sidebarName) sidebarName.textContent = displayName;
-            if (sidebarRole) sidebarRole.textContent = roleText;
             if (headerName) headerName.textContent = displayName;
         }
+        window.refreshHeaderProfile = () => {
+            if (auth.currentUser) populateUserProfile(auth.currentUser);
+        };
 
         // Authentication Check
         onAuthStateChanged(auth, (user) => {
@@ -316,7 +292,6 @@
         const overlay = document.getElementById('sidebarOverlay');
         const bottomNav = document.getElementById('bottomNav');
         const contentFrame = document.getElementById('contentFrame');
-        const flowStepsEl = document.getElementById('flowSteps');
         const menuItems = document.querySelectorAll('.menu-item[href]');
         const bottomTabs = document.querySelectorAll('.bo-tab-item');
 
@@ -335,32 +310,25 @@
             '#qr': 'qr-gen.html'
         };
 
+        const routeTitles = {
+            '#dashboard': 'ภาพรวมการเงิน',
+            '#financial': 'บัญชีรายรับรายจ่าย',
+            '#calendar': 'ปฏิทินและงาน',
+            '#document-record': 'ทะเบียนเอกสาร',
+            '#quotation': 'ใบเสนอราคา',
+            '#invoice': 'ใบแจ้งหนี้',
+            '#receipt': 'ใบเสร็จรับเงิน',
+            '#certificate': 'หนังสือรับรอง',
+            '#user': 'จัดการผู้ใช้',
+            '#qr': 'สร้าง QR Code',
+            '#profile': 'โปรไฟล์ของฉัน'
+        };
+
         // Reverse lookup from file name to route hash
         const fileToHash = Object.fromEntries(
             Object.entries(routeMap).map(([h, f]) => [f, h])
         );
         fileToHash['document-viewer.html'] = '#document-record';
-
-        // Workflow definitions for topbar step pills
-        const workflows = {
-            docs: {
-                routes: ['#document-record', '#quotation', '#invoice', '#receipt', '#certificate'],
-                steps: [
-                    { hash: '#document-record', num: '<i class="bi bi-folder2-open"></i>', label: 'คลังเอกสาร' },
-                    { hash: '#quotation', num: '1', label: 'ใบเสนอราคา' },
-                    { hash: '#invoice', num: '2', label: 'ใบแจ้งหนี้' },
-                    { hash: '#receipt', num: '3', label: 'ใบเสร็จ' },
-                    { hash: '#certificate', num: '4', label: 'หนังสือรับรอง' }
-                ]
-            },
-            finance: {
-                routes: ['#dashboard', '#financial'],
-                steps: [
-                    { hash: '#dashboard', num: '1', label: 'ภาพรวม (Dashboard)' },
-                    { hash: '#financial', num: '2', label: 'บัญชีรายรับ-รายจ่าย' }
-                ]
-            }
-        };
 
         function isMobileViewport() {
             return window.innerWidth < 1024;
@@ -413,32 +381,13 @@
         }
 
         // Close mobile drawer when a link is selected
-        document.querySelectorAll('.menu-item[href], #sidebarUserProfile').forEach(item => {
+        document.querySelectorAll('.menu-item[href]').forEach(item => {
             item.addEventListener('click', function () {
                 if (isMobileViewport()) {
                     closeMobileDrawer();
                 }
             });
         });
-
-        function renderFlowSteps(activeHash) {
-            if (!flowStepsEl) return;
-            const activeWorkflow = Object.values(workflows).find(wf => wf.routes.includes(activeHash));
-            if (!activeWorkflow) {
-                flowStepsEl.hidden = true;
-                flowStepsEl.innerHTML = '';
-                return;
-            }
-
-            flowStepsEl.hidden = false;
-            flowStepsEl.innerHTML = activeWorkflow.steps.map(step => {
-                const isCurrent = step.hash === activeHash ? 'is-current' : '';
-                return `<a href="${step.hash}" class="flow-step ${isCurrent}">
-                    <span class="flow-step__n">${step.num}</span>
-                    <span>${step.label}</span>
-                </a>`;
-            }).join('');
-        }
 
         function syncBottomDock(activeHash) {
             if (!bottomNav) return;
@@ -458,11 +407,12 @@
 
         function syncNavigationState(activeHash) {
             menuItems.forEach(i => i.classList.remove('active'));
+            updateTitle(routeTitles[activeHash] || '');
 
             menuItems.forEach(i => {
                 if (i.getAttribute('href') === activeHash) {
                     i.classList.add('active');
-                    updateTitle(i.getAttribute('data-title'));
+                    updateTitle(i.getAttribute('data-title') || routeTitles[activeHash]);
                     const groupItems = i.closest('.menu-group-items');
                     if (groupItems && !groupItems.classList.contains('open')) {
                         groupItems.classList.add('open');
@@ -472,7 +422,6 @@
                 }
             });
 
-            renderFlowSteps(activeHash);
             syncBottomDock(activeHash);
         }
 
