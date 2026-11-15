@@ -18,7 +18,7 @@ import {
     query,
     orderBy,
     serverTimestamp 
-} from '../core/firebase-config.js';
+} from './core/firebase-config.js';
 
 const escapeHTML = (str) => {
     if (!str) return '';

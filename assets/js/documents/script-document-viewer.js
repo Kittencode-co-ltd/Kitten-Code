@@ -1,3 +1,18 @@
+// Legacy records were HTML-escaped before being saved; decode them once so
+// render-time escapeHTML does not double-encode (e.g. "&amp;amp;").
+const decodeLegacyEntities = (val) => {
+    if (typeof val === 'string') {
+        return val.replace(/&(amp|lt|gt|quot|#39);/g, (m, e) => ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'" }[e]));
+    }
+    if (Array.isArray(val)) return val.map(decodeLegacyEntities);
+    if (val && typeof val === 'object' && val.constructor === Object) {
+        const out = {};
+        for (const k in val) out[k] = decodeLegacyEntities(val[k]);
+        return out;
+    }
+    return val;
+};
+
 const escapeHTML = (str) => {
     if (!str) return '';
     return String(str).replace(/[&<>'"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[m]));
@@ -274,17 +289,27 @@ function buildViewer() {
     }
 
     const type = viewDoc.type;
-    const d = viewDoc.data;
+    const d = decodeLegacyEntities(viewDoc.data);
 
     // Update header badge
     const badge = document.getElementById('doc-type-badge');
     const docNum = document.getElementById('doc-number');
-    const labels = { quotation: 'ใบเสนอราคา', invoice: 'ใบแจ้งหนี้', receipt: 'ใบเสร็จรับเงิน' };
+    const labels = {
+        quotation: 'ใบเสนอราคา',
+        invoice: 'ใบแจ้งหนี้',
+        receipt: 'ใบเสร็จรับเงิน',
+        certificate: d.certType === 'internship' ? 'หนังสือรับรองการฝึกงาน' : 'หนังสือรับรองการทำงาน'
+    };
     if (badge) badge.textContent = labels[type] || type;
     if (docNum) docNum.textContent = d.docNo || '';
 
     const container = document.getElementById('preview-panel');
     container.innerHTML = '';
+
+    if (type === 'certificate' && window.KCCertificate) {
+        container.appendChild(window.KCCertificate.render(d));
+        return;
+    }
 
     const items = (d.items || []).map((item, i) => ({
         id: i,

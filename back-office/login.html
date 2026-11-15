@@ -309,7 +309,7 @@
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/vendor/aos/aos.js"></script>
   <script type="module">
-    import { auth, db, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, collection, query, where, getDocs } from '../assets/js/core/firebase-config.js';
+    import { auth, db, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, doc, getDoc } from '../assets/js/core/firebase-config.js';
 
     // Initialize AOS animation
     AOS.init();
@@ -326,16 +326,18 @@
     async function formatEmail(username) {
       if (username.includes('@')) return username;
 
-      try {
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, where("username", "==", username));
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          return querySnapshot.docs[0].data().email;
+      // Resolve via the public username index (usernames/{username} = { uid, email }).
+      // The users collection itself is not readable before sign-in.
+      const key = username.trim().toLowerCase();
+      if (!key.includes('/')) {
+        try {
+          const snap = await getDoc(doc(db, "usernames", key));
+          if (snap.exists() && snap.data().email) {
+            return snap.data().email;
+          }
+        } catch (e) {
+          console.error("Error resolving username", e);
         }
-      } catch (e) {
-        console.error("Error fetching username from Firestore", e);
       }
 
       // Fallback

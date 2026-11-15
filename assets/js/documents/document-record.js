@@ -16,16 +16,20 @@ async function loadDocuments() {
     if (!tbody) return;
 
     try {
-        const collections = ['quotations', 'invoices', 'receipts'];
+        const collections = ['quotations', 'invoices', 'receipts', 'certificates'];
         
         for (const colName of collections) {
-            const querySnapshot = await getDocs(collection(db, colName));
-            querySnapshot.forEach(snapshotDoc => {
-                let data = snapshotDoc.data();
-                data.id = snapshotDoc.id;
-                data.collectionName = colName;
-                allDocs.push(data);
-            });
+            try {
+                const querySnapshot = await getDocs(collection(db, colName));
+                querySnapshot.forEach(snapshotDoc => {
+                    let data = decodeLegacyEntities(snapshotDoc.data());
+                    data.id = snapshotDoc.id;
+                    data.collectionName = colName;
+                    allDocs.push(data);
+                });
+            } catch (colErr) {
+                console.warn(`Could not load collection ${colName}:`, colErr);
+            }
         }
         
         // Sort by date descending, fallback to createdAt timestamp
@@ -82,22 +86,31 @@ function renderDocuments() {
         } else if (d.collectionName === 'receipts') {
             typeLabel = 'Receipt';
             typeBadgeClass += 'badge-receipt';
+        } else if (d.collectionName === 'certificates') {
+            typeLabel = d.certType === 'internship' ? 'Cert (ฝึกงาน)' : 'Cert (ทำงาน)';
+            typeBadgeClass += 'badge-certificate';
         }
         
         // Provide visual indicator for status
         let statusClass = 'badge ';
         const status = d.status || 'Pending';
-        if (status.toLowerCase() === 'paid') statusClass += 'badge-paid';
-        else if (status.toLowerCase() === 'pending') statusClass += 'badge-pending';
+        const statusLower = status.toLowerCase();
+        if (statusLower === 'paid' || statusLower === 'issued') statusClass += 'badge-paid';
+        else if (statusLower === 'pending') statusClass += 'badge-pending';
         else statusClass += 'badge-rejected';
         
+        const amountCell = (d.collectionName === 'certificates' && !d.amountTotal)
+            ? '<span style="color:#94a3b8;">—</span>'
+            : `<strong>฿${formatMoney(d.amountTotal || 0)}</strong>`;
+        const recipient = d.custName || d.personName || '-';
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${escapeHTML(d.docDate || '-')}</td>
             <td><strong>${escapeHTML(d.docNo || '-')}</strong></td>
             <td style="text-align:center;"><span class="${typeBadgeClass}">${escapeHTML(typeLabel)}</span></td>
-            <td>${escapeHTML(d.custName || '-')}</td>
-            <td style="text-align:right;"><strong>฿${formatMoney(d.amountTotal || 0)}</strong></td>
+            <td>${escapeHTML(recipient)}</td>
+            <td style="text-align:right;">${amountCell}</td>
             <td style="text-align:center;"><span class="${statusClass}">${escapeHTML(status)}</span></td>
             <td style="text-align:center;">
                 <button class="action-btn" style="padding: 4px 8px; font-size: 11px;" onclick="printDocument('${d.collectionName}', '${d.id}')" title="Print/View">
@@ -120,9 +133,14 @@ window.printDocument = async function(colName, id) {
             alert("ไม่พบเอกสารนี้ในระบบ (Document not found)");
             return;
         }
-        const data = snapshot.data();
+        const data = decodeLegacyEntities(snapshot.data());
 
-        const typeMap = { quotations: 'quotation', invoices: 'invoice', receipts: 'receipt' };
+        const typeMap = {
+            quotations: 'quotation',
+            invoices: 'invoice',
+            receipts: 'receipt',
+            certificates: 'certificate'
+        };
         const viewDoc = {
             type: typeMap[colName] || colName,
             data: { ...data }
@@ -149,6 +167,21 @@ window.deleteDocument = async function(colName, id) {
             alert('Error deleting document: ' + (e.message || "Unknown error"));
         }
     }
+};
+
+// Legacy records were HTML-escaped before being saved; decode them once so
+// render-time escapeHTML does not double-encode (e.g. "&amp;amp;").
+const decodeLegacyEntities = (val) => {
+    if (typeof val === 'string') {
+        return val.replace(/&(amp|lt|gt|quot|#39);/g, (m, e) => ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'" }[e]));
+    }
+    if (Array.isArray(val)) return val.map(decodeLegacyEntities);
+    if (val && typeof val === 'object' && val.constructor === Object) {
+        const out = {};
+        for (const k in val) out[k] = decodeLegacyEntities(val[k]);
+        return out;
+    }
+    return val;
 };
 
 const escapeHTML = (str) => {

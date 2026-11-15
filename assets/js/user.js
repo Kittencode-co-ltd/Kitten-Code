@@ -1,4 +1,18 @@
-        import { app, auth, db, onAuthStateChanged, createUserWithEmailAndPassword, signOut, collection, doc, setDoc, addDoc, getDocs, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc } from '../core/firebase-config.js';
+        import { app, auth, db, onAuthStateChanged, createUserWithEmailAndPassword, signOut, collection, doc, setDoc, addDoc, getDocs, query, limit, limitToLast, startAfter, endBefore, orderBy, deleteDoc, serverTimestamp, updateDoc, getDoc } from './core/firebase-config.js';
+
+        // ── Username → email index (public lookup used by login.html) ──
+        // Stored at usernames/{lowercased username} = { uid, email } so the
+        // login page can resolve a username without reading the users collection.
+        const usernameKey = (name) => String(name || '').trim().toLowerCase();
+        async function syncUsernameIndex(uid, username, email, oldUsername) {
+            const key = usernameKey(username);
+            if (!key || key.includes('/') || !email) return;
+            await setDoc(doc(db, "usernames", key), { uid, email });
+            const oldKey = usernameKey(oldUsername);
+            if (oldKey && oldKey !== key && !oldKey.includes('/')) {
+                await deleteDoc(doc(db, "usernames", oldKey)).catch(() => {});
+            }
+        }
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
         
@@ -230,7 +244,10 @@
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Deleting...';
 
             try {
+                const delSnap = await getDoc(doc(db, "users", userToDeleteId));
                 await deleteDoc(doc(db, "users", userToDeleteId));
+                const delKey = delSnap.exists() ? usernameKey(delSnap.data().username) : '';
+                if (delKey && !delKey.includes('/')) await deleteDoc(doc(db, "usernames", delKey)).catch(() => {});
                 deleteModalInstance.hide();
                 loadUsers(true); // reload current view
             } catch (e) {
@@ -314,6 +331,7 @@
                         };
 
                         await setDoc(doc(db, "users", uid), userData);
+                        await syncUsernameIndex(uid, username, email);
                         localStorage.removeItem('draft_user_data');
                         loadUsers(true);
 
@@ -325,7 +343,10 @@
                             updated_at: serverTimestamp()
                         };
 
+                        const prevSnap = await getDoc(doc(db, "users", docId));
+                        const prev = prevSnap.exists() ? prevSnap.data() : {};
                         await updateDoc(doc(db, "users", docId), updateData);
+                        await syncUsernameIndex(docId, username, prev.email, prev.username);
                         loadUsers(true);
                     }
                     userModalInstance.hide();
@@ -394,6 +415,10 @@
                 let indexOffset = (currentPage - 1) * PAGE_LIMIT;
                 querySnapshot.forEach((docSnap, index) => {
                     const user = docSnap.data();
+                    // Backfill the username index for users created before it existed
+                    if (user.username && user.email) {
+                        syncUsernameIndex(docSnap.id, user.username, user.email).catch(e => console.warn('username index backfill failed', e));
+                    }
                     const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || '<i>N/A</i>';
                     const rNumber = indexOffset + index + 1;
 

@@ -68,7 +68,7 @@ function restoreDraft() {
             Object.keys(draft.inputs).forEach(id => {
                 const el = document.getElementById(id);
                 // Sanitize upon restore to maintain security
-                if(el) el.value = escapeHTML(draft.inputs[id]);
+                if(el) el.value = draft.inputs[id] ?? "";
             });
             if (draft.isReprint) {
                 localStorage.removeItem('draft_invoice_data');
@@ -690,15 +690,15 @@ window.saveDocumentToFirestore = async function() {
             docRef: getInputValue('doc-ref'),
             vatRate,
             discountAmount,
-            custName: escapeHTML(custName),
-            custAddr: escapeHTML(getInputValue('cust-addr')),
-            custTel: escapeHTML(getInputValue('cust-tel')),
-            custTax: escapeHTML(getInputValue('cust-tax')),
-            note: escapeHTML(state.note || ''),
-            signReceiver: escapeHTML(getInputValue('sign-receiver')),
-            signAuth: escapeHTML(getInputValue('sign-auth')),
+            custName: custName,
+            custAddr: getInputValue('cust-addr'),
+            custTel: getInputValue('cust-tel'),
+            custTax: getInputValue('cust-tax'),
+            note: state.note || '',
+            signReceiver: getInputValue('sign-receiver'),
+            signAuth: getInputValue('sign-auth'),
             items: state.items.map(item => ({
-                desc: escapeHTML(item.desc),
+                desc: item.desc,
                 qty: Number(item.qty),
                 price: Number(item.price)
             })),

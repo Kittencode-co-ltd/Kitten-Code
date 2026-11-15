@@ -26,7 +26,7 @@ firebase emulators:start     # run local Firebase emulators
 
 Firebase emulator ports: Firestore `8080`, Auth `9099`, Realtime DB `9000`, Data Connect `9399`.
 
-Firebase config is injected at build time via GitHub Actions secrets. For local development, `assets/js/firebase-config.js` must be configured manually (not committed — see `.gitignore`).
+Firebase config lives in `assets/js/core/firebase-config.js`. It reads `window.__ENV__` (injected at build time by GitHub Actions secrets) and falls back to the public web config hard-coded in the file, so local development works without extra setup. The file is committed (only `assets/js/__ENV__.js` is git-ignored).
 
 There are no npm build scripts, linting, or test suites configured.
 
@@ -43,24 +43,31 @@ Firebase rules and indexes deploy separately via `firebase deploy`.
 
 ### JavaScript Modules (`assets/js/`)
 
-Each page has a dedicated JS file:
-- `firebase-config.js` — Firebase SDK initialization (Auth, Firestore, Realtime DB)
-- `i18n.js` — language switching; persists selection to `localStorage`
-- `main.js` — global UI (scroll behavior, mobile nav, AOS animations)
+Shared modules live in `assets/js/core/`:
+- `core/firebase-config.js` — Firebase SDK initialization (Auth, Firestore) and re-exports of SDK helpers; every page imports from here
+- `core/i18n.js` — language switching; persists selection to `localStorage`
+- `core/main.js` — global UI (scroll behavior, mobile nav, AOS animations)
+- `core/theme.js` — theme handling
+
+Page modules (import paths are relative to the file: `./core/...` from `assets/js/`, `../core/...` from `assets/js/documents/`):
+- `user.js` — user management (admin), maintains the `usernames` index
 - `dashboard.js` — Chart.js financial charts
 - `financial.js` — transaction/category CRUD
-- `script-invoice.js`, `script-quotation.js`, `script-receipt.js` — document generation
+- `documents/script-invoice.js`, `documents/script-quotation.js`, `documents/script-receipt.js`, `documents/script-certificate.js`, `documents/certificate-template.js` — document & employment/internship certificate generation (store raw text; escape only at render time)
+- `documents/document-record.js`, `documents/script-document-viewer.js` — document list and re-print viewer
+
+Back-office pages are loaded inside the `back-office/back-office.html` shell via an iframe and hash routes (`routeMap`). Each page guards itself with `onAuthStateChanged` and redirects to `login.html`.
 
 ### Firestore Security Model
 
 `firestore.rules` enforces role-based access:
 - **admin** role: full access to financial data, user management
-- **user** role: read-only or scoped write access
-- All operations require authentication
+- **user** role: read-only or scoped write access; may edit own profile but not `role`/`uid`/`email`/`username`
+- All operations require authentication, except single-document `get` on `usernames/{name}` (login lookup)
 
 ### Firestore Collections
 
-Key collections: `users`, `categories`, `transactions`, `quotations`, `invoices`, `receipts`, `calendar_events`.
+Key collections: `users`, `usernames` (public username → `{ uid, email }` index used by login; get-only, no list), `fin_categories`, `fin_transactions`, `quotations`, `invoices`, `receipts`, `certificates`, `calendar_events`.
 
 ### Data Connect Schema (`dataconnect/schema/schema.gql`)
 

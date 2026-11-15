@@ -68,7 +68,7 @@ function restoreDraft() {
             Object.keys(draft.inputs).forEach(id => {
                 const el = document.getElementById(id);
                 // Sanitize upon restore to maintain security
-                if(el) el.value = escapeHTML(draft.inputs[id]);
+                if(el) el.value = draft.inputs[id] ?? "";
             });
             if (draft.isReprint) {
                 localStorage.removeItem('draft_quotation_data');
@@ -550,19 +550,19 @@ window.saveDocumentToFirestore = async function() {
             docCredit: getInputValue('doc-credit'),
             vatRate,
             discountAmount,
-            custName: escapeHTML(custName),
-            custAddr: escapeHTML(getInputValue('cust-addr')),
-            custTel: escapeHTML(getInputValue('cust-tel')),
-            custTax: escapeHTML(getInputValue('cust-tax')),
-            projName: escapeHTML(getInputValue('proj-name')),
-            projContact: escapeHTML(getInputValue('proj-contact')),
-            projTel: escapeHTML(getInputValue('proj-tel')),
-            note: escapeHTML(state.note || ''),
-            signBuyer: escapeHTML(getInputValue('sign-buyer')),
-            signPrep: escapeHTML(getInputValue('sign-prep')),
-            signAppr: escapeHTML(getInputValue('sign-appr')),
+            custName: custName,
+            custAddr: getInputValue('cust-addr'),
+            custTel: getInputValue('cust-tel'),
+            custTax: getInputValue('cust-tax'),
+            projName: getInputValue('proj-name'),
+            projContact: getInputValue('proj-contact'),
+            projTel: getInputValue('proj-tel'),
+            note: state.note || '',
+            signBuyer: getInputValue('sign-buyer'),
+            signPrep: getInputValue('sign-prep'),
+            signAppr: getInputValue('sign-appr'),
             items: state.items.map(item => ({
-                desc: escapeHTML(item.desc),
+                desc: item.desc,
                 qty: Number(item.qty),
                 price: Number(item.price)
             })),

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitten Code Certificate Generator — หนังสือรับรองการทำงาน/ฝึกงาน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/document.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        .type-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .type-tab-btn {
+            padding: 10px 12px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            background: #f8fafc;
+            color: #334155;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .type-tab-btn:hover {
+            border-color: #f26522;
+            color: #f26522;
+        }
+
+        .type-tab-btn.active {
+            background: #f26522;
+            border-color: #f26522;
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(242, 101, 34, 0.28);
+        }
+
+        .check-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            user-select: none;
+            margin-top: 4px;
+        }
+
+        .check-inline input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #f26522;
+            cursor: pointer;
+        }
+
+        .helper-btn {
+            padding: 4px 10px;
+            font-size: 0.78rem;
+            background: #e2e8f0;
+            color: #334155;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .helper-btn:hover {
+            background: #cbd5e1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container no-print">
+
+        <!-- Left Panel: Form Input -->
+        <div class="form-panel">
+            <div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2><i class="fas fa-award"></i> สร้างหนังสือรับรอง</h2>
+                <button type="button" onclick="clearDraft()"
+                    style="padding: 6px 12px; font-size: 0.85rem; background: #dc2626; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                    <i class="fas fa-eraser"></i> Clear Draft
+                </button>
+            </div>
+
+            <form id="certificate-form" onsubmit="return false;">
+
+                <!-- Section: Certificate Type & Document Info -->
+                <div class="form-section">
+                    <h3><i class="fas fa-file-signature"></i> ประเภทและข้อมูลเอกสาร</h3>
+                    <input type="hidden" id="in-cert-type" value="employment">
+                    <div class="type-tabs" style="margin-bottom: 14px;">
+                        <button type="button" class="type-tab-btn active" data-type="employment"
+                            onclick="handleCertTypeChange('employment')">
+                            <i class="fas fa-user-tie"></i> รับรองการทำงาน
+                        </button>
+                        <button type="button" class="type-tab-btn" data-type="internship"
+                            onclick="handleCertTypeChange('internship')">
+                            <i class="fas fa-user-graduate"></i> รับรองการฝึกงาน
+                        </button>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>เลขที่เอกสาร (ที่)</label>
+                            <input type="text" id="in-doc-no" value="" placeholder="เช่น KC-CERT-2569/001">
+                        </div>
+                        <div class="form-group">
+                            <label>วันที่ออกหนังสือ</label>
+                            <input type="date" id="in-doc-date" value="">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ชื่อบริษัทผู้ออกหนังสือ</label>
+                            <input type="text" id="in-company-name"
+                                value="บริษัท คิทเช่น โค้ด จำกัด (Kitten Code Co., Ltd.)"
+                                placeholder="ระบุชื่อบริษัท...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Recipient Info -->
+                <div class="form-section">
+                    <h3><i class="fas fa-id-card"></i> ข้อมูลผู้รับรอง</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>คำนำหน้าชื่อ</label>
+                            <select id="in-name-prefix">
+                                <option value="นาย">นาย</option>
+                                <option value="นางสาว">นางสาว</option>
+                                <option value="นาง">นาง</option>
+                                <option value="คุณ">คุณ</option>
+                                <option value="">(ไม่ระบุ)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ชื่อ - นามสกุล</label>
+                            <input type="text" id="in-person-name" value="" placeholder="เช่น สมชาย ใจดี">
+                        </div>
+
+                        <!-- Employment only -->
+                        <div class="form-group full-width only-employment">
+                            <label>เลขประจำตัวประชาชน (เว้นว่างได้)</label>
+                            <input type="text" id="in-id-card" value="" placeholder="เช่น 1-6599-00xxx-xx-x">
+                        </div>
+
+                        <!-- Internship only -->
+                        <div class="form-group only-internship" style="display: none;">
+                            <label>รหัสนักศึกษา</label>
+                            <input type="text" id="in-student-id" value="" placeholder="เช่น 6531xxxx">
+                        </div>
+                        <div class="form-group only-internship" style="display: none;">
+                            <label>สถาบันการศึกษา / มหาวิทยาลัย</label>
+                            <input type="text" id="in-institution" value="" placeholder="เช่น มหาวิทยาลัยนเรศวร">
+                        </div>
+                        <div class="form-group only-internship" style="display: none;">
+                            <label>คณะ</label>
+                            <input type="text" id="in-faculty" value="" placeholder="เช่น วิศวกรรมศาสตร์">
+                        </div>
+                        <div class="form-group only-internship" style="display: none;">
+                            <label>สาขาวิชา</label>
+                            <input type="text" id="in-major" value="" placeholder="เช่น วิศวกรรมคอมพิวเตอร์">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Position & Period -->
+                <div class="form-section">
+                    <h3><i class="fas fa-briefcase"></i> ตำแหน่งและระยะเวลา</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ตำแหน่ง</label>
+                            <input type="text" id="in-position" value=""
+                                placeholder="เช่น Full-Stack Developer">
+                        </div>
+                        <div class="form-group">
+                            <label>ฝ่าย / แผนก (เว้นว่างได้)</label>
+                            <input type="text" id="in-department" value="" placeholder="เช่น พัฒนาซอฟต์แวร์">
+                        </div>
+                        <div class="form-group">
+                            <label>วันที่เริ่มงาน / เริ่มฝึกงาน</label>
+                            <input type="date" id="in-start-date" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>วันที่สิ้นสุด</label>
+                            <input type="date" id="in-end-date" value="">
+                        </div>
+
+                        <!-- Employment: still employed & salary -->
+                        <div class="form-group full-width only-employment">
+                            <label class="check-inline">
+                                <input type="checkbox" id="in-still-employed" checked>
+                                ปัจจุบันยังคงปฏิบัติงานอยู่ (แสดง "จนถึงปัจจุบัน")
+                            </label>
+                        </div>
+                        <div class="form-group full-width only-employment">
+                            <label class="check-inline">
+                                <input type="checkbox" id="in-show-salary">
+                                ระบุอัตราเงินเดือนในหนังสือรับรอง
+                            </label>
+                        </div>
+                        <div class="form-group full-width only-employment" id="salary-input-group"
+                            style="display: none;">
+                            <label>อัตราเงินเดือน (บาท/เดือน)</label>
+                            <input type="number" id="in-salary" value="0" min="0" step="100"
+                                placeholder="เช่น 25000">
+                        </div>
+
+                        <!-- Internship: total hours -->
+                        <div class="form-group full-width only-internship" style="display: none;">
+                            <label>จำนวนชั่วโมงฝึกงานรวม (ชั่วโมง — เว้นว่างได้)</label>
+                            <input type="text" id="in-total-hours" value="" placeholder="เช่น 420">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Duties, Evaluation & Purpose -->
+                <div class="form-section">
+                    <h3><i class="fas fa-tasks"></i> รายละเอียดงาน / คำรับรองเพิ่มเติม</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>หน้าที่ความรับผิดชอบ / งานที่ได้รับมอบหมาย (เว้นว่างได้)</label>
+                            <textarea id="in-duties" rows="2"
+                                placeholder="เช่น พัฒนาและดูแลระบบเว็บไซต์ส่วนหน้าและส่วนหลังบ้าน..."></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <div class="flex-between" style="margin-bottom: 4px;">
+                                <label style="margin-bottom: 0;">ข้อความรับรองความประพฤติ / ผลการฝึกงาน</label>
+                                <button type="button" class="helper-btn" onclick="fillDefaultEvaluation()">
+                                    <i class="fas fa-magic"></i> ข้อความมาตรฐาน
+                                </button>
+                            </div>
+                            <textarea id="in-evaluation" rows="3"
+                                placeholder="ระบุคำรับรองความประพฤติหรือผลการประเมิน (เว้นว่างได้)..."></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>วัตถุประสงค์ในการใช้เอกสาร (เว้นว่างเพื่อใช้ข้อความมาตรฐาน)</label>
+                            <input type="text" id="in-purpose" value=""
+                                placeholder="เช่น การสมัครงาน / การยื่นขอสินเชื่อ / การสำเร็จการศึกษา">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Authorized Signatory -->
+                <div class="form-section">
+                    <h3><i class="fas fa-signature"></i> ผู้มีอำนาจลงนาม</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ชื่อผู้ลงนาม</label>
+                            <input type="text" id="in-sign-name" value="" placeholder="ระบุชื่อ-นามสกุลผู้มีอำนาจลงนาม">
+                        </div>
+                        <div class="form-group">
+                            <label>ตำแหน่งผู้ลงนาม</label>
+                            <input type="text" id="in-sign-position" value="กรรมการผู้จัดการ (Managing Director)"
+                                placeholder="เช่น กรรมการผู้จัดการ">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-section print-section">
+                    <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn"
+                        onclick="window.print()" style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px;">
+                        <i class="fas fa-print"></i> พิมพ์หนังสือรับรอง (A4)
+                    </button>
+                    <button type="button" id="btn-save-cloud" class="btn btn-success btn-large full-width-btn"
+                        onclick="saveDocumentToFirestore()"
+                        style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px; background-color: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                        <i class="fas fa-cloud-upload-alt"></i> บันทึกข้อมูล (Save to Cloud)
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Right Panel: A4 Preview -->
+        <div class="preview-panel" id="preview-panel">
+            <!-- JavaScript will render the A4 certificate preview here -->
+        </div>
+    </div>
+
+    <script src="../assets/js/documents/certificate-template.js"></script>
+    <script src="../assets/js/documents/script-certificate.js"></script>
+    <script type="module">
+        import { onAuthStateChanged, auth } from '../assets/js/core/firebase-config.js';
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace('login.html'); }
+        });
+    </script>
+</body>
+
+</html>

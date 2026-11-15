@@ -1,1 +1,219 @@
-<h1> Functionality is under construction.</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>My Profile - Kitten Code</title>
+
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f26522, #ff9a5a);
+            color: #fff;
+            font-size: 28px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid" style="max-width: 960px;">
+        <h2 class="h4 mb-4">My Profile</h2>
+
+        <div id="loading" class="text-center py-5 text-muted">
+            <span class="spinner-border spinner-border-sm me-2"></span> Loading profile...
+        </div>
+
+        <div id="profileContent" class="d-none">
+            <!-- Summary -->
+            <div class="card mb-4">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="avatar" id="avatar">?</div>
+                    <div>
+                        <div class="h5 mb-1" id="displayName">-</div>
+                        <div class="text-muted small"><i class="bi bi-envelope me-1"></i><span id="displayEmail">-</span></div>
+                        <div class="mt-1">
+                            <span class="badge bg-secondary" id="displayRole">User</span>
+                            <span class="text-muted small ms-2"><i class="bi bi-person me-1"></i><span id="displayUsername">-</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit form -->
+            <div class="card">
+                <div class="card-body">
+                    <div id="alertBox" class="alert d-none" role="alert"></div>
+                    <form id="profileForm" novalidate>
+                        <h6 class="text-muted mb-3">Personal Information</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label" for="pFirstName">First Name</label>
+                                <input type="text" class="form-control" id="pFirstName" maxlength="100">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="pLastName">Last Name</label>
+                                <input type="text" class="form-control" id="pLastName" maxlength="100">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="pPosition">Position</label>
+                                <input type="text" class="form-control" id="pPosition" maxlength="100">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="pBirthDate">Birth Date</label>
+                                <input type="date" class="form-control" id="pBirthDate">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="pPhone">Phone</label>
+                                <input type="tel" class="form-control" id="pPhone" maxlength="30">
+                            </div>
+                        </div>
+
+                        <h6 class="text-muted mb-3">Bank Account</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label" for="pBankAccountName">Account Name</label>
+                                <input type="text" class="form-control" id="pBankAccountName" maxlength="150">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="pBankName">Bank</label>
+                                <input type="text" class="form-control" id="pBankName" maxlength="100">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="pBankAccountNumber">Account Number</label>
+                                <input type="text" class="form-control" id="pBankAccountNumber" maxlength="30">
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary" id="btnSave">
+                                <i class="bi bi-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db, onAuthStateChanged, doc, getDoc, updateDoc, serverTimestamp } from '../assets/js/core/firebase-config.js';
+
+        // Editable fields: input id -> Firestore field.
+        // username / email / role are intentionally read-only here
+        // (managed by admins on the User page).
+        const FIELDS = {
+            pFirstName: 'firstName',
+            pLastName: 'lastName',
+            pPosition: 'position',
+            pBirthDate: 'birthDate',
+            pPhone: 'phone',
+            pBankAccountName: 'bankAccountName',
+            pBankName: 'bankName',
+            pBankAccountNumber: 'bankAccountNumber'
+        };
+
+        let currentUid = null;
+
+        function showAlert(type, message) {
+            const box = document.getElementById('alertBox');
+            box.className = `alert alert-${type}`;
+            box.textContent = message;
+        }
+
+        function renderSummary(data, authUser) {
+            const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim();
+            const username = data.username || '';
+            document.getElementById('displayName').textContent = fullName || username || 'Unnamed user';
+            document.getElementById('displayEmail').textContent = data.email || authUser.email || '-';
+            document.getElementById('displayUsername').textContent = username || '-';
+            document.getElementById('avatar').textContent = (fullName || username || authUser.email || '?').charAt(0);
+
+            const roleBadge = document.getElementById('displayRole');
+            const isAdmin = data.role === 'admin';
+            roleBadge.textContent = isAdmin ? 'Admin' : 'User';
+            roleBadge.className = `badge ${isAdmin ? 'bg-danger' : 'bg-secondary'}`;
+        }
+
+        async function loadProfile(authUser) {
+            currentUid = authUser.uid;
+            try {
+                const snap = await getDoc(doc(db, 'users', currentUid));
+                const data = snap.exists() ? snap.data() : {};
+                if (!snap.exists()) {
+                    showAlert('warning', 'No profile record found for this account. Please contact an administrator.');
+                    document.getElementById('btnSave').disabled = true;
+                }
+                renderSummary(data, authUser);
+                for (const [inputId, field] of Object.entries(FIELDS)) {
+                    document.getElementById(inputId).value = data[field] ?? '';
+                }
+            } catch (e) {
+                console.error('Error loading profile', e);
+                showAlert('danger', 'Failed to load profile: ' + e.message);
+            } finally {
+                document.getElementById('loading').classList.add('d-none');
+                document.getElementById('profileContent').classList.remove('d-none');
+            }
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            if (!currentUid) return;
+
+            const btn = document.getElementById('btnSave');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+
+            try {
+                const updateData = { updated_at: serverTimestamp() };
+                for (const [inputId, field] of Object.entries(FIELDS)) {
+                    updateData[field] = document.getElementById(inputId).value.trim();
+                }
+                await updateDoc(doc(db, 'users', currentUid), updateData);
+
+                const snap = await getDoc(doc(db, 'users', currentUid));
+                renderSummary(snap.data() || {}, auth.currentUser);
+                showAlert('success', 'Profile updated successfully.');
+            } catch (e) {
+                console.error('Error saving profile', e);
+                showAlert('danger', 'Failed to save profile: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-save me-2"></i>Save Changes';
+            }
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.replace('login.html');
+                return;
+            }
+            loadProfile(user);
+        });
+    </script>
+</body>
+
+</html>

@@ -67,7 +67,7 @@ function restoreDraft() {
             if (draft.isReprint) state.isReprint = true;
             Object.keys(draft.inputs).forEach(id => {
                 const el = document.getElementById(id);
-                if(el) el.value = escapeHTML(draft.inputs[id]);
+                if(el) el.value = draft.inputs[id] ?? "";
             });
             if (draft.isReprint) {
                 localStorage.removeItem('draft_receipt_data');
@@ -626,21 +626,21 @@ window.saveDocumentToFirestore = async function() {
             docNo,
             docDate: getInputValue('doc-date') || new Date().toISOString().split('T')[0],
             docPayment: getInputValue('doc-payment'),
-            docSalesman: escapeHTML(getInputValue('doc-salesman')),
+            docSalesman: getInputValue('doc-salesman'),
             docInvoice: getInputValue('doc-invoice'),
             docRef: getInputValue('doc-ref'),
-            custName: escapeHTML(custName),
-            custTax: escapeHTML(getInputValue('cust-tax')),
-            custAddr: escapeHTML(getInputValue('cust-addr')),
-            projName: escapeHTML(getInputValue('proj-name')),
-            paymentDetail: escapeHTML(getInputValue('payment-detail')),
-            note: escapeHTML(state.note || ''),
-            signReceiver: escapeHTML(getInputValue('sign-receiver')),
-            signAuth: escapeHTML(getInputValue('sign-auth')),
+            custName: custName,
+            custTax: getInputValue('cust-tax'),
+            custAddr: getInputValue('cust-addr'),
+            projName: getInputValue('proj-name'),
+            paymentDetail: getInputValue('payment-detail'),
+            note: state.note || '',
+            signReceiver: getInputValue('sign-receiver'),
+            signAuth: getInputValue('sign-auth'),
             vatRate,
             discountAmount,
             items: state.items.map(item => ({
-                desc: escapeHTML(item.desc),
+                desc: item.desc,
                 qty: Number(item.qty),
                 price: Number(item.price),
                 discount: Number(item.discount || 0)
