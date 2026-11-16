@@ -294,7 +294,7 @@
             { id: 'payDir', label: 'การชำระเงินเมื่อยกเลิก', group: 'pay', type: 'select', def: 'ไม่มีการชำระเงินระหว่างกัน', options: ['ไม่มีการชำระเงินระหว่างกัน', 'ฝ่ายที่หนึ่งชำระให้ฝ่ายที่สอง', 'ฝ่ายที่สองชำระให้ฝ่ายที่หนึ่ง'] },
             { id: 'payAmt', label: 'จำนวนเงิน (บาท)', group: 'pay', type: 'number', def: '' },
             { id: 'payDate', label: 'กำหนดชำระภายในวันที่', group: 'pay', type: 'date', def: '' },
-            extraField()
+            C._k.extraField()
         ],
         summaryAmount: (f) => Number(f.payAmt) || 0,
         clauses(f, h) {

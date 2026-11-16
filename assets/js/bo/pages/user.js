@@ -318,6 +318,10 @@
                 try {
                     if (!docId) { // Create
                         const password = document.getElementById('mPassword').value;
+                        // Stronger than Firebase's 6-character minimum: staff hold financial and personal data.
+                        if (password.length < 10 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+                            throw new Error('รหัสผ่านต้องยาวอย่างน้อย 10 ตัวอักษร และมีทั้งตัวอักษรและตัวเลข');
+                        }
                         // Create Firebase Auth user on secondary app
                         const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
                         const uid = userCredential.user.uid;
@@ -464,7 +468,7 @@
 
             } catch (e) {
                 console.error("Fetch DB error", e);
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Failed to fetch data: ${e.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Failed to fetch data: ${escapeHTML(e.message)}</td></tr>`;
             }
         }
 

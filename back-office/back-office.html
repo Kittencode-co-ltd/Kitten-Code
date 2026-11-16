@@ -3,9 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'">
     <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Back Office - KITTEN CODE Co.,Ltd</title>
+    <title>ระบบหลังบ้าน — KITTEN CODE Co.,Ltd</title>
 
     <!-- Favicon -->
     <link href="../assets/img/favicon.png" rel="icon">
@@ -56,7 +59,7 @@
             <div class="menu-title menu-title-gap" data-i18n-th="การเงิน" data-i18n-en="Finance">การเงิน</div>
             <a href="#finance" class="menu-item" data-title="การเงิน" data-title-en="Finance">
                 <i class="bi bi-wallet2"></i>
-                <span data-i18n-th="ภาพรวม / รายรับ-รายจ่าย" data-i18n-en="Finance">ภาพรวม / รายรับ-รายจ่าย</span>
+                <span data-i18n-th="การเงิน" data-i18n-en="Finance">การเงิน</span>
             </a>
             <div class="menu-title menu-title-gap" data-i18n-th="ทีม" data-i18n-en="Team">ทีม</div>
             <a href="#attendance" class="menu-item" data-title="เข้างาน / ลางาน" data-title-en="Attendance & Leave">
@@ -267,6 +270,7 @@
 
             if (profileData.role === 'admin') {
                 ['menu-contract', 'picker-contract-title', 'picker-contract-grid'].forEach(id => { const el = document.getElementById(id); if (el) el.hidden = false; });
+                loadMenuBadges();
             }
 
             const initial = (displayName.trim().charAt(0) || 'K').toUpperCase();
@@ -346,6 +350,12 @@
             const msg = KCTheme.getLang() === 'en' ? 'Are you sure you want to sign out?' : 'ต้องการออกจากระบบใช่หรือไม่?';
             if (confirm(msg)) {
                 try {
+                    // Don't leave documents, drafts or edit hand-offs behind on a shared computer.
+                    try {
+                        Object.keys(localStorage).forEach(k => {
+                            if (/^(kc_edit_doc|kc_view_doc|kc_convert_|draft_)/.test(k)) localStorage.removeItem(k);
+                        });
+                    } catch (_) { /* storage blocked */ }
                     await signOut(auth);
                     window.location.href = 'login.html';
                 } catch (error) {
@@ -439,9 +449,37 @@
         );
         fileToHash['document-viewer.html'] = '#document-record';
 
+        // Admin: show how many things are waiting on the menu items.
+        async function loadMenuBadges() {
+            const { db, collection, getDocs } = await import('../assets/js/bo/core/firebase-config.js');
+            const count = async (col, pred) => { try { return (await getDocs(collection(db, col))).docs.filter(d => pred(d.data())).length; } catch (e) { console.warn('badge', col, e.message); return 0; } };
+            const [leaves, docsQ, docsV, txns] = await Promise.all([
+                count('leave_requests', d => d.status === 'pending'),
+                count('quotations', d => (d.status || 'Pending') === 'Pending'),
+                count('vouchers', d => (d.status || 'Pending') === 'Pending'),
+                count('fin_transactions', d => d.payment_status === 1)
+            ]);
+            const set = (href, n) => {
+                const a = document.querySelector('.sidebar-menu a[href="' + href + '"]');
+                if (!a) return;
+                a.querySelector('.menu-badge')?.remove();
+                if (n > 0) { const b = document.createElement('span'); b.className = 'menu-badge'; b.textContent = n > 99 ? '99+' : n; a.appendChild(b); }
+            };
+            set('#attendance', leaves);
+            set('#document-record', docsQ + docsV);
+            set('#finance', txns);
+        }
+
         window.openCreatePicker = function () { closeMobileDrawer(); document.getElementById('createPicker').hidden = false; };
         window.closeCreatePicker = function () { document.getElementById('createPicker').hidden = true; };
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.closeCreatePicker(); });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') window.closeCreatePicker();
+            // "N" = new document (ignored while typing)
+            const tag = (e.target && e.target.tagName) || '';
+            if ((e.key === 'n' || e.key === 'N') && !e.metaKey && !e.ctrlKey && !e.altKey && !/INPUT|TEXTAREA|SELECT/.test(tag) && !(e.target && e.target.isContentEditable)) {
+                e.preventDefault(); window.openCreatePicker();
+            }
+        });
 
         function isMobileViewport() {
             return window.innerWidth < 1024;

@@ -3,9 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'">
     <script src="../assets/js/bo/core/bo-theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Studio — KITTEN CODE Co.,Ltd</title>
+    <title>QR Code — KITTEN CODE Co.,Ltd</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="../assets/css/bo/tokens.css">
@@ -464,6 +467,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const DEFAULT_LOGO_SRC = '../assets/img/LOGO-KittenCode.png';
             const HISTORY_KEY = 'kittencode_qr_history_v1';
+            const escHist = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
             const urlInput = document.getElementById('urlInput');
             const clearUrlBtn = document.getElementById('clearUrlBtn');
@@ -1012,8 +1016,8 @@
                         <div class="history-item-left">
                             <span class="history-mode-tag"><i class="bi ${icons[item.mode] || 'bi-qr-code'}"></i></span>
                             <div class="history-text">
-                                <div class="history-title">${item.title}</div>
-                                <div class="history-sub">${item.sub}</div>
+                                <div class="history-title">${escHist(item.title)}</div>
+                                <div class="history-sub">${escHist(item.sub)}</div>
                             </div>
                         </div>
                         <i class="bi bi-arrow-up-right-circle" style="color:var(--kc-muted);"></i>

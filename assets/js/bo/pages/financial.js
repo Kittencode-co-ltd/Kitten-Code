@@ -213,7 +213,7 @@ function renderRegister() {
 
             quotaCell = `
               <div style="line-height:1.6;">
-                <span class="quota-period-tag">${c.quota_value} ${unitLabel}</span>
+                <span class="quota-period-tag">${escapeHTML(c.quota_value)} ${escapeHTML(unitLabel)}</span>
                 <div style="font-size:11px;margin-top:4px;color:${isExpired ? 'var(--color-exp)' : 'var(--text-secondary)'}">
                   ${isExpired
                     ? '<span style="color:var(--color-exp);font-weight:600;">หมดรอบแล้ว</span>'
@@ -299,7 +299,7 @@ function renderTxns() {
             : '';
 
         return `<tr>
-        <td style="font-size:12px;color:var(--text-secondary);">${t.date}</td>
+        <td style="font-size:12px;color:var(--text-secondary);">${escapeHTML(t.date)}</td>
         <td>${escapeHTML(t.desc)}</td>
         <td><span class="tag-code">${escapeHTML(cat?.code) || ''}</span></td>
         <td style="font-size:12px;color:var(--text-secondary);">${escapeHTML(t.ref) || '-'}</td>

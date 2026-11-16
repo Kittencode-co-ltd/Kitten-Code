@@ -40,6 +40,18 @@
   --kc-float: 0 1px 2px rgba(28, 27, 25, 0.06), 0 6px 18px rgba(28, 27, 25, 0.08);
   --kc-float-lg: 0 2px 4px rgba(28, 27, 25, 0.06), 0 14px 34px rgba(28, 27, 25, 0.14);
   --kc-scrim: rgba(28, 27, 25, 0.32);
+  /* Depth: top-edge highlight + layered shadows (buttons feel like physical keys) */
+  --kc-hi: rgba(255, 255, 255, 0.95);
+  --kc-btn-shadow: inset 0 1px 0 var(--kc-hi), inset 0 -2px 0 rgba(28, 27, 25, 0.09), 0 1px 1px rgba(28, 27, 25, 0.14), 0 3px 6px rgba(28, 27, 25, 0.10), 0 10px 18px -6px rgba(28, 27, 25, 0.22);
+  --kc-btn-shadow-hover: inset 0 1px 0 var(--kc-hi), inset 0 -2px 0 rgba(28, 27, 25, 0.09), 0 2px 3px rgba(28, 27, 25, 0.14), 0 8px 14px rgba(28, 27, 25, 0.12), 0 18px 28px -10px rgba(28, 27, 25, 0.34);
+  --kc-btn-shadow-press: inset 0 3px 7px rgba(28, 27, 25, 0.26), inset 0 -1px 0 var(--kc-hi), 0 0 0 rgba(0, 0, 0, 0);
+  --kc-ink-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), inset 0 -3px 0 rgba(0, 0, 0, 0.42), 0 1px 2px rgba(0, 0, 0, 0.40), 0 5px 9px rgba(0, 0, 0, 0.22), 0 14px 22px -8px rgba(0, 0, 0, 0.50);
+  --kc-ink-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.38), inset 0 -3px 0 rgba(0, 0, 0, 0.42), 0 2px 3px rgba(0, 0, 0, 0.40), 0 10px 16px rgba(0, 0, 0, 0.24), 0 22px 32px -10px rgba(0, 0, 0, 0.58);
+  --kc-ink-shadow-press: inset 0 4px 8px rgba(0, 0, 0, 0.60), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  --kc-groove: inset 0 1px 2px rgba(28, 27, 25, 0.10);
+  --kc-card-shadow: 0 1px 1px rgba(28, 27, 25, 0.04), 0 2px 8px rgba(28, 27, 25, 0.05);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
 
   /* Type */
   --kc-font: "IBM Plex Sans Thai", "Inter", system-ui, sans-serif;
@@ -102,6 +114,16 @@
   --kc-float: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.35);
   --kc-float-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 14px 34px rgba(0, 0, 0, 0.5);
   --kc-scrim: rgba(0, 0, 0, 0.55);
+  --kc-hi: rgba(255, 255, 255, 0.08);
+  --kc-btn-shadow: inset 0 1px 0 var(--kc-hi), inset 0 -2px 0 rgba(0, 0, 0, 0.35), 0 1px 1px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.35), 0 12px 20px -6px rgba(0, 0, 0, 0.65);
+  --kc-btn-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 -2px 0 rgba(0, 0, 0, 0.35), 0 2px 3px rgba(0, 0, 0, 0.5), 0 10px 16px rgba(0, 0, 0, 0.4), 0 22px 32px -10px rgba(0, 0, 0, 0.8);
+  --kc-btn-shadow-press: inset 0 3px 8px rgba(0, 0, 0, 0.65);
+  --kc-ink-shadow: inset 0 1px 0 #fff, inset 0 -3px 0 rgba(0, 0, 0, 0.28), 0 1px 2px rgba(0, 0, 0, 0.55), 0 5px 9px rgba(0, 0, 0, 0.35), 0 14px 22px -8px rgba(0, 0, 0, 0.7);
+  --kc-ink-shadow-hover: inset 0 1px 0 #fff, inset 0 -3px 0 rgba(0, 0, 0, 0.28), 0 2px 3px rgba(0, 0, 0, 0.55), 0 10px 16px rgba(0, 0, 0, 0.4), 0 22px 32px -10px rgba(0, 0, 0, 0.8);
+  --kc-ink-shadow-press: inset 0 4px 8px rgba(0, 0, 0, 0.45);
+  --kc-groove: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+  --kc-card-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), 0 3px 10px rgba(0, 0, 0, 0.25);
+
 }
 
 /* Text size (set from the profile menu) */
