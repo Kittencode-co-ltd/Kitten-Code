@@ -122,6 +122,7 @@
           localStorage.removeItem('kc_remember_username');
         }
 
+        try { sessionStorage.setItem('kc_show_welcome', '1'); } catch (_) { /* storage blocked */ }
         window.location.href = 'back-office.html#today';
       } catch (error) {
         console.error("Login error:", error);

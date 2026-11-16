@@ -19,8 +19,8 @@
 <body class="bo-page">
     <div class="tm">
         <section class="tm-card">
-            <h2>เกี่ยวกับ KITTEN CODE Co.,Ltd <button type="button" class="btn tm-btn-sm" id="btn-edit-about" hidden>แก้ไข</button></h2>
-            <div class="ann-about" id="about"><div class="tm-empty">กำลังโหลด…</div></div>
+            <h2>เกี่ยวกับ KITTEN CODE Co.,Ltd <button type="button" class="btn tm-btn-sm" id="btn-replay"><i class="bi bi-play-circle"></i> เล่นการ์ดต้อนรับ</button></h2>
+            <div class="ab-wrap" id="about"><div class="tm-empty">กำลังโหลด…</div></div>
         </section>
 
         <div class="tm-head">
@@ -32,19 +32,6 @@
             <button type="button" class="btn btn-primary" id="btn-add" hidden><i class="bi bi-plus-lg"></i> เขียนประกาศ</button>
         </div>
         <div id="list" style="display:grid;gap:.8rem"><div class="tm-empty">กำลังโหลด…</div></div>
-    </div>
-
-    <!-- About editor -->
-    <div class="modal-overlay" id="about-modal">
-        <div class="modal-box">
-            <div class="modal-title">แก้ไขข้อมูลองค์กร</div>
-            <div class="tm-form" style="margin-top:1rem">
-                <div class="form-group full"><label>วิสัยทัศน์</label><textarea id="ab-vision"></textarea></div>
-                <div class="form-group full"><label>พันธกิจ</label><textarea id="ab-mission"></textarea></div>
-                <div class="form-group full"><label>ค่านิยมองค์กร</label><textarea id="ab-values" placeholder="บรรทัดละ 1 ข้อ"></textarea></div>
-            </div>
-            <div class="modal-actions"><button type="button" class="btn" onclick="closeM('about-modal')">ยกเลิก</button><button type="button" class="btn btn-primary" id="ab-ok">บันทึก</button></div>
-        </div>
     </div>
 
     <!-- Post editor -->

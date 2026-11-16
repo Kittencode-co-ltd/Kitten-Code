@@ -1,14 +1,15 @@
 import { db, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, serverTimestamp } from '../core/firebase-config.js';
+import { COMPANY_INFO } from './company-info.js';
 import { requireUser, esc, thDate, isoDate, toast, openModal, closeModal } from '../core/session.js';
 
 const $ = (id) => document.getElementById(id);
 const CATS = { announcement: ['ประกาศ', 'badge-blue'], policy: ['นโยบาย', 'badge-invoice'] };
-let me, posts = [], cat = 'all', editId = null, about = {};
+let me, posts = [], cat = 'all', editId = null;
 window.closeM = closeModal;
 
 (async function init() {
     me = await requireUser();
-    $('btn-add').hidden = $('btn-edit-about').hidden = !me.isAdmin;
+    $('btn-add').hidden = !me.isAdmin;
     $('cats').addEventListener('click', (e) => {
         const b = e.target.closest('.tab'); if (!b) return;
         cat = b.dataset.c;
@@ -16,29 +17,29 @@ window.closeM = closeModal;
         renderList();
     });
     $('btn-add').addEventListener('click', () => openPost(null));
-    $('btn-edit-about').addEventListener('click', openAbout);
-    $('ab-ok').addEventListener('click', saveAbout);
     $('po-ok').addEventListener('click', savePost);
     $('list').addEventListener('click', onList);
-    await Promise.all([loadAbout(), loadPosts()]);
+    renderAbout();
+    $('btn-replay').addEventListener('click', () => { if (window.parent !== window && window.parent.openWelcome) window.parent.openWelcome(); });
+    await loadPosts();
 })();
 
-async function loadAbout() {
-    try { const s = await getDoc(doc(db, 'company_profile', 'main')); about = s.exists() ? s.data() : {}; } catch (e) { console.warn(e); }
-    const vals = (about.values || '').split('\n').map(v => v.trim()).filter(Boolean);
-    const block = (icon, title, text) => `<div><h3><i class="bi ${icon}"></i> ${title}</h3><p>${text ? esc(text) : '<span style="color:var(--kc-muted)">ยังไม่ได้กรอก</span>'}</p></div>`;
-    $('about').innerHTML = block('bi-eye', 'วิสัยทัศน์', about.vision) + block('bi-bullseye', 'พันธกิจ', about.mission)
-        + block('bi-heart', 'ค่านิยมองค์กร', vals.map((v, i) => `${i + 1}. ${v}`).join('\n'));
-}
-function openAbout() {
-    $('ab-vision').value = about.vision || ''; $('ab-mission').value = about.mission || ''; $('ab-values').value = about.values || '';
-    openModal('about-modal');
-}
-async function saveAbout() {
-    try {
-        await setDoc(doc(db, 'company_profile', 'main'), { vision: $('ab-vision').value.trim(), mission: $('ab-mission').value.trim(), values: $('ab-values').value.trim(), updatedAt: serverTimestamp(), updatedBy: me.uid }, { merge: true });
-        closeModal('about-modal'); toast('บันทึกแล้ว'); loadAbout();
-    } catch (e) { toast('บันทึกไม่สำเร็จ: ' + e.message, false); }
+function renderAbout() {
+    const I = COMPANY_INFO;
+    const duo = (o) => `<p class="ab-en">${esc(o.en)}</p><p class="ab-th">${esc(o.th)}</p>`;
+    $('about').innerHTML = `
+        <div class="ab-hero">
+            <div class="ab-vision"><span class="ab-label"><i class="bi bi-eye"></i> วิสัยทัศน์ · Vision</span>${duo(I.vision)}</div>
+            <div class="ab-philo"><span class="ab-label"><i class="bi bi-lightbulb"></i> Brand Philosophy</span>${duo(I.philosophy)}</div>
+        </div>
+        <div class="ab-block">
+            <h3 class="ab-title"><i class="bi bi-bullseye"></i> พันธกิจ · Mission</h3>
+            <ol class="ab-mission">${I.mission.map(m => `<li><b>${esc(m.en)}</b><span>${esc(m.th)}</span></li>`).join('')}</ol>
+        </div>
+        <div class="ab-block">
+            <h3 class="ab-title"><i class="bi bi-heart"></i> ${esc(I.valuesTitle)} <small>${esc(I.valuesSubtitle)}</small></h3>
+            <div class="ab-values">${I.values.map(v => `<article class="ab-value"><span class="ab-letter">${esc(v.letter)}</span><div><b>${esc(v.en)}</b><p>${esc(v.th)}</p><em>${esc(v.tag)}</em></div></article>`).join('')}</div>
+        </div>`;
 }
 
 async function loadPosts() {

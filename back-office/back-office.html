@@ -675,6 +675,69 @@
 
         window.onhashchange = loadView;
     </script>
+
+    <!-- Welcome card: shown once after each sign-in, and on demand from the About page -->
+    <script type="module">
+        import { COMPANY_INFO as I } from '../assets/js/bo/pages/company-info.js';
+        const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        let root = null, step = 0;
+        const STEPS = 3;
+
+        function pages(name) {
+            return [
+                `<div class="wl-hero"><span class="wl-hi">${name ? 'ยินดีต้อนรับ ' + esc(name) : 'ยินดีต้อนรับ'}</span>
+                    <span class="wl-label">วิสัยทัศน์ · Vision</span>
+                    <h2>${esc(I.vision.en)}</h2><p>${esc(I.vision.th)}</p></div>
+                 <div class="wl-philo"><span class="wl-label">Brand Philosophy</span><b>${esc(I.philosophy.en)}</b><span>${esc(I.philosophy.th)}</span></div>`,
+                `<div class="wl-body"><span class="wl-label">พันธกิจ · Mission</span>
+                    <ol class="wl-mission">${I.mission.map(m => `<li><b>${esc(m.en)}</b><span>${esc(m.th)}</span></li>`).join('')}</ol></div>`,
+                `<div class="wl-body"><span class="wl-label">${esc(I.valuesTitle)} · ${esc(I.valuesSubtitle)}</span>
+                    <div class="wl-values">${I.values.map((v, i) => `<div class="wl-value" style="--i:${i}"><span>${esc(v.letter)}</span><b>${esc(v.en)}</b><em>${esc(v.tag)}</em></div>`).join('')}</div>
+                    <p class="wl-tail">${esc(I.philosophy.en)}</p></div>`
+            ];
+        }
+
+        function close() { if (!root) return; root.classList.remove('open'); setTimeout(() => { root && root.remove(); root = null; }, 250); document.removeEventListener('keydown', onKey); }
+        function onKey(e) { if (e.key === 'Escape') close(); if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); next(); } if (e.key === 'ArrowLeft') go(step - 1); }
+        function go(n) {
+            step = Math.max(0, Math.min(STEPS - 1, n));
+            root.querySelectorAll('.wl-page').forEach((p, i) => p.hidden = i !== step);
+            root.querySelectorAll('.wl-dot').forEach((d, i) => d.classList.toggle('on', i === step));
+            root.querySelector('.wl-next').textContent = step === STEPS - 1 ? 'เริ่มทำงานกันเลย' : 'ถัดไป';
+        }
+        function next() { step === STEPS - 1 ? close() : go(step + 1); }
+
+        function show(name) {
+            if (root) return;
+            step = 0;
+            root = document.createElement('div');
+            root.className = 'welcome';
+            root.setAttribute('role', 'dialog'); root.setAttribute('aria-modal', 'true'); root.setAttribute('aria-label', 'ยินดีต้อนรับ');
+            root.innerHTML = `<div class="welcome-card">
+                <img class="wl-logo" src="../assets/img/LOGO-KittenCode.png" alt="">
+                ${pages(name).map((p, i) => `<section class="wl-page" ${i ? 'hidden' : ''}>${p}</section>`).join('')}
+                <div class="wl-foot"><div class="wl-dots">${Array.from({ length: STEPS }, (_, i) => `<span class="wl-dot${i ? '' : ' on'}"></span>`).join('')}</div>
+                    <button type="button" class="wl-skip">ข้าม</button><button type="button" class="btn btn-primary wl-next">ถัดไป</button></div></div>`;
+            document.body.appendChild(root);
+            requestAnimationFrame(() => root.classList.add('open'));
+            root.querySelector('.wl-next').addEventListener('click', next);
+            root.querySelector('.wl-skip').addEventListener('click', close);
+            root.addEventListener('click', (e) => { if (e.target === root) close(); });
+            document.addEventListener('keydown', onKey);
+            root.querySelector('.wl-next').focus();
+        }
+
+        const userName = () => { const n = (document.getElementById('headerUserName') || {}).textContent || ''; return n === 'Profile' ? '' : n.trim(); };
+        window.openWelcome = () => show(userName());
+
+        let flagged = false;
+        try { flagged = sessionStorage.getItem('kc_show_welcome') === '1'; sessionStorage.removeItem('kc_show_welcome'); } catch (_) { /* storage blocked */ }
+        if (flagged) {
+            // wait (briefly) for the header to fill in the signed-in user's name
+            let tries = 0;
+            const t = setInterval(() => { tries++; if (userName() || tries > 20) { clearInterval(t); show(userName()); } }, 150);
+        }
+    </script>
 </body>
 
 </html>

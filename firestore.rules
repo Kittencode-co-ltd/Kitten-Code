@@ -248,9 +248,10 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Read-only from the app; the company identity now lives in assets/js/bo/pages/company-info.js.
     match /company_profile/{id} {
       allow read:  if isStaff();
-      allow write: if isAdmin();
+      allow write: if false;
     }
   }
 }
