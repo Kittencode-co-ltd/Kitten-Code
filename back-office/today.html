@@ -20,19 +20,22 @@
             <p id="today-date"></p>
         </section>
 
+        <section class="today-card today-clock">
+            <div>
+                <h2>ลงเวลาวันนี้</h2>
+                <div class="clock-now" id="clock-now">--:--</div>
+                <div class="task-meta" id="clock-sub">กำลังโหลด…</div>
+            </div>
+            <button type="button" class="btn btn-primary clock-btn" id="clock-btn" disabled>เข้างาน</button>
+        </section>
+
         <section class="today-card">
-            <h2>เริ่มทำอะไรดี</h2>
+            <h2>ทางลัด</h2>
             <div class="quick-grid">
-                <a href="#" data-go="quotation"><i class="bi bi-file-earmark-plus"></i>ใบเสนอราคา</a>
-                <a href="#" data-go="invoice"><i class="bi bi-file-earmark-ruled"></i>ใบแจ้งหนี้</a>
-                <a href="#" data-go="receipt"><i class="bi bi-receipt"></i>ใบเสร็จรับเงิน</a>
-                <a href="#" data-go="voucher"><i class="bi bi-cash-stack"></i>ใบเบิก / ซื้อ / จ้าง</a>
-                <a href="#" data-go="certificate"><i class="bi bi-patch-check"></i>ออกหนังสือรับรอง</a>
-                <a href="#" data-go="calendar"><i class="bi bi-calendar-plus"></i>เพิ่มงานในปฏิทิน</a>
-                <a href="#" data-go="financial"><i class="bi bi-wallet2"></i>บันทึกรายรับรายจ่าย</a>
-                <a href="#" data-go="attendance"><i class="bi bi-alarm"></i>เข้างาน / ลางาน</a>
+                <a href="#" data-go="attendance"><i class="bi bi-calendar2-x"></i>ขอลางาน</a>
                 <a href="#" data-go="equipment"><i class="bi bi-camera-reels"></i>ยืม-คืนอุปกรณ์</a>
             </div>
+            <p class="task-meta" style="margin-top:.7rem">ออกเอกสารทุกชนิดได้จากปุ่ม “สร้างเอกสาร” มุมขวาบน</p>
         </section>
 
         <section class="today-card" id="ann-card" hidden>

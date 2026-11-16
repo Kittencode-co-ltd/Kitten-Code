@@ -136,7 +136,7 @@
                 <div class="data-card">
                     <div class="data-card-header">
                         <span class="data-card-title">5 รายการล่าสุด</span>
-                        <a href="#" class="data-card-action" onclick="event.preventDefault(); window.parent !== window ? window.parent.location.hash = '#financial' : location.href = 'financial.html'">ดูทั้งหมด →</a>
+                        <a href="#" class="data-card-action" onclick="event.preventDefault(); window.parent !== window && window.parent.KCTabs ? window.parent.KCTabs.go('ledger') : location.href = 'financial.html'">ดูทั้งหมด →</a>
                     </div>
                     <div class="table-scroll-wrapper">
                         <table class="txn-tbl" aria-label="Last 5 Transactions">

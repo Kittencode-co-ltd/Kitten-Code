@@ -477,11 +477,11 @@ button.header-profile-pill { border: none; font-family: inherit; color: var(--kc
 .sidebar-create:hover { transform: translateY(-1px); box-shadow: var(--kc-float-lg); }
 .header-create {
   display: inline-flex; align-items: center; gap: 0.4rem; margin-right: 0.5rem;
-  min-height: 2.4rem; padding: 0 1rem; border: 1px solid var(--kc-line);
-  border-radius: var(--kc-pill); background: var(--kc-surface); color: var(--kc-text);
-  font: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  min-height: 2.4rem; padding: 0 1.1rem; border: 0;
+  border-radius: var(--kc-pill); background: var(--kc-ink); color: var(--kc-on-ink);
+  font: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer; box-shadow: var(--kc-float);
 }
-.header-create:hover { background: var(--kc-bg); }
+.header-create:hover { transform: translateY(-1px); box-shadow: var(--kc-float-lg); }
 @media (max-width: 640px) { .header-create span { display: none; } .header-create { padding: 0; width: 2.4rem; justify-content: center; } }
 
 .create-picker { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: 1rem; }

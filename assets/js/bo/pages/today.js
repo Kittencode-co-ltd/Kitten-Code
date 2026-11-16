@@ -1,4 +1,4 @@
-import { db, auth, onAuthStateChanged, collection, getDocs, doc, getDoc, setDoc, serverTimestamp, query, where } from '../core/firebase-config.js';
+import { db, auth, onAuthStateChanged, collection, getDocs, doc, getDoc, setDoc, updateDoc, serverTimestamp, query, where } from '../core/firebase-config.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -36,6 +36,7 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('hello').textContent = `${greet}${name ? ' ' + name : ''}`;
     document.getElementById('today-date').textContent = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
+    initClock(user.uid, name || (user.email || '').split('@')[0]);
     loadAnnouncement();
     loadTasks(user.uid);
     loadPending(isAdmin);
@@ -107,4 +108,33 @@ async function loadPending(isAdmin) {
     const ok = rows.filter(r => r.n !== null);
     if (!ok.length) { box.innerHTML = '<div class="today-empty">ไม่มีรายการรอดำเนินการ</div>'; return; }
     box.innerHTML = ok.map(r => `<a href="#" class="pending-row" data-go="${r.go || 'document-record'}"><span>${esc(r.label)}</span><span class="pending-count${r.n ? '' : ' zero'}">${r.n}</span></a>`).join('');
+}
+
+// ── One-tap time clock (same records as the attendance page) ──
+const LATE_AFTER = '09:15';
+const pad2 = (n) => String(n).padStart(2, '0');
+async function initClock(uid, name) {
+    const nowEl = document.getElementById('clock-now'), sub = document.getElementById('clock-sub'), btn = document.getElementById('clock-btn');
+    const tick = () => { const d = new Date(); nowEl.textContent = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+    tick(); setInterval(tick, 15000);
+    const day = iso(new Date());
+    const ref = doc(db, 'attendance', `${uid}_${day}`);
+    let rec = null;
+    const paint = () => {
+        btn.disabled = false;
+        if (!rec) { btn.textContent = 'เข้างาน'; sub.textContent = 'วันนี้ยังไม่ได้ลงเวลาเข้างาน'; }
+        else if (!rec.checkOut) { btn.textContent = 'ออกงาน'; sub.textContent = `เข้างาน ${rec.checkIn} น.${rec.checkIn > LATE_AFTER ? ' (สาย)' : ''}`; }
+        else { btn.textContent = 'แก้เวลาออกงาน'; sub.textContent = `เข้า ${rec.checkIn} · ออก ${rec.checkOut} น.`; }
+    };
+    try { const s = await getDoc(ref); rec = s.exists() ? s.data() : null; } catch (e) { sub.textContent = 'โหลดเวลาทำงานไม่สำเร็จ'; return; }
+    paint();
+    btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        const t = `${pad2(new Date().getHours())}:${pad2(new Date().getMinutes())}`;
+        try {
+            if (!rec) { rec = { uid, name, date: day, checkIn: t, checkOut: '' }; await setDoc(ref, { ...rec, createdAt: serverTimestamp() }); }
+            else { rec.checkOut = t; await updateDoc(ref, { checkOut: t, updatedAt: serverTimestamp() }); }
+        } catch (e) { alert('บันทึกเวลาไม่สำเร็จ: ' + e.message); rec = null; try { const s = await getDoc(ref); rec = s.exists() ? s.data() : null; } catch (_) {} }
+        paint();
+    });
 }

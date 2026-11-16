@@ -37,79 +37,45 @@
             <span class="sidebar-brand-text"><strong>KITTEN CODE Co.,Ltd</strong><small>บริษัท คิทเท่น โค้ด จำกัด</small></span>
         </div>
 
-        <button type="button" class="sidebar-create" onclick="openCreatePicker()">
-            <i class="bi bi-plus-lg"></i>
-            <span data-i18n-th="สร้างเอกสาร" data-i18n-en="New document">สร้างเอกสาร</span>
-        </button>
-
         <!-- Navigation Menu -->
         <div class="sidebar-menu">
-            <div class="menu-title" data-i18n-th="เมนูหลัก" data-i18n-en="Main Menu">เมนูหลัก</div>
-
+            <div class="menu-title" data-i18n-th="งานของฉัน" data-i18n-en="My work">งานของฉัน</div>
             <a href="#today" class="menu-item" data-title="วันนี้" data-title-en="Today">
                 <i class="bi bi-house-heart"></i>
                 <span data-i18n-th="วันนี้" data-i18n-en="Today">วันนี้</span>
             </a>
-
-            <a href="#dashboard" class="menu-item" data-title="ภาพรวมการเงิน" data-title-en="Financial Overview">
-                <i class="bi bi-bar-chart-line"></i>
-                <span data-i18n-th="ภาพรวม" data-i18n-en="Dashboard">ภาพรวม</span>
-            </a>
-
-            <a href="#financial" class="menu-item" data-title="บัญชีรายรับรายจ่าย" data-title-en="Income & Expense Ledger">
-                <i class="bi bi-wallet2"></i>
-                <span data-i18n-th="บัญชี" data-i18n-en="Accounting">บัญชี</span>
-            </a>
-
             <a href="#calendar" class="menu-item" data-title="ปฏิทินและงาน" data-title-en="Calendar & Tasks">
                 <i class="bi bi-calendar3"></i>
                 <span data-i18n-th="ปฏิทินและงาน" data-i18n-en="Calendar & Tasks">ปฏิทินและงาน</span>
             </a>
-
-            <a href="#certificate" class="menu-item" data-title="หนังสือรับรอง / เกียรติบัตร" data-title-en="Certificates & Awards">
-                <i class="bi bi-patch-check"></i>
-                <span data-i18n-th="ออกหนังสือรับรอง" data-i18n-en="Certificates">ออกหนังสือรับรอง</span>
-            </a>
-
-            <a href="#contract" class="menu-item" id="menu-contract" data-title="ทำสัญญา" data-title-en="Contracts" hidden>
-                <i class="bi bi-file-earmark-ruled"></i>
-                <span data-i18n-th="ทำสัญญา" data-i18n-en="Contracts">ทำสัญญา</span>
-            </a>
-
+            <div class="menu-title menu-title-gap" data-i18n-th="เอกสาร" data-i18n-en="Documents">เอกสาร</div>
             <a href="#document-record" class="menu-item" data-title="ทะเบียนเอกสาร" data-title-en="Document Register">
                 <i class="bi bi-folder2-open"></i>
                 <span data-i18n-th="เอกสารทั้งหมด" data-i18n-en="All documents">เอกสารทั้งหมด</span>
             </a>
-
-            <div class="menu-title menu-title-gap" data-i18n-th="ทีมและองค์กร" data-i18n-en="Team">ทีมและองค์กร</div>
-
+            <div class="menu-title menu-title-gap" data-i18n-th="การเงิน" data-i18n-en="Finance">การเงิน</div>
+            <a href="#finance" class="menu-item" data-title="การเงิน" data-title-en="Finance">
+                <i class="bi bi-wallet2"></i>
+                <span data-i18n-th="ภาพรวม / รายรับ-รายจ่าย" data-i18n-en="Finance">ภาพรวม / รายรับ-รายจ่าย</span>
+            </a>
+            <div class="menu-title menu-title-gap" data-i18n-th="ทีม" data-i18n-en="Team">ทีม</div>
             <a href="#attendance" class="menu-item" data-title="เข้างาน / ลางาน" data-title-en="Attendance & Leave">
                 <i class="bi bi-alarm"></i>
                 <span data-i18n-th="เข้างาน / ลา" data-i18n-en="Attendance">เข้างาน / ลา</span>
             </a>
-
             <a href="#equipment" class="menu-item" data-title="อุปกรณ์ส่วนกลาง" data-title-en="Shared Equipment">
                 <i class="bi bi-camera-reels"></i>
                 <span data-i18n-th="ยืม-คืนอุปกรณ์" data-i18n-en="Equipment">ยืม-คืนอุปกรณ์</span>
             </a>
-
-            <a href="#announcements" class="menu-item" data-title="ประกาศและวิสัยทัศน์" data-title-en="Announcements & Vision">
+            <a href="#company" class="menu-item" data-title="ประกาศและคู่มือ" data-title-en="Announcements & Handbook">
                 <i class="bi bi-megaphone"></i>
-                <span data-i18n-th="ประกาศ / นโยบาย" data-i18n-en="Announcements">ประกาศ / นโยบาย</span>
+                <span data-i18n-th="ประกาศ / คู่มือ" data-i18n-en="News & Handbook">ประกาศ / คู่มือ</span>
             </a>
-
-            <a href="#handbook" class="menu-item" data-title="คู่มือปฏิบัติงาน" data-title-en="Operations Handbook">
-                <i class="bi bi-journal-bookmark"></i>
-                <span data-i18n-th="คู่มือปฏิบัติงาน" data-i18n-en="Handbook">คู่มือปฏิบัติงาน</span>
-            </a>
-
-            <div class="menu-title menu-title-gap" data-i18n-th="เครื่องมือ" data-i18n-en="Tools">เครื่องมือ</div>
-
+            <div class="menu-title menu-title-gap" data-i18n-th="ระบบ" data-i18n-en="System">ระบบ</div>
             <a href="#user" class="menu-item" data-title="จัดการผู้ใช้" data-title-en="User Management">
                 <i class="bi bi-people"></i>
                 <span data-i18n-th="ผู้ใช้" data-i18n-en="Users">ผู้ใช้</span>
             </a>
-
             <a href="#qr" class="menu-item" data-title="สร้าง QR Code" data-title-en="QR Code Generator">
                 <i class="bi bi-qr-code-scan"></i>
                 <span data-i18n-th="QR Code" data-i18n-en="QR Code">QR Code</span>
@@ -200,9 +166,9 @@
             <span class="bo-tab-label" data-i18n-th="วันนี้" data-i18n-en="Today">วันนี้</span>
         </a>
 
-        <a href="#financial" class="bo-tab-item" data-tab-index="1" data-routes="#financial">
+        <a href="#finance" class="bo-tab-item" data-tab-index="1" data-routes="#finance">
             <i class="bi bi-wallet2"></i>
-            <span class="bo-tab-label" data-i18n-th="บัญชี" data-i18n-en="Accounts">บัญชี</span>
+            <span class="bo-tab-label" data-i18n-th="การเงิน" data-i18n-en="Finance">การเงิน</span>
         </a>
 
         <a href="#calendar" class="bo-tab-item" data-tab-index="2" data-routes="#calendar">
@@ -217,7 +183,7 @@
         </a>
 
         <button type="button" class="bo-tab-item" id="bottomMenuBtn" data-tab-index="4"
-            data-routes="#dashboard,#attendance,#equipment,#announcements,#handbook,#user,#qr,#profile" onclick="toggleMobileDrawer()">
+            data-routes="#attendance,#equipment,#company,#user,#qr,#profile" onclick="toggleMobileDrawer()">
             <i class="bi bi-grid"></i>
             <span class="bo-tab-label" data-i18n-th="เมนู" data-i18n-en="Menu">เมนู</span>
         </button>
@@ -401,15 +367,13 @@
         const routeMap = {
             '#attendance': 'attendance.html',
             '#equipment': 'equipment.html',
-            '#announcements': 'announcements.html',
-            '#handbook': 'handbook.html',
             '#contract': 'contract.html',
             '#today': 'today.html',
-            '#dashboard': 'dashboard.html',
+            '#finance': 'finance.html',
+            '#company': 'company.html',
             '#quotation': 'quotation.html',
             '#receipt': 'receipt.html',
             '#voucher': 'voucher.html',
-            '#financial': 'financial.html',
             '#user': 'user.html',
             '#profile': 'profile.html',
             '#calendar': 'calendar.html',
@@ -423,12 +387,10 @@
         const routeTitles = {
             '#attendance': 'เข้างาน / ลางาน',
             '#equipment': 'อุปกรณ์ส่วนกลาง',
-            '#announcements': 'ประกาศและวิสัยทัศน์',
-            '#handbook': 'คู่มือปฏิบัติงาน',
             '#contract': 'ทำสัญญา',
             '#today': 'วันนี้',
-            '#dashboard': 'ภาพรวมการเงิน',
-            '#financial': 'บัญชีรายรับรายจ่าย',
+            '#finance': 'การเงิน',
+            '#company': 'ประกาศและคู่มือ',
             '#calendar': 'ปฏิทินและงาน',
             '#document-record': 'ทะเบียนเอกสาร',
             '#quotation': 'ใบเสนอราคา',
@@ -445,12 +407,10 @@
         const routeTitlesEn = {
             '#attendance': 'Attendance & Leave',
             '#equipment': 'Shared Equipment',
-            '#announcements': 'Announcements & Vision',
-            '#handbook': 'Operations Handbook',
             '#contract': 'Contracts',
             '#today': 'Today',
-            '#dashboard': 'Financial Overview',
-            '#financial': 'Income & Expense Ledger',
+            '#finance': 'Finance',
+            '#company': 'Announcements & Handbook',
             '#calendar': 'Calendar & Tasks',
             '#document-record': 'Document Register',
             '#quotation': 'Quotation',
@@ -584,8 +544,14 @@
         });
 
         // "#certificate:employment" = page + a type to open it with.
+        // Old links (#dashboard, #financial …) now open a tab of a combined page.
+        const ROUTE_ALIASES = {
+            '#dashboard': ['#finance', 'overview'], '#financial': ['#finance', 'ledger'],
+            '#announcements': ['#company', 'news'], '#handbook': ['#company', 'handbook']
+        };
         function parseRoute() {
-            const [base, arg] = window.location.hash.split(':');
+            let [base, arg] = window.location.hash.split(':');
+            if (ROUTE_ALIASES[base]) { [base, arg] = ROUTE_ALIASES[base]; }
             return routeMap[base] ? { hash: base, arg: arg || '' } : { hash: '#today', arg: '' };
         }
 

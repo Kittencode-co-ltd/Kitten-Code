@@ -1,0 +1,9 @@
+/* A page made of tabs; each tab shows another back-office page in an inner frame. */
+html, body.bo-tabbed { height: 100%; }
+body.bo-tabbed { display: flex; flex-direction: column; padding: 0.9rem 1.5rem 0; overflow: hidden; }
+.tabbed-bar { flex: 0 0 auto; margin-bottom: 0.5rem; }
+.tabbed-frame { flex: 1 1 auto; min-height: 0; width: calc(100% + 3rem); margin: 0 -1.5rem; border: 0; background: transparent; }
+@media (max-width: 639px) {
+  body.bo-tabbed { padding: 0.7rem 0.9rem 0; }
+  .tabbed-frame { width: calc(100% + 1.8rem); margin: 0 -0.9rem; }
+}
