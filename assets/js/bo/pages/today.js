@@ -1,5 +1,6 @@
 import { db, auth, onAuthStateChanged, collection, getDocs, doc, getDoc, setDoc, updateDoc, serverTimestamp, query, where } from '../core/firebase-config.js';
 
+import { COMPANY_INFO } from './company-info.js';
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
@@ -36,6 +37,8 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('hello').textContent = `${greet}${name ? ' ' + name : ''}`;
     document.getElementById('today-date').textContent = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
+    loadStats(user.uid);
+    showDailyValue();
     initClock(user.uid, name || (user.email || '').split('@')[0]);
     loadAnnouncement();
     loadTasks(user.uid);
@@ -64,6 +67,7 @@ async function loadTasks(uid) {
             const isMine = a.includes(uid) || (a.length === 0 && e.createdBy === uid);
             return isMine && e.status !== 'done' && (e.startDate || '') <= soon;
         }).sort((a, b) => (a.startDate || '').localeCompare(b.startDate || ''));
+        const stT = document.getElementById('st-tasks'); if (stT) stT.textContent = mine.length;
         if (!mine.length) { box.innerHTML = '<div class="today-empty">ไม่มีงานค้าง เยี่ยมมาก 🎉</div>'; return; }
         box.innerHTML = mine.slice(0, 8).map(e => {
             const end = e.endDate || e.startDate;
@@ -137,4 +141,30 @@ async function initClock(uid, name) {
         } catch (e) { alert('บันทึกเวลาไม่สำเร็จ: ' + e.message); rec = null; try { const s = await getDoc(ref); rec = s.exists() ? s.data() : null; } catch (_) {} }
         paint();
     });
+}
+
+// ── Small numbers + a daily company value ──
+async function loadStats() {
+    const month = iso(new Date()).slice(0, 7), day = iso(new Date());
+    const count = async (col, pred) => { try { return (await getDocs(collection(db, col))).docs.filter(d => pred(d.data())).length; } catch (e) { return null; } };
+    const [staff, here, q, i, r] = await Promise.all([
+        count('staff_directory', () => true),
+        count('attendance', d => d.date === day),
+        count('quotations', d => String(d.docDate || '').startsWith(month)),
+        count('invoices', d => String(d.docDate || '').startsWith(month)),
+        count('receipts', d => String(d.docDate || '').startsWith(month))
+    ]);
+    const team = document.getElementById('st-team'), docs = document.getElementById('st-docs');
+    if (team) team.textContent = staff == null || here == null ? '–' : `${here}/${staff}`;
+    if (docs) docs.textContent = [q, i, r].some(v => v == null) ? '–' : q + i + r;
+}
+
+function showDailyValue() {
+    const vals = COMPANY_INFO.values || [];
+    const box = document.getElementById('today-value');
+    if (!box || !vals.length) return;
+    const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    const v = vals[dayOfYear % vals.length];
+    box.innerHTML = `<span class="tv-letter">${esc(v.letter || '')}</span><div><small>ค่านิยมวันนี้ · KITTEN VALUES</small><b>${esc(v.en)}</b><p>${esc(v.th)}</p></div>`;
+    box.hidden = false;
 }

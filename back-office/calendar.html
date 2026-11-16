@@ -451,7 +451,7 @@
                     <div class="upcoming-dot dot-${escHTML(e.type || 'work')}"></div>
                     <div class="upcoming-info">
                         <div class="upcoming-title">${escHTML(e.title)}</div>
-                        <div class="upcoming-date">${whenLabel(e.startDate)}${e.timeStart ? ' · ' + escHTML(e.timeStart) : ''} · ${TYPE_LABELS[e.type] || escHTML(e.type)}</div>
+                        <div class="upcoming-date">${whenLabel(e.startDate)}${e.timeStart ? ' · ' + escHTML(e.timeStart) : ''} · ${TYPE_LABELS[e.type] || 'งาน'}</div>
                     </div>
                 </div>`).join('');
         }

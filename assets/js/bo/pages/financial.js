@@ -698,3 +698,10 @@ onAuthStateChanged(auth, user => {
         });
     }
 });
+
+// Embedded inside the Finance page: its own tab bar is hidden and the tab comes from the URL.
+(function () {
+    const q = new URLSearchParams(location.search);
+    if (q.get('embed')) document.documentElement.classList.add('is-embed');
+    if (q.get('tab') && document.getElementById('page-' + q.get('tab'))) switchTab(q.get('tab'));
+})();

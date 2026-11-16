@@ -110,3 +110,7 @@ button.doc-stat:hover { border-color: var(--kc-line-strong); }
   .page-head .head-tools { width: 100%; justify-content: space-between; margin-top: 0.7rem; }
   .page-head .kc-search { margin-left: auto; width: 100%; max-width: 22rem; }
 }
+
+/* Finance page: tabs live in the outer bar */
+html.is-embed .page-head { display: none; }
+html.is-embed body.bo-page { padding-top: 0.4rem; }
