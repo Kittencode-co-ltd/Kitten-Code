@@ -192,41 +192,45 @@
         </button>
     </nav>
 
-    <!-- Create-document picker -->
+    <!-- Create-document picker: type to filter, arrows + Enter to open -->
     <div class="create-picker" id="createPicker" hidden>
         <div class="create-picker-backdrop" onclick="closeCreatePicker()"></div>
         <div class="create-picker-sheet" role="dialog" aria-modal="true" aria-label="สร้างเอกสาร">
-            <div class="create-picker-head">
-                <strong data-i18n-th="สร้างเอกสารใหม่" data-i18n-en="Create a document">สร้างเอกสารใหม่</strong>
-                <button type="button" class="create-picker-close" onclick="closeCreatePicker()" aria-label="ปิด"><i class="bi bi-x-lg"></i></button>
+            <div class="cp-search">
+                <i class="bi bi-search"></i>
+                <input type="text" id="cpSearch" placeholder="ค้นหา หรือเลือกชนิดเอกสารที่จะสร้าง" autocomplete="off" spellcheck="false">
+                <kbd>Esc</kbd>
             </div>
-            <div class="create-picker-group" data-i18n-th="ขายและรับเงิน" data-i18n-en="Sales">ขายและรับเงิน</div>
-            <div class="create-picker-grid">
-                <a href="#quotation" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-plus"></i><b>ใบเสนอราคา</b><small>เสนอราคาลูกค้า</small></a>
-                <a href="#invoice" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-ruled"></i><b>ใบแจ้งหนี้</b><small>เรียกเก็บเงิน</small></a>
-                <a href="#receipt" onclick="closeCreatePicker()"><i class="bi bi-receipt"></i><b>ใบเสร็จรับเงิน</b><small>รับเงินแล้ว</small></a>
+            <div class="cp-list" id="cpList">
+                <div class="cp-group">ขายและรับเงิน</div>
+                <a class="cp-item" href="#quotation" data-k="ใบเสนอราคา เสนอราคาให้ลูกค้า quotation เสนอราคา" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-plus"></i><span class="cp-name">ใบเสนอราคา</span><span class="cp-desc">เสนอราคาให้ลูกค้า</span></a>
+                <a class="cp-item" href="#invoice" data-k="ใบแจ้งหนี้ เรียกเก็บเงิน invoice แจ้งหนี้" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-ruled"></i><span class="cp-name">ใบแจ้งหนี้</span><span class="cp-desc">เรียกเก็บเงิน</span></a>
+                <a class="cp-item" href="#receipt" data-k="ใบเสร็จรับเงิน รับเงินแล้ว receipt ใบเสร็จ" onclick="closeCreatePicker()"><i class="bi bi-receipt"></i><span class="cp-name">ใบเสร็จรับเงิน</span><span class="cp-desc">รับเงินแล้ว</span></a>
+                <div class="cp-group">จัดซื้อและจ่ายเงิน</div>
+                <a class="cp-item" href="#voucher" data-k="ใบเบิก / ซื้อ / จ้าง PR · PO · ใบสำคัญจ่าย voucher เบิก ซื้อ จ้าง จ่ายเงิน" onclick="closeCreatePicker()"><i class="bi bi-cash-stack"></i><span class="cp-name">ใบเบิก / ซื้อ / จ้าง</span><span class="cp-desc">PR · PO · ใบสำคัญจ่าย</span></a>
+                <div class="cp-group" data-admin hidden>จ่ายเงิน (แอดมิน)</div>
+                <a class="cp-item" href="#contract:commission" data-k="ใบรับเงินค่าคอมมิชชั่น ค่านายหน้า · หัก ณ ที่จ่าย commission คอมมิชชั่น ค่านายหน้า" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-hand-thumbs-up"></i><span class="cp-name">ใบรับเงินค่าคอมมิชชั่น</span><span class="cp-desc">ค่านายหน้า · หัก ณ ที่จ่าย</span></a>
+                <a class="cp-item" href="#contract:wht50" data-k="หนังสือรับรองหัก ณ ที่จ่าย 50 ทวิ ภาษี หัก withholding" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-file-earmark-text"></i><span class="cp-name">หนังสือรับรองหัก ณ ที่จ่าย (50 ทวิ)</span><span class="cp-desc">ให้ผู้รับเงิน · ใช้เครดิตภาษี</span></a>
+                <div class="cp-group">หนังสือ</div>
+                <a class="cp-item" href="#certificate:employment" data-k="หนังสือรับรองการทำงาน ยืนยันตำแหน่ง อายุงาน รับรอง ทำงาน" onclick="closeCreatePicker()"><i class="bi bi-person-vcard"></i><span class="cp-name">หนังสือรับรองการทำงาน</span><span class="cp-desc">ยืนยันตำแหน่ง อายุงาน</span></a>
+                <a class="cp-item" href="#certificate:internship" data-k="หนังสือรับรองการฝึกงาน นักศึกษาฝึกงาน รับรอง ฝึกงาน" onclick="closeCreatePicker()"><i class="bi bi-mortarboard"></i><span class="cp-name">หนังสือรับรองการฝึกงาน</span><span class="cp-desc">นักศึกษาฝึกงาน</span></a>
+                <a class="cp-item" href="#certificate" data-k="เกียรติบัตร / ประกาศนียบัตร อบรม วิทยากร รางวัล เกียรติบัตร ประกาศนียบัตร certificate" onclick="closeCreatePicker()"><i class="bi bi-patch-check"></i><span class="cp-name">เกียรติบัตร / ประกาศนียบัตร</span><span class="cp-desc">อบรม วิทยากร รางวัล</span></a>
+                <a class="cp-item" href="#letter" data-k="หนังสือติดต่อภายนอก ถึงหน่วยงานรัฐ / เอกชน letter หนังสือ ภายนอก" onclick="closeCreatePicker()"><i class="bi bi-envelope-paper"></i><span class="cp-name">หนังสือติดต่อภายนอก</span><span class="cp-desc">ถึงหน่วยงานรัฐ / เอกชน</span></a>
+                <div class="cp-group" data-admin hidden>สัญญา (แอดมิน)</div>
+                <a class="cp-item" href="#contract:service" data-k="สัญญาจ้างทำของ ฟรีแลนซ์ / งานโครงการ จ้างทำของ ฟรีแลนซ์" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-handshake"></i><span class="cp-name">สัญญาจ้างทำของ</span><span class="cp-desc">ฟรีแลนซ์ / งานโครงการ</span></a>
+                <a class="cp-item" href="#contract:employment" data-k="สัญญาจ้างแรงงาน พนักงานประจำ จ้างแรงงาน พนักงาน" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-person-badge"></i><span class="cp-name">สัญญาจ้างแรงงาน</span><span class="cp-desc">พนักงานประจำ</span></a>
+                <a class="cp-item" href="#contract:software" data-k="จ้างพัฒนาเว็บ / ซอฟต์แวร์ ลูกค้าจ้างบริษัท เว็บ ซอฟต์แวร์ software" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-laptop"></i><span class="cp-name">จ้างพัฒนาเว็บ / ซอฟต์แวร์</span><span class="cp-desc">ลูกค้าจ้างบริษัท</span></a>
+                <a class="cp-item" href="#contract:revshare" data-k="จ้างทำของแบ่งรายได้ % จ่ายตามรายได้จริง แบ่งรายได้ เปอร์เซ็นต์" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-percent"></i><span class="cp-name">จ้างทำของแบ่งรายได้ %</span><span class="cp-desc">จ่ายตามรายได้จริง</span></a>
+                <a class="cp-item" href="#contract:nda" data-k="สัญญารักษาความลับ NDA nda ความลับ" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-shield-lock"></i><span class="cp-name">สัญญารักษาความลับ</span><span class="cp-desc">NDA</span></a>
+                <div class="cp-group" data-admin hidden>เตือน · เลิกจ้าง · ยุติสัญญา (แอดมิน)</div>
+                <a class="cp-item" href="#contract:warning" data-k="หนังสือเตือนพนักงาน ตามมาตรา 119 เตือน warning" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-exclamation-triangle"></i><span class="cp-name">หนังสือเตือนพนักงาน</span><span class="cp-desc">ตามมาตรา 119</span></a>
+                <a class="cp-item" href="#contract:dismissal" data-k="หนังสือเลิกจ้าง คำนวณค่าชดเชยให้ เลิกจ้าง ชดเชย" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-person-x"></i><span class="cp-name">หนังสือเลิกจ้าง</span><span class="cp-desc">คำนวณค่าชดเชยให้</span></a>
+                <a class="cp-item" href="#contract:breach" data-k="แจ้งเตือนผิดสัญญา บอกกล่าวก่อนบอกเลิก แจ้งเตือน ทวง ผิดสัญญา" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-bell"></i><span class="cp-name">แจ้งเตือนผิดสัญญา</span><span class="cp-desc">บอกกล่าวก่อนบอกเลิก</span></a>
+                <a class="cp-item" href="#contract:termination" data-k="บอกเลิกสัญญา ฝ่ายเดียว บอกเลิก ยุติ" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-file-earmark-x"></i><span class="cp-name">บอกเลิกสัญญา</span><span class="cp-desc">ฝ่ายเดียว</span></a>
+                <a class="cp-item" href="#contract:mutual_end" data-k="ข้อตกลงยกเลิกสัญญา สองฝ่ายตกลง ยกเลิก ยุติ ตกลง" data-admin hidden onclick="closeCreatePicker()"><i class="bi bi-hand-index"></i><span class="cp-name">ข้อตกลงยกเลิกสัญญา</span><span class="cp-desc">สองฝ่ายตกลง</span></a>
+                <div class="cp-empty" id="cpEmpty" hidden>ไม่พบชนิดเอกสารที่ค้นหา</div>
             </div>
-            <div class="create-picker-group" data-i18n-th="จัดซื้อและจ่ายเงิน" data-i18n-en="Purchasing">จัดซื้อและจ่ายเงิน</div>
-            <div class="create-picker-grid">
-                <a href="#voucher" onclick="closeCreatePicker()"><i class="bi bi-cash-stack"></i><b>ใบเบิก / ซื้อ / จ้าง</b><small>PR · PO · ใบสำคัญจ่าย</small></a>
-            </div>
-            <div class="create-picker-group" id="picker-contract-title" hidden>สัญญา</div>
-            <div class="create-picker-grid" id="picker-contract-grid" hidden>
-                <a href="#contract:service" onclick="closeCreatePicker()"><i class="bi bi-handshake"></i><b>สัญญาจ้างทำของ</b><small>ฟรีแลนซ์ / งานโครงการ</small></a>
-                <a href="#contract:employment" onclick="closeCreatePicker()"><i class="bi bi-person-badge"></i><b>สัญญาจ้างแรงงาน</b><small>พนักงานประจำ</small></a>
-                <a href="#contract:software" onclick="closeCreatePicker()"><i class="bi bi-laptop"></i><b>จ้างพัฒนาเว็บ/ซอฟต์แวร์</b><small>ลูกค้าจ้างบริษัท</small></a>
-                <a href="#contract:warning" onclick="closeCreatePicker()"><i class="bi bi-exclamation-triangle"></i><b>หนังสือเตือนพนักงาน</b><small>ตามมาตรา 119</small></a>
-                <a href="#contract:dismissal" onclick="closeCreatePicker()"><i class="bi bi-person-x"></i><b>หนังสือเลิกจ้าง</b><small>คำนวณค่าชดเชยให้</small></a>
-                <a href="#contract:termination" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-x"></i><b>บอกเลิก / ยุติสัญญา</b><small>แจ้งเตือน · บอกเลิก · ตกลงยกเลิก</small></a>
-                <a href="#contract" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-lock"></i><b>สัญญาอื่น ๆ</b><small>NDA · แบ่งรายได้ %</small></a>
-            </div>
-            <div class="create-picker-group" data-i18n-th="หนังสือ" data-i18n-en="Letters">หนังสือ</div>
-            <div class="create-picker-grid">
-                <a href="#certificate:employment" onclick="closeCreatePicker()"><i class="bi bi-person-vcard"></i><b>หนังสือรับรองการทำงาน</b><small>ยืนยันตำแหน่ง อายุงาน</small></a>
-                <a href="#certificate:internship" onclick="closeCreatePicker()"><i class="bi bi-mortarboard"></i><b>หนังสือรับรองการฝึกงาน</b><small>สำหรับนักศึกษาฝึกงาน</small></a>
-                <a href="#certificate" onclick="closeCreatePicker()"><i class="bi bi-patch-check"></i><b>เกียรติบัตร / ประกาศนียบัตร</b><small>อบรม วิทยากร รางวัล ขอบคุณ</small></a>
-                <a href="#letter" onclick="closeCreatePicker()"><i class="bi bi-envelope-paper"></i><b>หนังสือติดต่อภายนอก</b><small>ถึงหน่วยงานรัฐ / เอกชน</small></a>
-            </div>
+            <div class="cp-foot"><span><kbd>↑</kbd><kbd>↓</kbd> เลือก</span><span><kbd>Enter</kbd> เปิด</span><span><kbd>N</kbd> เปิดเมนูนี้</span></div>
         </div>
     </div>
 
@@ -269,7 +273,8 @@
             }
 
             if (profileData.role === 'admin') {
-                ['menu-contract', 'picker-contract-title', 'picker-contract-grid'].forEach(id => { const el = document.getElementById(id); if (el) el.hidden = false; });
+                document.body.dataset.admin = '1';
+                document.querySelectorAll('#cpList [data-admin]').forEach(el => { el.hidden = false; });
                 loadMenuBadges();
             }
 
@@ -470,7 +475,44 @@
             set('#finance', txns);
         }
 
-        window.openCreatePicker = function () { closeMobileDrawer(); document.getElementById('createPicker').hidden = false; };
+        window.openCreatePicker = function () {
+            closeMobileDrawer();
+            document.getElementById('createPicker').hidden = false;
+            const q = document.getElementById('cpSearch'); q.value = ''; filterPicker(); q.focus();
+        };
+        function pickerItems() { return [...document.querySelectorAll('#cpList .cp-item')].filter(a => !a.hidden && !a.closest('[hidden]')); }
+        function setActive(i) {
+            const items = pickerItems(); if (!items.length) return;
+            const n = (i + items.length) % items.length;
+            document.querySelectorAll('#cpList .cp-item.is-active').forEach(x => x.classList.remove('is-active'));
+            items[n].classList.add('is-active'); items[n].scrollIntoView({ block: 'nearest' });
+        }
+        function filterPicker() {
+            const q = document.getElementById('cpSearch').value.trim().toLowerCase();
+            const adminOn = document.body.dataset.admin === '1';
+            const groups = [...document.querySelectorAll('#cpList .cp-group')];
+            let any = false;
+            groups.forEach(g => {
+                let n = g.nextElementSibling, shown = 0;
+                const adminOnly = g.hasAttribute('data-admin');
+                while (n && n.classList.contains('cp-item')) {
+                    const ok = (!adminOnly || adminOn) && (!q || n.dataset.k.toLowerCase().includes(q));
+                    n.hidden = !ok; if (ok) shown++;
+                    n = n.nextElementSibling;
+                }
+                g.hidden = !shown; any = any || shown > 0;
+            });
+            document.getElementById('cpEmpty').hidden = any;
+            setActive(0);
+        }
+        document.addEventListener('input', (e) => { if (e.target.id === 'cpSearch') filterPicker(); });
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('createPicker').hidden) return;
+            const items = pickerItems(); const cur = items.findIndex(x => x.classList.contains('is-active'));
+            if (e.key === 'ArrowDown') { e.preventDefault(); setActive(cur + 1); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(cur - 1); }
+            else if (e.key === 'Enter' && items[cur]) { e.preventDefault(); items[cur].click(); }
+        });
         window.closeCreatePicker = function () { document.getElementById('createPicker').hidden = true; };
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') window.closeCreatePicker();

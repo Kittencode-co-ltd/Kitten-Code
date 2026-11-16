@@ -385,15 +385,15 @@ input:focus, select:focus, textarea:focus, .form-control:focus, .form-select:foc
 @keyframes kc-pop { from { opacity: 0; transform: translateY(14px) scale(0.92); } to { opacity: 1; transform: none; } }
 @keyframes kc-sheet { from { opacity: 0; transform: translateY(14px) scale(0.97); } to { opacity: 1; transform: none; } }
 
-body.bo-page > *:not(script):not(style):not(.kc-fab-group):not(.modal-overlay):not(.kc-modal):not(.kc-toast):not(.kc-toast-container) { animation: kc-fade var(--dur-slow) var(--ease-out) both; }
+body.bo-page > *:not(script):not(style):not(.kc-fab-group):not(.modal-overlay):not(.kc-modal):not(.kc-toast):not(.kc-toast-container) { animation: kc-fade var(--dur-slow) var(--ease-out) backwards; }
 .today > *, .tm > *, .cal-layout > *, .app > *, .doc-stats > *, .fin-stats > *, .tm-grid > *, .hb-list > *, .kpi-grid > * {
-  animation: kc-rise 0.45s var(--ease-out) both;
+  animation: kc-rise 0.45s var(--ease-out) backwards;
 }
 .today > *:nth-child(2), .tm > *:nth-child(2), .app > *:nth-child(2), .doc-stats > *:nth-child(2), .fin-stats > *:nth-child(2), .tm-grid > *:nth-child(2), .hb-list > *:nth-child(2), .kpi-grid > *:nth-child(2) { animation-delay: 50ms; }
 .today > *:nth-child(3), .tm > *:nth-child(3), .app > *:nth-child(3), .doc-stats > *:nth-child(3), .fin-stats > *:nth-child(3), .tm-grid > *:nth-child(3), .hb-list > *:nth-child(3), .kpi-grid > *:nth-child(3) { animation-delay: 100ms; }
 .today > *:nth-child(4), .tm > *:nth-child(4), .doc-stats > *:nth-child(4), .fin-stats > *:nth-child(4), .tm-grid > *:nth-child(4), .hb-list > *:nth-child(4), .kpi-grid > *:nth-child(4) { animation-delay: 150ms; }
 .today > *:nth-child(n+5), .tm-grid > *:nth-child(n+5), .hb-list > *:nth-child(n+5) { animation-delay: 200ms; }
-.kc-fab-group { animation: kc-pop 0.5s var(--ease-spring) 0.2s both; }
+.kc-fab-group { animation: kc-pop 0.5s var(--ease-spring) 0.2s backwards; }
 
 .modal-overlay.open, .kc-modal.open { animation: kc-fade var(--dur-base) var(--ease-out); }
 .modal-overlay.open > .modal-box, .modal-overlay.open > .modal-content, .kc-modal.open > .kc-modal-box { animation: kc-sheet 0.32s var(--ease-spring); }

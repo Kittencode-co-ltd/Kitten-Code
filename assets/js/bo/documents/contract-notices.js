@@ -322,5 +322,213 @@
         }
     };
 
+
+    // ============================================================
+    // 6. ใบสำคัญรับเงินค่าคอมมิชชั่น (จ่ายให้ผู้แนะนำ / ตัวแทนขาย)
+    // ============================================================
+    const METHODS = ['โอนเงินเข้าบัญชี', 'เงินสด', 'เช็ค'];
+
+    function commissionCalc(f) {
+        const base = Number(f.baseAmount) || 0;
+        const rate = Number(f.rate) || 0;
+        const fixed = Number(f.fixedAmt) || 0;
+        const gross = Math.round((fixed > 0 ? fixed : base * rate / 100) * 100) / 100;
+        const wRate = Number(f.whtRate) || 0;
+        const wht = Math.round(gross * wRate) / 100;
+        const vRate = Number(f.vatRate) || 0;
+        const vat = Math.round(gross * vRate) / 100;     // VAT is added on top; withholding is on the pre-VAT amount
+        return { base, rate, fixed, gross, wRate, wht, vRate, vat, net: Math.round((gross + vat - wht) * 100) / 100 };
+    }
+
+    const INCOME_TYPES = [
+        '1. เงินเดือน ค่าจ้าง เบี้ยเลี้ยง โบนัส ฯลฯ ตามมาตรา 40 (1)',
+        '2. ค่าธรรมเนียม ค่านายหน้า ฯลฯ ตามมาตรา 40 (2)',
+        '3. ค่าแห่งลิขสิทธิ์ ฯลฯ ตามมาตรา 40 (3)',
+        '4. ดอกเบี้ย เงินปันผล ฯลฯ ตามมาตรา 40 (4)',
+        '5. ค่าจ้างทำของ ค่าบริการ และเงินได้อื่น ตามมาตรา 40 (5)–(8)'
+    ];
+
+    T.commission = {
+        title: 'ใบสำคัญรับเงินค่าคอมมิชชั่น', short: 'ใบรับเงินค่าคอมมิชชั่น', icon: 'fa-hand-holding-dollar',
+        group: 'out', prefix: 'CM', roles: { a: 'ผู้จ่ายเงิน', b: 'ผู้รับเงิน' }, kittenSide: 'a', otherLabel: 'ผู้รับเงิน',
+        desc: 'หลักฐานจ่ายค่าคอมมิชชั่น / ค่านายหน้า คำนวณภาษีหัก ณ ที่จ่ายและยอดโอนสุทธิให้',
+        law: 'ประมวลรัษฎากร (ภาษีหัก ณ ที่จ่าย — ต้องออกหนังสือรับรองการหักภาษี 50 ทวิ) · ป.พ.พ. มาตรา 845–849 (นายหน้า)',
+        fields: [
+            { id: 'signDate', label: 'วันที่จ่ายเงิน', group: 'doc', type: 'date', def: '__today' },
+            { id: 'aName', label: 'ผู้จ่ายเงิน (บริษัท)', group: 'a', def: KITTEN.name, full: true },
+            { id: 'aId', label: 'เลขประจำตัวผู้เสียภาษี', group: 'a', def: KITTEN.id },
+            { id: 'signerName', label: 'ผู้จ่ายเงิน (ลงนาม)', group: 'a', def: '' },
+            { id: 'aAddress', label: 'ที่อยู่', group: 'a', type: 'textarea', def: KITTEN.address, full: true },
+            { id: 'bName', label: 'ชื่อผู้รับเงิน', group: 'b', def: '', full: true },
+            { id: 'bId', label: 'เลขประจำตัวประชาชน / เลขผู้เสียภาษี', group: 'b', def: '' },
+            { id: 'bPhone', label: 'เบอร์โทร', group: 'b', def: '' },
+            { id: 'bAddress', label: 'ที่อยู่ผู้รับเงิน', group: 'b', type: 'textarea', def: '', full: true },
+            { id: 'refDoc', label: 'อ้างอิง (เลขที่ใบเสนอราคา / ใบแจ้งหนี้ / สัญญา)', group: 'terms', def: '', full: true },
+            { id: 'customer', label: 'ลูกค้า / โครงการที่ได้ค่าคอมมิชชั่น', group: 'terms', def: '', full: true },
+            { id: 'baseAmount', label: 'ยอดขายที่ใช้คำนวณ (บาท)', group: 'pay', type: 'number', def: '' },
+            { id: 'rate', label: 'อัตราคอมมิชชั่น (%)', group: 'pay', type: 'number', def: '' },
+            { id: 'fixedAmt', label: 'หรือระบุเป็นจำนวนเงินคงที่ (บาท · ถ้าใส่จะใช้ค่านี้แทน)', group: 'pay', type: 'number', def: '' },
+            { id: 'payeeKind', label: 'ผู้รับเป็น', group: 'pay', type: 'select', def: 'บุคคลธรรมดา', options: ['บุคคลธรรมดา', 'นิติบุคคล (บริษัท/ห้างหุ้นส่วน)'] },
+            { id: 'whtRate', label: 'หักภาษี ณ ที่จ่าย (% · ปกติ 3 · 0 = ไม่หัก)', group: 'pay', type: 'number', def: '3' },
+            { id: 'vatRate', label: 'ภาษีมูลค่าเพิ่มของผู้รับ (% · 0 = ผู้รับไม่ได้จด VAT)', group: 'pay', type: 'number', def: '0' },
+            { id: 'method', label: 'วิธีจ่าย', group: 'pay', type: 'select', def: METHODS[0], options: METHODS },
+            { id: 'bankName', label: 'ธนาคาร', group: 'pay', def: '' },
+            { id: 'bankHolder', label: 'ชื่อบัญชี', group: 'pay', def: '' },
+            { id: 'bankNo', label: 'เลขที่บัญชี', group: 'pay', def: '' },
+            { id: 'note', label: 'หมายเหตุ', group: 'extra', type: 'textarea', def: '', full: true }
+        ],
+        summaryAmount: (f) => commissionCalc(f).gross,
+        convertTo: {
+            type: 'wht50',
+            label: 'ออกหนังสือรับรองหัก ณ ที่จ่าย (50 ทวิ) จากใบนี้',
+            map(f) {
+                const c = commissionCalc(f);
+                const juristic = String(f.payeeKind || '').startsWith('นิติบุคคล');
+                return {
+                    signDate: f.signDate, aName: f.aName, aId: f.aId, aAddress: f.aAddress, signerName: f.signerName,
+                    bName: f.bName, bId: f.bId, bAddress: f.bAddress,
+                    formType: juristic ? 'ภ.ง.ด.53' : 'ภ.ง.ด.3',
+                    incomeType: INCOME_TYPES[1], incomeDesc: 'ค่าคอมมิชชั่น / ค่านายหน้า',
+                    payDate: f.signDate, amount: c.gross, rate: c.wRate, taxPaid: c.wht
+                };
+            }
+        },
+        render(rec, f, h, K2) {
+            const c = commissionCalc(f);
+            const money = (n) => `${K2.fmt(n)}`;
+            const row = (k, v, cls) => `<tr class="${cls || ''}"><td>${k}</td><td class="r">${v}</td></tr>`;
+            const rows = [];
+            if (c.fixed > 0) rows.push(row('ค่าคอมมิชชั่น (ตามจำนวนที่ตกลง)', money(c.gross)));
+            else { rows.push(row('ยอดขายที่ใช้คำนวณ', money(c.base))); rows.push(row(`ค่าคอมมิชชั่น ${c.rate || '…'}%`, money(c.gross))); }
+            if (c.vat > 0) rows.push(row(`บวก ภาษีมูลค่าเพิ่ม ${c.vRate}%`, '+ ' + money(c.vat)));
+            if (c.wRate > 0) rows.push(row(`หัก ภาษีเงินได้ ณ ที่จ่าย ${c.wRate}% (คิดจากยอดก่อน VAT)`, '- ' + money(c.wht)));
+            rows.push(row('ยอดโอน / จ่ายสุทธิ', money(c.net), 't'));
+            const page = document.createElement('div');
+            page.className = 'ct-paper ct-notice ct-receipt';
+            page.innerHTML = `
+                <div class="ct-head">${K2.brandHTML(rec.docNo)}
+                    <h1 class="ct-title">ใบสำคัญรับเงินค่าคอมมิชชั่น</h1>
+                    <p class="ct-place">Commission Payment Receipt</p>
+                </div>
+                <div class="ct-meta"><span>เลขที่ ${rec.docNo ? K2.esc(rec.docNo) : '..........'}</span><span>วันที่ ${h.date('signDate')}</span></div>
+                <div class="ct-two">
+                    <div class="ct-box"><b>ผู้รับเงิน</b><br>${h.v('bName', 12)}<br>เลขประจำตัวผู้เสียภาษี ${h.v('bId', 9)}<br>${h.v('bAddress', 14)}${f.bPhone ? '<br>โทร ' + K2.esc(f.bPhone) : ''}</div>
+                    <div class="ct-box"><b>ผู้จ่ายเงิน</b><br>${h.v('aName', 12)}<br>เลขประจำตัวผู้เสียภาษี ${h.v('aId', 9)}<br>${h.v('aAddress', 14)}</div>
+                </div>
+                <p class="ct-line"><b>รายการ</b> ค่าคอมมิชชั่น/ค่านายหน้า จากงาน ${h.v('customer', 12)}${f.refDoc ? ' อ้างอิง ' + K2.esc(f.refDoc) : ''}</p>
+                <table class="ct-table"><tbody>${rows.join('')}</tbody></table>
+                <p class="ct-note-s">จำนวนเงินสุทธิ (ตัวอักษร): <b>${c.net > 0 ? K2.bahtText(c.net) : '……………………'}</b></p>
+                <p class="ct-line"><b>วิธีจ่าย</b> ${K2.esc(f.method)}${f.method === METHODS[0] ? ` ธนาคาร ${h.v('bankName', 7)} ชื่อบัญชี ${h.v('bankHolder', 9)} เลขที่ ${h.v('bankNo', 9)}` : ''}</p>
+                <p class="ct-para">ข้าพเจ้าผู้รับเงินขอรับรองว่าได้รับเงินค่าคอมมิชชั่นตามรายการข้างต้นครบถ้วนแล้ว ${c.wRate > 0 ? 'ผู้จ่ายเงินได้หักภาษีเงินได้ ณ ที่จ่ายและจะออกหนังสือรับรองการหักภาษี ณ ที่จ่าย (50 ทวิ) ให้ตามกฎหมาย' : ''}</p>
+                ${String(f.note || '').trim() ? `<p class="ct-line"><b>หมายเหตุ</b> <span class="ct-multi">${K2.esc(f.note)}</span></p>` : ''}
+                <div class="ct-signs">
+                    <div class="ct-sign"><div class="ct-sign-line">ลงชื่อ ................................................ ผู้รับเงิน</div><div class="ct-sign-name">( ${K2.esc(f.bName) || '................................................'} )</div><div class="ct-sign-sub">วันที่ ........../........../..........</div></div>
+                    <div class="ct-sign"><div class="ct-sign-line">ลงชื่อ ................................................ ผู้จ่ายเงิน</div><div class="ct-sign-name">( ${K2.esc(f.signerName) || '................................................'} )</div><div class="ct-sign-sub">${K2.esc(f.aName || '')}</div></div>
+                </div>`;
+            return page;
+        },
+        warn(f) {
+            const w = [];
+            const c = commissionCalc(f);
+            if (!c.gross) w.push('ยังไม่ได้ระบุยอดคอมมิชชั่น (กรอกยอดขายกับอัตรา % หรือจำนวนเงินคงที่)');
+            if (!String(f.bId || '').trim()) w.push('ยังไม่ได้ใส่เลขประจำตัวผู้เสียภาษีของผู้รับ — จำเป็นสำหรับออกหนังสือหัก ณ ที่จ่าย');
+            if (f.method === METHODS[0] && !String(f.bankNo || '').trim()) w.push('เลือกโอนเงิน แต่ยังไม่ได้ใส่เลขที่บัญชี');
+            if (c.gross > 0 && c.wRate === 0) w.push('ไม่ได้หักภาษี ณ ที่จ่าย — ค่านายหน้า/ค่าคอมมิชชั่นปกติต้องหัก (มักใช้ 3%) ตรวจกับนักบัญชีว่าเข้าข้อยกเว้นหรือไม่');
+            if (c.wRate > 0 && c.wRate !== 3) w.push(`อัตราหัก ${c.wRate}% ต่างจากที่ใช้กันทั่วไป (3%) — ยืนยันกับนักบัญชี`);
+            if (String(f.payeeKind || '').startsWith('นิติบุคคล') && c.wRate > 0 && c.wRate !== 3) w.push('ผู้รับเป็นนิติบุคคล: ตรวจประเภทเงินได้และอัตราหักให้ตรงตาม ภ.ง.ด.53');
+            if (c.gross > 0 && c.gross < 1000 && c.wRate > 0) w.push('ยอดจ่ายครั้งนี้ต่ำกว่า 1,000 บาท — บางกรณีไม่ต้องหักภาษี ตรวจกับนักบัญชี');
+            return w;
+        }
+    };
+
+    // ============================================================
+    // 7. หนังสือรับรองการหักภาษี ณ ที่จ่าย (50 ทวิ)
+    // ============================================================
+    const fmtTaxId = (v) => { const d = String(v || '').replace(/\D/g, ''); return d.length === 13 ? `${d[0]}-${d.slice(1, 5)}-${d.slice(5, 10)}-${d.slice(10, 12)}-${d[12]}` : String(v || ''); };
+
+    T.wht50 = {
+        title: 'หนังสือรับรองการหักภาษี ณ ที่จ่าย', short: 'หนังสือรับรองหัก ณ ที่จ่าย (50 ทวิ)', icon: 'fa-file-invoice',
+        group: 'out', prefix: 'WT', roles: { a: 'ผู้มีหน้าที่หักภาษี', b: 'ผู้ถูกหักภาษี' }, kittenSide: 'a', otherLabel: 'ผู้ถูกหักภาษี',
+        desc: 'ออกให้ผู้รับเงินที่ถูกหักภาษี ณ ที่จ่าย ใช้เป็นหลักฐานเครดิตภาษี (ออกได้ทั้ง 2 ฉบับ)',
+        law: 'ประมวลรัษฎากร มาตรา 50 ทวิ — ผู้หักต้องออกหนังสือรับรองให้ผู้ถูกหักทุกครั้ง · นำส่งภาษีด้วย ภ.ง.ด.3 / 53 ภายในวันที่ 7 ของเดือนถัดไป',
+        fields: [
+            { id: 'docSeq', label: 'เลขที่หนังสือ (เล่มที่/เลขที่)', group: 'doc', def: '' },
+            { id: 'signDate', label: 'วันที่ออกหนังสือ', group: 'doc', type: 'date', def: '__today' },
+            { id: 'copies', label: 'พิมพ์', group: 'doc', type: 'select', def: 'ทั้ง 2 ฉบับ', options: ['ทั้ง 2 ฉบับ', 'ฉบับที่ 1 (แนบแบบ)', 'ฉบับที่ 2 (เก็บไว้)'] },
+            { id: 'aName', label: 'ผู้มีหน้าที่หักภาษี ณ ที่จ่าย', group: 'a', def: KITTEN.name, full: true },
+            { id: 'aId', label: 'เลขประจำตัวผู้เสียภาษี (13 หลัก)', group: 'a', def: KITTEN.id },
+            { id: 'signerName', label: 'ผู้จ่ายเงิน (ลงนาม)', group: 'a', def: '' },
+            { id: 'aAddress', label: 'ที่อยู่', group: 'a', type: 'textarea', def: KITTEN.address, full: true },
+            { id: 'bName', label: 'ผู้ถูกหักภาษี ณ ที่จ่าย', group: 'b', def: '', full: true },
+            { id: 'bId', label: 'เลขประจำตัวผู้เสียภาษี (13 หลัก)', group: 'b', def: '' },
+            { id: 'formType', label: 'ลำดับที่ในแบบ', group: 'b', type: 'select', def: 'ภ.ง.ด.3', options: ['ภ.ง.ด.1', 'ภ.ง.ด.3', 'ภ.ง.ด.53'] },
+            { id: 'bAddress', label: 'ที่อยู่ผู้ถูกหักภาษี', group: 'b', type: 'textarea', def: '', full: true },
+            { id: 'incomeType', label: 'ประเภทเงินได้พึงประเมินที่จ่าย', group: 'terms', type: 'select', def: INCOME_TYPES[1], options: INCOME_TYPES, full: true },
+            { id: 'incomeDesc', label: 'รายละเอียด (เช่น ค่าคอมมิชชั่นงานเว็บ ABC)', group: 'terms', def: '', full: true },
+            { id: 'payDate', label: 'วันที่จ่ายเงิน', group: 'terms', type: 'date', def: '__today' },
+            { id: 'cond', label: 'ลักษณะการจ่าย', group: 'terms', type: 'select', def: '(1) หัก ณ ที่จ่าย', options: ['(1) หัก ณ ที่จ่าย', '(2) ออกให้ตลอดไป', '(3) ออกให้ครั้งเดียว', '(4) อื่น ๆ'] },
+            { id: 'amount', label: 'จำนวนเงินที่จ่าย (บาท)', group: 'pay', type: 'number', def: '' },
+            { id: 'rate', label: 'อัตราภาษีที่หัก (%)', group: 'pay', type: 'number', def: '3' },
+            { id: 'taxPaid', label: 'ภาษีที่หักและนำส่ง (บาท · เว้นว่างให้คำนวณจากอัตรา)', group: 'pay', type: 'number', def: '' },
+            { id: 'sso', label: 'เงินสมทบกองทุนประกันสังคม (บาท · ถ้ามี)', group: 'pay', type: 'number', def: '' },
+            { id: 'pvf', label: 'กองทุนสำรองเลี้ยงชีพ (บาท · ถ้ามี)', group: 'pay', type: 'number', def: '' }
+        ],
+        summaryAmount: (f) => whtTax(f),
+        render(rec, f, h, K2) {
+            const amount = Number(f.amount) || 0;
+            const tax = whtTax(f);
+            const idx = Math.max(0, INCOME_TYPES.indexOf(f.incomeType));
+            const copies = f.copies === 'ฉบับที่ 1 (แนบแบบ)' ? [1] : f.copies === 'ฉบับที่ 2 (เก็บไว้)' ? [2] : [1, 2];
+            const conds = ['(1) หัก ณ ที่จ่าย', '(2) ออกให้ตลอดไป', '(3) ออกให้ครั้งเดียว', '(4) อื่น ๆ'];
+            const box = (on) => on ? '☑' : '☐';
+            const dt = K2.thaiDate(f.payDate);
+            const wrap = document.createElement('div');
+            wrap.className = 'ct-stack';
+            copies.forEach((n) => {
+                const page = document.createElement('div');
+                page.className = 'ct-paper ct-wht';
+                page.innerHTML = `
+                    <div class="ct-wht-top"><span class="ct-wht-copy">${n === 1 ? 'ฉบับที่ 1 (สำหรับผู้ถูกหักภาษี ใช้แนบพร้อมกับแบบแสดงรายการภาษี)' : 'ฉบับที่ 2 (สำหรับผู้ถูกหักภาษี เก็บไว้เป็นหลักฐาน)'}</span><span>เลขที่ ${f.docSeq ? K2.esc(f.docSeq) : '..........'}</span></div>
+                    <h1 class="ct-title">หนังสือรับรองการหักภาษี ณ ที่จ่าย</h1>
+                    <p class="ct-place">ตามมาตรา 50 ทวิ แห่งประมวลรัษฎากร</p>
+                    <div class="ct-box"><b>ผู้มีหน้าที่หักภาษี ณ ที่จ่าย</b><br>ชื่อ ${h.v('aName', 14)} เลขประจำตัวผู้เสียภาษี ${K2.esc(fmtTaxId(f.aId)) || '................'}<br>ที่อยู่ ${h.v('aAddress', 20)}</div>
+                    <div class="ct-box"><b>ผู้ถูกหักภาษี ณ ที่จ่าย</b> <span class="ct-wht-form">ลำดับที่ ........ ในแบบ ${K2.esc(f.formType)}</span><br>ชื่อ ${h.v('bName', 14)} เลขประจำตัวผู้เสียภาษี ${K2.esc(fmtTaxId(f.bId)) || '................'}<br>ที่อยู่ ${h.v('bAddress', 20)}</div>
+                    <table class="ct-table ct-wht-table">
+                        <thead><tr><td>ประเภทเงินได้พึงประเมินที่จ่าย</td><td class="c">วัน เดือน ปี ที่จ่าย</td><td class="c">จำนวนเงินที่จ่าย</td><td class="c">ภาษีที่หักและนำส่งไว้</td></tr></thead>
+                        <tbody>
+                            ${INCOME_TYPES.map((t, i) => i === idx
+                                ? `<tr class="on"><td>${K2.esc(t)}${f.incomeDesc ? `<br><small>${K2.esc(f.incomeDesc)}</small>` : ''}</td><td class="c">${dt ? K2.esc(dt) : ''}</td><td class="r">${amount ? K2.fmt(amount) : ''}</td><td class="r">${tax ? K2.fmt(tax) : ''}</td></tr>`
+                                : `<tr><td>${K2.esc(t)}</td><td></td><td></td><td></td></tr>`).join('')}
+                            <tr class="t"><td colspan="2">รวมเงินที่จ่ายและภาษีที่หักนำส่ง</td><td class="r">${amount ? K2.fmt(amount) : ''}</td><td class="r">${tax ? K2.fmt(tax) : ''}</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="ct-note-s">รวมเงินภาษีที่หักนำส่ง (ตัวอักษร): <b>${tax > 0 ? K2.bahtText(tax) : '……………………'}</b></p>
+                    <p class="ct-line">เงินสมทบกองทุนประกันสังคม ${Number(f.sso) > 0 ? K2.fmt(Number(f.sso)) : '..........'} บาท &nbsp; กองทุนสำรองเลี้ยงชีพ ${Number(f.pvf) > 0 ? K2.fmt(Number(f.pvf)) : '..........'} บาท</p>
+                    <p class="ct-line"><b>ผู้จ่ายเงิน</b> ${conds.map((c) => `${box(f.cond === c)} ${c}`).join(' &nbsp; ')}</p>
+                    <p class="ct-note-s">คำเตือน: ผู้มีหน้าที่ออกหนังสือรับรองการหักภาษี ณ ที่จ่าย ฝ่าฝืนไม่ปฏิบัติตามมาตรา 50 ทวิ ต้องรับโทษทางอาญาตามมาตรา 35 แห่งประมวลรัษฎากร</p>
+                    <div class="ct-notice-sign"><p>ขอรับรองว่าข้อความข้างต้นถูกต้องตรงกับความจริงทุกประการ</p>
+                        <div class="ct-sign-line">ลงชื่อ ................................................ ผู้จ่ายเงิน</div>
+                        <div class="ct-sign-name">( ${K2.esc(f.signerName) || '................................................'} )</div>
+                        <div class="ct-sign-sub">วันที่ ${h.date('signDate')}</div>
+                        <div class="ct-sign-sub">(ประทับตรานิติบุคคล ถ้ามี)</div></div>`;
+                wrap.appendChild(page);
+            });
+            return wrap;
+        },
+        warn(f) {
+            const w = [];
+            if (!(Number(f.amount) > 0)) w.push('ยังไม่ได้ระบุจำนวนเงินที่จ่าย');
+            if (String(f.aId || '').replace(/\D/g, '').length !== 13) w.push('เลขประจำตัวผู้เสียภาษีของผู้หักไม่ครบ 13 หลัก');
+            if (String(f.bId || '').replace(/\D/g, '').length !== 13) w.push('เลขประจำตัวผู้เสียภาษีของผู้ถูกหักไม่ครบ 13 หลัก — หนังสือรับรองที่เลขไม่ครบอาจใช้เครดิตภาษีไม่ได้');
+            if (Number(f.taxPaid) > 0 && Number(f.amount) > 0 && Number(f.taxPaid) > Number(f.amount)) w.push('ภาษีที่หักมากกว่าจำนวนเงินที่จ่าย');
+            return w;
+        }
+    };
+    function whtTax(f) {
+        const t = Number(f.taxPaid);
+        if (t > 0) return Math.round(t * 100) / 100;
+        return Math.round((Number(f.amount) || 0) * (Number(f.rate) || 0)) / 100;
+    }
+
     // ---------- Wire the one-sided letters into warnings(): recipient name check uses bName ----------
 })();

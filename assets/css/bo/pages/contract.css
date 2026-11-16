@@ -97,3 +97,25 @@
 .ct-sum-row i { color: var(--kc-red); font-weight: 400; font-style: normal; }
 .print-section #btn-prev { flex: 0 0 auto; }
 .print-section #btn-next { flex: 1 1 auto; }
+
+/* Commission receipt */
+.ct-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0 10px; }
+.ct-two .ct-box { margin: 0; text-align: left; line-height: 1.6; }
+.ct-receipt .ct-signs { margin-top: 28px; }
+/* Paper keeps its own ink in dark mode */
+.ct-paper h1, .ct-paper .ct-title { color: #111; }
+.ct-paper p, .ct-paper li, .ct-paper td, .ct-paper b, .ct-paper span { color: inherit; }
+.ct-paper .ct-sign-sub { color: #333; }
+
+/* 50 ทวิ */
+.ct-stack { display: contents; }
+.ct-wht { font-size: 14px; line-height: 1.6; }
+.ct-wht-top { display: flex; justify-content: space-between; gap: 1rem; font-size: 12px; color: #333; margin-bottom: 4px; }
+.ct-wht-form { float: right; font-size: 13px; }
+.ct-wht .ct-box { margin: 6px 0; text-align: left; }
+.ct-wht-table td.c { text-align: center; }
+.ct-wht-table thead td { background: #f1f4f8; font-weight: 700; text-align: center; }
+.ct-wht-table tr.on td { font-weight: 600; background: #fffdf2; }
+.ct-wht-table td small { font-weight: 400; color: #444; }
+.ct-convert { margin-top: 0.7rem; width: 100%; }
+@media print { .ct-stack .ct-paper { break-after: page; } .ct-stack .ct-paper:last-child { break-after: auto; } }

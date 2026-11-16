@@ -45,7 +45,9 @@ const CONTRACT_SUBLABELS = {
     breach: 'แจ้งเตือนผิดสัญญา',
     dismissal: 'หนังสือเลิกจ้าง',
     termination: 'บอกเลิกสัญญา',
-    mutual_end: 'ข้อตกลงยกเลิกสัญญา'
+    mutual_end: 'ข้อตกลงยกเลิกสัญญา',
+    commission: 'ใบรับเงินค่าคอมมิชชั่น',
+    wht50: 'หนังสือรับรองหัก ณ ที่จ่าย (50 ทวิ)'
 };
 
 const LETTER_SUBLABELS = {
@@ -273,9 +275,10 @@ function renderDocuments() {
         }
 
         // Posting to the ledger records a paid entry — admin only (firestore.rules)
-        const canLedger = isAdminUser && (d.collectionName === 'receipts' ||
+        const isCommission = d.collectionName === 'contracts' && d.contractType === 'commission';
+        const canLedger = isAdminUser && (d.collectionName === 'receipts' || isCommission ||
             (d.collectionName === 'vouchers' && (d.voucherType === 'pv' || d.voucherType === 'exp')));
-        const ledgerLabel = d.collectionName === 'vouchers' ? 'ลงบัญชีรายจ่าย' : 'ลงบัญชีรายรับ';
+        const ledgerLabel = (d.collectionName === 'vouchers' || isCommission) ? 'ลงบัญชีรายจ่าย' : 'ลงบัญชีรายรับ';
 
         const actions = [
             `<button class="row-btn" data-action="print" ${key} title="ดู / พิมพ์"><i class="fas fa-print"></i></button>`,
@@ -446,7 +449,7 @@ async function openLedger(colName, id) {
     const d = findDoc(colName, id);
     if (!d) return;
     ledgerTarget = d;
-    const isExpense = colName === 'vouchers';
+    const isExpense = colName === 'vouchers' || colName === 'contracts';
     const wantType = isExpense ? 2 : 1;
 
     if (!finCategories.length) {
@@ -490,7 +493,7 @@ function closeLedger() {
 async function confirmLedger() {
     const d = ledgerTarget;
     if (!d) return;
-    const isExpense = d.collectionName === 'vouchers';
+    const isExpense = d.collectionName === 'vouchers' || d.collectionName === 'contracts';
     const amount = parseFloat(document.getElementById('ledger-amount').value);
     const date = document.getElementById('ledger-date').value;
     const catCode = document.getElementById('ledger-cat').value;

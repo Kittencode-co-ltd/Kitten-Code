@@ -191,6 +191,15 @@
         el.innerHTML = row('ชนิดสัญญา', t.short) + row(t.kittenSide === 'a' ? t.roles.b : t.roles.a, sm.party)
             + row('งาน / ตำแหน่ง', sm.subject)
             + row('มูลค่า', sm.amountTotal ? '฿' + Number(sm.amountTotal).toLocaleString('en-US', { minimumFractionDigits: 2 }) : '');
+        if (t.convertTo) {
+            el.insertAdjacentHTML('beforeend', `<button type="button" class="btn helper-btn ct-convert" id="ct-convert"><i class="fas fa-file-invoice"></i> ${esc(t.convertTo.label)}</button>`);
+            $('ct-convert').addEventListener('click', () => {
+                try { localStorage.setItem('kc_wht_prefill', JSON.stringify(t.convertTo.map(fields))); } catch (e) { /* ignore */ }
+                const inShell = window.parent !== window && /back-office\.html$/.test(window.parent.location.pathname);
+                if (inShell) window.parent.location.hash = '#contract:' + t.convertTo.type;
+                else window.location.href = 'contract.html?type=' + t.convertTo.type;
+            });
+        }
     }
 
     function saveDraft() {
@@ -220,6 +229,12 @@
         return out;
     }
 
+    function applyPrefill(t) {
+        let pre = null;
+        try { pre = JSON.parse(localStorage.getItem('kc_wht_prefill') || 'null'); localStorage.removeItem('kc_wht_prefill'); } catch (e) { pre = null; }
+        if (pre && t === 'wht50') { fields = Object.assign(fields, pre); buildForm(); refresh(); }
+    }
+
     function pick(t, useDraft) {
         const had = !!type;
         const draft = useDraft ? loadDraft(t) : null;
@@ -232,6 +247,7 @@
         }
         chosen = true;
         $('ct-chooser').hidden = true;
+        applyPrefill(t);
         if (!editing) ensureNumber();
         const first = document.querySelector('#ct-form [data-f=bName], #ct-form [data-f=aName]');
         if (first) first.focus({ preventScroll: true });

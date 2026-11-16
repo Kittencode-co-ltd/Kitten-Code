@@ -620,6 +620,7 @@
         const t = TYPES[type] || TYPES.service;
         const f = Object.assign(defaults(type), rec.fields || {});
         const h = helpers(f);
+        if (typeof t.render === 'function') return t.render(rec, f, h, K);
         if (t.kind === 'notice') return renderNotice(t, f, h, rec);
 
         const clauses = t.clauses(f, h).slice();
@@ -663,9 +664,9 @@
         const t = TYPES[type] || TYPES.service;
         const other = t.kittenSide === 'a' ? 'b' : 'a';
         const value = t.summaryAmount ? t.summaryAmount(f) : (Number(f.total) || Number(f.salary) || Number(f.estimate) || 0);
-        return { party: String(f[other + 'Name'] || '').trim(), amountTotal: value, subject: f.subject || f.project || f.position || f.contractName || f.purpose || '' };
+        return { party: String(f[other + 'Name'] || '').trim(), amountTotal: value, subject: f.subject || f.project || f.position || f.contractName || f.customer || f.purpose || '' };
     }
 
-    const K = { esc, thaiDate, fmt, bahtText, helpers, party, docFields, extraField, installmentFields, bankFields, disputeClause, confClause, KITTEN };
+    const K = { brandHTML, esc, thaiDate, fmt, bahtText, helpers, party, docFields, extraField, installmentFields, bankFields, disputeClause, confClause, KITTEN };
     window.KCContract = { _k: K, TYPES, GROUPS, render, defaults, warnings, summary, bahtText, thaiDate, escapeHTML: esc, KITTEN };
 })();

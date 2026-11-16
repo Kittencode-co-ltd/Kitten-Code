@@ -12,6 +12,7 @@
 
 /* Transaction list */
 .txn-table td:nth-child(8) { white-space: nowrap; font-weight: 600; }
+.txn-table td:nth-child(1) { white-space: nowrap; }
 .txn-table .btn-txn-action { min-height: 1.8rem; padding: 0 0.7rem; font-size: 0.76rem; }
 
 /* Dashboard-style cards inside the hidden overview page */
@@ -89,3 +90,23 @@ button.doc-stat:hover { border-color: var(--kc-line-strong); }
 .fin-stat.is-pending b { color: var(--kc-amber); }
 .filter-row input[type="search"] { flex: 1 1 14rem; min-width: 0; }
 @media (max-width: 760px) { .fin-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .filter-row > * { flex: 1 1 100%; } }
+
+/* Document register table: no two-line dates, one-line actions, even columns */
+@media (min-width: 901px) {
+  .doc-table td:nth-child(1), .doc-table td:nth-child(2), .doc-table td:nth-child(5) { white-space: nowrap; }
+  .doc-table td:nth-child(1) { color: var(--kc-muted); font-size: 0.84rem; font-variant-numeric: tabular-nums; }
+  .doc-table td:nth-child(2) { font-variant-numeric: tabular-nums; }
+  .doc-table td:nth-child(3) .badge { white-space: nowrap; }
+  .doc-table td:nth-child(4) { min-width: 9rem; max-width: 16rem; overflow-wrap: anywhere; }
+  .doc-table td:nth-child(5) { text-align: right; font-variant-numeric: tabular-nums; }
+  .doc-table td:nth-child(6) .status-select { min-width: 8.6rem; }
+  .doc-table .row-actions { flex-wrap: nowrap; justify-content: flex-end; gap: 0.35rem; }
+  .doc-table .row-btn-text { white-space: nowrap; }
+  .doc-table th:nth-child(1) { width: 6.5rem; }
+  .doc-table th:nth-child(7) { width: 1%; }
+}
+.doc-table tbody tr { transition: background-color var(--dur-fast); }
+@media (min-width: 641px) {
+  .page-head .head-tools { width: 100%; justify-content: space-between; margin-top: 0.7rem; }
+  .page-head .kc-search { margin-left: auto; width: 100%; max-width: 22rem; }
+}

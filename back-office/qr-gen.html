@@ -19,60 +19,26 @@
 
 <body class="bo-page">
     <div class="qr-studio">
-        <!-- Studio Header -->
-        <div class="studio-header">
-            <div class="studio-title-group">
-                <div class="studio-icon">
-                    <i class="bi bi-qr-code-scan"></i>
-                </div>
-                <div>
-                    <h1 data-i18n-th="สตูดิโอสร้าง QR Code ความละเอียดสูง" data-i18n-en="High-Resolution QR Code Studio">สตูดิโอสร้าง QR Code ความละเอียดสูง</h1>
-                    <p data-i18n-th="สร้าง QR ลิงก์, พร้อมเพย์รับเงิน, Wi-Fi และนามบัตรดิจิทัล พร้อมโลโก้คมชัดระดับ 4K" data-i18n-en="Create URL, Thai PromptPay, Wi-Fi & vCard QR codes with crisp 4K output">สร้าง QR ลิงก์, พร้อมเพย์รับเงิน, Wi-Fi และนามบัตรดิจิทัล พร้อมโลโก้คมชัดระดับ 4K</p>
-                </div>
-            </div>
-            <span class="studio-badge">
-                <i class="bi bi-lightning-charge-fill"></i>
-                <span data-i18n-th="อัปเดตตัวอย่างอัตโนมัติ (Live Preview)" data-i18n-en="Instant Live Preview">อัปเดตตัวอย่างอัตโนมัติ (Live Preview)</span>
-            </span>
-        </div>
+        <header class="studio-header">
+            <h1 data-i18n-th="สร้าง QR Code" data-i18n-en="QR Code">สร้าง QR Code</h1>
+            <p data-i18n-th="เลือกชนิด กรอกข้อมูล แล้วดาวน์โหลดรูป" data-i18n-en="Pick a type, fill in the details, download the image">เลือกชนิด กรอกข้อมูล แล้วดาวน์โหลดรูป</p>
+        </header>
 
         <div class="studio-grid">
-            <!-- Left Column: Content & Design Controls -->
             <div class="studio-left-col">
-                <!-- Card 1: QR Content Type & Data -->
-                <div class="studio-card">
-                    <div class="card-sec-title">
-                        <span class="sec-left">
-                            <i class="bi bi-sliders2"></i>
-                            <span data-i18n-th="1. เลือกประเภทข้อมูล QR Code" data-i18n-en="1. Choose QR Content Type">1. เลือกประเภทข้อมูล QR Code</span>
-                        </span>
-                    </div>
-
-                    <!-- 4 Smart Modes -->
+                <section class="studio-card">
                     <div class="qr-mode-tabs" role="tablist">
-                        <button type="button" class="qr-mode-btn active" data-mode="url">
-                            <i class="bi bi-globe2"></i>
-                            <span data-i18n-th="ลิงก์ / ข้อความ" data-i18n-en="URL / Text">ลิงก์ / ข้อความ</span>
-                        </button>
-                        <button type="button" class="qr-mode-btn" data-mode="promptpay">
-                            <i class="bi bi-cash-coin"></i>
-                            <span data-i18n-th="พร้อมเพย์รับเงิน" data-i18n-en="PromptPay">พร้อมเพย์รับเงิน</span>
-                        </button>
-                        <button type="button" class="qr-mode-btn" data-mode="wifi">
-                            <i class="bi bi-wifi"></i>
-                            <span data-i18n-th="เชื่อมต่อ Wi-Fi" data-i18n-en="Wi-Fi Access">เชื่อมต่อ Wi-Fi</span>
-                        </button>
-                        <button type="button" class="qr-mode-btn" data-mode="vcard">
-                            <i class="bi bi-person-vcard"></i>
-                            <span data-i18n-th="นามบัตรดิจิทัล" data-i18n-en="vCard Contact">นามบัตรดิจิทัล</span>
-                        </button>
+                        <button type="button" class="qr-mode-btn active" data-mode="url"><i class="bi bi-link-45deg"></i><span data-i18n-th="ลิงก์ / ข้อความ" data-i18n-en="Link / Text">ลิงก์ / ข้อความ</span></button>
+                        <button type="button" class="qr-mode-btn" data-mode="promptpay"><i class="bi bi-cash-coin"></i><span data-i18n-th="พร้อมเพย์" data-i18n-en="PromptPay">พร้อมเพย์</span></button>
+                        <button type="button" class="qr-mode-btn" data-mode="wifi"><i class="bi bi-wifi"></i><span data-i18n-th="Wi-Fi" data-i18n-en="Wi-Fi">Wi-Fi</span></button>
+                        <button type="button" class="qr-mode-btn" data-mode="vcard"><i class="bi bi-person-vcard"></i><span data-i18n-th="นามบัตร" data-i18n-en="Contact">นามบัตร</span></button>
                     </div>
 
                     <!-- Mode 1: URL / Text -->
                     <div class="mode-pane active" id="pane-url">
                         <div class="field-group">
                             <label class="field-label" for="urlInput">
-                                <span data-i18n-th="ลิงก์เว็บไซต์ (URL) หรือข้อความ" data-i18n-en="Website URL or Text">ลิงก์เว็บไซต์ (URL) หรือข้อความ</span>
+                                <span data-i18n-th="ลิงก์หรือข้อความ" data-i18n-en="Website URL or Text">ลิงก์หรือข้อความ</span>
                                 <small id="charCountLabel">24 ตัวอักษร</small>
                             </label>
                             <div class="input-icon-wrap">
@@ -84,7 +50,7 @@
                             </div>
                         </div>
                         <div class="preset-bar">
-                            <span class="preset-label" data-i18n-th="ทางลัด:" data-i18n-en="Presets:">ทางลัด:</span>
+                            <span class="preset-label" data-i18n-th="ใส่ให้เลย:" data-i18n-en="Quick fill:">ใส่ให้เลย:</span>
                             <button type="button" class="preset-chip" data-preset-url="https://kittencode.co.th" data-preset-caption="KITTEN CODE Co.,Ltd">
                                 <i class="bi bi-globe"></i> เว็บไซต์ Kitten Code
                             </button>
@@ -139,9 +105,9 @@
                             <div class="field-group full">
                                 <label class="field-label" for="wifiAuthSelect" data-i18n-th="ประเภทการเข้ารหัส" data-i18n-en="Security Type">ประเภทการเข้ารหัส</label>
                                 <select id="wifiAuthSelect" class="qr-select">
-                                    <option value="WPA" selected>WPA / WPA2 / WPA3 (มาตรฐานทั่วไป)</option>
+                                    <option value="WPA" selected>WPA / WPA2 / WPA3 (ทั่วไป)</option>
                                     <option value="WEP">WEP</option>
-                                    <option value="nopass">ไม่มีรหัสผ่าน (Open Wi-Fi)</option>
+                                    <option value="nopass">ไม่มีรหัสผ่าน</option>
                                 </select>
                             </div>
                         </div>
@@ -172,21 +138,15 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- Card 2: Visual Style, Logo & Resolution -->
-                <div class="studio-card">
-                    <div class="card-sec-title">
-                        <span class="sec-left">
-                            <i class="bi bi-palette2"></i>
-                            <span data-i18n-th="2. ปรับแต่งโลโก้ รูปแบบจุด และสี" data-i18n-en="2. Customize Logo, Pattern & Colors">2. ปรับแต่งโลโก้ รูปแบบจุด และสี</span>
-                        </span>
-                    </div>
-
+                <details class="studio-card studio-more">
+                    <summary><span data-i18n-th="ปรับแต่งหน้าตา" data-i18n-en="Customize">ปรับแต่งหน้าตา</span><small data-i18n-th="โลโก้ · รูปแบบจุด · สี · ข้อความใต้ QR" data-i18n-en="Logo · dots · colour · caption">โลโก้ · รูปแบบจุด · สี · ข้อความใต้ QR</small></summary>
+                    <div class="studio-more-body">
                     <!-- Center Logo Selection Cards -->
                     <div class="cust-section">
                         <div class="field-label mb-sm">
-                            <span data-i18n-th="โลโก้ตรงกลาง QR Code" data-i18n-en="Center Logo">โลโก้ตรงกลาง QR Code</span>
+                            <span data-i18n-th="โลโก้กลาง QR" data-i18n-en="Center Logo">โลโก้กลาง QR</span>
                         </div>
                         <div class="logo-cards" id="logoCardsGroup">
                             <label class="logo-card active">
@@ -231,16 +191,16 @@
                     <!-- Dot Pattern Style -->
                     <div class="cust-section">
                         <div class="field-label mb-sm">
-                            <span data-i18n-th="สไตล์ลวดลายจุด (Pattern Style)" data-i18n-en="Module Pattern Style">สไตล์ลวดลายจุด (Pattern Style)</span>
+                            <span data-i18n-th="รูปแบบจุด" data-i18n-en="Dot style">รูปแบบจุด</span>
                         </div>
                         <div class="seg-row" id="dotStyleGroup">
                             <button type="button" class="seg-pill active" data-dot-style="square">
                                 <i class="bi bi-grid-3x3-gap-fill"></i>
-                                <span data-i18n-th="เหลี่ยมมาตรฐาน" data-i18n-en="Sharp Square">เหลี่ยมมาตรฐาน</span>
+                                <span data-i18n-th="เหลี่ยม" data-i18n-en="Sharp Square">เหลี่ยม</span>
                             </button>
                             <button type="button" class="seg-pill" data-dot-style="rounded">
                                 <i class="bi bi-app-indicator"></i>
-                                <span data-i18n-th="มุมมนทันสมัย" data-i18n-en="Rounded">มุมมนทันสมัย</span>
+                                <span data-i18n-th="มุมมน" data-i18n-en="Rounded">มุมมน</span>
                             </button>
                             <button type="button" class="seg-pill" data-dot-style="dots">
                                 <i class="bi bi-three-dots"></i>
@@ -252,7 +212,7 @@
                     <!-- Colors -->
                     <div class="cust-section">
                         <div class="field-label mb-sm">
-                            <span data-i18n-th="โทนสี QR Code" data-i18n-en="Color Theme">โทนสี QR Code</span>
+                            <span data-i18n-th="สี" data-i18n-en="Color Theme">สี</span>
                         </div>
                         <div class="color-palette-row">
                             <div class="color-swatches" id="colorSwatchGroup">
@@ -281,88 +241,61 @@
                         <div class="field-grid">
                             <div class="field-group">
                                 <label class="field-label" for="captionInput">
-                                    <span data-i18n-th="ป้ายข้อความใต้ QR (เว้นว่างได้)" data-i18n-en="Bottom Caption (Optional)">ป้ายข้อความใต้ QR (เว้นว่างได้)</span>
+                                    <span data-i18n-th="ข้อความใต้ QR (ไม่บังคับ)" data-i18n-en="Bottom Caption (Optional)">ข้อความใต้ QR (ไม่บังคับ)</span>
                                 </label>
                                 <input type="text" id="captionInput" class="qr-input" placeholder="เช่น บริษัท คิทเท่น โค้ด จำกัด" maxlength="60">
                             </div>
-                            <div class="field-group">
-                                <label class="field-label" for="sizeSelect">
-                                    <span data-i18n-th="ความละเอียดไฟล์ภาพ" data-i18n-en="Export Resolution">ความละเอียดไฟล์ภาพ</span>
-                                </label>
-                                <select id="sizeSelect" class="qr-select">
-                                    <option value="1024">1024 × 1024 px (HD)</option>
-                                    <option value="2048" selected>2048 × 2048 px (2K แนะนำ)</option>
-                                    <option value="4096">4096 × 4096 px (4K งานพิมพ์)</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
-                </div>
+                    </div>
+                </details>
             </div>
 
-            <!-- Right Column: Live Preview & Export -->
-            <div class="preview-sticky">
-                <div class="studio-card">
-                    <div class="card-sec-title">
-                        <span class="sec-left">
-                            <i class="bi bi-eye"></i>
-                            <span data-i18n-th="ตัวอย่าง QR Code และการส่งออก" data-i18n-en="Live Preview & Export">ตัวอย่าง QR Code และการส่งออก</span>
-                        </span>
-                        <button type="button" id="generateBtn" class="preset-chip" title="สร้างใหม่">
-                            <i class="bi bi-arrow-repeat"></i>
-                            <span data-i18n-th="รีเฟรช" data-i18n-en="Refresh">รีเฟรช</span>
-                        </button>
-                    </div>
-
+            <aside class="preview-sticky">
+                <section class="studio-card preview-card">
                     <div id="qrWrapper" class="qr-stage">
                         <div id="placeholderContent" class="placeholder-content" style="display:none;">
                             <i class="bi bi-qr-code"></i>
-                            <span data-i18n-th="กรอกข้อมูลฝั่งซ้ายเพื่อสร้าง QR Code" data-i18n-en="Enter details on the left to generate QR">กรอกข้อมูลฝั่งซ้ายเพื่อสร้าง QR Code</span>
+                            <span data-i18n-th="กรอกข้อมูลทางซ้ายเพื่อสร้าง QR Code" data-i18n-en="Fill in the details to create a QR code">กรอกข้อมูลทางซ้ายเพื่อสร้าง QR Code</span>
                         </div>
                         <div id="qrcode" class="active">
                             <canvas id="qrCanvas"></canvas>
                         </div>
                     </div>
 
-                    <div id="qrMeta" class="qr-meta-badges">
-                        <span class="meta-pill" id="metaSizePill">2048 × 2048 px</span>
-                        <span class="meta-pill">Error Correction: H (30%)</span>
-                        <span class="meta-pill" id="metaModePill">URL / Text</span>
+                    <div id="qrMeta" class="qr-meta-badges" hidden>
+                        <span class="meta-pill" id="metaSizePill"></span>
+                        <span class="meta-pill" id="metaModePill"></span>
+                    </div>
+                    <button type="button" id="generateBtn" hidden></button>
+
+                    <div class="size-row">
+                        <label for="sizeSelect" data-i18n-th="ขนาดไฟล์" data-i18n-en="File size">ขนาดไฟล์</label>
+                        <select id="sizeSelect" class="qr-select">
+                            <option value="1024">เล็ก · 1024 px</option>
+                            <option value="2048" selected>กลาง · 2048 px (แนะนำ)</option>
+                            <option value="4096">ใหญ่ · 4096 px (งานพิมพ์)</option>
+                        </select>
                     </div>
 
                     <div class="action-stack">
                         <button type="button" id="downloadBtn" class="btn-studio btn-studio-primary">
                             <i class="bi bi-download"></i>
-                            <span id="downloadBtnText">ดาวน์โหลด PNG (2048 × 2048 px)</span>
+                            <span id="downloadBtnText">ดาวน์โหลด PNG</span>
                         </button>
                         <div class="action-row-2">
-                            <button type="button" id="copyImgBtn" class="btn-studio">
-                                <i class="bi bi-clipboard-check"></i>
-                                <span data-i18n-th="คัดลอกรูปภาพ" data-i18n-en="Copy Image">คัดลอกรูปภาพ</span>
-                            </button>
-                            <button type="button" id="downloadSvgBtn" class="btn-studio">
-                                <i class="bi bi-filetype-svg"></i>
-                                <span data-i18n-th="ดาวน์โหลด SVG" data-i18n-en="Download SVG">ดาวน์โหลด SVG</span>
-                            </button>
+                            <button type="button" id="copyImgBtn" class="btn-studio"><i class="bi bi-clipboard"></i><span data-i18n-th="คัดลอกรูป" data-i18n-en="Copy image">คัดลอกรูป</span></button>
+                            <button type="button" id="downloadSvgBtn" class="btn-studio"><i class="bi bi-filetype-svg"></i><span data-i18n-th="ไฟล์ SVG" data-i18n-en="SVG file">ไฟล์ SVG</span></button>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- Recent History Card -->
-                <div class="studio-card history-card">
-                    <div class="card-sec-title">
-                        <span class="sec-left">
-                            <i class="bi bi-clock-history"></i>
-                            <span data-i18n-th="รายการที่บันทึกไว้ล่าสุด" data-i18n-en="Saved Recent QR Codes">รายการที่บันทึกไว้ล่าสุด</span>
-                        </span>
-                        <button type="button" class="preset-chip" id="saveHistoryBtn">
-                            <i class="bi bi-bookmark-plus"></i>
-                            <span data-i18n-th="บันทึกเก็บไว้" data-i18n-en="Save Current">บันทึกเก็บไว้</span>
-                        </button>
-                    </div>
+                <details class="studio-card history-card">
+                    <summary><span data-i18n-th="ที่บันทึกไว้" data-i18n-en="Saved">ที่บันทึกไว้</span></summary>
+                    <div class="history-head"><button type="button" class="preset-chip" id="saveHistoryBtn"><i class="bi bi-bookmark-plus"></i> <span data-i18n-th="เก็บอันนี้ไว้" data-i18n-en="Save this one">เก็บอันนี้ไว้</span></button></div>
                     <div id="historyList" class="history-list"></div>
-                </div>
-            </div>
+                </details>
+            </aside>
         </div>
     </div>
 
@@ -928,7 +861,7 @@
                 };
                 metaSizePill.textContent = `${targetSize} × ${targetSize} px`;
                 metaModePill.textContent = modeLabels[currentMode] || 'QR';
-                downloadBtnText.textContent = `ดาวน์โหลด PNG (${targetSize} × ${targetSize} px)`;
+                downloadBtnText.textContent = "ดาวน์โหลดรูป PNG";
             }
 
             // Download PNG
