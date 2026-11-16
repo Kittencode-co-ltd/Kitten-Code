@@ -533,7 +533,8 @@
     const GROUPS = [
         { id: 'out', label: 'จ้างบุคคล / ฟรีแลนซ์' },
         { id: 'hr', label: 'บุคลากร' },
-        { id: 'co', label: 'คู่ค้าและลูกค้า' }
+        { id: 'co', label: 'คู่ค้าและลูกค้า' },
+        { id: 'end', label: 'หนังสือเตือน · เลิกจ้าง · ยุติสัญญา' }
     ];
 
     // ---------- defaults ----------
@@ -552,6 +553,7 @@
             if (!it) return '';
             return `<p class="ct-item">${numbered ? `<span class="ct-no">${num}.${idx}</span>` : ''}<span>${it}</span></p>`;
         }
+        if (it.html) return `<div class="ct-item ct-raw">${it.html}</div>`;
         const list = (it.list || []).map((x) => `<li>${x}</li>`).join('');
         return `<div class="ct-item ct-has-list">${it.text ? `<p>${numbered ? `<span class="ct-no">${num}.${idx}</span>` : ''}<span>${it.text}</span></p>` : ''}<ul class="ct-list">${list}</ul></div>`;
     }
@@ -570,12 +572,55 @@
         return isCompany(f, p) ? String(f[p + 'Rep'] || '').trim() : String(f[p + 'Name'] || '').trim();
     }
 
+    const brandHTML = (docNo) => `
+                <div class="ct-brand">
+                    <img src="../assets/img/LOGO-KittenCode.png" alt="" onerror="this.style.display='none'">
+                    <div><b>${esc(KITTEN.name)}</b><span>KITTEN CODE Co.,Ltd</span></div>
+                    <div class="ct-no-line">${docNo ? `เลขที่<br><b>${esc(docNo)}</b>` : ''}</div>
+                </div>`;
+
+    // One-sided letters (warning, dismissal, termination notice …)
+    function renderNotice(t, f, h, rec) {
+        const n = t.notice(f, h, K) || {};
+        const paras = (n.paras || []).filter((x) => x !== '' && x != null).map((x) =>
+            typeof x === 'string' ? `<p class="ct-para">${x}</p>` : (x.html ? `<div class="ct-raw">${x.html}</div>` : `<ul class="ct-list">${(x.list || []).map((l) => `<li>${l}</li>`).join('')}</ul>`)).join('');
+        const signer = String(f.signerName || '').trim();
+        const ack = n.ack ? `
+            <div class="ct-ack">
+                <p><b>${esc(n.ack.title)}</b></p>
+                <p>${esc(n.ack.text)}</p>
+                <div class="ct-ack-line">ลงชื่อ ................................................ ผู้รับหนังสือ &nbsp;&nbsp; วันที่ ........../........../..........</div>
+                <div class="ct-ack-line">ลงชื่อ ................................................ พยาน &nbsp;&nbsp; (กรณีผู้รับปฏิเสธไม่ลงลายมือชื่อ)</div>
+            </div>` : '';
+        const page = document.createElement('div');
+        page.className = 'ct-paper ct-notice';
+        page.innerHTML = `
+            <div class="ct-head">${brandHTML(rec.docNo)}</div>
+            <div class="ct-meta"><span>ที่ ${rec.docNo ? esc(rec.docNo) : '..........'}</span><span>วันที่ ${h.date('signDate')}</span></div>
+            <p class="ct-line"><b>เรื่อง</b> ${n.subject || ''}</p>
+            <p class="ct-line"><b>เรียน</b> ${n.to || ''}</p>
+            ${n.ref ? `<p class="ct-line"><b>อ้างถึง</b> ${n.ref}</p>` : ''}
+            <div class="ct-notice-body">${paras}</div>
+            <p class="ct-para">${n.closing || 'จึงเรียนมาเพื่อโปรดทราบ'}</p>
+            <div class="ct-notice-sign">
+                <p>ขอแสดงความนับถือ</p>
+                <div class="ct-sign-line">${signer ? '' : '<br>'}ลงชื่อ ................................................</div>
+                <div class="ct-sign-name">( ${esc(signer) || '................................................'} )</div>
+                <div class="ct-sign-sub">${esc(f.signerPos || '')}</div>
+                <div class="ct-sign-sub">${esc(f.aName || KITTEN.name)}</div>
+            </div>
+            ${n.encl ? `<p class="ct-encl"><b>สิ่งที่ส่งมาด้วย</b> ${n.encl}</p>` : ''}
+            ${ack}`;
+        return page;
+    }
+
     function render(rec) {
         rec = rec || {};
         const type = rec.contractType || 'service';
         const t = TYPES[type] || TYPES.service;
         const f = Object.assign(defaults(type), rec.fields || {});
         const h = helpers(f);
+        if (t.kind === 'notice') return renderNotice(t, f, h, rec);
 
         const clauses = t.clauses(f, h).slice();
         if (String(f.extra || '').trim()) clauses.push({ t: 'ข้อตกลงเพิ่มเติม', i: [`<span class="ct-multi">${esc(f.extra)}</span>`] });
@@ -588,11 +633,7 @@
         page.className = 'ct-paper';
         page.innerHTML = `
             <div class="ct-head">
-                <div class="ct-brand">
-                    <img src="../assets/img/LOGO-KittenCode.png" alt="" onerror="this.style.display='none'">
-                    <div><b>${esc(KITTEN.name)}</b><span>KITTEN CODE Co.,Ltd</span></div>
-                    <div class="ct-no-line">${rec.docNo ? `เลขที่สัญญา<br><b>${esc(rec.docNo)}</b>` : ''}</div>
-                </div>
+                ${brandHTML(rec.docNo)}
                 <h1 class="ct-title">${esc(t.title)}${sub}</h1>
                 <p class="ct-place">เขียนที่ ${h.v('signPlace', 10)}</p>
             </div>
@@ -621,9 +662,10 @@
     function summary(type, f) {
         const t = TYPES[type] || TYPES.service;
         const other = t.kittenSide === 'a' ? 'b' : 'a';
-        const value = Number(f.total) || Number(f.salary) || Number(f.estimate) || 0;
-        return { party: String(f[other + 'Name'] || '').trim(), amountTotal: value, subject: f.subject || f.project || f.position || f.purpose || '' };
+        const value = t.summaryAmount ? t.summaryAmount(f) : (Number(f.total) || Number(f.salary) || Number(f.estimate) || 0);
+        return { party: String(f[other + 'Name'] || '').trim(), amountTotal: value, subject: f.subject || f.project || f.position || f.contractName || f.purpose || '' };
     }
 
-    window.KCContract = { TYPES, GROUPS, render, defaults, warnings, summary, bahtText, thaiDate, escapeHTML: esc, KITTEN };
+    const K = { esc, thaiDate, fmt, bahtText, helpers, party, docFields, extraField, installmentFields, bankFields, disputeClause, confClause, KITTEN };
+    window.KCContract = { _k: K, TYPES, GROUPS, render, defaults, warnings, summary, bahtText, thaiDate, escapeHTML: esc, KITTEN };
 })();

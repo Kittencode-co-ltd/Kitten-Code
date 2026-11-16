@@ -53,6 +53,26 @@
 .ct-sign-line, .ct-sign-name, .ct-sign-sub { font-size: 14px; }
 .ct-sign-sub { color: #333; }
 
+/* One-sided letters */
+.ct-notice .ct-meta { display: flex; justify-content: space-between; margin: 4px 0 10px; }
+.ct-line { margin: 0 0 6px; text-align: left; }
+.ct-line b { display: inline-block; min-width: 3.2em; }
+.ct-notice-body { margin-top: 10px; }
+.ct-notice-body .ct-para { margin-bottom: 9px; }
+.ct-box { margin: 2px 0 8px 2em; padding: 8px 12px; border: 1px solid #bbb; border-radius: 4px; background: #fafafa; white-space: pre-wrap; text-indent: 0; }
+.ct-raw { margin: 0 0 8px; }
+.ct-table { width: 100%; border-collapse: collapse; margin: 2px 0 4px; font-size: 14px; }
+.ct-table td { padding: 4px 8px; border: 1px solid #bbb; text-align: left; }
+.ct-table td.r { text-align: right; width: 28%; font-variant-numeric: tabular-nums; }
+.ct-table tr.t td { font-weight: 700; background: #f1f4f8; }
+.ct-note-s { margin: 0 0 8px; font-size: 12.5px; color: #444; text-indent: 0; }
+.ct-notice-sign { margin: 20px 0 0 auto; width: 52%; text-align: center; break-inside: avoid; }
+.ct-notice-sign p { margin: 0 0 20px; }
+.ct-encl { margin-top: 14px; font-size: 13px; }
+.ct-ack { margin-top: 26px; padding: 12px 14px; border: 1px dashed #888; border-radius: 4px; break-inside: avoid; font-size: 14px; }
+.ct-ack p { margin: 0 0 6px; text-indent: 0; }
+.ct-ack-line { margin-top: 14px; }
+
 @media print {
   @page { size: A4 portrait; margin: 16mm 18mm 18mm; }
   .ct-paper { box-shadow: none !important; margin: 0 !important; padding: 0 !important; width: auto !important; min-height: 0 !important; zoom: 1 !important; }

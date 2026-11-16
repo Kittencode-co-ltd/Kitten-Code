@@ -14,7 +14,7 @@ const TYPE_INFO = {
     vouchers:     { label: 'เบิก/ซื้อ/จ้าง/PV', badge: 'badge-voucher',    editor: 'voucher',     hash: '#voucher' },
     certificates: { label: 'หนังสือรับรอง',    badge: 'badge-certificate', editor: 'certificate', hash: '#certificate' },
     letters:      { label: 'หนังสือภายนอก',   badge: 'badge-letter',      editor: 'letter',      hash: '#letter' },
-    contracts:    { label: 'สัญญา',            badge: 'badge-contract',    editor: 'contract',    hash: '#contract' }
+    contracts:    { label: 'สัญญา/หนังสือเตือน', badge: 'badge-contract',    editor: 'contract',    hash: '#contract' }
 };
 
 const VOUCHER_SUBLABELS = {
@@ -40,7 +40,12 @@ const CONTRACT_SUBLABELS = {
     revshare: 'จ้างทำของ (แบ่งรายได้)',
     employment: 'สัญญาจ้างแรงงาน',
     nda: 'สัญญารักษาความลับ',
-    software: 'จ้างพัฒนาเว็บ/ซอฟต์แวร์'
+    software: 'จ้างพัฒนาเว็บ/ซอฟต์แวร์',
+    warning: 'หนังสือเตือนพนักงาน',
+    breach: 'แจ้งเตือนผิดสัญญา',
+    dismissal: 'หนังสือเลิกจ้าง',
+    termination: 'บอกเลิกสัญญา',
+    mutual_end: 'ข้อตกลงยกเลิกสัญญา'
 };
 
 const LETTER_SUBLABELS = {
@@ -80,7 +85,7 @@ const STATUSES = {
     vouchers:     [['Pending', 'รออนุมัติ', 'pending'], ['Approved', 'อนุมัติแล้ว', 'paid'], ['Paid', 'จ่ายเงินแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
     certificates: [['Issued', 'ออกแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
     letters:      [['Issued', 'ออกหนังสือแล้ว', 'paid'], ['Sent', 'ส่งแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
-    contracts:    [['Draft', 'ร่าง', 'pending'], ['Signed', 'ลงนามแล้ว', 'paid'], ['Terminated', 'สิ้นสุด/ยกเลิก', 'rejected']]
+    contracts:    [['Draft', 'ร่าง', 'pending'], ['Signed', 'ลงนาม/ออกแล้ว', 'paid'], ['Terminated', 'สิ้นสุด/ยกเลิก', 'rejected']]
 };
 
 // What "continue" creates next

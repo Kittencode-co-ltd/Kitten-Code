@@ -238,7 +238,7 @@
     }
 
     async function ensureNumber() {
-        if (window.KCDoc && !docNoValue()) { await window.KCDoc.ensureDocNo('contract'); refresh(); }
+        if (window.KCDoc && !docNoValue()) { await window.KCDoc.ensureDocNo('contract', C.TYPES[type].prefix); refresh(); }
     }
 
     // ---------- actions ----------
