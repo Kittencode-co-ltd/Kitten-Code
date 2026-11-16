@@ -102,7 +102,15 @@
                     <div class="section-header">
                         <div class="section-title">รายการเงินทั้งหมด</div>
                     </div>
+                    <div class="fin-stats" id="fin-stats"></div>
                     <div class="filter-row">
+                        <input type="search" id="filter-q" placeholder="ค้นหารายการ ผู้ติดต่อ เลขอ้างอิง" oninput="renderTxns()">
+                        <select id="filter-status" onchange="renderTxns()">
+                            <option value="">ทุกสถานะ</option>
+                            <option value="1">รอจ่าย</option>
+                            <option value="2">จ่ายแล้ว</option>
+                            <option value="0">ปฏิเสธ</option>
+                        </select>
                         <select id="filter-type" onchange="renderTxns()">
                             <option value="">รายรับและรายจ่าย</option>
                             <option value="1">รายรับ</option>

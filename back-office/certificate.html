@@ -34,6 +34,21 @@
         </button>
     </div>
 
+    <!-- Step 1: choose what to issue (shown when opening without a type) -->
+    <div class="cert-chooser" id="cert-chooser" hidden>
+        <div class="cert-chooser-inner">
+            <div class="cert-chooser-head">
+                <h1>ออกเอกสารรับรอง</h1>
+                <p>เลือกชนิดเอกสารที่ต้องการออก แล้วกรอกข้อมูลเพียงไม่กี่ช่อง</p>
+            </div>
+            <div class="cert-chooser-group">หนังสือรับรอง (A4 แนวตั้ง)</div>
+            <div class="cert-chooser-grid" id="cc-letters"></div>
+            <div class="cert-chooser-group">ประกาศนียบัตร / เกียรติบัตร (A4 แนวนอน)</div>
+            <div class="cert-chooser-grid" id="cc-awards"></div>
+            <button type="button" class="btn cert-chooser-resume" id="cc-resume" hidden></button>
+        </div>
+    </div>
+
     <div class="app-container no-print" id="docAppContainer" data-mobile-view="form">
 
         <!-- Left Panel: Form Input -->
@@ -45,6 +60,11 @@
                 </button>
             </div>
 
+            <div class="cert-current">
+                <span>กำลังออก: <b id="cert-current-label">-</b></span>
+                <button type="button" class="btn helper-btn" onclick="openCertChooser()"><i class="fas fa-repeat"></i> เปลี่ยนประเภท</button>
+            </div>
+
             <form id="certificate-form" onsubmit="return false;">
 
                 <!-- Section: Certificate Type & Document Info -->
@@ -53,6 +73,7 @@
                     <input type="hidden" id="in-cert-type" value="employment">
                     <input type="hidden" id="in-cert-theme" value="gold">
 
+                    <details class="type-switch" hidden><summary>เปลี่ยนประเภทเอกสาร</summary>
                     <div class="type-group-label">
                         <i class="fas fa-file-alt"></i> หนังสือรับรองแนวตั้ง (A4 Portrait)
                     </div>
@@ -97,6 +118,8 @@
                         </button>
                     </div>
 
+                    </details>
+
                     <!-- Landscape Theme Selector -->
                     <div class="only-landscape" style="display: none;">
                         <label class="field-hint-label">
@@ -130,6 +153,7 @@
                         </label>
                     </div>
 
+                    <details class="more-fields"><summary><i class="fas fa-sliders"></i> เลขที่เอกสาร · วันที่ · ชื่อบริษัท <small>ใส่ให้อัตโนมัติแล้ว กดเพื่อแก้</small></summary>
                     <div class="form-grid">
                         <div class="form-group">
                             <label>เลขที่เอกสาร / เลขที่เกียรติบัตร</label>
@@ -146,6 +170,7 @@
                                 placeholder="ระบุชื่อบริษัท...">
                         </div>
                     </div>
+                    </details>
                 </div>
 
                 <!-- Section: Recipient Info -->
@@ -271,7 +296,7 @@
                 </div>
 
                 <!-- Section: Landscape Diploma Wording -->
-                <div class="form-section only-landscape" style="display: none;">
+                <div class="form-section kc-collapse only-landscape" data-hint="ระบบเติมข้อความมาตรฐานตามชนิดให้แล้ว" style="display: none;">
                     <div class="flex-between">
                         <h3><i class="fas fa-scroll"></i> ข้อความบนใบประกาศนียบัตร</h3>
                         <button type="button" class="helper-btn" onclick="fillLandscapeAwardBody()">
@@ -306,7 +331,7 @@
                 </div>
 
                 <!-- Section: Portrait Duties, Evaluation & Purpose -->
-                <div class="form-section only-portrait">
+                <div class="form-section kc-collapse only-portrait" data-hint="ไม่บังคับ — ระบบมีข้อความมาตรฐานให้">
                     <h3><i class="fas fa-tasks"></i> รายละเอียดงาน / คำรับรองเพิ่มเติม</h3>
                     <div class="form-grid">
                         <div class="form-group full-width">
@@ -333,7 +358,7 @@
                 </div>
 
                 <!-- Section: Authorized Signatory (1 or 2 Signatories) -->
-                <div class="form-section">
+                <div class="form-section kc-collapse" data-hint="" id="sec-signer">
                     <h3><i class="fas fa-signature"></i> ผู้มีอำนาจลงนาม</h3>
                     <div class="form-grid">
                         <div class="form-group">

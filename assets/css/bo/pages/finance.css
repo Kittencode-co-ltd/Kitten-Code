@@ -66,3 +66,26 @@
   .kc-search { min-width: 100%; }
   .page-head .tabs { width: 100%; }
 }
+
+/* Document register: summary cards double as status filters */
+.doc-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.7rem; margin: 0 0 1rem; }
+.doc-stat { display: flex; flex-direction: column; align-items: flex-start; gap: 0.15rem; padding: 0.8rem 1rem; border: 1px solid var(--kc-line); border-radius: var(--kc-radius); background: var(--kc-surface); color: var(--kc-text); font: inherit; text-align: left; cursor: pointer; }
+.doc-stat b { font-size: 1.3rem; line-height: 1.2; }
+.doc-stat span { font-size: 0.76rem; color: var(--kc-muted); }
+button.doc-stat:hover { border-color: var(--kc-line-strong); }
+.doc-stat.active { border-color: var(--kc-ink); box-shadow: inset 0 0 0 1px var(--kc-ink); }
+.doc-stat.is-pending b { color: var(--kc-amber); }
+.doc-stat.is-paid b { color: var(--kc-green); }
+.doc-stat.is-rejected b { color: var(--kc-red); }
+.doc-stat-sum { cursor: default; background: var(--kc-bg); }
+.doc-stat-sum b { font-size: 1.1rem; }
+@media (max-width: 900px) { .doc-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .doc-stat-sum { grid-column: 1 / -1; } }
+
+/* Ledger summary strip */
+.fin-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.7rem; margin: 0 0 1rem; }
+.fin-stat { padding: 0.7rem 0.9rem; border-radius: var(--kc-radius-sm); background: var(--kc-bg); }
+.fin-stat span { display: block; font-size: 0.74rem; color: var(--kc-muted); }
+.fin-stat b { display: block; margin-top: 0.1rem; font-size: 1.05rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.fin-stat.is-pending b { color: var(--kc-amber); }
+.filter-row input[type="search"] { flex: 1 1 14rem; min-width: 0; }
+@media (max-width: 760px) { .fin-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .filter-row > * { flex: 1 1 100%; } }

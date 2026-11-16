@@ -3,6 +3,7 @@ import { db, auth, onAuthStateChanged, collection, getDocs, doc, deleteDoc, getD
 let allDocs = [];
 let currentFilter = 'all';
 let searchText = '';
+let statusFilter = 'all';          // all | pending | paid | rejected
 let finCategories = [];
 let ledgerTarget = null;
 
@@ -12,7 +13,8 @@ const TYPE_INFO = {
     receipts:     { label: 'ใบเสร็จ',         badge: 'badge-receipt',     editor: 'receipt',     hash: '#receipt' },
     vouchers:     { label: 'เบิก/ซื้อ/จ้าง/PV', badge: 'badge-voucher',    editor: 'voucher',     hash: '#voucher' },
     certificates: { label: 'หนังสือรับรอง',    badge: 'badge-certificate', editor: 'certificate', hash: '#certificate' },
-    letters:      { label: 'หนังสือภายนอก',   badge: 'badge-letter',      editor: 'letter',      hash: '#letter' }
+    letters:      { label: 'หนังสือภายนอก',   badge: 'badge-letter',      editor: 'letter',      hash: '#letter' },
+    contracts:    { label: 'สัญญา',            badge: 'badge-contract',    editor: 'contract',    hash: '#contract' }
 };
 
 const VOUCHER_SUBLABELS = {
@@ -31,6 +33,14 @@ const CERT_SUBLABELS = {
     award_participation: 'เกียรติบัตรเข้าร่วมงาน',
     award_partner: 'เกียรติบัตรพันธมิตร',
     award_intern_excellence: 'ประกาศนียบัตรฝึกงาน'
+};
+
+const CONTRACT_SUBLABELS = {
+    service: 'สัญญาจ้างทำของ',
+    revshare: 'จ้างทำของ (แบ่งรายได้)',
+    employment: 'สัญญาจ้างแรงงาน',
+    nda: 'สัญญารักษาความลับ',
+    software: 'จ้างพัฒนาเว็บ/ซอฟต์แวร์'
 };
 
 const LETTER_SUBLABELS = {
@@ -69,7 +79,8 @@ const STATUSES = {
     receipts:     [['Completed', 'รับเงินแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
     vouchers:     [['Pending', 'รออนุมัติ', 'pending'], ['Approved', 'อนุมัติแล้ว', 'paid'], ['Paid', 'จ่ายเงินแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
     certificates: [['Issued', 'ออกแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
-    letters:      [['Issued', 'ออกหนังสือแล้ว', 'paid'], ['Sent', 'ส่งแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']]
+    letters:      [['Issued', 'ออกหนังสือแล้ว', 'paid'], ['Sent', 'ส่งแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
+    contracts:    [['Draft', 'ร่าง', 'pending'], ['Signed', 'ลงนามแล้ว', 'paid'], ['Terminated', 'สิ้นสุด/ยกเลิก', 'rejected']]
 };
 
 // What "continue" creates next
@@ -108,6 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sel) changeStatus(sel.dataset.col, sel.dataset.id, sel);
     });
 
+    document.addEventListener('click', (e) => {
+        const card = e.target.closest('[data-status]');
+        if (card) { statusFilter = statusFilter === card.dataset.status ? 'all' : card.dataset.status; renderDocuments(); return; }
+        if (e.target.closest('[data-reset]')) {
+            statusFilter = 'all'; searchText = ''; if (search) search.value = '';
+            renderDocuments();
+        }
+    });
+
     if (search) search.addEventListener('input', () => { searchText = search.value.trim().toLowerCase(); renderDocuments(); });
 
     // Firestore rules need a signed-in user — wait for the restored session.
@@ -116,7 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+let isAdminUser = false;
+
 async function loadDocuments() {
+    try {
+        const me = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        isAdminUser = !!(me.exists() && me.data().role === 'admin');
+    } catch (e) { /* non-admin or offline */ }
     const tbody = document.getElementById('doc-tbody');
     if (!tbody) return;
     const loaded = [];
@@ -133,10 +159,14 @@ async function loadDocuments() {
             });
         } catch (err) {
             console.warn(`Could not load ${colName}:`, err);
-            failed.push(TYPE_INFO[colName].label);
+            if (colName !== 'contracts') failed.push(TYPE_INFO[colName].label);   // contracts are admin-only
         }
     }
 
+    if (loaded.some(d => d.collectionName === 'contracts') || isAdminUser) {
+        const tab = document.getElementById('tab-contracts');
+        if (tab) tab.hidden = false;
+    }
     loaded.sort((a, b) => sortKey(b).localeCompare(sortKey(a)));
     allDocs = loaded;
     renderDocuments();
@@ -171,22 +201,41 @@ function statusInfo(d) {
     return list.find(s => s[0].toLowerCase() === String(value).toLowerCase()) || [value, value, 'pending'];
 }
 
+function renderStats(list) {
+    const box = document.getElementById('doc-stats');
+    if (!box) return;
+    const by = (st) => list.filter(d => statusInfo(d)[2] === st);
+    const live = list.filter(d => statusInfo(d)[2] !== 'rejected');
+    const total = live.reduce((s, d) => s + (Number(d.amountTotal) || 0), 0);
+    const card = (key, n, label, cls) => `<button type="button" class="doc-stat ${cls}${statusFilter === key ? ' active' : ''}" data-status="${key}"><b>${n}</b><span>${label}</span></button>`;
+    box.innerHTML = card('all', list.length, 'ทั้งหมด', '')
+        + card('pending', by('pending').length, 'รอดำเนินการ', 'is-pending')
+        + card('paid', by('paid').length, 'เสร็จสมบูรณ์', 'is-paid')
+        + card('rejected', by('rejected').length, 'ยกเลิก / ไม่อนุมัติ', 'is-rejected')
+        + `<div class="doc-stat doc-stat-sum"><b>฿${formatMoney(total)}</b><span>มูลค่ารวม (ไม่นับที่ยกเลิก)</span></div>`;
+}
+
 function renderDocuments() {
     const tbody = document.getElementById('doc-tbody');
     if (!tbody) return;
 
-    const filtered = allDocs.filter(d => {
+    const inScope = allDocs.filter(d => {
         if (currentFilter !== 'all' && d.collectionName !== currentFilter) return false;
         if (!searchText) return true;
         const hay = [d.docNo, d.custName, d.personName, d.vendorName, d.requesterName, d.recipientTitle, d.recipientOrg, d.subject, d.projName].filter(Boolean).join(' ').toLowerCase();
         return hay.includes(searchText);
     });
+    renderStats(inScope);
+    const filtered = inScope.filter(d => statusFilter === 'all' || statusInfo(d)[2] === statusFilter);
 
     const count = document.getElementById('doc-count');
     if (count) count.textContent = `${filtered.length} รายการ`;
 
     if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">${allDocs.length ? 'ไม่พบเอกสารที่ค้นหา' : 'ยังไม่มีเอกสาร'}</div></td></tr>`;
+        const none = allDocs.length
+            ? 'ไม่พบเอกสารตามที่เลือก <button type="button" class="row-btn row-btn-text" data-reset="1">ล้างตัวกรอง</button>'
+            : 'ยังไม่มีเอกสาร กดปุ่ม "สร้าง…" ด้านล่างเพื่อเริ่มต้น';
+        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">${none}</div></td></tr>`;
         return;
     }
 
@@ -194,7 +243,10 @@ function renderDocuments() {
         const info = TYPE_INFO[d.collectionName];
         const [statusValue, , statusStyle] = statusInfo(d);
         const options = (STATUSES[d.collectionName] || [])
-            .map(([v, label]) => `<option value="${v}"${v === statusValue ? ' selected' : ''}>${label}</option>`).join('');
+            .map(([v, label]) => {
+                const adminOnly = !isAdminUser && ['quotations', 'vouchers'].includes(d.collectionName) && ['Approved', 'Paid'].includes(v) && v !== statusValue;
+                return `<option value="${v}"${v === statusValue ? ' selected' : ''}${adminOnly ? ' disabled' : ''}>${label}${adminOnly ? ' (แอดมิน)' : ''}</option>`;
+            }).join('');
         const isZeroDoc = (d.collectionName === 'certificates' || d.collectionName === 'letters') && !d.amountTotal;
         const amount = isZeroDoc
             ? '<span class="muted">—</span>'
@@ -211,10 +263,13 @@ function renderDocuments() {
             badgeLabel = CERT_SUBLABELS[d.certType];
         } else if (d.collectionName === 'letters' && LETTER_SUBLABELS[d.letterType]) {
             badgeLabel = LETTER_SUBLABELS[d.letterType];
+        } else if (d.collectionName === 'contracts' && CONTRACT_SUBLABELS[d.contractType]) {
+            badgeLabel = CONTRACT_SUBLABELS[d.contractType];
         }
 
-        const canLedger = d.collectionName === 'receipts' ||
-            (d.collectionName === 'vouchers' && (d.voucherType === 'pv' || d.voucherType === 'exp'));
+        // Posting to the ledger records a paid entry — admin only (firestore.rules)
+        const canLedger = isAdminUser && (d.collectionName === 'receipts' ||
+            (d.collectionName === 'vouchers' && (d.voucherType === 'pv' || d.voucherType === 'exp')));
         const ledgerLabel = d.collectionName === 'vouchers' ? 'ลงบัญชีรายจ่าย' : 'ลงบัญชีรายรับ';
 
         const actions = [
@@ -356,7 +411,8 @@ async function printDocument(colName, id) {
             receipts: 'receipt',
             vouchers: 'voucher',
             certificates: 'certificate',
-            letters: 'letter'
+            letters: 'letter',
+            contracts: 'contract'
         };
         localStorage.setItem('kc_view_doc', JSON.stringify({ type: typeMap[colName] || colName, data: { ...data } }));
         window.location.href = 'document-viewer.html';

@@ -37,6 +37,14 @@
             </div>
         </div>
 
+        <div class="cal-legend" aria-label="สีของประเภทงาน">
+            <span class="evt-work"><i></i>งาน</span>
+            <span class="evt-meet"><i></i>ประชุม</span>
+            <span class="evt-deadline"><i></i>กำหนดส่ง</span>
+            <span class="evt-personal"><i></i>ส่วนตัว</span>
+            <span class="evt-holiday"><i></i>วันหยุด</span>
+        </div>
+
         <!-- Floating add button -->
         <div class="kc-fab-group">
             <button class="kc-fab" onclick="openAddModal()"><i class="fas fa-plus"></i> เพิ่มงาน</button>
@@ -377,7 +385,9 @@
                 if (dayEvents.length > MAX_SHOW) {
                     const more = document.createElement('div');
                     more.className = 'more-events';
-                    more.textContent = `+${dayEvents.length - MAX_SHOW} more`;
+                    more.textContent = `อีก ${dayEvents.length - MAX_SHOW} งาน`;
+                    more.title = 'ดูทั้งสัปดาห์';
+                    more.onclick = (e) => { e.stopPropagation(); currentDate = new Date(c.date); setView('week'); };
                     cell.appendChild(more);
                 }
 

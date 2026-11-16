@@ -52,6 +52,11 @@
 
 @media (max-width: 900px) { .charts-grid { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 640px) {
-  .kpi-grid { grid-template-columns: minmax(0, 1fr); }
-  .kpi-value { font-size: 1.5rem; }
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+  .kpi-card { padding: 0.85rem 0.9rem; }
+  .kpi-header { margin-bottom: 0.3rem; }
+  .kpi-icon { display: none; }
+  .kpi-label { font-size: 0.78rem; }
+  .kpi-value { font-size: 1.2rem; }
+  .kpi-sub { font-size: 0.7rem; }
 }

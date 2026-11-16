@@ -60,7 +60,7 @@ Each page has a dedicated JS file:
 
 ### Firestore Collections
 
-Key collections: `users`, `categories`, `transactions`, `quotations`, `invoices`, `receipts`, `calendar_events`.
+Key collections: `users`, `categories`, `transactions`, `quotations`, `invoices`, `receipts`, `calendar_events`, `attendance`, `leave_requests`, `equipment`, `equipment_log`, `announcements`, `company_profile`, `contracts` (admin only).
 
 ### Data Connect Schema (`dataconnect/schema/schema.gql`)
 

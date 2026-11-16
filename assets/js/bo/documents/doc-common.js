@@ -17,7 +17,8 @@
         receipts: 'RC',
         certificates: 'CERT',
         vouchers: 'PV',
-        letters: 'LET'
+        letters: 'LET',
+        contracts: 'CT'
     };
     const TYPE_TO_COL = {
         quotation: 'quotations',
@@ -25,7 +26,8 @@
         receipt: 'receipts',
         certificate: 'certificates',
         voucher: 'vouchers',
-        letter: 'letters'
+        letter: 'letters',
+        contract: 'contracts'
     };
 
     // Saved field name → editor input id (without the "in-" prefix) where

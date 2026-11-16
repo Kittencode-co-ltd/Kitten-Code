@@ -300,3 +300,14 @@
   .cal-cell { min-height: 4rem; padding: 0.2rem; }
   .cal-event { font-size: 0.62rem; padding: 1px 4px; }
 }
+
+/* Legend + hover affordance */
+.cal-legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin: -0.2rem 0 1rem; font-size: 0.76rem; color: var(--kc-muted); }
+.cal-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.cal-legend i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--c); }
+.cal-cell:not(.other-month):hover::after {
+  content: "+"; position: absolute; top: 4px; right: 8px; width: 1.4rem; height: 1.4rem;
+  display: grid; place-items: center; border-radius: 50%; background: var(--kc-accent-soft); color: var(--kc-accent); font-weight: 700; font-size: 0.95rem; line-height: 1;
+}
+.more-events { cursor: pointer; text-decoration: none; }
+.more-events:hover { color: var(--kc-accent); text-decoration: underline; }

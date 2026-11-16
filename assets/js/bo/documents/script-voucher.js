@@ -375,7 +375,7 @@ window.saveDocumentToFirestore = async function () {
         if (!data.vendorName && !data.requesterName) {
             throw new Error('กรุณาระบุชื่อผู้ขอเบิก หรือ ชื่อผู้ขาย/ผู้รับเงิน');
         }
-        const defaultStatus = data.voucherType === 'pv' ? 'Paid' : 'Pending';
+        const defaultStatus = 'Pending';   // approving / marking Paid is an admin action in the register
         const record = {
             ...data,
             docDate: data.docDate || new Date().toISOString().split('T')[0],

@@ -245,14 +245,37 @@ function renderRegister() {
     }).join('');
 }
 
+// ── Transactions summary (follows the filters) ────────────────
+function renderTxnStats(txns) {
+  const box = document.getElementById('fin-stats');
+  if (!box) return;
+  let inc = 0, exp = 0, pend = 0, pendN = 0;
+  txns.forEach(t => {
+    const type = getCatByCode(t.catCode)?.type;
+    const amt = Number(t.amount) || 0;
+    if (t.payment_status === 2) { if (type === 1) inc += amt; else exp += amt; }
+    if (t.payment_status === 1) { pend += amt; pendN++; }
+  });
+  box.innerHTML = `
+    <div class="fin-stat"><span>รับแล้ว</span><b class="amount-inc">${fmt(inc)}</b></div>
+    <div class="fin-stat"><span>จ่ายแล้ว</span><b class="amount-exp">${fmt(exp)}</b></div>
+    <div class="fin-stat"><span>ส่วนต่าง (รับ − จ่าย)</span><b>${inc - exp < 0 ? "-" : ""}${fmt(Math.abs(inc - exp))}</b></div>
+    <div class="fin-stat is-pending"><span>รอจ่าย ${pendN} รายการ</span><b>${fmt(pend)}</b></div>`;
+}
+
 // ── Transactions Table ────────────────────────────────────────
 function renderTxns() {
     const ft = document.getElementById('filter-type')?.value || '';
     const fm = document.getElementById('filter-month')?.value || '';
     let txns = [..._transactions];
     if (ft) txns = txns.filter(t => String(getCatByCode(t.catCode)?.type) === ft);
-    if (fm) txns = txns.filter(t => t.date.startsWith(fm));
-    txns.sort((a, b) => b.date.localeCompare(a.date));
+    if (fm) txns = txns.filter(t => (t.date || '').startsWith(fm));
+    const fs = document.getElementById('filter-status')?.value || '';
+    if (fs !== '') txns = txns.filter(t => String(t.payment_status) === fs);
+    const fq = (document.getElementById('filter-q')?.value || '').trim().toLowerCase();
+    if (fq) txns = txns.filter(t => [t.desc, t.contact, t.ref, t.catCode].filter(Boolean).join(' ').toLowerCase().includes(fq));
+    txns.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    renderTxnStats(txns);
 
     const tbody = document.getElementById('txn-tbody');
     if (!txns.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">ไม่มีรายการในช่วงนี้</td></tr>'; return; }
@@ -286,7 +309,7 @@ function renderTxns() {
         <td style="text-align:right;" class="${cls}">${sign}${fmt(t.amount)}</td>
         <td style="text-align:center;min-width:160px;">
             <div style="display:flex;gap:4px;justify-content:center;margin-bottom:${t.payment_status === 1 ? '6px' : '0'};">
-                <button class="action-btn" onclick="openEditModal('${t.id}', '${TXNS_COL}')" title="แก้ไข">แก้ไข</button>
+                ${(_isAdmin || t.payment_status === 1) ? `<button class="action-btn" onclick="openEditModal('${t.id}', '${TXNS_COL}')" title="แก้ไข">แก้ไข</button>` : '<span class="muted" title="รายการที่อนุมัติแล้วแก้ไขได้เฉพาะแอดมิน">ล็อก</span>'}
             </div>
             ${actionBtns}
         </td>
@@ -611,6 +634,16 @@ window.renderTxns = renderTxns;
 // so the page never makes an unauthenticated Firestore request.
 let _isAdmin = false;
 
+// Staff can only file pending entries; paying / rejecting is an admin decision (firestore.rules).
+function applyRoleUI() {
+    ['txn-status', 'edit-txn-status'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        [...sel.options].forEach(o => { if (!_isAdmin && o.value !== '1') o.remove(); });
+        if (!_isAdmin) sel.value = '1';
+    });
+}
+
 function showFinToast(msg) {
     let t = document.getElementById('fin-toast');
     if (!t) { t = document.createElement('div'); t.id = 'fin-toast'; t.className = 'kc-toast'; document.body.appendChild(t); }
@@ -648,7 +681,7 @@ document.addEventListener('DOMContentLoaded', () => {
 onAuthStateChanged(auth, user => {
     if (user) {
         getDoc(doc(db, 'users', user.uid))
-            .then(snap => { _isAdmin = snap.exists() && snap.data().role === 'admin'; renderTxns(); })
+            .then(snap => { _isAdmin = snap.exists() && snap.data().role === 'admin'; applyRoleUI(); renderTxns(); })
             .catch(() => {});
         initRealtimeListeners();
     } else {

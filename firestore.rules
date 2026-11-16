@@ -13,6 +13,16 @@ service cloud.firestore {
              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
+    // Approving is an admin decision: only admins may set Approved / Paid on quotations and vouchers.
+    function approvalSafeCreate() {
+      return isAdmin() || !(request.resource.data.get('status', 'Pending') in ['Approved', 'Paid']);
+    }
+    function approvalSafeUpdate() {
+      return isAdmin()
+             || request.resource.data.get('status', null) == resource.data.get('status', null)
+             || !(request.resource.data.get('status', null) in ['Approved', 'Paid']);
+    }
+
     // ── Users collection ──────────────────────────────────────
     match /users/{userId} {
       allow read:   if isAuthenticated() && (request.auth.uid == userId || isAdmin());
@@ -70,6 +80,8 @@ service cloud.firestore {
                        && request.resource.data.amount         >  0
                        && request.resource.data.payment_status is int
                        && request.resource.data.payment_status in [0, 1, 2]
+                       // Staff may only file pending (1) entries; "paid"/"rejected" is an admin decision.
+                       && (isAdmin() || request.resource.data.payment_status == 1)
                        && request.resource.data.desc.size()    >  0
                        && request.resource.data.desc.size()    <= 500;
 
@@ -79,8 +91,9 @@ service cloud.firestore {
                        && request.resource.data.payment_status is int
                        && request.resource.data.payment_status in [0, 1, 2]
                        && (
-                            request.resource.data.payment_status == resource.data.payment_status
-                            || isAdmin()
+                            isAdmin()
+                            // Staff may only edit entries that are still pending, and cannot change the status.
+                            || (resource.data.payment_status == 1 && request.resource.data.payment_status == 1)
                           );
 
       allow delete: if isAdmin();
@@ -89,8 +102,8 @@ service cloud.firestore {
     // ── Quotations, Invoices & Receipts ───────────────────────
     match /quotations/{docId} {
       allow read:   if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
+      allow create: if isAuthenticated() && approvalSafeCreate();
+      allow update: if isAuthenticated() && approvalSafeUpdate();
       allow delete: if isAdmin();
     }
 
@@ -117,8 +130,8 @@ service cloud.firestore {
 
     match /vouchers/{docId} {
       allow read:   if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
+      allow create: if isAuthenticated() && approvalSafeCreate();
+      allow update: if isAuthenticated() && approvalSafeUpdate();
       allow delete: if isAdmin();
     }
 
@@ -158,6 +171,61 @@ service cloud.firestore {
       allow write: if isAuthenticated() && (request.auth.uid == uid || isAdmin())
                       && (request.resource == null
                           || request.resource.data.keys().hasOnly(['uid', 'name']));
+    }
+
+    // ── Contracts (contain ID numbers, salaries, bank details) ──
+    match /contracts/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ── Team: attendance, leave, equipment, announcements ─────
+    // attendance doc ID = {uid}_{yyyy-mm-dd}
+    match /attendance/{id} {
+      allow read:   if isAuthenticated();
+      allow create: if isAuthenticated()
+                       && request.resource.data.uid == request.auth.uid
+                       && id == request.auth.uid + '_' + request.resource.data.date;
+      allow update: if isAuthenticated()
+                       && (resource.data.uid == request.auth.uid || isAdmin())
+                       && request.resource.data.uid == resource.data.uid;
+      allow delete: if isAdmin();
+    }
+
+    match /leave_requests/{id} {
+      allow read:   if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated()
+                       && request.resource.data.uid == request.auth.uid
+                       && request.resource.data.status == 'pending'
+                       && request.resource.data.type in ['sick', 'vacation', 'personal', 'other'];
+      allow update: if isAdmin();
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid
+                                     && resource.data.status == 'pending');
+    }
+
+    match /equipment/{id} {
+      allow read:   if isAuthenticated();
+      allow create, delete: if isAdmin();
+      // Anyone may borrow / return; only the borrow fields may change.
+      allow update: if isAdmin() ||
+                       (isAuthenticated() &&
+                        request.resource.data.diff(resource.data).affectedKeys()
+                          .hasOnly(['status', 'holderUid', 'holderName', 'borrowedAt', 'dueDate']));
+    }
+
+    match /equipment_log/{id} {
+      allow read:   if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /announcements/{id} {
+      allow read:  if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /company_profile/{id} {
+      allow read:  if isAuthenticated();
+      allow write: if isAdmin();
     }
   }
 }

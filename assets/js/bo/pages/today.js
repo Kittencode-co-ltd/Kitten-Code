@@ -36,9 +36,21 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('hello').textContent = `${greet}${name ? ' ' + name : ''}`;
     document.getElementById('today-date').textContent = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
+    loadAnnouncement();
     loadTasks(user.uid);
     loadPending(isAdmin);
 });
+
+async function loadAnnouncement() {
+    try {
+        const snap = await getDocs(collection(db, 'announcements'));
+        const list = snap.docs.map(d => d.data()).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.date || '').localeCompare(a.date || ''));
+        if (!list.length) return;
+        const a = list[0];
+        document.getElementById('ann').innerHTML = `<strong>${a.pinned ? '📌 ' : ''}${esc(a.title)}</strong><div class="task-meta">${esc(a.date || '')}</div><p style="margin-top:.4rem;white-space:pre-wrap;font-size:.9rem;max-height:6.5rem;overflow:hidden">${esc(a.body)}</p>`;
+        document.getElementById('ann-card').hidden = false;
+    } catch (e) { console.warn(e); }
+}
 
 async function loadTasks(uid) {
     const box = document.getElementById('my-tasks');

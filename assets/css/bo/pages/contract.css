@@ -1,0 +1,79 @@
+/* Contract editor + printed contract (multi-page, flowing text) */
+.ct-disclaimer { margin-top: 1.5rem; padding: 0.7rem 0.9rem; border-radius: var(--kc-radius-sm); background: var(--kc-amber-soft); color: var(--kc-amber); font-size: 0.84rem; }
+.ct-law { margin: -0.3rem 0 0.8rem; padding: 0 0.4rem; font-size: 0.76rem; color: var(--kc-muted); line-height: 1.5; }
+.ct-warn { margin-bottom: 0.8rem; padding: 0.7rem 0.9rem; border-radius: var(--kc-radius-sm); background: var(--kc-red-soft); color: var(--kc-red); font-size: 0.84rem; line-height: 1.6; }
+.ct-warn ul { margin: 0; padding-left: 1.1rem; }
+.ct-warn.ok { background: var(--kc-green-soft); color: var(--kc-green); }
+.ct-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.ct-form-grid .full { grid-column: 1 / -1; }
+.ct-form-grid textarea { min-height: 4.5rem; }
+@media (max-width: 639px) { .ct-form-grid { grid-template-columns: 1fr; } }
+
+/* The contract itself: fixed paper colours like the other documents */
+.ct-paper {
+  --ct-ink: #111;
+  width: 210mm;
+  min-height: 297mm;
+  box-sizing: border-box;
+  margin: 0 auto 28px auto;
+  padding: 18mm 20mm 20mm;
+  background: #fff;
+  color: var(--ct-ink);
+  font-family: "Josefin Sans", "KC TH Sarabun", "Sarabun", sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  text-align: justify;
+  text-justify: inter-character;
+}
+.ct-brand { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; margin-bottom: 14px; border-bottom: 2px solid #1e3a5f; }
+.ct-brand img { width: 46px; height: 46px; object-fit: contain; }
+.ct-brand > div:nth-child(2) { display: flex; flex-direction: column; line-height: 1.3; text-align: left; }
+.ct-brand b { font-size: 15px; }
+.ct-brand span { font-size: 11px; color: #555; letter-spacing: 0.04em; }
+.ct-no-line { margin-left: auto; text-align: right; font-size: 11.5px; color: #444; line-height: 1.4; }
+.ct-title { text-align: center; font-size: 24px; font-weight: 700; margin: 8px 0 2px; letter-spacing: 0.01em; }
+.ct-place { text-align: center; margin: 0 0 12px; }
+.ct-para { margin: 0 0 10px; text-indent: 2em; }
+.ct-clause { margin: 0 0 8px; break-inside: auto; }
+.ct-clause h3 { font-size: 15px; font-weight: 700; margin: 12px 0 3px; color: #1e3a5f; break-after: avoid; page-break-after: avoid; }
+.ct-item { margin: 0 0 3px; padding-left: 2.6em; text-indent: -2.6em; }
+.ct-item p { margin: 0; }
+.ct-no { display: inline-block; width: 2.6em; text-indent: 0; font-weight: 600; }
+.ct-clause > .ct-item:only-of-type { padding-left: 0; text-indent: 2em; }
+.ct-list { margin: 2px 0 4px; padding-left: 4em; text-indent: 0; }
+.ct-list li { margin: 0 0 2px; }
+.ct-val { font-weight: 600; text-decoration: underline dotted #888; text-underline-offset: 3px; }
+.ct-multi { white-space: pre-wrap; font-weight: 500; text-decoration: none; display: inline; }
+.ct-blank { display: inline-block; border-bottom: 1px dotted #555; vertical-align: baseline; height: 1em; }
+.ct-lines { display: block; border-bottom: 1px dotted #555; height: 1.6em; margin-bottom: 2px; }
+.ct-closing { margin-top: 14px; break-inside: avoid; }
+.ct-signs { padding-top: 6px; border-top: 1px solid #ddd; display: grid; grid-template-columns: 1fr 1fr; gap: 26px 20px; margin-top: 22px; break-inside: avoid; page-break-inside: avoid; text-align: center; }
+.ct-sign { padding-top: 22px; }
+.ct-sign-line, .ct-sign-name, .ct-sign-sub { font-size: 14px; }
+.ct-sign-sub { color: #333; }
+
+@media print {
+  @page { size: A4 portrait; margin: 16mm 18mm 18mm; }
+  .ct-paper { box-shadow: none !important; margin: 0 !important; padding: 0 !important; width: auto !important; min-height: 0 !important; zoom: 1 !important; }
+  .ct-clause h3, .ct-sign { break-inside: avoid; }
+}
+
+/* Step-by-step form */
+.ct-steps { display: flex; gap: 0.4rem; margin: 0 0 1rem; overflow-x: auto; padding-bottom: 0.2rem; }
+.ct-step-chip { flex: 1 1 0; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.6rem; padding: 0 0.5rem; border: 1px solid var(--kc-line); border-radius: var(--kc-pill); background: var(--kc-surface); color: var(--kc-muted); font: inherit; font-size: 0.82rem; font-weight: 500; white-space: nowrap; cursor: pointer; }
+.ct-step-chip.active { background: var(--kc-ink); border-color: var(--kc-ink); color: var(--kc-on-ink); font-weight: 600; }
+.ct-step-chip.done { color: var(--kc-text); }
+.ct-step-n { position: relative; display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--kc-bg); color: var(--kc-text); font-size: 0.72rem; font-weight: 700; }
+.ct-step-chip.active .ct-step-n { background: var(--kc-on-ink); color: var(--kc-ink); }
+.ct-step-chip.done .ct-step-n { background: var(--kc-green-soft); color: var(--kc-green); }
+.ct-step-n[data-warn]:not([data-warn=""])::after { content: attr(data-warn); position: absolute; top: -0.45rem; right: -0.5rem; min-width: 1rem; height: 1rem; padding: 0 0.2rem; border-radius: 1rem; background: var(--kc-red); color: #fff; font-size: 0.62rem; line-height: 1rem; text-align: center; }
+.ct-note { margin: -0.4rem 0 0.8rem; font-size: 0.78rem; color: var(--kc-muted); }
+.ct-summary { margin-bottom: 1rem; padding: 0.4rem 1rem; border: 1px solid var(--kc-line); border-radius: var(--kc-radius); background: var(--kc-surface); }
+.ct-sum-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-top: 1px solid var(--kc-line); font-size: 0.86rem; }
+.ct-sum-row:first-child { border-top: 0; }
+.ct-sum-row span { color: var(--kc-muted); }
+.ct-sum-row b { text-align: right; }
+.ct-sum-row i { color: var(--kc-red); font-weight: 400; font-style: normal; }
+.print-section #btn-prev { flex: 0 0 auto; }
+.print-section #btn-next { flex: 1 1 auto; }

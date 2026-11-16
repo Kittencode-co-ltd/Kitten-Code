@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สัญญา — KITTEN CODE Co.,Ltd</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/paper.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/editor.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/contract.css">
+</head>
+
+<body class="bo-editor">
+    <div class="doc-mobile-switcher no-print">
+        <div class="doc-segment" id="docMobileSegment">
+            <span class="doc-segment-pill"></span>
+            <button type="button" class="doc-segment-btn active" data-mode="form" onclick="switchDocMobileTab('form')">
+                <i class="fas fa-edit"></i> กรอกข้อมูล
+            </button>
+            <button type="button" class="doc-segment-btn" data-mode="preview" onclick="switchDocMobileTab('preview')">
+                <i class="fas fa-eye"></i> ดูตัวอย่าง
+            </button>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="printContract()">
+            <i class="fas fa-file-pdf"></i> พิมพ์
+        </button>
+    </div>
+
+    <!-- Step 1: choose a contract -->
+    <div class="cert-chooser no-print" id="ct-chooser" hidden>
+        <div class="cert-chooser-inner">
+            <div class="cert-chooser-head">
+                <h1>ทำสัญญา</h1>
+                <p>เลือกชนิดสัญญา ระบบเติมข้อความตามกฎหมายให้ เหลือแค่กรอกรายละเอียดของงาน</p>
+            </div>
+            <div id="ct-chooser-groups"></div>
+            <p class="ct-disclaimer"><i class="fas fa-circle-info"></i> แม่แบบสัญญานี้เป็นข้อความทั่วไป ควรให้ทนายความตรวจก่อนใช้กับงานมูลค่าสูงหรือกรณีพิเศษ</p>
+            <button type="button" class="btn cert-chooser-resume" id="ct-resume" hidden></button>
+        </div>
+    </div>
+
+    <div class="app-container no-print" id="docAppContainer" data-mobile-view="form">
+        <div class="form-panel">
+            <div class="form-header">
+                <h2><i class="fas fa-file-signature"></i> <span id="ct-form-title">สัญญา</span></h2>
+                <button type="button" class="btn-clear-draft" onclick="clearContractDraft()">
+                    <i class="fas fa-rotate-left"></i> เริ่มใหม่
+                </button>
+            </div>
+
+            <div class="cert-current">
+                <span>กำลังทำ: <b id="ct-current-label">-</b></span>
+                <button type="button" class="btn helper-btn" onclick="openContractChooser()"><i class="fas fa-repeat"></i> เปลี่ยนชนิด</button>
+            </div>
+            <div class="ct-steps" id="ct-steps"></div>
+            <div class="ct-warn" id="ct-warn" hidden></div>
+
+            <form id="ct-form" onsubmit="return false;"></form>
+            <div class="ct-law" id="ct-law"></div>
+
+            <div class="form-section print-section">
+                <button type="button" id="btn-prev" class="btn" hidden><i class="fas fa-arrow-left"></i> ย้อนกลับ</button>
+                <button type="button" id="btn-next" class="btn btn-primary btn-large">ถัดไป: <span id="ct-next-label"></span> <i class="fas fa-arrow-right"></i></button>
+                <button type="button" id="btn-print" class="btn btn-large full-width-btn" onclick="printContract()" hidden>
+                    <i class="fas fa-file-pdf"></i> พิมพ์ / ส่งออก PDF
+                </button>
+                <button type="button" id="btn-save-cloud" class="btn btn-primary btn-large full-width-btn" onclick="saveContract()" hidden>
+                    <i class="fas fa-check"></i> บันทึกลงทะเบียนเอกสาร
+                </button>
+            </div>
+        </div>
+
+        <div class="preview-panel" id="preview-panel"></div>
+    </div>
+
+    <script>
+        window.switchDocMobileTab = function (mode) {
+            const container = document.getElementById('docAppContainer');
+            const seg = document.getElementById('docMobileSegment');
+            if (container) container.setAttribute('data-mobile-view', mode);
+            if (seg) {
+                seg.style.setProperty('--seg-i', mode === 'preview' ? 1 : 0);
+                seg.querySelectorAll('.doc-segment-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-mode') === mode));
+            }
+        };
+    </script>
+    <script src="../assets/js/bo/documents/doc-common.js"></script>
+    <script src="../assets/js/bo/documents/contract-templates.js"></script>
+    <script src="../assets/js/bo/documents/script-contract.js"></script>
+</body>
+
+</html>

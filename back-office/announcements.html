@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ประกาศและวิสัยทัศน์ — KITTEN CODE Co.,Ltd</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/team.css">
+</head>
+
+<body class="bo-page">
+    <div class="tm">
+        <section class="tm-card">
+            <h2>เกี่ยวกับ KITTEN CODE Co.,Ltd <button type="button" class="btn tm-btn-sm" id="btn-edit-about" hidden>แก้ไข</button></h2>
+            <div class="ann-about" id="about"><div class="tm-empty">กำลังโหลด…</div></div>
+        </section>
+
+        <div class="tm-head">
+            <div class="tabs" id="cats">
+                <button type="button" class="tab active" data-c="all">ทั้งหมด</button>
+                <button type="button" class="tab" data-c="announcement">ประกาศ</button>
+                <button type="button" class="tab" data-c="policy">นโยบาย</button>
+            </div>
+            <button type="button" class="btn btn-primary" id="btn-add" hidden><i class="bi bi-plus-lg"></i> เขียนประกาศ</button>
+        </div>
+        <div id="list" style="display:grid;gap:.8rem"><div class="tm-empty">กำลังโหลด…</div></div>
+    </div>
+
+    <!-- About editor -->
+    <div class="modal-overlay" id="about-modal">
+        <div class="modal-box">
+            <div class="modal-title">แก้ไขข้อมูลองค์กร</div>
+            <div class="tm-form" style="margin-top:1rem">
+                <div class="form-group full"><label>วิสัยทัศน์</label><textarea id="ab-vision"></textarea></div>
+                <div class="form-group full"><label>พันธกิจ</label><textarea id="ab-mission"></textarea></div>
+                <div class="form-group full"><label>ค่านิยมองค์กร</label><textarea id="ab-values" placeholder="บรรทัดละ 1 ข้อ"></textarea></div>
+            </div>
+            <div class="modal-actions"><button type="button" class="btn" onclick="closeM('about-modal')">ยกเลิก</button><button type="button" class="btn btn-primary" id="ab-ok">บันทึก</button></div>
+        </div>
+    </div>
+
+    <!-- Post editor -->
+    <div class="modal-overlay" id="post-modal">
+        <div class="modal-box">
+            <div class="modal-title" id="post-title">เขียนประกาศ</div>
+            <div class="tm-form" style="margin-top:1rem">
+                <div class="form-group full"><label>หัวข้อ *</label><input type="text" id="po-title"></div>
+                <div class="form-group"><label>ประเภท</label><select id="po-cat"><option value="announcement">ประกาศ</option><option value="policy">นโยบาย</option></select></div>
+                <div class="form-group"><label>ปักหมุดไว้บนสุด</label><select id="po-pin"><option value="0">ไม่ปักหมุด</option><option value="1">ปักหมุด</option></select></div>
+                <div class="form-group full"><label>เนื้อหา</label><textarea id="po-body" style="min-height:10rem"></textarea></div>
+            </div>
+            <div class="modal-actions"><button type="button" class="btn" onclick="closeM('post-modal')">ยกเลิก</button><button type="button" class="btn btn-primary" id="po-ok">เผยแพร่</button></div>
+        </div>
+    </div>
+    <script type="module" src="../assets/js/bo/pages/announcements.js"></script>
+</body>
+
+</html>

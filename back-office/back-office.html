@@ -66,9 +66,41 @@
                 <span data-i18n-th="ปฏิทินและงาน" data-i18n-en="Calendar & Tasks">ปฏิทินและงาน</span>
             </a>
 
+            <a href="#certificate" class="menu-item" data-title="หนังสือรับรอง / เกียรติบัตร" data-title-en="Certificates & Awards">
+                <i class="bi bi-patch-check"></i>
+                <span data-i18n-th="ออกหนังสือรับรอง" data-i18n-en="Certificates">ออกหนังสือรับรอง</span>
+            </a>
+
+            <a href="#contract" class="menu-item" id="menu-contract" data-title="ทำสัญญา" data-title-en="Contracts" hidden>
+                <i class="bi bi-file-earmark-ruled"></i>
+                <span data-i18n-th="ทำสัญญา" data-i18n-en="Contracts">ทำสัญญา</span>
+            </a>
+
             <a href="#document-record" class="menu-item" data-title="ทะเบียนเอกสาร" data-title-en="Document Register">
                 <i class="bi bi-folder2-open"></i>
                 <span data-i18n-th="เอกสารทั้งหมด" data-i18n-en="All documents">เอกสารทั้งหมด</span>
+            </a>
+
+            <div class="menu-title menu-title-gap" data-i18n-th="ทีมและองค์กร" data-i18n-en="Team">ทีมและองค์กร</div>
+
+            <a href="#attendance" class="menu-item" data-title="เข้างาน / ลางาน" data-title-en="Attendance & Leave">
+                <i class="bi bi-alarm"></i>
+                <span data-i18n-th="เข้างาน / ลา" data-i18n-en="Attendance">เข้างาน / ลา</span>
+            </a>
+
+            <a href="#equipment" class="menu-item" data-title="อุปกรณ์ส่วนกลาง" data-title-en="Shared Equipment">
+                <i class="bi bi-camera-reels"></i>
+                <span data-i18n-th="ยืม-คืนอุปกรณ์" data-i18n-en="Equipment">ยืม-คืนอุปกรณ์</span>
+            </a>
+
+            <a href="#announcements" class="menu-item" data-title="ประกาศและวิสัยทัศน์" data-title-en="Announcements & Vision">
+                <i class="bi bi-megaphone"></i>
+                <span data-i18n-th="ประกาศ / นโยบาย" data-i18n-en="Announcements">ประกาศ / นโยบาย</span>
+            </a>
+
+            <a href="#handbook" class="menu-item" data-title="คู่มือปฏิบัติงาน" data-title-en="Operations Handbook">
+                <i class="bi bi-journal-bookmark"></i>
+                <span data-i18n-th="คู่มือปฏิบัติงาน" data-i18n-en="Handbook">คู่มือปฏิบัติงาน</span>
             </a>
 
             <div class="menu-title menu-title-gap" data-i18n-th="เครื่องมือ" data-i18n-en="Tools">เครื่องมือ</div>
@@ -179,13 +211,13 @@
         </a>
 
         <a href="#document-record" class="bo-tab-item" data-tab-index="3"
-            data-routes="#document-record,#quotation,#invoice,#receipt,#voucher,#certificate,#letter">
+            data-routes="#document-record,#quotation,#invoice,#receipt,#voucher,#certificate,#letter,#contract">
             <i class="bi bi-file-earmark-text"></i>
             <span class="bo-tab-label" data-i18n-th="เอกสาร" data-i18n-en="Docs">เอกสาร</span>
         </a>
 
         <button type="button" class="bo-tab-item" id="bottomMenuBtn" data-tab-index="4"
-            data-routes="#dashboard,#user,#qr,#profile" onclick="toggleMobileDrawer()">
+            data-routes="#dashboard,#attendance,#equipment,#announcements,#handbook,#user,#qr,#profile" onclick="toggleMobileDrawer()">
             <i class="bi bi-grid"></i>
             <span class="bo-tab-label" data-i18n-th="เมนู" data-i18n-en="Menu">เมนู</span>
         </button>
@@ -209,9 +241,18 @@
             <div class="create-picker-grid">
                 <a href="#voucher" onclick="closeCreatePicker()"><i class="bi bi-cash-stack"></i><b>ใบเบิก / ซื้อ / จ้าง</b><small>PR · PO · ใบสำคัญจ่าย</small></a>
             </div>
+            <div class="create-picker-group" id="picker-contract-title" hidden>สัญญา</div>
+            <div class="create-picker-grid" id="picker-contract-grid" hidden>
+                <a href="#contract:service" onclick="closeCreatePicker()"><i class="bi bi-handshake"></i><b>สัญญาจ้างทำของ</b><small>ฟรีแลนซ์ / งานโครงการ</small></a>
+                <a href="#contract:employment" onclick="closeCreatePicker()"><i class="bi bi-person-badge"></i><b>สัญญาจ้างแรงงาน</b><small>พนักงานประจำ</small></a>
+                <a href="#contract:software" onclick="closeCreatePicker()"><i class="bi bi-laptop"></i><b>จ้างพัฒนาเว็บ/ซอฟต์แวร์</b><small>ลูกค้าจ้างบริษัท</small></a>
+                <a href="#contract" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-lock"></i><b>สัญญาอื่น ๆ</b><small>NDA · แบ่งรายได้ %</small></a>
+            </div>
             <div class="create-picker-group" data-i18n-th="หนังสือ" data-i18n-en="Letters">หนังสือ</div>
             <div class="create-picker-grid">
-                <a href="#certificate" onclick="closeCreatePicker()"><i class="bi bi-patch-check"></i><b>หนังสือรับรอง / เกียรติบัตร</b><small>รับรองการทำงาน · ประกาศนียบัตร</small></a>
+                <a href="#certificate:employment" onclick="closeCreatePicker()"><i class="bi bi-person-vcard"></i><b>หนังสือรับรองการทำงาน</b><small>ยืนยันตำแหน่ง อายุงาน</small></a>
+                <a href="#certificate:internship" onclick="closeCreatePicker()"><i class="bi bi-mortarboard"></i><b>หนังสือรับรองการฝึกงาน</b><small>สำหรับนักศึกษาฝึกงาน</small></a>
+                <a href="#certificate" onclick="closeCreatePicker()"><i class="bi bi-patch-check"></i><b>เกียรติบัตร / ประกาศนียบัตร</b><small>อบรม วิทยากร รางวัล ขอบคุณ</small></a>
                 <a href="#letter" onclick="closeCreatePicker()"><i class="bi bi-envelope-paper"></i><b>หนังสือติดต่อภายนอก</b><small>ถึงหน่วยงานรัฐ / เอกชน</small></a>
             </div>
         </div>
@@ -253,6 +294,10 @@
                 }
             } catch (_) {
                 // Keep fallback values if Firestore read fails
+            }
+
+            if (profileData.role === 'admin') {
+                ['menu-contract', 'picker-contract-title', 'picker-contract-grid'].forEach(id => { const el = document.getElementById(id); if (el) el.hidden = false; });
             }
 
             const initial = (displayName.trim().charAt(0) || 'K').toUpperCase();
@@ -351,6 +396,11 @@
 
         // Hash Routing Map
         const routeMap = {
+            '#attendance': 'attendance.html',
+            '#equipment': 'equipment.html',
+            '#announcements': 'announcements.html',
+            '#handbook': 'handbook.html',
+            '#contract': 'contract.html',
             '#today': 'today.html',
             '#dashboard': 'dashboard.html',
             '#quotation': 'quotation.html',
@@ -368,6 +418,11 @@
         };
 
         const routeTitles = {
+            '#attendance': 'เข้างาน / ลางาน',
+            '#equipment': 'อุปกรณ์ส่วนกลาง',
+            '#announcements': 'ประกาศและวิสัยทัศน์',
+            '#handbook': 'คู่มือปฏิบัติงาน',
+            '#contract': 'ทำสัญญา',
             '#today': 'วันนี้',
             '#dashboard': 'ภาพรวมการเงิน',
             '#financial': 'บัญชีรายรับรายจ่าย',
@@ -385,6 +440,11 @@
         };
 
         const routeTitlesEn = {
+            '#attendance': 'Attendance & Leave',
+            '#equipment': 'Shared Equipment',
+            '#announcements': 'Announcements & Vision',
+            '#handbook': 'Operations Handbook',
+            '#contract': 'Contracts',
             '#today': 'Today',
             '#dashboard': 'Financial Overview',
             '#financial': 'Income & Expense Ledger',
@@ -516,20 +576,27 @@
         }
 
         document.addEventListener('kc-lang-change', () => {
-            const hash = routeMap[window.location.hash] ? window.location.hash : '#today';
+            const hash = parseRoute().hash;
             syncNavigationState(hash);
         });
+
+        // "#certificate:employment" = page + a type to open it with.
+        function parseRoute() {
+            const [base, arg] = window.location.hash.split(':');
+            return routeMap[base] ? { hash: base, arg: arg || '' } : { hash: '#today', arg: '' };
+        }
 
         let currentLoadedFile = '';
 
         function loadView() {
-            const hash = routeMap[window.location.hash] ? window.location.hash : '#today';
+            const { hash, arg } = parseRoute();
             const viewFile = routeMap[hash] || 'today.html';
+            const target = viewFile + (arg ? '?type=' + encodeURIComponent(arg) : '');
 
-            if (currentLoadedFile !== viewFile) {
-                currentLoadedFile = viewFile;
+            if (currentLoadedFile !== target) {
+                currentLoadedFile = target;
                 contentFrame.classList.add('is-loading');
-                contentFrame.src = viewFile;
+                contentFrame.src = target;
             }
 
             syncNavigationState(hash);

@@ -24,12 +24,15 @@
                     <button class="tab" onclick="switchTab('vouchers', this)">เบิก/ซื้อ/จ้าง/PV</button>
                     <button class="tab" onclick="switchTab('certificates', this)">หนังสือรับรอง</button>
                     <button class="tab" onclick="switchTab('letters', this)">หนังสือภายนอก</button>
+                    <button class="tab" id="tab-contracts" onclick="switchTab('contracts', this)" hidden>สัญญา</button>
                 </div>
                 <div class="head-tools">
                     <span class="page-sub" id="doc-count">กำลังโหลด…</span>
                     <input type="search" id="doc-search" class="kc-search" placeholder="ค้นหาเลขที่ ลูกค้า หรือโปรเจกต์">
                 </div>
             </div>
+
+            <div class="doc-stats" id="doc-stats"></div>
 
             <div class="section">
                 <div class="table-scroll-wrapper">

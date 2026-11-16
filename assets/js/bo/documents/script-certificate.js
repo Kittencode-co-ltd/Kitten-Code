@@ -403,9 +403,102 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.handleCertTypeChange(getInputValue('cert-type') || 'employment');
+    initCertChooser(window.KCDoc && window.KCDoc.isEditing ? window.KCDoc.isEditing() : false);
 
     if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => buildPreview());
     }
     setTimeout(() => buildPreview(), 400);
+});
+
+
+// --- Step 1: type chooser ---
+const CERT_CHOICES = {
+    letters: [
+        ['employment', 'fa-user-tie', 'รับรองการทำงาน', 'ยืนยันตำแหน่ง อายุงาน เงินเดือน (ใช้ขอวีซ่า สินเชื่อ)'],
+        ['internship', 'fa-user-graduate', 'รับรองการฝึกงาน', 'ผลการฝึกงานของนักศึกษา พร้อมชั่วโมงและผลประเมิน']
+    ],
+    awards: [
+        ['award_training', 'fa-graduation-cap', 'ผ่านการอบรม / เวิร์กชอป', 'มอบให้ผู้เข้าอบรมครบหลักสูตร'],
+        ['award_speaker', 'fa-chalkboard-teacher', 'ขอบคุณวิทยากร / ที่ปรึกษา', 'ขอบคุณผู้ให้ความรู้หรือคำปรึกษา'],
+        ['award_competition', 'fa-trophy', 'รางวัลการแข่งขัน / ดีเด่น', 'ผู้ชนะ รองชนะเลิศ หรือผลงานดีเด่น'],
+        ['award_participation', 'fa-certificate', 'เข้าร่วมโครงการ / สัมมนา', 'ผู้เข้าร่วมกิจกรรม'],
+        ['award_partner', 'fa-handshake', 'ขอบคุณหน่วยงานพันธมิตร', 'มอบให้องค์กรที่ร่วมงานกัน'],
+        ['award_intern_excellence', 'fa-medal', 'สำเร็จการฝึกงาน (แนวนอน)', 'ประกาศนียบัตรสำหรับผู้ฝึกงาน']
+    ]
+};
+const certLabel = (t) => { for (const g of Object.values(CERT_CHOICES)) { const f = g.find(c => c[0] === t); if (f) return f[2]; } return '-'; };
+
+function certCards(list) {
+    return list.map(c => `<button type="button" class="cert-card" data-pick="${c[0]}"><i class="fas ${c[1]}"></i><b>${c[2]}</b><small>${c[3]}</small></button>`).join('');
+}
+
+function setCertType(t) {
+    window.handleCertTypeChange(t);
+    const lab = document.getElementById('cert-current-label');
+    if (lab) lab.textContent = certLabel(t);
+}
+
+window.openCertChooser = function () { document.getElementById('cert-chooser').hidden = false; };
+
+function initCertChooser(editing) {
+    const box = document.getElementById('cert-chooser');
+    if (!box) return;
+    document.getElementById('cc-letters').innerHTML = certCards(CERT_CHOICES.letters);
+    document.getElementById('cc-awards').innerHTML = certCards(CERT_CHOICES.awards);
+    box.addEventListener('click', (e) => {
+        const c = e.target.closest('[data-pick]');
+        if (c) {
+            setCertType(c.dataset.pick);
+            box.hidden = true;
+            const first = document.getElementById('in-person-name');
+            if (first) first.focus({ preventScroll: true });
+        }
+        if (e.target.closest('#cc-resume')) { box.hidden = true; }
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !box.hidden && window.__certTypeChosen) box.hidden = true; });
+
+    const wanted = new URLSearchParams(location.search).get('type');
+    const valid = Object.values(CERT_CHOICES).flat().map(c => c[0]);
+    const current = getInputValue('cert-type') || 'employment';
+    setCertType(valid.includes(wanted) ? wanted : current);
+    window.__certTypeChosen = true;
+    if (valid.includes(wanted) || editing) return;
+
+    // Opened without a type: ask first. Offer to continue an unfinished draft.
+    let hasDraft = false;
+    try { const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); hasDraft = !!(d && d.inputs && (d.inputs['person-name'] || d.inputs['event-title'])); } catch (_) { }
+    const resume = document.getElementById('cc-resume');
+    if (hasDraft) { resume.hidden = false; resume.textContent = `ทำต่อจากร่างที่ค้างไว้ (${certLabel(current)})`; }
+    box.hidden = false;
+}
+
+// --- Optional sections stay folded; click the heading to open ---
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.form-section.kc-collapse').forEach(sec => {
+        const h3 = sec.querySelector('h3');
+        if (!h3) return;
+        const hintText = sec.dataset.hint;
+        if (hintText) { const h = document.createElement('span'); h.className = 'kc-collapse-hint'; h.textContent = hintText; h3.appendChild(h); }
+        sec.addEventListener('click', (e) => {
+            if (e.target.closest('button, input, select, textarea, label')) return;
+            if (e.target.closest('h3') || e.target.closest('.flex-between')) sec.classList.toggle('open');
+        });
+    });
+    // Signer: show who is currently set so people know they can skip it.
+    const signer = document.getElementById('sec-signer');
+    if (signer) {
+        const hint = document.createElement('span');
+        hint.className = 'kc-collapse-hint';
+        signer.querySelector('h3').appendChild(hint);
+        const upd = () => {
+            const n = (document.getElementById('in-sign-name') || {}).value || '';
+            const pos = (document.getElementById('in-sign-position') || {}).value || '';
+            hint.textContent = n ? `${n} — ${pos}` : 'ยังไม่ได้ใส่ชื่อ กดเพื่อกรอก';
+            hint.style.color = n ? '' : 'var(--kc-red)';
+        };
+        upd();
+        signer.addEventListener('input', upd);
+        setTimeout(upd, 500);
+    }
 });

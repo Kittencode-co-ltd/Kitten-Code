@@ -317,7 +317,8 @@ function buildViewer() {
         receipt: 'receipts',
         voucher: 'vouchers',
         certificate: 'certificates',
-        letter: 'letters'
+        letter: 'letters',
+        contract: 'contracts'
     };
     const hashMap = {
         quotation: '#quotation',
@@ -325,7 +326,8 @@ function buildViewer() {
         receipt: '#receipt',
         voucher: '#voucher',
         certificate: '#certificate',
-        letter: '#letter'
+        letter: '#letter',
+        contract: '#contract'
     };
     const editBtn = document.getElementById('btn-edit-doc');
     if (editBtn && colMap[type]) {
@@ -349,7 +351,8 @@ function buildViewer() {
         receipt: 'ใบเสร็จรับเงิน',
         voucher: (window.KCVoucher && window.KCVoucher.TYPES[d.voucherType]?.title) || 'ใบสำคัญจ่าย / เบิกจ่าย',
         certificate: (window.KCCertificate && window.KCCertificate.TYPES[d.certType]?.short) || (d.certType === 'internship' ? 'หนังสือรับรองการฝึกงาน' : 'หนังสือรับรองการทำงาน'),
-        letter: (window.KCLetter && window.KCLetter.TYPES[d.letterType]?.title) || 'หนังสือติดต่อภายนอก'
+        letter: (window.KCLetter && window.KCLetter.TYPES[d.letterType]?.title) || 'หนังสือติดต่อภายนอก',
+        contract: (window.KCContract && window.KCContract.TYPES[d.contractType]?.short) || 'สัญญา'
     };
     if (badge) badge.textContent = labels[type] || type;
     if (docNum) docNum.textContent = d.docNo || '';
@@ -363,6 +366,10 @@ function buildViewer() {
     }
     if (type === 'voucher' && window.KCVoucher) {
         container.appendChild(window.KCVoucher.render(d));
+        return;
+    }
+    if (type === 'contract' && window.KCContract) {
+        container.appendChild(window.KCContract.render(d));
         return;
     }
     if (type === 'letter' && window.KCLetter) {

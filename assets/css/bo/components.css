@@ -189,7 +189,7 @@ label, .form-label, .form-label-cal, .kc-label { color: var(--kc-muted); font-si
 .badge-pending, .sb-pending { background: var(--kc-amber-soft); color: var(--kc-amber); }
 .badge-rejected, .badge-exp, .sb-rejected, .badge-neg { background: var(--kc-red-soft); color: var(--kc-red); }
 .badge-quote { background: var(--kc-accent-soft); color: var(--kc-accent); }
-.badge-invoice, .badge-voucher { background: var(--kc-violet-soft); color: var(--kc-violet); }
+.badge-invoice, .badge-voucher, .badge-contract { background: var(--kc-violet-soft); color: var(--kc-violet); }
 .badge-certificate, .badge-letter { background: var(--kc-bg); color: var(--kc-muted); }
 .bg-danger { background: var(--kc-red-soft) !important; color: var(--kc-red); }
 .bg-secondary { background: var(--kc-bg) !important; color: var(--kc-muted); }
