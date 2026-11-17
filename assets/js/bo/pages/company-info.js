@@ -1,6 +1,15 @@
 // Company identity shown (read-only) on the announcements page.
 // Edit this file to change it — there is deliberately no edit screen in the back office.
 export const COMPANY_INFO = {
+    // Official registration (ใบสำคัญแสดงการจดทะเบียน — Department of Business Development)
+    official: {
+        nameTh: 'บริษัท คิทเท่น โค้ด จำกัด',
+        nameEn: 'KITTEN CODE Co.,Ltd',
+        regNo: '0655569001411',
+        registeredOn: '2026-05-06',                 // 6 พฤษภาคม 2569
+        office: 'สำนักงานทะเบียนหุ้นส่วนบริษัท จังหวัดพิษณุโลก',
+        type: 'บริษัทจำกัด (นิติบุคคลตามประมวลกฎหมายแพ่งและพาณิชย์)'
+    },
     vision: {
         en: 'Beyond Technology, Creating Possibilities.',
         th: 'ก้าวข้ามขีดจำกัดของเทคโนโลยี เพื่อสร้างความเป็นไปได้ใหม่ให้กับโลก'

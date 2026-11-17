@@ -24,13 +24,22 @@ window.closeM = closeModal;
     await loadPosts();
 })();
 
+const THAI_MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+const thDateLong = (iso) => { const [y, m, d] = String(iso).split('-').map(Number); return y ? `${d} ${THAI_MONTHS[m - 1]} ${y + 543}` : ''; };
+const fmtReg = (v) => { const d = String(v || '').replace(/\D/g, ''); return d.length === 13 ? `${d[0]}-${d.slice(1, 5)}-${d.slice(5, 10)}-${d.slice(10, 12)}-${d[12]}` : String(v || ''); };
+
 function renderAbout() {
-    const I = COMPANY_INFO;
+    const I = COMPANY_INFO, O = I.official;
     const duo = (o) => `<p class="ab-en">${esc(o.en)}</p><p class="ab-th">${esc(o.th)}</p>`;
     $('about').innerHTML = `
         <div class="ab-hero">
             <div class="ab-vision"><span class="ab-label"><i class="bi bi-eye"></i> วิสัยทัศน์ · Vision</span>${duo(I.vision)}</div>
             <div class="ab-philo"><span class="ab-label"><i class="bi bi-lightbulb"></i> Brand Philosophy</span>${duo(I.philosophy)}</div>
+        </div>
+        <div class="ab-official">
+            <div><span>ชื่อนิติบุคคล</span><b>${esc(O.nameTh)}</b><small>${esc(O.nameEn)}</small></div>
+            <div><span>เลขทะเบียนนิติบุคคล</span><b class="reg">${esc(fmtReg(O.regNo))}</b><small>${esc(O.type)}</small></div>
+            <div><span>จดทะเบียนก่อตั้งเมื่อ</span><b>${esc(thDateLong(O.registeredOn))}</b><small>${esc(O.office)}</small></div>
         </div>
         <div class="ab-block">
             <h3 class="ab-title"><i class="bi bi-bullseye"></i> พันธกิจ · Mission</h3>

@@ -100,3 +100,9 @@
 .ab-letter { width: 3rem; height: 3rem; font-size: 1.5rem; }
 .ab-value:hover { transform: translateY(-2px); box-shadow: var(--kc-btn-shadow-hover); }
 .ab-value { transition: transform var(--dur-base) var(--ease-spring), box-shadow var(--dur-base) var(--ease-out); }
+.ab-official { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.7rem; padding: 0.9rem 1rem; border: 1px dashed var(--kc-line-strong); border-radius: var(--kc-radius); background: var(--kc-surface-2); }
+.ab-official > div { display: grid; gap: 0.1rem; min-width: 0; }
+.ab-official span { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; color: var(--kc-muted); }
+.ab-official b { font-size: 0.98rem; overflow-wrap: anywhere; }
+.ab-official b.reg { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.ab-official small { color: var(--kc-muted); font-size: 0.76rem; line-height: 1.4; }

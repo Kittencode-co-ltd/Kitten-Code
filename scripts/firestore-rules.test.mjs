@@ -1,7 +1,7 @@
 // Run: (needs Java + `npm i -D firebase-tools @firebase/rules-unit-testing`)
 //   npx firebase emulators:exec --only firestore --project demo-kitten "node scripts/firestore-rules.test.mjs"
 import { initializeTestEnvironment, assertSucceeds, assertFails } from '@firebase/rules-unit-testing';
-import { doc, setDoc, getDoc, updateDoc, getDocs, collection, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, getDocs, collection, deleteDoc, serverTimestamp, query, where } from 'firebase/firestore';
 import { readFileSync } from 'fs';
 
 const env = await initializeTestEnvironment({
@@ -100,6 +100,20 @@ await t('staff claims their own username', () => assertSucceeds(setDoc(doc(staff
 await t('staff cannot claim the admin username', () => assertFails(setDoc(doc(staff, 'usernames/boss'), { uid: 'staff', email: 's@x.co' })));
 await t('anyone can look a username up (login)', () => assertSucceeds(getDoc(doc(anon, 'usernames/somchai'))));
 await t('nobody can list usernames', () => assertFails(getDocs(collection(anon, 'usernames'))));
+
+console.log('IMS registers');
+await t('staff reads a register', () => assertSucceeds(getDocs(collection(staff, 'ims_risks'))));
+await t('staff cannot write a register', () => assertFails(setDoc(doc(staff, 'ims_risks/r1'), { title: 'x' })));
+await t('admin writes a register', () => assertSucceeds(setDoc(doc(admin, 'ims_risks/r1'), { title: 'x', score: 9 })));
+await t('admin writes RACI', () => assertSucceeds(setDoc(doc(admin, 'ims_raci/a1'), { activity: 'x' })));
+await t('unknown ims_ collection is closed', () => assertFails(setDoc(doc(admin, 'ims_secret/x'), { a: 1 })));
+await t('anon cannot read a register', () => assertFails(getDocs(collection(anon, 'ims_docs'))));
+await t('staff acknowledges a policy as self', () => assertSucceeds(setDoc(doc(staff, 'ims_acks/p1_v1.0_staff'), { policyId: 'p1', version: '1.0', uid: 'staff', name: 's', createdAt: serverTimestamp() })));
+await t('staff cannot acknowledge for someone else', () => assertFails(setDoc(doc(staff, 'ims_acks/p1_v1.0_staff2'), { policyId: 'p1', version: '1.0', uid: 'staff2', createdAt: serverTimestamp() })));
+await t('staff cannot rewrite an acknowledgement', () => assertFails(updateDoc(doc(staff, 'ims_acks/p1_v1.0_staff'), { name: 'z' })));
+await t('staff reads only own acknowledgements', () => assertSucceeds(getDocs(query(collection(staff, 'ims_acks'), where('uid', '==', 'staff')))));
+await t('staff cannot list everyone\'s acknowledgements', () => assertFails(getDocs(collection(staff, 'ims_acks'))));
+await t('admin lists all acknowledgements', () => assertSucceeds(getDocs(collection(admin, 'ims_acks'))));
 
 console.log(`\n${pass} passed, ${fail} failed`);
 await env.cleanup();

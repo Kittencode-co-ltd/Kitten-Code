@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'">
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบคุณภาพ — KITTEN CODE Co.,Ltd</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/team.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/ims.css">
+</head>
+
+<body class="bo-page">
+    <div class="tm ims">
+        <div class="tm-head">
+            <div><h1 id="ims-title">ระบบคุณภาพ</h1><p id="ims-sub"></p></div>
+            <div class="tm-actions">
+                <a class="btn" id="btn-order" href="#" hidden><i class="bi bi-file-earmark-text"></i> ออกคำสั่งแต่งตั้ง</a>
+                <button type="button" class="btn btn-primary" id="btn-add" hidden><i class="bi bi-plus-lg"></i> เพิ่มรายการ</button>
+            </div>
+        </div>
+        <div class="tabs ims-tabs" id="tabs"></div>
+        <div class="tm-stats" id="stats"></div>
+        <section class="tm-card"><div id="list"><div class="tm-empty">กำลังโหลด…</div></div></section>
+    </div>
+
+    <div class="modal-overlay" id="rec-modal">
+        <div class="modal-box">
+            <div class="modal-title" id="rec-title"></div>
+            <div class="kc-modal-sub" id="rec-sub"></div>
+            <div class="tm-form" id="rec-form"></div>
+            <div class="ims-hist" id="rec-hist" hidden></div>
+            <div class="modal-actions">
+                <button type="button" class="btn tm-btn-danger" id="rec-del" hidden>ลบ</button>
+                <span style="flex:1"></span>
+                <button type="button" class="btn" id="rec-cancel">ปิด</button>
+                <button type="button" class="btn btn-primary" id="rec-ok">บันทึก</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="../assets/js/bo/pages/ims.js"></script>
+</body>
+
+</html>

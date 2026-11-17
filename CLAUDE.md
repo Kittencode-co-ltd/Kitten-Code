@@ -60,7 +60,7 @@ Each page has a dedicated JS file:
 
 ### Firestore Collections
 
-Key collections: `users`, `categories`, `transactions`, `quotations`, `invoices`, `receipts`, `calendar_events`, `attendance`, `leave_requests`, `equipment`, `equipment_log`, `announcements`, `company_profile`, `contracts` (admin only).
+Key collections: `users`, `categories`, `transactions`, `quotations`, `invoices`, `receipts`, `calendar_events`, `attendance`, `leave_requests`, `equipment`, `equipment_log`, `announcements`, `company_profile`, `contracts` (admin only), `ims_docs`, `ims_policies`, `ims_acks`, `ims_roles`, `ims_raci`, `ims_training`, `ims_stakeholders`, `ims_comms`, `ims_risks`, `ims_objectives`, `ims_changes` (ISO registers; staff read, admin write; `ims_acks` = own policy acknowledgements).
 
 ### Data Connect Schema (`dataconnect/schema/schema.gql`)
 

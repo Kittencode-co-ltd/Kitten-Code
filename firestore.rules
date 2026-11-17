@@ -248,6 +248,25 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ── IMS / ISO registers (document control, risks, objectives …) ──
+    // Everyone on staff can read; only admins maintain the registers.
+    match /{col}/{id} {
+      allow read:  if isStaff() && col in ['ims_docs', 'ims_policies', 'ims_roles', 'ims_raci', 'ims_training', 'ims_stakeholders',
+                                          'ims_comms', 'ims_risks', 'ims_objectives', 'ims_changes'];
+      allow write: if isAdmin() && col in ['ims_docs', 'ims_policies', 'ims_roles', 'ims_raci', 'ims_training', 'ims_stakeholders',
+                                          'ims_comms', 'ims_risks', 'ims_objectives', 'ims_changes'];
+    }
+
+    // Policy acknowledgement: doc ID = {policyId}_v{version}_{uid}. You can only record your own, and never change it afterwards.
+    match /ims_acks/{id} {
+      allow read:   if isStaff() && (isAdmin() || resource.data.uid == request.auth.uid);
+      allow create: if isStaff()
+                       && request.resource.data.uid == request.auth.uid
+                       && id == request.resource.data.policyId + '_v' + request.resource.data.version + '_' + request.auth.uid
+                       && request.resource.data.createdAt == request.time;
+      allow update, delete: if isAdmin();
+    }
+
     // Read-only from the app; the company identity now lives in assets/js/bo/pages/company-info.js.
     match /company_profile/{id} {
       allow read:  if isStaff();
