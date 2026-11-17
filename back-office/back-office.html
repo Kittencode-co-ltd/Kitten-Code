@@ -84,6 +84,10 @@
                 <i class="bi bi-people"></i>
                 <span data-i18n-th="ผู้ใช้" data-i18n-en="Users">ผู้ใช้</span>
             </a>
+            <a href="#namecard" class="menu-item" data-title="นามบัตรอิเล็กทรอนิกส์" data-title-en="Digital Business Card">
+                <i class="bi bi-person-vcard"></i>
+                <span data-i18n-th="นามบัตร" data-i18n-en="Business card">นามบัตร</span>
+            </a>
             <a href="#qr" class="menu-item" data-title="สร้าง QR Code" data-title-en="QR Code Generator">
                 <i class="bi bi-qr-code-scan"></i>
                 <span data-i18n-th="QR Code" data-i18n-en="QR Code">QR Code</span>
@@ -191,7 +195,7 @@
         </a>
 
         <button type="button" class="bo-tab-item" id="bottomMenuBtn" data-tab-index="4"
-            data-routes="#attendance,#equipment,#company,#ims,#user,#qr,#profile" onclick="toggleMobileDrawer()">
+            data-routes="#attendance,#equipment,#company,#ims,#user,#qr,#namecard,#profile" onclick="toggleMobileDrawer()">
             <i class="bi bi-grid"></i>
             <span class="bo-tab-label" data-i18n-th="เมนู" data-i18n-en="Menu">เมนู</span>
         </button>
@@ -402,7 +406,8 @@
             '#invoice': 'invoice.html',
             '#certificate': 'certificate.html',
             '#letter': 'letter.html',
-            '#qr': 'qr-gen.html'
+            '#qr': 'qr-gen.html',
+            '#namecard': 'namecard.html'
         };
 
         const routeTitles = {
@@ -423,6 +428,7 @@
             '#letter': 'หนังสือติดต่อหน่วยงานภายนอก',
             '#user': 'จัดการผู้ใช้',
             '#qr': 'สร้าง QR Code',
+            '#namecard': 'นามบัตรอิเล็กทรอนิกส์',
             '#profile': 'โปรไฟล์ของฉัน'
         };
 
@@ -444,6 +450,7 @@
             '#letter': 'External Correspondence',
             '#user': 'User Management',
             '#qr': 'QR Code Generator',
+            '#namecard': 'Digital Business Card',
             '#profile': 'My Profile'
         };
 

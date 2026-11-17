@@ -29,6 +29,7 @@ await env.withSecurityRulesDisabled(async (ctx) => {
 
 const admin = env.authenticatedContext('admin').firestore();
 const staff = env.authenticatedContext('staff').firestore();
+const staff2 = env.authenticatedContext('staff2').firestore();
 const stray = env.authenticatedContext('stray').firestore();
 const anon = env.unauthenticatedContext().firestore();
 
@@ -114,6 +115,22 @@ await t('staff cannot rewrite an acknowledgement', () => assertFails(updateDoc(d
 await t('staff reads only own acknowledgements', () => assertSucceeds(getDocs(query(collection(staff, 'ims_acks'), where('uid', '==', 'staff')))));
 await t('staff cannot list everyone\'s acknowledgements', () => assertFails(getDocs(collection(staff, 'ims_acks'))));
 await t('admin lists all acknowledgements', () => assertSucceeds(getDocs(collection(admin, 'ims_acks'))));
+
+console.log('Business cards');
+const card = { uid: 'staff', published: true, name: 'ทดสอบ', position: 'dev', accent: 'blue', updatedAt: serverTimestamp() };
+await t('staff creates own card', () => assertSucceeds(setDoc(doc(staff, 'cards/somchai'), card)));
+await t('anyone opens a published card', () => assertSucceeds(getDoc(doc(anon, 'cards/somchai'))));
+await t('nobody can list cards (anon)', () => assertFails(getDocs(collection(anon, 'cards'))));
+await t('staff cannot list cards', () => assertFails(getDocs(collection(staff, 'cards'))));
+await t('admin lists cards', () => assertSucceeds(getDocs(collection(admin, 'cards'))));
+await t('unpublished card is private to owner', async () => { await assertSucceeds(updateDoc(doc(staff, 'cards/somchai'), { published: false })); await assertFails(getDoc(doc(anon, 'cards/somchai'))); await assertSucceeds(getDoc(doc(staff, 'cards/somchai'))); });
+await t('staff cannot create a card for someone else', () => assertFails(setDoc(doc(staff, 'cards/other-one'), { ...card, uid: 'staff2' })));
+await t('staff cannot take over a card', () => assertFails(updateDoc(doc(staff2, 'cards/somchai'), { name: 'x' })));
+await t('bad link name is refused', () => assertFails(setDoc(doc(staff, 'cards/A'), card)));
+await t('unknown field is refused', () => assertFails(setDoc(doc(staff, 'cards/extra-one'), { ...card, role: 'admin' })));
+await t('oversized field is refused', () => assertFails(setDoc(doc(staff, 'cards/big-one'), { ...card, tagline: 'x'.repeat(300) })));
+await t('anon cannot write a card', () => assertFails(setDoc(doc(anon, 'cards/anon-one'), card)));
+await t('admin can unpublish anyone', () => assertSucceeds(updateDoc(doc(admin, 'cards/somchai'), { published: false })));
 
 console.log(`\n${pass} passed, ${fail} failed`);
 await env.cleanup();

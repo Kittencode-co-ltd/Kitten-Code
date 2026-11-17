@@ -66,6 +66,7 @@ jobs:
           cp -r team-profile public/
           cp -r services public/
           cp index.html public/
+          cp card.html public/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

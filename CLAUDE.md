@@ -33,7 +33,7 @@ There are no npm build scripts, linting, or test suites configured.
 ## Deployment
 
 CI/CD runs automatically on push to `main` via `.github/workflows/deploy.yml`. It:
-1. Copies `assets/`, `back-office/`, and `index.html` into `public/`
+1. Copies `assets/`, `back-office/`, `index.html` and `card.html` into `public/`
 2. Injects Firebase secrets from GitHub Actions environment
 3. Deploys `public/` to GitHub Pages
 
@@ -60,7 +60,7 @@ Each page has a dedicated JS file:
 
 ### Firestore Collections
 
-Key collections: `users`, `categories`, `transactions`, `quotations`, `invoices`, `receipts`, `calendar_events`, `attendance`, `leave_requests`, `equipment`, `equipment_log`, `announcements`, `company_profile`, `contracts` (admin only), `ims_docs`, `ims_policies`, `ims_acks`, `ims_roles`, `ims_raci`, `ims_training`, `ims_stakeholders`, `ims_comms`, `ims_risks`, `ims_objectives`, `ims_changes` (ISO registers; staff read, admin write; `ims_acks` = own policy acknowledgements).
+Key collections: `users`, `categories`, `transactions`, `quotations`, `invoices`, `receipts`, `calendar_events`, `attendance`, `leave_requests`, `equipment`, `equipment_log`, `announcements`, `company_profile`, `contracts` (admin only), `ims_docs`, `ims_policies`, `ims_acks`, `ims_roles`, `ims_raci`, `ims_training`, `ims_stakeholders`, `ims_comms`, `ims_risks`, `ims_objectives`, `cards` (public digital business cards; `card.html` at the site root reads one by `?u=`), `ims_changes` (ISO registers; staff read, admin write; `ims_acks` = own policy acknowledgements).
 
 ### Data Connect Schema (`dataconnect/schema/schema.gql`)
 

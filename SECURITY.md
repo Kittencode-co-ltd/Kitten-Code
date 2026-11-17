@@ -10,7 +10,7 @@ The rules in `firestore.rules` are **not live until deployed**. The app code ass
 1. Sign in to the Firebase CLI with the Google account that **owns or edits the `kitten-code` project**
    (needs *Firebase Rules Admin* + *Service Usage Consumer*, or Editor).
 2. (Optional but recommended) run the rule tests — needs Java 11+ and `npm i -D firebase-tools @firebase/rules-unit-testing`:
-   `npx firebase emulators:exec --only firestore --project demo-kitten "node scripts/firestore-rules.test.mjs"` → expect **65 passed, 0 failed**.
+   `npx firebase emulators:exec --only firestore --project demo-kitten "node scripts/firestore-rules.test.mjs"` → expect **78 passed, 0 failed**.
 3. `firebase deploy --only firestore:rules --project kitten-code`
 4. Smoke test with an admin and a normal staff login: staff can open Today/Calendar/Attendance, cannot see Contracts or approve money;
    admin can do both.
@@ -19,6 +19,8 @@ The rules in `firestore.rules` are **not live until deployed**. The app code ass
 ## What the code enforces (`firestore.rules`)
 - **Staff = an admin-created `users/{uid}` profile.** Anyone can create a Firebase Auth account, but without a profile
   they can read and write nothing (`isStaff()`). Only an admin can create a profile, so nobody can make themselves admin.
+- Business cards (`cards/{link-name}`): the owner publishes it; one published card opens for anyone with the link, lists are admin-only,
+  fields are whitelisted and size-limited. Treat everything on a published card as public.
 - Admin-only: contracts, user management, approving money (`fin_transactions` paid/rejected, quotation/voucher
   *Approved/Paid*), editing approved ledger rows, equipment management, announcements.
 - Staff cannot rewrite their own check-in time (only the check-out); borrowing equipment can only be for yourself and
