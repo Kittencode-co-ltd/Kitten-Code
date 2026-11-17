@@ -53,7 +53,7 @@ const TABS = {
         sub: 'ตำแหน่ง ผู้ดำรงตำแหน่ง สายบังคับบัญชา และบทบาทด้านระบบบริหาร', noun: 'ตำแหน่ง',
         fields: [
             { k: 'position', label: 'ตำแหน่ง *', req: 1 }, { k: 'holder', label: 'ผู้ดำรงตำแหน่ง' },
-            { k: 'parent', label: 'รายงานต่อ', type: 'select', options: () => [['', '— ผู้บริหารสูงสุด —'], ...(items.roles || []).filter(r => !editing || r.id !== editing.id).map(r => [r.id, r.position])] },
+            { k: 'parent', label: 'รายงานต่อ', type: 'select', options: () => { const bad = editing ? descendants(editing.id) : new Set(); return [['', '— ผู้บริหารสูงสุด —'], ...(items.roles || []).filter(r => !bad.has(r.id)).map(r => [r.id, r.position])]; } },
             { k: 'isoRole', label: 'บทบาทในระบบบริหาร', type: 'select', options: [['', '—'], ['top', 'ผู้บริหารสูงสุด'], ['mr', 'ผู้แทนฝ่ายบริหาร (MR)'], ['auditor', 'ผู้ตรวจสอบภายใน'], ['owner', 'เจ้าของกระบวนการ'], ['security', 'ผู้ดูแลความมั่นคงสารสนเทศ'], ['dpo', 'เจ้าหน้าที่คุ้มครองข้อมูล (DPO)'], ['innov', 'ผู้นำด้านนวัตกรรม']] },
             { k: 'duties', label: 'หน้าที่ความรับผิดชอบ', type: 'textarea', full: true }, { k: 'authority', label: 'อำนาจตัดสินใจ', type: 'textarea', full: true },
             { k: 'orderNo', label: 'เลขที่คำสั่งแต่งตั้ง', ph: 'เช่น คำสั่งที่ 1/2569' }, { k: 'orderDate', label: 'ลงวันที่', type: 'date' }
@@ -162,8 +162,9 @@ const DT = { policy: 'นโยบาย', procedure: 'ขั้นตอน', w
 const ISO = { top: 'ผู้บริหารสูงสุด', mr: 'MR', auditor: 'ผู้ตรวจสอบภายใน', owner: 'เจ้าของกระบวนการ', security: 'ดูแลความมั่นคง', dpo: 'DPO', innov: 'ผู้นำนวัตกรรม' };
 const SK = { customer: 'ลูกค้า', staff: 'พนักงาน', supplier: 'ผู้ให้บริการ', regulator: 'หน่วยงานกำกับ', owner: 'ผู้ถือหุ้น', community: 'ชุมชน', other: 'อื่นๆ' };
 const CAT = { quality: 'คุณภาพ', security: 'ความมั่นคง/PDPA', env: 'สิ่งแวดล้อม', innov: 'นวัตกรรม', finance: 'การเงิน', people: 'บุคลากร', legal: 'กฎหมาย' };
+function descendants(id) { const out = new Set([id]); let grew = true; while (grew) { grew = false; (items.roles || []).forEach(r => { if (r.parent && out.has(r.parent) && !out.has(r.id)) { out.add(r.id); grew = true; } }); } return out; }
 function score(r) { return (Number(r.likelihood) || 0) * (Number(r.impact) || 0); }
-function pct(r) { const t = Number(r.target); return t > 0 ? Math.max(0, Math.min(100, Math.round((Number(r.current) || 0) / t * 100))) : 0; }
+function pct(r) { const t = Number(r.target); if (t === 0 && r.target !== '' && r.target != null) return (Number(r.current) || 0) === 0 ? 100 : 0; return t > 0 ? Math.max(0, Math.min(100, Math.round((Number(r.current) || 0) / t * 100))) : 0; }
 function ackedBy(p, uid) { return acks.some(a => a.policyId === p.id && a.uid === uid && a.version === (p.version || '1.0')); }
 
 (async function init() {
@@ -177,13 +178,17 @@ function ackedBy(p, uid) { return acks.some(a => a.policyId === p.id && a.uid ==
     $('list').addEventListener('click', onList);
     $('rec-cancel').addEventListener('click', () => closeModal('rec-modal'));
     $('rec-ok').addEventListener('click', save);
+    $('list').addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('ims-row')) { e.preventDefault(); e.target.click(); } });
+    $('rec-modal').addEventListener('mousedown', (e) => { if (e.target.id === 'rec-modal') closeModal('rec-modal'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal('rec-modal'); });
     $('rec-del').addEventListener('click', remove);
     $('btn-order').addEventListener('click', (e) => { e.preventDefault(); try { window.parent.location.hash = '#letter'; } catch (x) { location.href = 'letter.html'; } });
     await show(tab);
 })();
 
+let loadSeq = 0;
 async function show(k) {
-    tab = k; const T = TABS[k];
+    tab = k; const seq = ++loadSeq; const T = TABS[k];
     document.querySelectorAll('#tabs .tab').forEach(b => b.classList.toggle('active', b.dataset.k === k));
     $('ims-title').textContent = T.label; $('ims-sub').textContent = T.sub;
     $('btn-add').hidden = !me.isAdmin; $('btn-order').hidden = !(me.isAdmin && k === 'roles');
@@ -193,8 +198,10 @@ async function show(k) {
         items[k] = (await getDocs(collection(db, T.col))).docs.map(d => ({ ...d.data(), id: d.id }));
         if (T.ack) await loadAcks();
         if (k === 'roles') { /* parent names resolve from this list */ }
-    } catch (e) { console.error(e); $('list').innerHTML = '<div class="tm-empty">โหลดไม่สำเร็จ — ตรวจสอบสิทธิ์หรือการเชื่อมต่อ</div>'; return; }
+    } catch (e) { if (seq !== loadSeq) return; console.error(e); $('list').innerHTML = '<div class="tm-empty">โหลดไม่สำเร็จ — ตรวจสอบสิทธิ์หรือการเชื่อมต่อ</div>'; return; }
+    if (seq !== loadSeq) return;   // a newer tab was opened meanwhile
     render();
+    const act = document.querySelector('#tabs .tab.active'); if (act && act.scrollIntoView) act.scrollIntoView({ block: 'nearest', inline: 'center' });
 }
 
 async function loadAcks() {
@@ -231,8 +238,9 @@ function row(r, T, depth = 0, idx = 0) {
 function tree(a, T) {
     const byParent = {}; a.forEach(r => { (byParent[r.parent || ''] = byParent[r.parent || ''] || []).push(r); });
     const ids = new Set(a.map(r => r.id)); const roots = a.filter(r => !r.parent || !ids.has(r.parent));
-    const out = []; const walk = (r, d) => { out.push(row(r, T, d, out.length)); (byParent[r.id] || []).forEach(c => walk(c, d + 1)); };
-    roots.forEach(r => walk(r, 0)); return `<div class="ims-tree">${out.join('')}</div>`;
+    const out = [], seen = new Set(); const walk = (r, d) => { if (seen.has(r.id)) return; seen.add(r.id); out.push(row(r, T, d, out.length)); (byParent[r.id] || []).forEach(c => walk(c, d + 1)); };
+    roots.forEach(r => walk(r, 0)); a.forEach(r => walk(r, 0));   // anything left (a loop in old data) still shows
+    return `<div class="ims-tree">${out.join('')}</div>`;
 }
 
 async function onList(e) {
