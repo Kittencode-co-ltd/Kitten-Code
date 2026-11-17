@@ -9,7 +9,7 @@ const lv = (n) => [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5']].m
 const std = { k: 'standards', label: 'มาตรฐานที่เกี่ยวข้อง', type: 'tags', options: STD, full: true };
 const WHO = 'ผู้รับผิดชอบ';
 
-let me, tab = 'docs', items = {}, acks = [], users = [], editing = null;
+let me, tab = 'home', items = {}, acks = [], users = [], editing = null;
 const today = () => isoDate();
 
 // Each register: collection, fields, how a row looks, and the stats on top.
@@ -162,6 +162,22 @@ const DT = { policy: 'นโยบาย', procedure: 'ขั้นตอน', w
 const ISO = { top: 'ผู้บริหารสูงสุด', mr: 'MR', auditor: 'ผู้ตรวจสอบภายใน', owner: 'เจ้าของกระบวนการ', security: 'ดูแลความมั่นคง', dpo: 'DPO', innov: 'ผู้นำนวัตกรรม' };
 const SK = { customer: 'ลูกค้า', staff: 'พนักงาน', supplier: 'ผู้ให้บริการ', regulator: 'หน่วยงานกำกับ', owner: 'ผู้ถือหุ้น', community: 'ชุมชน', other: 'อื่นๆ' };
 const CAT = { quality: 'คุณภาพ', security: 'ความมั่นคง/PDPA', env: 'สิ่งแวดล้อม', innov: 'นวัตกรรม', finance: 'การเงิน', people: 'บุคลากร', legal: 'กฎหมาย' };
+// What needs attention in each register: [count, text, level] (level 2 red, 1 amber, 0 info).
+const cnt = (a, f) => a.filter(f).length;
+const TODO = {
+    docs: (a) => [[cnt(a, r => r.status === 'approved' && r.nextReview && r.nextReview < today()), 'เอกสารเลยกำหนดทบทวน', 2], [cnt(a, r => r.status === 'review'), 'เอกสารรออนุมัติ', 1], [cnt(a, r => r.status === 'draft'), 'เอกสารยังเป็นร่าง', 0]],
+    policies: (a) => [[cnt(a, r => r.status === 'active' && !ackedBy(r, me.uid)), 'นโยบายที่คุณยังไม่รับทราบ', 2], [me.isAdmin ? cnt(a, r => r.status === 'draft') : 0, 'นโยบายยังเป็นร่าง', 0]],
+    roles: (a) => [[cnt(a, r => r.isoRole && !r.orderNo), 'ตำแหน่งรอคำสั่งแต่งตั้ง', 1]],
+    raci: (a) => [[cnt(a, r => !r.a), 'กิจกรรมที่ยังไม่ระบุ A', 1]],
+    training: (a) => [[cnt(a, r => r.expires && r.expires < today()), 'การอบรมที่หมดอายุ', 2]],
+    stakeholders: () => [], comms: () => [],
+    risks: (a) => [[cnt(a, r => r.status !== 'closed' && r.rtype !== 'opp' && score(r) >= 15), 'ความเสี่ยงระดับสูงที่ยังเปิดอยู่', 2]],
+    objectives: (a) => [[cnt(a, r => r.status === 'active' && r.due && r.due < today()), 'วัตถุประสงค์เลยกำหนด', 2]],
+    changes: (a) => [[cnt(a, r => r.status === 'proposed'), 'การเปลี่ยนแปลงรอพิจารณา', 1]]
+};
+const todoOf = (k) => (TODO[k] ? TODO[k](items[k] || []) : []).filter(t => t[0] > 0);
+const attn = (k) => todoOf(k).filter(t => t[2] > 0).reduce((n, t) => n + t[0], 0);
+const GROUPS = { 1: 'เอกสารและคน', 2: 'ความเสี่ยงและเป้าหมาย' };
 function descendants(id) { const out = new Set([id]); let grew = true; while (grew) { grew = false; (items.roles || []).forEach(r => { if (r.parent && out.has(r.parent) && !out.has(r.id)) { out.add(r.id); grew = true; } }); } return out; }
 function score(r) { return (Number(r.likelihood) || 0) * (Number(r.impact) || 0); }
 function pct(r) { const t = Number(r.target); if (t === 0 && r.target !== '' && r.target != null) return (Number(r.current) || 0) === 0 ? 100 : 0; return t > 0 ? Math.max(0, Math.min(100, Math.round((Number(r.current) || 0) / t * 100))) : 0; }
@@ -170,9 +186,11 @@ function ackedBy(p, uid) { return acks.some(a => a.policyId === p.id && a.uid ==
 (async function init() {
     me = await requireUser();
     const q = new URLSearchParams(location.search).get('type');
-    if (q && TABS[q]) tab = q;
-    $('tabs').innerHTML = [1, 2].map(g => (g === 2 ? '<span class="ims-sep"></span>' : '') + Object.entries(TABS).filter(([, t]) => t.group === g)
-        .map(([k, t]) => `<button type="button" class="tab" data-k="${k}"><i class="bi ${t.icon}"></i> ${t.label}</button>`).join('')).join('');
+    if (q && (TABS[q] || q === 'home')) tab = q;
+    let n = 0; const chip = (k, icon, label) => `<button type="button" class="tab" data-k="${k}" style="--i:${n++}"><i class="bi ${icon}"></i><span>${label}</span><em class="ims-n" hidden></em></button>`;
+    $('tabs').innerHTML = chip('home', 'bi-grid-1x2', 'ภาพรวม') + [1, 2].map(g => `<div class="ims-grp"><span class="ims-gl">${GROUPS[g]}</span>${Object.entries(TABS).filter(([, t]) => t.group === g).map(([k, t]) => chip(k, t.icon, t.label)).join('')}</div>`).join('');
+    $('list').addEventListener('pointermove', (e) => { const c = e.target.closest('.ov-card'); if (!c) return; const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
+    $('list').addEventListener('input', (e) => { if (e.target.id === 'ims-q') filterRows(e.target.value); });
     $('tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) show(b.dataset.k); });
     $('btn-add').addEventListener('click', () => openRec(null));
     $('list').addEventListener('click', onList);
@@ -188,8 +206,11 @@ function ackedBy(p, uid) { return acks.some(a => a.policyId === p.id && a.uid ==
 
 let loadSeq = 0;
 async function show(k) {
-    tab = k; const seq = ++loadSeq; const T = TABS[k];
+    tab = k; const seq = ++loadSeq;
     document.querySelectorAll('#tabs .tab').forEach(b => b.classList.toggle('active', b.dataset.k === k));
+    document.querySelector('.ims').classList.toggle('ov-on', k === 'home');
+    if (k === 'home') return showHome(seq);
+    const T = TABS[k];
     $('ims-title').textContent = T.label; $('ims-sub').textContent = T.sub;
     $('btn-add').hidden = !me.isAdmin; $('btn-order').hidden = !(me.isAdmin && k === 'roles');
     $('btn-add').innerHTML = `<i class="bi bi-plus-lg"></i> เพิ่ม${T.noun}`;
@@ -200,8 +221,75 @@ async function show(k) {
         if (k === 'roles') { /* parent names resolve from this list */ }
     } catch (e) { if (seq !== loadSeq) return; console.error(e); $('list').innerHTML = '<div class="tm-empty">โหลดไม่สำเร็จ — ตรวจสอบสิทธิ์หรือการเชื่อมต่อ</div>'; return; }
     if (seq !== loadSeq) return;   // a newer tab was opened meanwhile
-    render();
+    paintNav(); render();
     const act = document.querySelector('#tabs .tab.active'); if (act && act.scrollIntoView) act.scrollIntoView({ block: 'nearest', inline: 'center' });
+}
+
+// Overview: everything in one screen — what needs doing, and one card per register.
+async function loadAll() {
+    const keys = Object.keys(TABS);
+    const res = await Promise.allSettled(keys.map(k => getDocs(collection(db, TABS[k].col))));
+    res.forEach((r, i) => { if (r.status === 'fulfilled') items[keys[i]] = r.value.docs.map(d => ({ ...d.data(), id: d.id })); });
+    try { await loadAcks(); } catch (e) { console.error(e); }
+    return res.every(r => r.status === 'fulfilled');
+}
+async function showHome(seq) {
+    $('ims-title').textContent = 'ระบบคุณภาพ'; $('ims-sub').textContent = 'ภาพรวมทะเบียนทั้งหมด และสิ่งที่ต้องทำต่อ';
+    $('btn-add').hidden = true; $('btn-order').hidden = true; $('stats').innerHTML = '';
+    $('list').innerHTML = '<div class="tm-empty">กำลังโหลด…</div>';
+    const ok = await loadAll(); if (seq !== loadSeq) return;
+    if (!ok && !Object.keys(items).length) { $('list').innerHTML = '<div class="tm-empty">โหลดไม่สำเร็จ — ตรวจสอบสิทธิ์หรือการเชื่อมต่อ</div>'; return; }
+    paintNav(); renderHome();
+}
+function renderHome() {
+    const keys = Object.keys(TABS), started = keys.filter(k => (items[k] || []).length).length, pctv = Math.round(started / keys.length * 100);
+    const empty = keys.filter(k => k !== 'training' && !(items[k] || []).length);
+    const todos = keys.flatMap(k => todoOf(k).map(t => ({ k, n: t[0], text: t[1], lvl: t[2] }))).sort((a, b) => b.lvl - a.lvl);
+    const C = 2 * Math.PI * 44;
+    const hero = `<section class="ov-hero">
+        <div class="ov-ring" style="--p:${pctv / 100};--c:${C.toFixed(1)}">
+            <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="ovg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--kc-accent)"/><stop offset="1" style="stop-color:var(--kc-violet)"/></linearGradient></defs>
+            <circle class="t" cx="50" cy="50" r="44"/><circle class="v" cx="50" cy="50" r="44"/></svg>
+            <div><b data-count="${started}">0</b><span>/ ${keys.length}</span></div>
+        </div>
+        <div class="ov-sum"><h2>${started === keys.length ? 'เริ่มใช้ครบทุกทะเบียนแล้ว' : `เริ่มใช้แล้ว ${started} จาก ${keys.length} ทะเบียน`}</h2>
+            <p>${todos.length ? `มี ${todos.reduce((n, t) => n + (t.lvl ? t.n : 0), 0)} เรื่องที่ควรจัดการ` : 'ตอนนี้ไม่มีเรื่องค้าง'}</p>
+            ${me.isAdmin && empty.length ? `<button type="button" class="btn btn-primary" id="btn-seed-all"><i class="bi bi-magic"></i> เติมรายการตั้งต้น ${empty.length} ทะเบียน</button>` : ''}</div>
+        <div class="ov-todo">${todos.length ? todos.map((t, i) => `<button type="button" class="ov-t l${t.lvl}" data-go="${t.k}" style="--i:${i}"><i></i><span>${esc(t.text)}</span><b>${t.n}</b><i class="bi bi-chevron-right"></i></button>`).join('')
+            : '<div class="ov-ok"><i class="bi bi-check2-circle"></i> เรียบร้อยดี</div>'}</div>
+    </section>`;
+    const cards = keys.map((k, i) => { const T = TABS[k], n = (items[k] || []).length, td = todoOf(k)[0], hot = td && td[2] > 0;
+        return `<button type="button" class="ov-card${hot ? ' warn' : ''}" data-go="${k}" style="--i:${i}"><span class="ov-ic"><i class="bi ${T.icon}"></i></span>
+            <span class="ov-l">${esc(T.label)}</span><b data-count="${n}">0</b>
+            <em>${!n ? 'ยังว่าง' : td ? `${td[0]} ${esc(td[1])}` : 'เรียบร้อย'}</em></button>`; }).join('');
+    $('list').innerHTML = hero + `<div class="ov-grid">${cards}</div>`;
+    const sa = $('btn-seed-all'); if (sa) sa.addEventListener('click', () => seedAll(empty));
+    countUp();
+}
+function countUp() {
+    const els = [...document.querySelectorAll('[data-count]')]; if (!els.length) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach(e => { e.textContent = e.dataset.count; }); return; }
+    const t0 = performance.now(), dur = 800;
+    const step = (t) => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); els.forEach(el => { el.textContent = Math.round(Number(el.dataset.count) * e); }); if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+}
+function paintNav() {
+    document.querySelectorAll('#tabs .tab').forEach(b => { const e = b.querySelector('.ims-n'); if (!e) return; const n = b.dataset.k === 'home' ? 0 : attn(b.dataset.k); const was = e.textContent; e.hidden = !n; e.textContent = n || ''; if (n && String(n) !== was) { e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } });
+}
+function filterRows(v) {
+    const q = v.trim().toLowerCase(); let shown = 0;
+    document.querySelectorAll('#list .ims-row').forEach(r => { const hit = !q || (r.dataset.q || '').includes(q); r.hidden = !hit; if (hit) shown++; });
+    const e = document.getElementById('ims-none'); if (e) e.hidden = shown > 0;
+}
+async function seedAll(keys) {
+    const b = $('btn-seed-all'); if (b) { b.disabled = true; b.innerHTML = 'กำลังเติม…'; }
+    try {
+        const seeds = (await import('./ims-seed.js')).default; let n = 0;
+        for (const k of keys) { const T = TABS[k]; const data = seeds[k] || [];
+            for (let i = 0; i < data.length; i++) { const d = { ...data[i] }; if (T.before) T.before(d); await setDoc(doc(db, T.col, `${T.prefix}_seed_${i}`), { ...d, createdBy: me.uid, createdAt: serverTimestamp(), seeded: true }); n++; } }
+        toast(`เติม ${n} รายการแล้ว — ตรวจและแก้ไขให้ตรงความจริง`);
+    } catch (err) { console.error(err); toast('เติมไม่สำเร็จ: ' + err.message, false); }
+    show('home');
 }
 
 async function loadAcks() {
@@ -220,7 +308,8 @@ function render() {
         const sb = $('btn-seed'); if (sb) sb.addEventListener('click', seed);
         return;
     }
-    $('list').innerHTML = T.tree ? tree(a, T) : a.map((r, i) => row(r, T, 0, i)).join('');
+    const search = a.length > 6 ? '<div class="ims-search"><i class="bi bi-search"></i><input id="ims-q" type="search" placeholder="ค้นหาในทะเบียนนี้" autocomplete="off"></div><div class="ims-none tm-empty" id="ims-none" hidden>ไม่พบรายการที่ค้นหา</div>' : '';
+    $('list').innerHTML = search + (T.tree ? tree(a, T) : a.map((r, i) => row(r, T, 0, i)).join(''));
 }
 
 function row(r, T, depth = 0, idx = 0) {
@@ -229,7 +318,7 @@ function row(r, T, depth = 0, idx = 0) {
     const ackBtn = T.ack && r.status === 'active' && !ackedBy(r, me.uid) ? `<button type="button" class="btn btn-primary tm-btn-sm" data-ack="${esc(r.id)}">รับทราบ</button>` : '';
     const link = r.link ? `<a class="ims-link" href="${esc(/^https?:/.test(r.link) ? r.link : '#')}" target="_blank" rel="noopener" data-nolink><i class="bi bi-box-arrow-up-right"></i></a>` : '';
     const ld = T.lead ? T.lead(r) : ['', `<i class="bi ${T.icon}"></i>`];
-    return `<div class="ims-row" data-id="${esc(r.id)}" style="--d:${depth};--i:${Math.min(idx, 12)}" tabindex="0" role="button">
+    return `<div class="ims-row" data-id="${esc(r.id)}" data-q="${esc((T.title(r) + ' ' + T.meta(r).join(' ')).toLowerCase())}" style="--d:${depth};--i:${Math.min(idx, 12)}" tabindex="0" role="button">
         <div class="ims-lead ${ld[0]}">${ld[1]}</div>
         <div class="ims-main"><div class="ims-t">${esc(T.title(r))}</div><div class="ims-m">${meta}${chips}</div>${T.bar ? `<div class="ims-bar"><i style="width:${T.bar(r)}%"></i></div>` : ''}</div>
         ${link}${ackBtn}${b ? `<span class="badge badge-${b[0]}">${esc(b[1])}</span>` : ''}<i class="bi bi-chevron-right ims-go"></i></div>`;
@@ -244,6 +333,7 @@ function tree(a, T) {
 }
 
 async function onList(e) {
+    const go = e.target.closest('[data-go]'); if (go) return show(go.dataset.go);
     if (e.target.closest('[data-nolink]')) { e.stopPropagation(); return; }
     const ab = e.target.closest('[data-ack]');
     if (ab) { e.stopPropagation(); return acknowledge(ab.dataset.ack); }

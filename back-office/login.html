@@ -19,31 +19,32 @@
 </head>
 
 <body class="bo-login">
+  <div class="login-bg" aria-hidden="true"><i class="login-orb a"></i><i class="login-orb b"></i><i class="login-scan"></i></div>
   <main class="login-card">
     <div class="login-brand">
-      <img src="../assets/img/LOGO-KittenCode.png" alt="KITTEN CODE">
-      <h1>KITTEN CODE Co.,Ltd</h1>
-      <p>บริษัท คิทเท่น โค้ด จำกัด · ระบบหลังบ้าน</p>
+      <div class="login-logo"><img src="../assets/img/LOGO-KittenCode.png" alt="KITTEN CODE"></div>
+      <h1 style="--n:1">KITTEN CODE Co.,Ltd</h1>
+      <p style="--n:2">บริษัท คิทเท่น โค้ด จำกัด · ระบบหลังบ้าน</p>
     </div>
 
     <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
-      <label class="login-field">
+      <label class="login-field" style="--n:3">
         <span>ชื่อผู้ใช้</span>
         <input type="text" id="username" required autocomplete="username" autocapitalize="none" spellcheck="false" autofocus>
       </label>
-      <label class="login-field">
+      <label class="login-field" style="--n:4">
         <span>รหัสผ่าน</span>
         <div class="pw-wrap">
           <input type="password" id="password" required autocomplete="current-password">
           <button type="button" class="pw-toggle" id="pwToggle" aria-label="แสดง/ซ่อนรหัสผ่าน"><i class="bi bi-eye"></i></button>
         </div>
       </label>
-      <label class="login-check"><input type="checkbox" id="rememberMe"> จำชื่อผู้ใช้ไว้ในเครื่องนี้</label>
-      <button type="submit" class="btn btn-primary login-submit" id="signInBtn">เข้าสู่ระบบ</button>
+      <label class="login-check" style="--n:5"><input type="checkbox" id="rememberMe"> จำชื่อผู้ใช้ไว้ในเครื่องนี้</label>
+      <button type="submit" class="btn btn-primary login-submit" id="signInBtn" style="--n:6">เข้าสู่ระบบ</button>
       <div id="loginError" class="login-error" role="alert" hidden><i class="bi bi-exclamation-circle"></i> <span id="errorText"></span></div>
     </form>
 
-    <div class="login-foot"><a href="../index.html"><i class="bi bi-arrow-left"></i> กลับหน้าเว็บไซต์</a></div>
+    <div class="login-foot" style="--n:7"><a href="../index.html"><i class="bi bi-arrow-left"></i> กลับหน้าเว็บไซต์</a></div>
   </main>
 
   <script type="module">
@@ -87,11 +88,19 @@
       const card = document.querySelector('.login-card');
       card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
       setBusy(false);
+      const btn = document.getElementById('signInBtn');
+      clearTimeout(btn._t);
+      btn.classList.remove('is-err'); void btn.offsetWidth; btn.classList.add('is-err');
+      btn.innerHTML = '<svg class="lb-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg> ลองอีกครั้ง';
+      btn._t = setTimeout(() => { btn.classList.remove('is-err'); btn.textContent = 'เข้าสู่ระบบ'; }, 1600);
     }
 
     function setBusy(busy) {
       const btn = document.getElementById('signInBtn');
+      if (busy) { clearTimeout(btn._t); btn.classList.remove('is-err'); }
       btn.disabled = busy;
+      btn.classList.toggle('busy', busy);
+      document.querySelector('.login-card').classList.toggle('busy', busy);
       btn.textContent = busy ? 'กำลังเข้าสู่ระบบ…' : 'เข้าสู่ระบบ';
     }
 
@@ -123,7 +132,13 @@
         }
 
         try { sessionStorage.setItem('kc_show_welcome', '1'); } catch (_) { /* storage blocked */ }
-        window.location.href = 'back-office.html#today';
+        // Short success beat (check mark, card lifts away) before the hand-off.
+        const ok = document.getElementById('signInBtn');
+        ok.classList.remove('busy'); ok.disabled = false; ok.classList.add('is-ok');
+        ok.innerHTML = '<svg class="lb-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg> สำเร็จ';
+        document.body.classList.add('is-ok');
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        setTimeout(() => { window.location.href = 'back-office.html#today'; }, reduce ? 0 : 650);
       } catch (error) {
         console.error("Login error:", error);
         if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
@@ -134,6 +149,22 @@
       }
     };
   
+    // Gentle pointer tilt on the card (fine pointers only, never with reduced motion).
+    (function tilt() {
+      const card = document.querySelector('.login-card');
+      if (matchMedia('(prefers-reduced-motion: reduce), (pointer: coarse)').matches) return;
+      let raf = 0;
+      addEventListener('pointermove', (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          card.style.setProperty('--ry', ((e.clientX / innerWidth - 0.5) * 5).toFixed(2) + 'deg');
+          card.style.setProperty('--rx', ((0.5 - e.clientY / innerHeight) * 4).toFixed(2) + 'deg');
+        });
+      });
+      document.addEventListener('pointerleave', () => { card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); });
+    })();
+
     document.getElementById('pwToggle').addEventListener('click', () => {
       const i = document.getElementById('password');
       const show = i.type === 'password';
