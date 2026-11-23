@@ -117,6 +117,7 @@ function applyConvertData() {
         setInputValue('cust-tax', data.custTax);
         setInputValue('proj-name', data.projName);
         setInputValue('doc-invoice', data.sourceDocNo);
+        setInputValue('issuer', data.issuer || 'company');
         setInputValue('doc-vat', data.vatRate);
         setInputValue('special-discount', data.discount || 0);
 
@@ -157,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderItemsForm();
     window.KCDoc.ensureDocNo('receipt');
+    if (window.KCIssuers) KCIssuers.bind('receipt', () => buildPreview());
 
     // Initial build
     document.fonts.ready.then(() => {
@@ -320,15 +322,7 @@ function createPageDOM(sv) {
                 <div class="logo-area">
                     <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
                 </div>
-                <div class="company-details">
-                    <h1 class="company-name">บริษัท คิทเท่น โค้ด จำกัด</h1><p class="company-name-en">KITTEN CODE Co.,Ltd</p>
-                    <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
-                    <p class="company-contact">
-                        โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp;
-                        อีเมล : <span>kittencode.co.ltd@gmail.com</span>
-                    </p>
-                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
-                </div>
+                <div class="company-details">${KCIssuers.detailsHtml(sv.issuer)}</div>
             </div>
 
             <h2 class="doc-title" style="text-align: center; margin-bottom: 20px; font-size: 18px;">ใบเสร็จรับเงิน (Receipt)</h2>
@@ -400,6 +394,7 @@ function buildPreview() {
     container.innerHTML = '';
 
     const stateVars = {
+        issuer: getInputValue('issuer') || 'company',
         docNo: getInputValue('doc-no') || '-',
         docDate: getThaiDate(getInputValue('doc-date')),
         docPayment: getInputValue('doc-payment') || '-',
@@ -643,6 +638,7 @@ window.saveDocumentToFirestore = async function() {
             signReceiver: getInputValue('sign-receiver'),
             signAuth: getInputValue('sign-auth'),
             vatRate,
+            issuer: getInputValue('issuer') || 'company',
             discountAmount,
             items: state.items.map(item => ({
                 desc: item.desc,

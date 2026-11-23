@@ -120,6 +120,7 @@ function applyConvertData() {
         setInputValue('proj-name', data.projName);
         setInputValue('proj-contact', data.projContact);
         setInputValue('quote-ref', data.sourceDocNo);
+        setInputValue('issuer', data.issuer || 'company');
         setInputValue('doc-vat', data.vatRate);
         setInputValue('doc-discount', data.discount || 0);
 
@@ -159,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderItemsForm();
     window.KCDoc.ensureDocNo('invoice');
+    if (window.KCIssuers) KCIssuers.bind('invoice', () => buildPreview());
 
     // Initial build
     document.fonts.ready.then(() => {
@@ -317,15 +319,7 @@ function createPageDOM(sv) {
                 <div class="logo-area">
                     <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
                 </div>
-                <div class="company-details">
-                    <h1 class="company-name">บริษัท คิทเท่น โค้ด จำกัด</h1><p class="company-name-en">KITTEN CODE Co.,Ltd</p>
-                    <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
-                    <p class="company-contact">
-                        โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp;
-                        อีเมล : <span>kittencode.co.ltd@gmail.com</span>
-                    </p>
-                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
-                </div>
+                <div class="company-details">${KCIssuers.detailsHtml(sv.issuer)}</div>
             </div>
 
             <h2 class="doc-title" style="text-align: center; margin-bottom: 20px; font-size: 18px;">ใบแจ้งหนี้ (Invoice)</h2>
@@ -398,6 +392,7 @@ function buildPreview() {
     container.innerHTML = '';
 
     const stateVars = {
+        issuer: getInputValue('issuer') || 'company',
         docNo: getInputValue('doc-no') || '-',
         docDate: getThaiDate(getInputValue('doc-date')),
         docDueDate: getThaiDate(getInputValue('doc-due-date')) || '-',
@@ -502,7 +497,7 @@ function buildPreview() {
                 <table style="border: none; font-size: 12px; border-collapse: collapse; width: 100%;">
                     <tr>
                         <td style="color: #64748b; padding: 2px 10px 2px 0; white-space: nowrap; vertical-align: top;">ชื่อบัญชี</td>
-                        <td style="font-weight: 600; color: #1e293b; padding: 2px 0;">บริษัท คิทเท่น โค้ด จำกัด</td>
+                        <td style="font-weight: 600; color: #1e293b; padding: 2px 0;">${escapeHTML(KCIssuers.get(getInputValue('issuer')).bankHolder)}</td>
                     </tr>
                     <tr>
                         <td style="color: #64748b; padding: 2px 10px 2px 0; white-space: nowrap; vertical-align: top;">เลขบัญชี</td>
@@ -691,6 +686,7 @@ window.saveDocumentToFirestore = async function() {
             docTerms: getInputValue('doc-terms'),
             docRef: getInputValue('doc-ref'),
             vatRate,
+            issuer: getInputValue('issuer') || 'company',
             discountAmount,
             custName: custName,
             custAddr: getInputValue('cust-addr'),
@@ -767,7 +763,8 @@ window.convertToReceipt = async function() {
         custTax: getInputValue('cust-tax'),
         projName: getInputValue('proj-name'),
         discount: state.discount || 0,
-        vatRate: Number(getInputValue('doc-vat')) || 7,
+        vatRate: Number.isFinite(Number(getInputValue('doc-vat'))) && getInputValue('doc-vat') !== '' ? Number(getInputValue('doc-vat')) : 7,
+        issuer: getInputValue('issuer') || 'company',
         items: state.items.map(item => ({ desc: item.desc, qty: item.qty, price: item.price }))
     };
     localStorage.setItem('kc_convert_data', JSON.stringify(payload));

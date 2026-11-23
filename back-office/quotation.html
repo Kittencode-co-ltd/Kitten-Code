@@ -55,6 +55,13 @@
                 <div class="form-section">
                     <h3><i class="fas fa-file-alt"></i> ข้อมูลเอกสาร</h3>
                     <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>ออกเอกสารในนาม</label>
+                            <select id="in-issuer" oninput="buildPreview()">
+                                <option value="company">บริษัท คิทเท่น โค้ด จำกัด (นิติบุคคล)</option>
+                                <option value="shop">คิทเท่น โค้ด (ทะเบียนพาณิชย์ · ไม่มี VAT)</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label>เลขที่ใบเสนอราคา</label>
                             <input type="text" id="in-doc-no" value="" placeholder="เช่น KC-2026001"
@@ -228,6 +235,7 @@
         };
     </script>
 
+    <script src="../assets/js/bo/documents/issuers.js"></script>
     <script src="../assets/js/bo/documents/doc-common.js"></script>
     <script src="../assets/js/bo/documents/script-quotation.js"></script>
     <script type="module">

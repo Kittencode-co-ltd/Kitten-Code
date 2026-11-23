@@ -189,7 +189,7 @@
         </a>
 
         <a href="#document-record" class="bo-tab-item" data-tab-index="3"
-            data-routes="#document-record,#quotation,#invoice,#receipt,#voucher,#certificate,#letter,#contract">
+            data-routes="#document-record,#quotation,#invoice,#receipt,#delivery,#voucher,#certificate,#letter,#contract">
             <i class="bi bi-file-earmark-text"></i>
             <span class="bo-tab-label" data-i18n-th="เอกสาร" data-i18n-en="Docs">เอกสาร</span>
         </a>
@@ -215,6 +215,7 @@
                 <a class="cp-item" href="#quotation" data-k="ใบเสนอราคา เสนอราคาให้ลูกค้า quotation เสนอราคา" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-plus"></i><span class="cp-name">ใบเสนอราคา</span><span class="cp-desc">เสนอราคาให้ลูกค้า</span></a>
                 <a class="cp-item" href="#invoice" data-k="ใบแจ้งหนี้ เรียกเก็บเงิน invoice แจ้งหนี้" onclick="closeCreatePicker()"><i class="bi bi-file-earmark-ruled"></i><span class="cp-name">ใบแจ้งหนี้</span><span class="cp-desc">เรียกเก็บเงิน</span></a>
                 <a class="cp-item" href="#receipt" data-k="ใบเสร็จรับเงิน รับเงินแล้ว receipt ใบเสร็จ" onclick="closeCreatePicker()"><i class="bi bi-receipt"></i><span class="cp-name">ใบเสร็จรับเงิน</span><span class="cp-desc">รับเงินแล้ว</span></a>
+                <a class="cp-item" href="#delivery" data-k="ใบส่งของ ส่งมอบสินค้า ส่งมอบงาน delivery note ส่งของ" onclick="closeCreatePicker()"><i class="bi bi-truck"></i><span class="cp-name">ใบส่งของ</span><span class="cp-desc">ส่งมอบสินค้า / งานให้ลูกค้า</span></a>
                 <div class="cp-group">จัดซื้อและจ่ายเงิน</div>
                 <a class="cp-item" href="#voucher" data-k="ใบเบิก / ซื้อ / จ้าง PR · PO · ใบสำคัญจ่าย voucher เบิก ซื้อ จ้าง จ่ายเงิน" onclick="closeCreatePicker()"><i class="bi bi-cash-stack"></i><span class="cp-name">ใบเบิก / ซื้อ / จ้าง</span><span class="cp-desc">PR · PO · ใบสำคัญจ่าย</span></a>
                 <div class="cp-group" data-admin hidden>จ่ายเงิน (แอดมิน)</div>
@@ -398,6 +399,7 @@
             '#ims': 'ims.html',
             '#quotation': 'quotation.html',
             '#receipt': 'receipt.html',
+            '#delivery': 'delivery.html',
             '#voucher': 'voucher.html',
             '#user': 'user.html',
             '#profile': 'profile.html',
@@ -423,6 +425,7 @@
             '#quotation': 'ใบเสนอราคา',
             '#invoice': 'ใบแจ้งหนี้',
             '#receipt': 'ใบเสร็จรับเงิน',
+            '#delivery': 'ใบส่งของ',
             '#voucher': 'ใบขอเบิก / ซื้อ / จ้าง / สำคัญจ่าย',
             '#certificate': 'หนังสือรับรอง & ประกาศนียบัตร',
             '#letter': 'หนังสือติดต่อหน่วยงานภายนอก',
@@ -445,6 +448,7 @@
             '#quotation': 'Quotation',
             '#invoice': 'Invoice',
             '#receipt': 'Receipt',
+            '#delivery': 'Delivery Note',
             '#voucher': 'Procurement & Payment Vouchers',
             '#certificate': 'Certificates & Awards',
             '#letter': 'External Correspondence',

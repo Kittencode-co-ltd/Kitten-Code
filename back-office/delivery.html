@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'">
+    <script src="../assets/js/bo/core/bo-theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ใบส่งของ — KITTEN CODE Co.,Ltd</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="../assets/css/bo/tokens.css">
+    <link rel="stylesheet" href="../assets/css/bo/base.css">
+    <link rel="stylesheet" href="../assets/css/bo/components.css">
+    <link rel="stylesheet" href="../assets/css/bo/paper.css">
+    <link rel="stylesheet" href="../assets/css/bo/pages/editor.css">
+</head>
+
+<body class="bo-editor">
+    <div class="doc-mobile-switcher no-print">
+        <div class="doc-segment" id="docMobileSegment">
+            <span class="doc-segment-pill"></span>
+            <button type="button" class="doc-segment-btn active" data-mode="form" onclick="switchDocMobileTab('form')">
+                <i class="fas fa-edit"></i> กรอกข้อมูล
+            </button>
+            <button type="button" class="doc-segment-btn" data-mode="preview" onclick="switchDocMobileTab('preview')">
+                <i class="fas fa-eye"></i> ดูตัวอย่าง A4
+            </button>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">
+            <i class="fas fa-print"></i> พิมพ์
+        </button>
+    </div>
+
+    <div class="app-container no-print" id="docAppContainer" data-mobile-view="form">
+
+        <div class="form-panel">
+            <div class="form-header">
+                <h2><i class="fas fa-truck"></i> สร้างใบส่งของ</h2>
+                <button type="button" class="btn-clear-draft" onclick="clearDraft()">
+                    <i class="fas fa-rotate-left"></i> เริ่มใหม่
+                </button>
+            </div>
+
+            <form id="delivery-form">
+                <div class="form-section">
+                    <h3><i class="fas fa-file-alt"></i> ข้อมูลเอกสาร</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>ออกเอกสารในนาม</label>
+                            <select id="in-issuer">
+                                <option value="company">บริษัท คิทเท่น โค้ด จำกัด (นิติบุคคล)</option>
+                                <option value="shop">คิทเท่น โค้ด (ทะเบียนพาณิชย์ · ไม่มี VAT)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>เลขที่ใบส่งของ</label>
+                            <input type="text" id="in-doc-no" value="" placeholder="เช่น DN-2569-001">
+                        </div>
+                        <div class="form-group">
+                            <label>วันที่ส่ง</label>
+                            <input type="date" id="in-doc-date" value="">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>อ้างอิงเอกสาร (ใบเสนอราคา / ใบแจ้งหนี้ / PO ลูกค้า)</label>
+                            <input type="text" id="in-doc-ref" value="" placeholder="เช่น INV-2569-001">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-user-tie"></i> ข้อมูลลูกค้า</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>ชื่อลูกค้า</label>
+                            <textarea id="in-cust-name" class="textarea-compact" rows="1" placeholder="ระบุชื่อบริษัทหรือชื่อลูกค้า..."></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ที่อยู่ลูกค้า</label>
+                            <textarea id="in-cust-addr" placeholder="ระบุที่อยู่ลูกค้า..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>เบอร์โทร</label>
+                            <input type="text" id="in-cust-tel" value="" placeholder="เช่น 08x-xxx-xxxx">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>สถานที่ส่งของ (ถ้าต่างจากที่อยู่ลูกค้า)</label>
+                            <textarea id="in-ship-to" class="textarea-compact" rows="1" placeholder="เว้นว่างได้"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="flex-between">
+                        <h3><i class="fas fa-list-ul"></i> รายการที่ส่งมอบ</h3>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addItemLine()">
+                            <i class="fas fa-plus"></i> เพิ่มรายการ
+                        </button>
+                    </div>
+                    <div id="items-container"></div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-sticky-note"></i> หมายเหตุ</h3>
+                    <div class="form-group full-width">
+                        <textarea id="in-note" placeholder="ระบุหมายเหตุ..." oninput="state.note = this.value"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-signature"></i> ลายเซ็น</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ผู้รับของ (ชื่อ)</label>
+                            <textarea id="in-sign-receiver" class="textarea-compact" rows="1" placeholder="เว้นว่างให้เซ็นสด"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>ผู้ส่งของ (ชื่อ)</label>
+                            <textarea id="in-sign-sender" class="textarea-compact" rows="1" placeholder="ชื่อผู้ส่งของ"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ผู้มีอำนาจลงนาม (ชื่อ)</label>
+                            <textarea id="in-sign-auth" class="textarea-compact" rows="1" placeholder="ชื่อผู้มีอำนาจลงนาม"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section print-section">
+                    <button type="button" id="btn-print" class="btn btn-primary btn-large full-width-btn" onclick="window.print()">
+                        <i class="fas fa-print"></i> พิมพ์
+                    </button>
+                    <button type="button" id="btn-save-cloud" class="btn btn-success btn-large full-width-btn" onclick="saveDocumentToFirestore()">
+                        <i class="fas fa-check"></i> บันทึก
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-large full-width-btn" onclick="downloadBackup()">
+                        <i class="fas fa-download"></i> ดาวน์โหลดสำรอง (.json)
+                    </button>
+                    <label class="btn btn-secondary btn-large full-width-btn" style="cursor:pointer;">
+                        <i class="fas fa-upload"></i> เปิดไฟล์สำรอง
+                        <input type="file" accept="application/json,.json" hidden onchange="loadBackup(this)">
+                    </label>
+                </div>
+            </form>
+        </div>
+
+        <div class="preview-panel" id="preview-panel"></div>
+    </div>
+
+    <script>
+        window.switchDocMobileTab = function (mode) {
+            const container = document.getElementById('docAppContainer');
+            const seg = document.getElementById('docMobileSegment');
+            if (container) container.setAttribute('data-mobile-view', mode);
+            if (seg) {
+                seg.style.setProperty('--seg-i', mode === 'preview' ? 1 : 0);
+                seg.querySelectorAll('.doc-segment-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+                });
+            }
+        };
+    </script>
+
+    <script src="../assets/js/bo/documents/issuers.js"></script>
+    <script src="../assets/js/bo/documents/doc-common.js"></script>
+    <script src="../assets/js/bo/documents/delivery-template.js"></script>
+    <script src="../assets/js/bo/documents/script-delivery.js"></script>
+    <script type="module">
+        import { onAuthStateChanged, auth } from '../assets/js/bo/core/firebase-config.js';
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.replace('login.html'); }
+        });
+    </script>
+</body>
+
+</html>

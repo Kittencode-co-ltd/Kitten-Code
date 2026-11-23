@@ -3,6 +3,7 @@ import { db, auth, onAuthStateChanged, collection, getDocs, doc, deleteDoc, getD
 let allDocs = [];
 let currentFilter = 'all';
 let searchText = '';
+let issuerFilter = 'all';          // all | company | shop
 let statusFilter = 'all';          // all | pending | paid | rejected
 let finCategories = [];
 let ledgerTarget = null;
@@ -11,11 +12,15 @@ const TYPE_INFO = {
     quotations:   { label: 'ใบเสนอราคา',     badge: 'badge-quote',       editor: 'quotation',   hash: '#quotation' },
     invoices:     { label: 'ใบแจ้งหนี้',      badge: 'badge-invoice',     editor: 'invoice',     hash: '#invoice' },
     receipts:     { label: 'ใบเสร็จ',         badge: 'badge-receipt',     editor: 'receipt',     hash: '#receipt' },
+    deliveries:   { label: 'ใบส่งของ',        badge: 'badge-letter',      editor: 'delivery',    hash: '#delivery' },
     vouchers:     { label: 'เบิก/ซื้อ/จ้าง/PV', badge: 'badge-voucher',    editor: 'voucher',     hash: '#voucher' },
     certificates: { label: 'หนังสือรับรอง',    badge: 'badge-certificate', editor: 'certificate', hash: '#certificate' },
     letters:      { label: 'หนังสือภายนอก',   badge: 'badge-letter',      editor: 'letter',      hash: '#letter' },
     contracts:    { label: 'สัญญา/หนังสือเตือน', badge: 'badge-contract',    editor: 'contract',    hash: '#contract' }
 };
+
+// Sales documents that can be issued as the company or as the registered shop (ทะเบียนพาณิชย์)
+const ISSUER_TYPES = new Set(['quotations', 'invoices', 'receipts', 'deliveries']);
 
 const VOUCHER_SUBLABELS = {
     pr: 'ใบขอซื้อ/จ้าง (PR)',
@@ -84,6 +89,7 @@ const STATUSES = {
     quotations:   [['Pending', 'รออนุมัติ', 'pending'], ['Approved', 'อนุมัติแล้ว', 'paid'], ['Rejected', 'ไม่อนุมัติ', 'rejected']],
     invoices:     [['Pending', 'รอชำระ', 'pending'], ['Paid', 'ชำระแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
     receipts:     [['Completed', 'รับเงินแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
+    deliveries:   [['Pending', 'รอส่งมอบ', 'pending'], ['Delivered', 'ส่งมอบแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
     vouchers:     [['Pending', 'รออนุมัติ', 'pending'], ['Approved', 'อนุมัติแล้ว', 'paid'], ['Paid', 'จ่ายเงินแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
     certificates: [['Issued', 'ออกแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
     letters:      [['Issued', 'ออกหนังสือแล้ว', 'paid'], ['Sent', 'ส่งแล้ว', 'paid'], ['Cancelled', 'ยกเลิก', 'rejected']],
@@ -115,6 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.confirmLedger = confirmLedger;
 
     const search = document.getElementById('doc-search');
+    const issuerSel = document.getElementById('doc-issuer');
+    if (issuerSel) issuerSel.addEventListener('change', () => { issuerFilter = issuerSel.value; renderDocuments(); });
     const tbody = document.getElementById('doc-tbody');
     const actions = { print: printDocument, edit: editDocument, continue: continueDocument, ledger: openLedger, delete: deleteDocument };
     tbody.addEventListener('click', (e) => {
@@ -228,6 +236,7 @@ function renderDocuments() {
 
     const inScope = allDocs.filter(d => {
         if (currentFilter !== 'all' && d.collectionName !== currentFilter) return false;
+        if (issuerFilter !== 'all' && (!ISSUER_TYPES.has(d.collectionName) || (d.issuer || 'company') !== issuerFilter)) return false;
         if (!searchText) return true;
         const hay = [d.docNo, d.custName, d.personName, d.vendorName, d.requesterName, d.recipientTitle, d.recipientOrg, d.subject, d.projName].filter(Boolean).join(' ').toLowerCase();
         return hay.includes(searchText);
@@ -254,7 +263,7 @@ function renderDocuments() {
                 const adminOnly = !isAdminUser && ['quotations', 'vouchers'].includes(d.collectionName) && ['Approved', 'Paid'].includes(v) && v !== statusValue;
                 return `<option value="${v}"${v === statusValue ? ' selected' : ''}${adminOnly ? ' disabled' : ''}>${label}${adminOnly ? ' (แอดมิน)' : ''}</option>`;
             }).join('');
-        const isZeroDoc = (d.collectionName === 'certificates' || d.collectionName === 'letters') && !d.amountTotal;
+        const isZeroDoc = (d.collectionName === 'certificates' || d.collectionName === 'letters' || d.collectionName === 'deliveries') && !d.amountTotal;
         const amount = isZeroDoc
             ? '<span class="muted">—</span>'
             : `<strong>฿${formatMoney(d.amountTotal || 0)}</strong>`;
@@ -296,7 +305,7 @@ function renderDocuments() {
 
         return `<tr>
             <td>${escapeHTML(d.docDate || '-')}</td>
-            <td><strong>${escapeHTML(d.docNo || d.id)}</strong></td>
+            <td><strong>${escapeHTML(d.docNo || d.id)}</strong>${d.issuer === 'shop' ? ' <span class="badge badge-gray" title="ออกในนามทะเบียนพาณิชย์">พาณิชย์</span>' : ''}</td>
             <td><span class="badge ${info.badge}">${escapeHTML(badgeLabel)}</span></td>
             <td>${escapeHTML(party)}</td>
             <td style="text-align:right;">${amount}</td>
@@ -400,6 +409,7 @@ async function continueDocument(colName, id) {
             projContact: d.projContact || '',
             discount: Number(d.discountAmount) || 0,
             vatRate: d.vatRate ?? 7,
+            issuer: d.issuer || 'company',
             items: (d.items || []).map(it => ({ desc: it.desc, qty: it.qty, price: it.price }))
         };
         localStorage.setItem('kc_convert_data', JSON.stringify(payload));
@@ -417,6 +427,7 @@ async function printDocument(colName, id) {
             quotations: 'quotation',
             invoices: 'invoice',
             receipts: 'receipt',
+            deliveries: 'delivery',
             vouchers: 'voucher',
             certificates: 'certificate',
             letters: 'letter',

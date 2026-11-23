@@ -89,12 +89,7 @@ function createPageDOM_quotation(sv) {
                 <div class="logo-area">
                     <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
                 </div>
-                <div class="company-details">
-                    <h1 class="company-name">บริษัท คิทเท่น โค้ด จำกัด</h1><p class="company-name-en">KITTEN CODE Co.,Ltd</p>
-                    <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
-                    <p class="company-contact">โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; อีเมล : <span>kittencode.co.ltd@gmail.com</span></p>
-                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
-                </div>
+                <div class="company-details">${KCIssuers.detailsHtml(sv.issuer)}</div>
             </div>
             <h2 class="doc-title" style="text-align:center;margin-bottom:20px;font-size:18px;">ใบเสนอราคา (Quotation)</h2>
             <div class="doc-info-section flex-between align-start" style="margin-bottom:20px;font-size:13px;align-items:flex-start;">
@@ -153,12 +148,7 @@ function createPageDOM_invoice(sv) {
                 <div class="logo-area">
                     <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
                 </div>
-                <div class="company-details">
-                    <h1 class="company-name">บริษัท คิทเท่น โค้ด จำกัด</h1><p class="company-name-en">KITTEN CODE Co.,Ltd</p>
-                    <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
-                    <p class="company-contact">โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; อีเมล : <span>kittencode.co.ltd@gmail.com</span></p>
-                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
-                </div>
+                <div class="company-details">${KCIssuers.detailsHtml(sv.issuer)}</div>
             </div>
             <h2 class="doc-title" style="text-align:center;margin-bottom:20px;font-size:18px;">ใบแจ้งหนี้ (Invoice)</h2>
             <div class="doc-info-section flex-between align-start" style="margin-bottom:20px;font-size:13px;align-items:flex-start;">
@@ -213,12 +203,7 @@ function createPageDOM_receipt(sv) {
                 <div class="logo-area">
                     <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
                 </div>
-                <div class="company-details">
-                    <h1 class="company-name">บริษัท คิทเท่น โค้ด จำกัด</h1><p class="company-name-en">KITTEN CODE Co.,Ltd</p>
-                    <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
-                    <p class="company-contact">โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp; อีเมล : <span>kittencode.co.ltd@gmail.com</span></p>
-                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
-                </div>
+                <div class="company-details">${KCIssuers.detailsHtml(sv.issuer)}</div>
             </div>
             <h2 class="doc-title" style="text-align:center;margin-bottom:20px;font-size:18px;">ใบเสร็จรับเงิน (Receipt)</h2>
             <div class="doc-info-section flex-between align-start" style="margin-bottom:20px;font-size:13px;align-items:flex-start;">
@@ -315,6 +300,7 @@ function buildViewer() {
         quotation: 'quotations',
         invoice: 'invoices',
         receipt: 'receipts',
+        delivery: 'deliveries',
         voucher: 'vouchers',
         certificate: 'certificates',
         letter: 'letters',
@@ -324,6 +310,7 @@ function buildViewer() {
         quotation: '#quotation',
         invoice: '#invoice',
         receipt: '#receipt',
+        delivery: '#delivery',
         voucher: '#voucher',
         certificate: '#certificate',
         letter: '#letter',
@@ -349,6 +336,7 @@ function buildViewer() {
         quotation: 'ใบเสนอราคา',
         invoice: 'ใบแจ้งหนี้',
         receipt: 'ใบเสร็จรับเงิน',
+        delivery: 'ใบส่งของ',
         voucher: (window.KCVoucher && window.KCVoucher.TYPES[d.voucherType]?.title) || 'ใบสำคัญจ่าย / เบิกจ่าย',
         certificate: (window.KCCertificate && window.KCCertificate.TYPES[d.certType]?.short) || (d.certType === 'internship' ? 'หนังสือรับรองการฝึกงาน' : 'หนังสือรับรองการทำงาน'),
         letter: (window.KCLetter && window.KCLetter.TYPES[d.letterType]?.title) || 'หนังสือติดต่อภายนอก',
@@ -362,6 +350,10 @@ function buildViewer() {
 
     if (type === 'certificate' && window.KCCertificate) {
         container.appendChild(window.KCCertificate.render(d));
+        return;
+    }
+    if (type === 'delivery' && window.KCDelivery) {
+        window.KCDelivery.render(d, container);
         return;
     }
     if (type === 'voucher' && window.KCVoucher) {
@@ -393,7 +385,7 @@ function buildViewer() {
 
     if (type === 'quotation') {
         sv = {
-            docNo: d.docNo || '-', docDate: getThaiDate(d.docDate), docTerms: d.docTerms || '-',
+            issuer: d.issuer || 'company', docNo: d.docNo || '-', docDate: getThaiDate(d.docDate), docTerms: d.docTerms || '-',
             docCredit: d.docCredit || '-', custName: d.custName || '-', custAddr: d.custAddr || '-',
             custTel: d.custTel || '-', custTax: d.custTax || '-', projName: d.projName || '-',
             projContact: d.projContact || '-', projTel: d.projTel || '-',
@@ -403,7 +395,7 @@ function buildViewer() {
         sigFn = signaturesHTML_quotation;
     } else if (type === 'invoice') {
         sv = {
-            docNo: d.docNo || '-', docDate: getThaiDate(d.docDate),
+            issuer: d.issuer || 'company', docNo: d.docNo || '-', docDate: getThaiDate(d.docDate),
             docDueDate: getThaiDate(d.docDueDate) || '-', docTerms: d.docTerms || '-',
             docRef: d.docRef || '-', custName: d.custName || '-', custAddr: d.custAddr || '-',
             custTel: d.custTel || '-', custTax: d.custTax || '-',
@@ -413,7 +405,7 @@ function buildViewer() {
         sigFn = signaturesHTML_invoice;
     } else {
         sv = {
-            docNo: d.docNo || '-', docDate: getThaiDate(d.docDate), docPayment: d.docPayment || '-',
+            issuer: d.issuer || 'company', docNo: d.docNo || '-', docDate: getThaiDate(d.docDate), docPayment: d.docPayment || '-',
             docSalesman: d.docSalesman || '-', docInvoice: d.docInvoice || '-', docRef: d.docRef || '-',
             projName: d.projName || '-', custName: d.custName || '-', custTax: d.custTax || '-',
             custAddr: d.custAddr || '-', signReceiver: d.signReceiver || '', signAuth: d.signAuth || ''

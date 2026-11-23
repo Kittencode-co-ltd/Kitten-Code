@@ -15,6 +15,7 @@
         quotations: 'QT',
         invoices: 'INV',
         receipts: 'RC',
+        deliveries: 'DN',
         certificates: 'CERT',
         vouchers: 'PV',
         letters: 'LET',
@@ -24,6 +25,7 @@
         quotation: 'quotations',
         invoice: 'invoices',
         receipt: 'receipts',
+        delivery: 'deliveries',
         certificate: 'certificates',
         voucher: 'vouchers',
         letter: 'letters',
@@ -104,12 +106,20 @@
             input.dispatchEvent(new Event('input', { bubbles: true }));
         } catch (e) {
             console.warn('Could not suggest a document number', e);
+            // Collection not readable yet (e.g. rules not deployed): offer the first number so the form is still usable.
+            if (!input.value.trim()) {
+                const sfx = document.getElementById('in-issuer') && document.getElementById('in-issuer').value === 'shop' ? '-S' : '';
+                input.value = `${customPrefix || (PREFIX[col] + sfx)}-${new Date().getFullYear() + 543}-001`;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
         }
     }
 
     async function nextDocNo(fb, col, customPrefix) {
         const year = new Date().getFullYear() + 543;
-        const pfx = customPrefix || PREFIX[col];
+        const issuerSel = document.getElementById('in-issuer');
+        const suffix = issuerSel && issuerSel.value === 'shop' ? '-S' : '';   // ทะเบียนพาณิชย์ keeps its own number series
+        const pfx = customPrefix || (PREFIX[col] + suffix);
         const head = `${pfx}-${year}-`;
         const snap = await fb.getDocs(fb.collection(fb.db, col));
         let max = 0;

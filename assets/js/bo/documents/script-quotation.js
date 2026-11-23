@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!window.KCDoc.applyEditData('quotation', state, setInputValue)) restoreDraft();
     renderItemsForm();
     window.KCDoc.ensureDocNo('quotation');
+    if (window.KCIssuers) KCIssuers.bind('quotation', () => buildPreview());
 
     // Initial build
     document.fonts.ready.then(() => {
@@ -264,15 +265,7 @@ function createPageDOM(sv) {
                 <div class="logo-area">
                     <img src="../assets/img/LOGO-KittenCode.png" class="company-logo" alt="Kitten Code Logo" onerror="this.style.display='none'">
                 </div>
-                <div class="company-details">
-                    <h1 class="company-name">บริษัท คิทเท่น โค้ด จำกัด</h1><p class="company-name-en">KITTEN CODE Co.,Ltd</p>
-                    <p class="company-address">ที่อยู่: 347/11 หมู่ 3 ตำบลท่าโพธิ์ อำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก 65000</p>
-                    <p class="company-contact">
-                        โทร : <span>+66 8 0885 0555</span> &nbsp;&nbsp;
-                        อีเมล : <span>kittencode.co.ltd@gmail.com</span>
-                    </p>
-                    <p class="company-tax-id">เลขประจำตัวผู้เสียภาษีอากร : <span>0655569001411</span></p>
-                </div>
+                <div class="company-details">${KCIssuers.detailsHtml(sv.issuer)}</div>
             </div>
 
             <h2 class="doc-title" style="text-align: center; margin-bottom: 20px; font-size: 18px;">ใบเสนอราคา (Quotation)</h2>
@@ -346,6 +339,7 @@ function buildPreview() {
     container.innerHTML = '';
 
     const stateVars = {
+        issuer: getInputValue('issuer') || 'company',
         docNo: getInputValue('doc-no') || '-',
         docDate: getThaiDate(getInputValue('doc-date')),
         docTerms: getInputValue('doc-terms') || '-',
@@ -551,6 +545,7 @@ window.saveDocumentToFirestore = async function() {
             docTerms: getInputValue('doc-terms'),
             docCredit: getInputValue('doc-credit'),
             vatRate,
+            issuer: getInputValue('issuer') || 'company',
             discountAmount,
             custName: custName,
             custAddr: getInputValue('cust-addr'),
@@ -628,7 +623,8 @@ window.convertToInvoice = async function() {
         projName: getInputValue('proj-name'),
         projContact: getInputValue('proj-contact'),
         discount: state.discount || 0,
-        vatRate: Number(getInputValue('doc-vat')) || 7,
+        vatRate: Number.isFinite(Number(getInputValue('doc-vat'))) && getInputValue('doc-vat') !== '' ? Number(getInputValue('doc-vat')) : 7,
+        issuer: getInputValue('issuer') || 'company',
         items: state.items.map(item => ({ desc: item.desc, qty: item.qty, price: item.price }))
     };
     localStorage.setItem('kc_convert_data', JSON.stringify(payload));

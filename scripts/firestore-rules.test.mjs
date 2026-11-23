@@ -116,6 +116,13 @@ await t('staff reads only own acknowledgements', () => assertSucceeds(getDocs(qu
 await t('staff cannot list everyone\'s acknowledgements', () => assertFails(getDocs(collection(staff, 'ims_acks'))));
 await t('admin lists all acknowledgements', () => assertSucceeds(getDocs(collection(admin, 'ims_acks'))));
 
+console.log('Delivery notes');
+await t('staff creates a delivery note', () => assertSucceeds(setDoc(doc(staff, 'deliveries/DN-2569-001'), { docNo: 'DN-2569-001', issuer: 'shop', custName: 'x', items: [] })));
+await t('staff reads delivery notes', () => assertSucceeds(getDoc(doc(staff, 'deliveries/DN-2569-001'))));
+await t('staff cannot delete a delivery note', () => assertFails(deleteDoc(doc(staff, 'deliveries/DN-2569-001'))));
+await t('admin deletes a delivery note', () => assertSucceeds(deleteDoc(doc(admin, 'deliveries/DN-2569-001'))));
+await t('anon cannot read delivery notes', () => assertFails(getDoc(doc(anon, 'deliveries/DN-2569-001'))));
+
 console.log('Business cards');
 const card = { uid: 'staff', published: true, name: 'ทดสอบ', position: 'dev', accent: 'blue', updatedAt: serverTimestamp() };
 await t('staff creates own card', () => assertSucceeds(setDoc(doc(staff, 'cards/somchai'), card)));

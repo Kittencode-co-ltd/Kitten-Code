@@ -131,6 +131,13 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    match /deliveries/{docId} {
+      allow read:   if isStaff();
+      allow create: if isStaff();
+      allow update: if isStaff();
+      allow delete: if isAdmin();
+    }
+
     match /certificates/{docId} {
       allow read:   if isStaff();
       allow create: if isStaff();

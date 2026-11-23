@@ -24,6 +24,7 @@
                     <button class="tab" onclick="switchTab('quotations', this)">ใบเสนอราคา</button>
                     <button class="tab" onclick="switchTab('invoices', this)">ใบแจ้งหนี้</button>
                     <button class="tab" onclick="switchTab('receipts', this)">ใบเสร็จ</button>
+                    <button class="tab" onclick="switchTab('deliveries', this)">ใบส่งของ</button>
                     <button class="tab" onclick="switchTab('vouchers', this)">เบิก/ซื้อ/จ้าง/PV</button>
                     <button class="tab" onclick="switchTab('certificates', this)">หนังสือรับรอง</button>
                     <button class="tab" onclick="switchTab('letters', this)">หนังสือภายนอก</button>
@@ -31,6 +32,7 @@
                 </div>
                 <div class="head-tools">
                     <span class="page-sub" id="doc-count">กำลังโหลด…</span>
+                    <select id="doc-issuer" class="kc-search" style="width:auto;min-width:7.5rem" aria-label="ออกในนาม"><option value="all">ทุกนาม</option><option value="company">บริษัท</option><option value="shop">พาณิชย์</option></select>
                     <input type="search" id="doc-search" class="kc-search" placeholder="ค้นหาเลขที่ ลูกค้า หรือโปรเจกต์">
                 </div>
             </div>
