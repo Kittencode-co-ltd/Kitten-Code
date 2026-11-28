@@ -52,6 +52,16 @@
       <img src="assets/img/hero-bg.jpg" alt="" class="hero-bg" data-i18n-alt="images.hero_bg">
       <div class="hero-grid" aria-hidden="true"></div>
       <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-glyphs" aria-hidden="true">
+        <span style="--x: 7%; --d: 0s; --s: 1">&lt;/&gt;</span>
+        <span style="--x: 17%; --d: -5s; --s: .75">{ }</span>
+        <span style="--x: 29%; --d: -9s; --s: .9">01</span>
+        <span style="--x: 41%; --d: -3s; --s: .7">AI</span>
+        <span style="--x: 58%; --d: -11s; --s: .8">=&gt;</span>
+        <span style="--x: 69%; --d: -7s; --s: 1">&lt;/&gt;</span>
+        <span style="--x: 81%; --d: -2s; --s: .75">( )</span>
+        <span style="--x: 92%; --d: -13s; --s: .85">#</span>
+      </div>
 
       <div class="container hero-inner d-flex flex-column align-items-center justify-content-center text-center">
 
@@ -66,14 +76,18 @@
           <span class="hero-word-bold" id="scramble-code" data-i18n="hero.title_word2">Code</span><span class="hero-dot">.</span>
         </h2>
 
-        <p class="hero-slogan" data-aos="fade-up" data-aos-delay="300" data-i18n="hero.subtitle">
+        <p class="hero-slogan" data-aos="fade-up" data-aos-delay="300" data-i18n="hero.subtitle" id="hero-type">
           Great innovation doesn't always start in a big company.
         </p>
 
-        <div class="d-flex mt-2" data-aos="fade-up" data-aos-delay="400">
+        <div class="hero-ctas mt-2" data-aos="fade-up" data-aos-delay="400">
           <a href="#about" class="minimal-tech-btn d-inline-flex align-items-center justify-content-center">
             <span data-i18n="hero.cta_button">Get Started</span>
             <i class="bi bi-arrow-right fw-light ms-3"></i>
+          </a>
+          <a href="mailto:kittencode.co.ltd@gmail.com?subject=Project%20inquiry" class="hero-mail-btn d-inline-flex align-items-center justify-content-center">
+            <i class="bi bi-envelope me-2" aria-hidden="true"></i>
+            <span data-i18n="hero.cta_email">Email us</span>
           </a>
         </div>
       </div>

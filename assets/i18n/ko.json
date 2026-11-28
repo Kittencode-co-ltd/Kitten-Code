@@ -9,14 +9,18 @@
     "services": "서비스",
     "portfolio": "포트폴리오",
     "team": "팀",
-    "contact": "문의하기"
+    "contact": "문의하기",
+    "language": "언어",
+    "theme_dark": "다크 모드",
+    "theme_light": "라이트 모드"
   },
   "hero": {
     "label": "Digital Native",
     "title_word1": "Kitten",
     "title_word2": "Code",
     "subtitle": "위대한 혁신이 꼭 대기업에서 시작되는 것은 아닙니다.",
-    "cta_button": "시작하기"
+    "cta_button": "시작하기",
+    "cta_email": "이메일 문의"
   },
   "about": {
     "heading": "회사 소개",

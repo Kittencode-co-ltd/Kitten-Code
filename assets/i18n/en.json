@@ -9,14 +9,18 @@
     "services": "Services",
     "portfolio": "Portfolio",
     "team": "Team",
-    "contact": "Contact"
+    "contact": "Contact",
+    "language": "Language",
+    "theme_dark": "Dark mode",
+    "theme_light": "Light mode"
   },
   "hero": {
     "label": "Digital Native",
     "title_word1": "Kitten",
     "title_word2": "Code",
     "subtitle": "Great innovation doesn't always start in a big company.",
-    "cta_button": "Get Started"
+    "cta_button": "Get Started",
+    "cta_email": "Email us"
   },
   "about": {
     "heading": "About us",

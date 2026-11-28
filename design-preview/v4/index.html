@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitten Code — ม็อกอัป v4 (Editor)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1117; --panel:#131922; --panel2:#1a212c; --line:#253041;
+    --fg:#e6e9ef; --muted:#8b95a7; --dim:#5b6577;
+    --orange:#ff4a17; --green:#7ee787; --blue:#79c0ff; --purple:#d2a8ff; --yellow:#e3b341;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--fg);font-family:'Prompt',sans-serif;font-weight:300;font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .mono{font-family:'JetBrains Mono','Prompt',monospace}
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+
+  /* top bar = editor title bar */
+  .bar{position:sticky;top:0;z-index:20;background:rgba(13,17,23,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .bar .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:20px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+  .brand img{width:30px;height:30px;border-radius:50%;background:#fff}
+  .tabs{display:flex;gap:2px;font-size:13px}
+  .tabs a{padding:8px 14px;color:var(--muted);border-radius:8px}
+  .tabs a:hover{background:var(--panel2);color:var(--fg)}
+  .tabs a b{color:var(--orange);font-weight:500}
+  .run{display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:#fff;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:500}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:10px;font-weight:500;font-size:15px;transition:transform .2s,background .2s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-o{background:var(--orange);color:#fff}
+  .btn-g{border:1px solid var(--line);color:var(--fg)}
+  .btn-g:hover{background:var(--panel2)}
+
+  /* window */
+  .win{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .win-head{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel2);font-size:13px;color:var(--muted)}
+  .dots{display:flex;gap:6px;margin-right:8px}
+  .dots i{width:11px;height:11px;border-radius:50%;background:#3a4556}
+  .dots i:first-child{background:var(--orange)}
+
+  /* hero */
+  .hero{padding:72px 0 40px}
+  .hero-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:stretch}
+  .code{display:grid;grid-template-columns:44px 1fr;font-size:15px;line-height:1.9;padding:26px 0}
+  .ln{color:var(--dim);text-align:right;padding-right:14px;user-select:none}
+  .src{padding-right:24px;overflow:hidden}
+  .k{color:var(--purple)} .s{color:var(--green)} .p{color:var(--blue)} .c{color:var(--dim)}
+  .word{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(58px,8.4vw,120px);line-height:1;letter-spacing:-.05em;color:#fff;padding:10px 0 6px 58px}
+  .word .dot{color:var(--orange)}
+  .caret{display:inline-block;width:.08em;height:.85em;background:var(--orange);margin-left:6px;vertical-align:-.05em;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero-copy{padding:8px 24px 30px 58px}
+  .hero-copy p{font-size:20px;color:var(--muted);max-width:34ch}
+  .hero-copy .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+  .preview{display:flex;flex-direction:column}
+  .preview .img{flex:1;min-height:360px;position:relative}
+  .preview .img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .preview .foot{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;padding:12px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}
+  .ok{color:var(--green)}
+
+  /* status bar stats */
+  .status{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:20px}
+  .status div{padding:24px 26px;border-right:1px solid var(--line);background:var(--panel)}
+  .status div:last-child{border-right:0;background:var(--orange)}
+  .status b{display:block;font-family:'JetBrains Mono',monospace;font-size:44px;line-height:1.1;letter-spacing:-.03em;font-weight:700}
+  .status b small{font-size:18px;font-weight:500;white-space:nowrap}
+  .status span{font-size:14px;color:var(--muted)}
+  .status div:last-child span{color:#ffe1d6}
+
+  /* section heads */
+  section{padding:56px 0}
+  .head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:28px}
+  .file{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--orange);margin-bottom:12px}
+  .file::before{content:"// "}
+  h2{font-size:clamp(32px,4vw,50px);line-height:1.2;font-weight:600;letter-spacing:-.01em;color:#fff}
+  .head p{color:var(--muted);max-width:42ch}
+
+  /* services */
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .svc{padding:28px}
+  .svc .fn{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--blue)}
+  .svc .fn em{color:var(--purple);font-style:normal}
+  .svc h3{font-size:24px;font-weight:600;color:#fff;margin:14px 0 8px}
+  .svc p{color:var(--muted);font-size:15px}
+  .svc ul{list-style:none;margin-top:18px;display:grid;gap:6px;font-size:14px}
+  .svc li::before{content:"→ ";color:var(--orange);font-family:'JetBrains Mono',monospace}
+  .svc-big{grid-column:span 2;display:grid;grid-template-columns:1fr 1fr}
+  .svc-big .img{position:relative;min-height:300px}
+  .svc-big .img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+  /* process = terminal */
+  .term{font-family:'JetBrains Mono','Prompt',monospace;font-size:15px;padding:26px 28px;line-height:2}
+  .term .row{display:grid;grid-template-columns:150px 1fr;gap:16px;border-bottom:1px dashed var(--line);padding:10px 0}
+  .term .row:last-child{border-bottom:0}
+  .term .cmd{color:var(--green)}
+  .term .cmd::before{content:"$ ";color:var(--dim)}
+  .term .out{font-family:'Prompt',sans-serif;color:var(--fg)}
+  .term .out small{display:block;color:var(--muted);font-size:14px}
+
+  /* product */
+  .fufu{display:grid;grid-template-columns:1.1fr 1fr;gap:20px}
+  .fufu .body{padding:34px}
+  .fufu ul{list-style:none;display:grid;gap:12px;margin:24px 0}
+  .fufu li{display:flex;gap:12px}
+  .fufu li::before{content:"✓";color:var(--green);font-family:'JetBrains Mono',monospace}
+  .metric{display:flex;gap:18px;align-items:baseline;border-top:1px solid var(--line);padding-top:20px}
+  .metric b{font-family:'JetBrains Mono',monospace;font-size:52px;color:var(--orange);letter-spacing:-.04em;line-height:1}
+  .metric span{color:var(--muted);font-size:14px}
+  .disc{font-size:13px;color:var(--dim);margin-top:12px}
+  .phones{display:flex;justify-content:center;align-items:center;gap:0;padding:34px 10px;background:radial-gradient(circle at 50% 60%,#1d2633,var(--panel) 70%)}
+  .phone{width:200px;border-radius:30px;border:6px solid #2a3343;overflow:hidden;background:#000;flex:0 0 auto}
+  .phone.side{width:160px;opacity:.6}
+  .phone.l{margin-right:-40px;transform:rotate(-6deg)} .phone.r{margin-left:-40px;transform:rotate(6deg)}
+  .phone.front{position:relative;z-index:2}
+
+  /* work */
+  .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .work .pic{aspect-ratio:4/3;overflow:hidden;background:#fff}
+  .work .pic img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .work:hover .pic img{transform:scale(1.04)}
+  .work .cap{padding:16px 18px;display:flex;justify-content:space-between;font-size:15px}
+  .work .cap span{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px}
+
+  /* proof = git log */
+  .proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .doc{display:grid;grid-template-columns:1fr 120px;gap:20px;padding:26px}
+  .doc img{border-radius:8px;transform:rotate(3deg);background:#fff}
+  .doc .iss{font-size:13px;color:var(--muted)}
+  .doc h3{color:#fff;font-size:21px;font-weight:600;margin:6px 0}
+  .doc p{font-size:14px;color:var(--muted)}
+  .log{grid-column:span 2;padding:26px 28px;font-size:15px}
+  .log .row{display:grid;grid-template-columns:110px 1fr;gap:18px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .log .row:last-of-type{border-bottom:0}
+  .log .hash{font-family:'JetBrains Mono',monospace;color:var(--yellow);font-size:14px}
+  .note{font-size:13px;color:var(--dim);margin-top:14px}
+
+  /* contact */
+  .contact{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+  .cta-box{padding:44px;background:var(--orange);border-color:var(--orange);color:#fff;display:flex;flex-direction:column;justify-content:space-between;gap:30px}
+  .cta-box .file{color:#ffd3c4}
+  .cta-box h2{font-size:clamp(36px,5vw,64px);line-height:1.15}
+  .cta-box .btn-d{background:#0d1117;color:#fff}
+  .cta-box .btn-w{background:#fff;color:#0d1117}
+  .cfg{font-family:'JetBrains Mono','Prompt',monospace;font-size:14px;padding:26px;line-height:2.1}
+  .cfg .key{color:var(--blue)}
+  .cfg .val{color:var(--green);word-break:break-word}
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:26px 0;font-size:13px;color:var(--dim)}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .badge{position:fixed;right:16px;bottom:16px;z-index:30;background:#fff;color:#0d1117;font-size:12px;padding:8px 14px;border-radius:999px}
+
+  @media (max-width:980px){
+    .tabs{display:none}
+    .hero-grid,.fufu,.contact,.proof-grid{grid-template-columns:1fr}
+    .svc-grid,.work-grid{grid-template-columns:1fr 1fr}
+    .svc-big{grid-column:span 2}
+    .log{grid-column:span 1}
+    .status{grid-template-columns:1fr 1fr}
+    .status div:nth-child(2){border-right:0}
+    .status div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+    .head{flex-direction:column;align-items:start}
+  }
+  @media (max-width:600px){
+    .svc-grid,.work-grid{grid-template-columns:1fr}
+    .svc-big{grid-column:span 1;grid-template-columns:1fr}
+    .word,.hero-copy{padding-left:24px}
+    .code{grid-template-columns:30px 1fr;font-size:13px}
+    .term .row,.log .row{grid-template-columns:1fr;gap:4px}
+    .phone.side{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand mono" href="#"><img src="../../assets/img/LOGO-KittenCode.png" alt="">kitten-code</a>
+    <nav class="tabs mono">
+      <a href="#services"><b>01</b> services</a>
+      <a href="#process"><b>02</b> process</a>
+      <a href="#product"><b>03</b> fufu</a>
+      <a href="#work"><b>04</b> work</a>
+      <a href="#proof"><b>05</b> proof</a>
+    </nav>
+    <a class="run" href="#contact"><span class="mono">▶</span> คุยสโคปฟรี</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="win">
+        <div class="win-head"><span class="dots"><i></i><i></i><i></i></span><span class="mono">index.ts — Kitten Code</span></div>
+        <div class="code mono">
+          <span class="ln">1</span><span class="src"><span class="c">// บริษัท คิทเท่น โค้ด จำกัด · พิษณุโลก · ตั้งแต่ 2562</span></span>
+          <span class="ln">2</span><span class="src"><span class="k">const</span> <span class="p">mission</span> = <span class="s">"นวัตกรรมใหญ่ ไม่ต้องเริ่มจากบริษัทใหญ่"</span>;</span>
+          <span class="ln">3</span><span class="src"><span class="k">export default</span> <span class="p">brand</span>();</span>
+        </div>
+        <div class="word"><span id="typed">Kitten Code</span><span class="dot">.</span><span class="caret"></span></div>
+        <div class="hero-copy">
+          <p>เราทำเว็บ แอป ระบบหลังบ้าน และ AI ที่ธุรกิจคุณใช้งานได้จริง ดูแลตั้งแต่ไอเดียแรกจนถึงหลังเปิดใช้งาน</p>
+          <div class="cta">
+            <a class="btn btn-o" href="#contact">คุยสโคปและประเมินงบฟรี →</a>
+            <a class="btn btn-g" href="#work">ดูผลงาน</a>
+          </div>
+        </div>
+      </div>
+      <div class="win preview">
+        <div class="win-head"><span class="dots"><i></i><i></i><i></i></span><span class="mono">preview — localhost</span></div>
+        <div class="img"><img src="../../assets/img/services-1.jpg" alt="แมวใส่ฮู้ดนั่งเขียนโค้ด"></div>
+        <div class="foot mono"><span class="ok">● compiled successfully</span><span>Code for a Better Tomorrow</span></div>
+      </div>
+    </div>
+
+    <div class="status">
+      <div><b>7 <small>ปี</small></b><span>บนเส้นทางดิจิทัล เริ่มปี 2562</span></div>
+      <div><b>4</b><span>ผลงานจดแจ้งลิขสิทธิ์โปรแกรม</span></div>
+      <div><b>4</b><span>โครงการและเวทีระดับประเทศที่ได้รับคัดเลือก</span></div>
+      <div><b>1 <small>ล้านบาท</small></b><span>ทุนจดทะเบียน ตรวจสอบได้</span></div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="head">
+      <div><div class="file">services.ts</div><h2>เราทำอะไรให้คุณได้บ้าง</h2></div>
+      <p>ทีมเดียวดูแลครบ ทั้งซอฟต์แวร์ AI และสื่อ</p>
+    </div>
+    <div class="svc-grid">
+      <div class="win svc-big">
+        <div class="svc">
+          <div class="fn"><em>build</em>(software)</div>
+          <h3>พัฒนาซอฟต์แวร์</h3>
+          <p>เว็บแอป แอปมือถือ และระบบหลังบ้าน ออกแบบให้ธุรกิจคุณโดยเฉพาะ</p>
+          <ul><li>เว็บแอปพลิเคชัน และแอป iOS / Android</li><li>ระบบ ERP · CRM · POS</li><li>แชทบอท LINE และระบบข้อมูล</li><li>เชื่อมระบบที่มีอยู่เข้าด้วยกัน</li></ul>
+        </div>
+        <div class="img"><img src="../../assets/img/about.jpg" alt="จอคอมพิวเตอร์แสดงโลโก้ Kitten Code"></div>
+      </div>
+      <div class="win svc">
+        <div class="fn"><em>integrate</em>(ai)</div>
+        <h3>AI</h3>
+        <p>เชื่อม AI เข้ากับระบบหลังบ้าน และพาทีมคุณใช้ AI เป็น</p>
+        <ul><li>AI Integration</li><li>อบรม AI</li><li>Workshop ปรับตามสายงาน</li></ul>
+      </div>
+      <div class="win svc">
+        <div class="fn"><em>render</em>(media)</div>
+        <h3>สื่อ</h3>
+        <p>เล่าเรื่องแบรนด์ด้วยภาพและวิดีโอ</p>
+        <ul><li>วิดีโอองค์กร</li><li>โมชันกราฟิก</li><li>กราฟิก</li></ul>
+      </div>
+      <div class="win svc">
+        <div class="fn"><em>plan</em>(system)</div>
+        <h3>ที่ปรึกษา</h3>
+        <p>วางระบบให้ชัดก่อนลงทุน</p>
+        <ul><li>วิเคราะห์ระบบ</li><li>วิเคราะห์ข้อมูลและ BI</li><li>โรดแมปเทคโนโลยี</li></ul>
+      </div>
+      <div class="win svc" style="background:var(--panel2)">
+        <div class="fn"><em>start</em>()</div>
+        <h3>คุยสโคปฟรี</h3>
+        <p>เล่าไอเดียให้เราฟัง พร้อมรับการประเมินงบเบื้องต้น ไม่มีค่าใช้จ่าย</p>
+        <ul><li><a href="#contact" style="color:var(--orange)">เริ่มคุยกับเรา</a></li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="head">
+      <div><div class="file">process.sh</div><h2>ทำงานด้วยกัน 5 ขั้น</h2></div>
+      <p>คุณเห็นงานและทดลองใช้ได้ระหว่างทาง ไม่ต้องรอจนวันส่งมอบ</p>
+    </div>
+    <div class="win">
+      <div class="win-head"><span class="dots"><i></i><i></i><i></i></span><span class="mono">terminal</span></div>
+      <div class="term">
+        <div class="row"><span class="cmd">scope</span><span class="out">คุยสโคปฟรี<small>เล่าไอเดีย รับการประเมินงบเบื้องต้นฟรี</small></span></div>
+        <div class="row"><span class="cmd">design</span><span class="out">ออกแบบ<small>ตกลงขอบเขตเป็นลายลักษณ์อักษร แล้วออกแบบขั้นตอนและหน้าจอไปด้วยกัน</small></span></div>
+        <div class="row"><span class="cmd">build</span><span class="out">พัฒนา<small>พัฒนาเป็นรอบ ๆ ให้คุณเห็นและทดลองใช้ได้ระหว่างทาง</small></span></div>
+        <div class="row"><span class="cmd">test --ship</span><span class="out">วัดผลและส่งมอบ<small>ตรวจคุณภาพ ทดสอบร่วมกับคุณ แล้วส่งมอบงาน</small></span></div>
+        <div class="row"><span class="cmd">support</span><span class="out">ดูแลหลังใช้งาน<small>อยู่เคียงข้างหลังเปิดใช้งาน ช่วยดูแลและปรับปรุงต่อเนื่อง</small></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT -->
+  <section id="product">
+    <div class="head">
+      <div><div class="file">products/fufu</div><h2>เราไม่ได้แค่รับทำ เราสร้างของเราเองด้วย</h2></div>
+    </div>
+    <div class="win">
+      <div class="win-head"><span class="dots"><i></i><i></i><i></i></span><span class="mono">FUFU Pet Care</span></div>
+      <div class="fufu">
+        <div class="body">
+          <img src="../../assets/img/fufu/fufu-logo.png" alt="FUFU Pet Care" style="width:64px;border-radius:16px;margin-bottom:18px">
+          <h2 style="font-size:36px">FUFU Pet Care</h2>
+          <p style="color:var(--muted);margin-top:8px">แอปดูแลสัตว์เลี้ยงที่เราออกแบบ พัฒนา และดูแลเองทั้งหมด ตั้งแต่โมเดล AI จนถึงพอร์ทัลคลินิก</p>
+          <ul>
+            <li>คัดกรองผิวหนังและขนจากรูปถ่ายด้วย AI แบ่ง 4 ระดับความเร่งด่วน</li>
+            <li>FUFU AI Vet ถามเรื่องน้องได้ตลอด 24 ชั่วโมง</li>
+            <li>สมุดสุขภาพ วัคซีน ถ่ายพยาธิ น้ำหนัก และการแจ้งเตือน</li>
+            <li>ส่งต่อเคสให้คลินิกพาร์ทเนอร์ผ่าน FUFU Partner Portal</li>
+          </ul>
+          <div class="metric"><b>94%</b><span>ความแม่นยำของโมเดลคัดกรองผิวหนัง ทดสอบกับภาพที่สัตวแพทย์ยืนยันแล้ว 6,215 ภาพ</span></div>
+          <p class="disc">คัดกรองเบื้องต้น ไม่ใช่การวินิจฉัย สัตวแพทย์เป็นผู้ตัดสินขั้นสุดท้าย</p>
+          <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+            <a class="btn btn-o" href="https://app.fufupetcare.com" target="_blank" rel="noopener">เปิดเว็บแอป ↗</a>
+            <a class="btn btn-g" href="https://fufupetcare.com" target="_blank" rel="noopener">fufupetcare.com</a>
+          </div>
+        </div>
+        <div class="phones">
+          <div class="phone side l"><img src="../../assets/img/fufu/fufu-app-scan.png" alt=""></div>
+          <div class="phone front"><img src="../../assets/img/fufu/fufu-app-home.png" alt="หน้าแรกแอป FUFU Pet Care"></div>
+          <div class="phone side r"><img src="../../assets/img/fufu/fufu-app-chat.png" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="head">
+      <div><div class="file">work/</div><h2>ผลงานบางส่วน</h2></div>
+      <a class="btn btn-g" href="../../index.html#portfolio">ดูผลงานทั้งหมด →</a>
+    </div>
+    <div class="work-grid">
+      <a class="win work" href="#"><div class="pic"><img src="../../assets/img/portfolio/Product/product-FUFU.png" alt=""></div><div class="cap"><span style="color:var(--fg);font-family:Prompt">FUFU Pet Care</span><span>app + ai</span></div></a>
+      <a class="win work" href="#"><div class="pic"><img src="../../assets/img/portfolio/Product/product-Kitt-EDGE.png" alt=""></div><div class="cap"><span style="color:var(--fg);font-family:Prompt">Kitt EDGE</span><span>product</span></div></a>
+      <a class="win work" href="#"><div class="pic"><img src="../../assets/img/portfolio/Media/media-overall.png" alt=""></div><div class="cap"><span style="color:var(--fg);font-family:Prompt">งานสื่อและวิดีโอ</span><span>media</span></div></a>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section id="proof">
+    <div class="head">
+      <div><div class="file">proof.log</div><h2>ผลงานที่พิสูจน์ได้ ตรวจสอบได้</h2></div>
+      <p>แสดงเฉพาะสิ่งที่มีเอกสารยืนยัน</p>
+    </div>
+    <div class="proof-grid">
+      <div class="win doc">
+        <div><div class="iss">กรมทรัพย์สินทางปัญญา</div><h3>จดแจ้งลิขสิทธิ์โปรแกรม 4 ผลงาน</h3><p class="mono" style="font-size:13px">ว1.000520 · ว1.000636 · ว1.001745 · ว1.001746</p></div>
+        <img src="../../assets/img/credentials/doc-copyright-000520.png" alt="เอกสารจดแจ้งลิขสิทธิ์">
+      </div>
+      <div class="win doc">
+        <div><div class="iss">กรมพัฒนาธุรกิจการค้า</div><h3>บริษัทจดทะเบียน ตรวจสอบได้</h3><p>ก่อตั้ง 6 พ.ค. 2569 ทุนจดทะเบียน 1,000,000 บาท และเครื่องหมาย DBD Registered</p></div>
+        <img src="../../assets/img/credentials/doc-dbd-registered.png" alt="เครื่องหมาย DBD Registered">
+      </div>
+      <div class="win log">
+        <div class="row"><span class="hash">2569-11-05</span><span>FUFU Pet Care ผ่านการคัดเลือกเป็นผู้มีสิทธิ์นำเสนอผลงาน รอบคัดเลือกระดับประเทศ สาขา Digital Startup, ASEAN Digital Awards 2027 (depa)</span></div>
+        <div class="row"><span class="hash">2569-08-28</span><span>1 ใน 10 ผลงานบนเวที Pitching, IP MART SHOWBIZ 2026</span></div>
+        <div class="row"><span class="hash">2569-07</span><span>1 ใน 19 ดิจิทัลสตาร์ทอัพ, depa Digital Startup Fund</span></div>
+        <div class="row"><span class="hash">2569-05</span><span>1 ใน 25 องค์กรทั่วประเทศ โครงการมาตรฐานการจัดการนวัตกรรม ISO 56001:2024 (NIA ร่วมกับ TNI)</span></div>
+        <div class="row"><span class="hash">2562</span><span>เริ่มเป็นทีมเล็ก ๆ ในพิษณุโลก รับงานเว็บ แอป มัลติมีเดีย</span></div>
+        <p class="note">ISO 56001: บริษัทได้รับคัดเลือกเข้าร่วมโครงการ ไม่ใช่การได้รับการรับรองมาตรฐาน ISO</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact">
+      <div class="win cta-box">
+        <div class="file">contact()</div>
+        <h2>มีไอเดียอยู่ในหัว? เล่าให้เราฟัง</h2>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-d" href="https://lin.ee/u1gpCVs" target="_blank" rel="noopener">แอดไลน์ @458ddksw</a>
+          <a class="btn btn-w" href="tel:+66808850555">โทร 080 885 0555</a>
+        </div>
+      </div>
+      <div class="win">
+        <div class="win-head"><span class="dots"><i></i><i></i><i></i></span><span class="mono">contact.json</span></div>
+        <div class="cfg">
+          {<br>
+          &nbsp;&nbsp;<span class="key">"email"</span>: <span class="val">"kittencode.co.ltd@gmail.com"</span>,<br>
+          &nbsp;&nbsp;<span class="key">"tel"</span>: <span class="val">"+66 8 0885 0555"</span>,<br>
+          &nbsp;&nbsp;<span class="key">"line"</span>: <span class="val">"@458ddksw"</span>,<br>
+          &nbsp;&nbsp;<span class="key">"address"</span>: <span class="val">"347/11 หมู่ 3 ต.ท่าโพธิ์ อ.เมืองพิษณุโลก จ.พิษณุโลก 65000"</span><br>
+          }
+        </div>
+        <div style="position:relative;height:200px;border-top:1px solid var(--line)"><img src="../../assets/img/hero-bg.jpg" alt="ออฟฟิศแมวโปรแกรมเมอร์" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 55%"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2569 บริษัท คิทเท่น โค้ด จำกัด · KITTEN CODE CO.,LTD.</span>
+    <span class="mono">Facebook · Instagram @kitten.code · TikTok · LinkedIn</span>
+  </div>
+</footer>
+
+<div class="badge">ม็อกอัป v4 · ยังไม่ใช่เว็บจริง</div>
+
+<script>
+  // type the wordmark once on load
+  (function(){
+    var el=document.getElementById('typed'), text=el.textContent, i=0;
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    el.textContent='';
+    (function step(){ el.textContent=text.slice(0,++i); if(i<text.length) setTimeout(step,90); })();
+  })();
+</script>
+</body>
+</html>

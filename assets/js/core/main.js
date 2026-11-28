@@ -22,6 +22,7 @@
   document.addEventListener('scroll', toggleScrolled);
   window.addEventListener('load', toggleScrolled);
 
+
   /**
    * Mobile nav toggle
    */
@@ -321,4 +322,113 @@
       });
     }
   });
+})();
+
+/**
+ * Motion layer: scroll progress bar, hero parallax, card tilt, in-view reveals.
+ * Everything is skipped when the visitor has "reduce motion" turned on.
+ */
+(function() {
+  "use strict";
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* Scroll progress bar along the top of the page */
+  var bar = document.createElement('div');
+  bar.className = 'scroll-progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+
+  /* Hero: content drifts and fades as you scroll away, background follows the mouse */
+  var hero = document.querySelector('.hero.hero-minimal');
+  if (hero && !reduce) {
+    var cue = document.createElement('a');
+    cue.className = 'scroll-cue';
+    cue.href = '#about';
+    cue.setAttribute('aria-label', 'Scroll down');
+    hero.appendChild(cue);
+
+    if (finePointer) {
+      hero.addEventListener('pointermove', function(e) {
+        var r = hero.getBoundingClientRect();
+        hero.style.setProperty('--mx', ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
+        hero.style.setProperty('--my', ((e.clientY - r.top) / r.height - 0.5).toFixed(3));
+      });
+      hero.addEventListener('pointerleave', function() {
+        hero.style.setProperty('--mx', 0);
+        hero.style.setProperty('--my', 0);
+      });
+    }
+  }
+
+  /* Back-to-top button: ring fills with reading progress, arrow launches on click */
+  var topBtn = document.querySelector('.scroll-top');
+  if (topBtn) {
+    topBtn.addEventListener('click', function() {
+      if (reduce) return;
+      topBtn.classList.remove('launch');
+      void topBtn.offsetWidth;
+      topBtn.classList.add('launch');
+      setTimeout(function() { topBtn.classList.remove('launch'); }, 700);
+    });
+  }
+
+  var ticking = false;
+  function onScroll() {
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - window.innerHeight;
+    var progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+    bar.style.transform = 'scaleX(' + progress + ')';
+    if (topBtn) topBtn.style.setProperty('--p', (progress * 100).toFixed(1));
+    if (hero && !reduce) {
+      var p = Math.min(Math.max(window.scrollY / hero.offsetHeight, 0), 1);
+      hero.style.setProperty('--hs', p.toFixed(3));
+    }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function() {
+    if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+  }, { passive: true });
+  window.addEventListener('load', onScroll);
+  onScroll();
+
+  if (reduce) {
+    document.querySelectorAll('.section-title, .process-list, .stats, .timeline').forEach(function(el) { el.classList.add('in-view'); });
+    return;
+  }
+
+  /* Cards lean towards the pointer (desktop mouse only) */
+  if (finePointer) {
+    var tiltSel = '.services-2 .service-item, .value-card, .rec-card, .proof-card, .team .member, .trust-card, .product-proof';
+    document.querySelectorAll(tiltSel).forEach(function(card) {
+      card.classList.add('tilt');
+      card.addEventListener('pointermove', function(e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5;
+        var y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.setProperty('--ry', (x * 8).toFixed(2) + 'deg');
+        card.style.setProperty('--rx', (y * -8).toFixed(2) + 'deg');
+        card.style.setProperty('--gx', ((x + 0.5) * 100).toFixed(1) + '%');
+        card.style.setProperty('--gy', ((y + 0.5) * 100).toFixed(1) + '%');
+      });
+      card.addEventListener('pointerleave', function() {
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+      });
+    });
+  }
+
+  /* Add .in-view once an element scrolls into view (drives line draws and pops in CSS) */
+  var watch = document.querySelectorAll('.section-title, .process-list, .stats, .timeline');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(en) {
+        if (en.isIntersecting) { en.target.classList.add('in-view'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.25 });
+    watch.forEach(function(el) { io.observe(el); });
+  } else {
+    watch.forEach(function(el) { el.classList.add('in-view'); });
+  }
 })();

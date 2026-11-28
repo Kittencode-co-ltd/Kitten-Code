@@ -26,7 +26,7 @@
   ];
   var CODES = LANGS.map(function (l) { return l.code; });
   var STORAGE_KEY = 'appLang';
-  var CACHE_VERSION = 'v3'; // bump whenever assets/i18n/*.json changes
+  var CACHE_VERSION = 'v6'; // bump whenever assets/i18n/*.json changes
 
   function store(kind, key, value) {
     try { (kind === 'local' ? localStorage : sessionStorage).setItem(key, value); } catch (e) { }
@@ -58,7 +58,7 @@
     if (cached) {
       try { return Promise.resolve(JSON.parse(cached)); } catch (e) { }
     }
-    return fetch(basePath() + 'assets/i18n/' + lang + '.json')
+    return fetch(basePath() + 'assets/i18n/' + lang + '.json?v=' + CACHE_VERSION)
       .then(function (r) {
         if (!r.ok) throw new Error('Failed to load ' + lang + '.json');
         return r.json();
@@ -161,8 +161,24 @@
     if (CODES.indexOf(lang) === -1 || lang === api.lang) return;
     store('local', STORAGE_KEY, lang);
     markActive(lang);
+
+    var root = document.documentElement;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Modern browsers: old text fades up and away, new text rises in (View Transitions).
+    if (document.startViewTransition && !reduce) {
+      // Fetch first so the page never freezes on a slow network inside the transition.
+      Promise.all([fetchDict(lang), lang !== 'en' ? fetchDict('en') : null]).then(function () {
+        root.classList.add('vt-lang');
+        var tr = document.startViewTransition(function () { return load(lang); });
+        tr.finished.finally(function () { root.classList.remove('vt-lang'); });
+      }).catch(function () { load(lang); });
+      return;
+    }
+
+    // Fallback: soft blur-out / blur-in of the content.
     document.body.classList.add('i18n-loading');
-    setTimeout(function () { load(lang); }, 200);
+    setTimeout(function () { load(lang); }, 220);
   }
 
   var api = { lang: null, t: t, setLanguage: setLanguage, LANGS: LANGS, apply: applyTranslations };

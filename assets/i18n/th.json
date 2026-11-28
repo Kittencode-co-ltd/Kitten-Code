@@ -9,14 +9,18 @@
     "services": "บริการ",
     "portfolio": "ผลงาน",
     "team": "ทีมงาน",
-    "contact": "ติดต่อเรา"
+    "contact": "ติดต่อเรา",
+    "language": "ภาษา",
+    "theme_dark": "โหมดมืด",
+    "theme_light": "โหมดสว่าง"
   },
   "hero": {
     "label": "Digital Native",
     "title_word1": "Kitten",
     "title_word2": "Code",
     "subtitle": "Great innovation doesn't always start in a big company.",
-    "cta_button": "Get Started"
+    "cta_button": "Get Started",
+    "cta_email": "ส่งอีเมลคุยงาน"
   },
   "about": {
     "heading": "เกี่ยวกับเรา",

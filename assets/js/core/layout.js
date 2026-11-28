@@ -57,27 +57,58 @@
       { code: 'zh', label: '中', name: '简体中文' }, { code: 'ja', label: '日', name: '日本語' },
       { code: 'ko', label: '한', name: '한국어' }
     ];
-    return langs.map(function (l) {
-      return '<button type="button" class="lang-btn" data-lang="' + l.code + '" lang="' + l.code +
-        '" title="' + l.name + '" aria-label="' + l.name + '" aria-pressed="false">' + l.label + '</button>';
+    var items = langs.map(function (l) {
+      return '<button type="button" class="lang-btn" role="menuitemradio" data-lang="' + l.code + '" data-label="' + l.label +
+        '" lang="' + l.code + '" aria-pressed="false"><span class="lang-code">' + l.label + '</span><span class="lang-name">' +
+        l.name + '</span></button>';
     }).join('');
+    return '<div class="lang-dd">' +
+      '<button type="button" class="lang-dd-toggle" aria-haspopup="true" aria-expanded="false" aria-label="Language / ภาษา">' +
+      '<i class="bi bi-globe2" aria-hidden="true"></i><span class="lang-dd-current">TH</span>' +
+      '<i class="bi bi-chevron-down lang-dd-chev" aria-hidden="true"></i></button>' +
+      '<div class="lang-dd-menu" role="menu" aria-label="Language" hidden>' + items + '</div>' +
+      '</div>';
+  }
+
+  /* Small screens: language and theme live inside the burger menu instead of the top bar */
+  function mobileTools() {
+    var langs = (window.KCi18n && window.KCi18n.LANGS) || [
+      { code: 'th', label: 'TH', name: 'ไทย' }, { code: 'en', label: 'EN', name: 'English' },
+      { code: 'zh', label: '中', name: '简体中文' }, { code: 'ja', label: '日', name: '日本語' },
+      { code: 'ko', label: '한', name: '한국어' }
+    ];
+    var langBtns = langs.map(function (l) {
+      return '<button type="button" class="lang-btn mnav-lang" data-lang="' + l.code + '" data-label="' + l.label +
+        '" lang="' + l.code + '" aria-pressed="false" aria-label="' + l.name + '">' + l.name + '</button>';
+    }).join('');
+    return '<li class="mnav-tools">' +
+      '<p class="mnav-label"><i class="bi bi-globe2" aria-hidden="true"></i> <span data-i18n="nav.language">Language</span></p>' +
+      '<div class="mnav-langs" role="group" aria-label="Language">' + langBtns + '</div>' +
+      '<button type="button" id="theme-toggle-mobile" class="mnav-theme">' +
+      '<span class="mnav-theme-icon"><i class="bi bi-moon-fill theme-icon-dark" aria-hidden="true"></i>' +
+      '<i class="bi bi-sun-fill theme-icon-light" aria-hidden="true"></i></span>' +
+      '<span class="mnav-theme-text"><span class="when-light" data-i18n="nav.theme_dark">Dark mode</span>' +
+      '<span class="when-dark" data-i18n="nav.theme_light">Light mode</span></span>' +
+      '<span class="mnav-switch" aria-hidden="true"><span></span></span></button>' +
+      '</li>';
   }
 
   function headerHtml(active) {
     var items = NAV.map(function (n) {
       var cls = n[0] === active ? ' class="active"' : '';
       return '<li><a href="' + section(n[1]) + '"' + cls + ' data-i18n="nav.' + n[0] + '">' + FALLBACK.nav[n[0]] + '</a></li>';
-    }).join('');
+    }).join('') + mobileTools();
 
     return '' +
       '<header id="header" class="header d-flex align-items-center fixed-top">' +
-      '<div class="container-fluid container-xl position-relative d-flex align-items-center">' +
-      '<a href="' + ROOT + 'index.html" class="logo d-flex align-items-center me-auto"><h1 class="sitename">KITTEN CODE</h1></a>' +
-      '<nav id="navmenu" class="navmenu"><ul>' + items +
-      '<li class="lang-toggle-wrapper"><div class="lang-toggle" role="group" aria-label="Language">' + langButtons() + '</div></li>' +
-      '<li class="theme-toggle-wrapper"><button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle dark mode">' +
-      '<i class="bi bi-moon-fill theme-icon-dark"></i><i class="bi bi-sun-fill theme-icon-light"></i></button></li>' +
-      '</ul><i class="mobile-nav-toggle d-xl-none bi bi-list"></i></nav>' +
+      '<div class="container-fluid container-xl position-relative header-inner">' +
+      '<a href="' + ROOT + 'index.html" class="logo d-flex align-items-center"><h1 class="sitename">KITTEN CODE</h1></a>' +
+      '<nav id="navmenu" class="navmenu" aria-label="Main"><ul>' + items + '</ul></nav>' +
+      '<div class="header-tools">' + langButtons() +
+      '<button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle dark mode">' +
+      '<i class="bi bi-moon-fill theme-icon-dark"></i><i class="bi bi-sun-fill theme-icon-light"></i></button>' +
+      '<button type="button" class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Menu"></button>' +
+      '</div>' +
       '</div></header>';
   }
 
@@ -123,7 +154,10 @@
       '<strong class="px-1 sitename">KITTEN CODE Co., Ltd.</strong></p>' +
       '<p class="footer-legal">บริษัท คิทเท่น โค้ด จำกัด · <span data-i18n="legal.reg">Juristic person registration no.</span> 0655569001411</p></div>' +
       '</footer>' +
-      '<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center" aria-label="Back to top"><i class="bi bi-arrow-up-short"></i></a>' +
+      '<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center" aria-label="Back to top">' +
+      '<svg class="scroll-top-ring" viewBox="0 0 52 52" aria-hidden="true"><circle class="track" cx="26" cy="26" r="23"></circle>' +
+      '<circle class="bar" cx="26" cy="26" r="23" pathLength="100"></circle></svg>' +
+      '<i class="bi bi-arrow-up-short" aria-hidden="true"></i></a>' +
       '<div id="preloader"></div>';
   }
 
@@ -146,6 +180,53 @@
 
   var footerSlot = document.querySelector('[data-kc-footer]');
   if (footerSlot) replace(footerSlot, footerHtml());
+
+  /* ---------- Language dropdown ---------- */
+  (function () {
+    var dd = document.querySelector('.lang-dd');
+    if (!dd) return;
+    var toggle = dd.querySelector('.lang-dd-toggle');
+    var menu = dd.querySelector('.lang-dd-menu');
+    var current = dd.querySelector('.lang-dd-current');
+
+    function setOpen(open) {
+      menu.hidden = !open;
+      dd.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    function syncLabel(e) {
+      var active = menu.querySelector('.lang-btn.active');
+      if (active) current.textContent = active.getAttribute('data-label');
+      if (e && e.type === 'kc:langchange') {
+        dd.classList.remove('changed');
+        void dd.offsetWidth;
+        dd.classList.add('changed');
+      }
+    }
+
+    toggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setOpen(menu.hidden);
+      if (!menu.hidden) {
+        var first = menu.querySelector('.lang-btn.active') || menu.querySelector('.lang-btn');
+        if (first) first.focus();
+      }
+    });
+    // Choosing a language: i18n.js does the switching; here we just update the label and close.
+    menu.addEventListener('click', function (e) {
+      var btn = e.target.closest('.lang-btn');
+      if (!btn) return;
+      current.textContent = btn.getAttribute('data-label');
+      setOpen(false);
+      toggle.focus();
+    });
+    document.addEventListener('click', function (e) { if (!dd.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !menu.hidden) { setOpen(false); toggle.focus(); }
+    });
+    document.addEventListener('kc:langchange', syncLabel);
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(syncLabel, 0); });
+  })();
 
   // Old flag from the previous footer; it never reflected the real session.
   try { localStorage.removeItem('isLoggedIn'); } catch (e) { }

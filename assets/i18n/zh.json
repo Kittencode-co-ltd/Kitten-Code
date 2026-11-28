@@ -9,14 +9,18 @@
     "services": "服务",
     "portfolio": "作品",
     "team": "团队",
-    "contact": "联系我们"
+    "contact": "联系我们",
+    "language": "语言",
+    "theme_dark": "深色模式",
+    "theme_light": "浅色模式"
   },
   "hero": {
     "label": "Digital Native",
     "title_word1": "Kitten",
     "title_word2": "Code",
     "subtitle": "伟大的创新，不一定始于大公司。",
-    "cta_button": "开始了解"
+    "cta_button": "开始了解",
+    "cta_email": "发邮件咨询"
   },
   "about": {
     "heading": "关于我们",

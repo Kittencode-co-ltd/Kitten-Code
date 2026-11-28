@@ -451,44 +451,113 @@ h6 {
   margin-left: 10px;
 }
 
-.lang-toggle {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background-color: color-mix(in srgb, var(--default-color) 10%, transparent);
-  border-radius: 20px;
-  padding: 3px;
+.lang-dd {
+  position: relative;
 }
 
-.lang-toggle .lang-btn {
+.lang-dd-toggle {
   appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 14px;
   border: 0;
-  background: transparent;
+  border-radius: 20px;
+  background-color: color-mix(in srgb, var(--default-color) 10%, transparent);
   color: var(--nav-color);
   font-family: var(--nav-font);
   font-size: 13px;
   font-weight: 600;
   line-height: 1;
-  min-width: 34px;
-  padding: 7px 10px;
-  border-radius: 16px;
   cursor: pointer;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.lang-toggle .lang-btn:hover:not(.active) {
-  color: var(--nav-hover-color);
-}
-
-.lang-toggle .lang-btn.active {
-  background-color: var(--accent-color);
+.lang-dd-toggle:hover,
+.lang-dd.open .lang-dd-toggle {
   color: var(--contrast-color);
+  background-color: var(--accent-color);
 }
 
-.lang-toggle .lang-btn:focus-visible {
+.lang-dd-toggle .bi-globe2 {
+  font-size: 15px;
+}
+
+.lang-dd-chev {
+  font-size: 11px;
+  transition: transform 0.25s ease;
+}
+
+.lang-dd.open .lang-dd-chev {
+  transform: rotate(180deg);
+}
+
+.lang-dd-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  min-width: 180px;
+  padding: 6px;
+  background: var(--nav-dropdown-background-color, #fff);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  animation: langDdIn 0.18s ease;
+}
+
+.lang-dd-menu[hidden] {
+  display: none;
+}
+
+@keyframes langDdIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.lang-dd-menu .lang-btn {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--nav-dropdown-color, #444);
+  font-family: var(--nav-font);
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lang-dd-menu .lang-code {
+  min-width: 24px;
+  font-weight: 700;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--nav-dropdown-color, #444), transparent 40%);
+}
+
+.lang-dd-menu .lang-btn:hover {
+  background: color-mix(in srgb, var(--accent-color), transparent 90%);
+}
+
+.lang-dd-menu .lang-btn.active {
+  background: color-mix(in srgb, var(--accent-color), transparent 88%);
+  color: var(--accent-color);
+}
+
+.lang-dd-menu .lang-btn.active .lang-code {
+  color: var(--accent-color);
+}
+
+.lang-dd-toggle:focus-visible,
+.lang-dd-menu .lang-btn:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
+
 
 /* Mobile Navigation */
 @media (max-width: 1199px) {
@@ -2647,11 +2716,7 @@ html[lang="ko"] body {
 }
 
 /* Language buttons inside the mobile menu sit on a light panel */
-@media (max-width: 1199px) {
-  .lang-toggle .lang-btn {
-    color: var(--nav-dropdown-color);
-  }
-}
+
 
 /* Theme toggle: correct icon before theme.js runs */
 .theme-toggle-btn .theme-icon-light {
@@ -3729,4 +3794,1136 @@ html[lang="en"] .vision-local {
 .journey .timeline-scroll.at-end {
   -webkit-mask-image: none;
   mask-image: none;
+}
+
+
+/*--------------------------------------------------------------
+# Header layout: logo left · menu centred · tools right
+--------------------------------------------------------------*/
+.header {
+  transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), background-color 0.5s, box-shadow 0.5s, padding 0.4s;
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+}
+
+.header-inner .logo {
+  justify-self: start;
+}
+
+.header-inner .navmenu {
+  justify-self: center;
+}
+
+.header-tools {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-tools .theme-toggle-btn {
+  color: var(--nav-color);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.header-tools .mobile-nav-toggle {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.header-tools .mobile-nav-toggle:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+
+/* Laptop widths: keep everything on one line */
+@media (min-width: 1200px) and (max-width: 1320px) {
+  .navmenu a,
+  .navmenu a:focus {
+    padding-left: 11px !important;
+    padding-right: 11px !important;
+  }
+
+  .header .logo h1 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .header-inner {
+    grid-template-columns: 1fr auto;
+    gap: 0 12px; /* no row gap: the menu row is 0px tall and must not push the bar's content up */
+  }
+
+  /* The template's old flex "order" rules would swap logo and tools: reset them */
+  .header-inner .logo { order: 0; grid-column: 1; grid-row: 1; }
+  .header-inner .header-tools { order: 0; grid-column: 2; grid-row: 1; }
+
+  .header-inner .navmenu {
+    order: 0;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    height: 0;
+  }
+
+  .mobile-nav-active .header-inner .navmenu {
+    height: auto;
+    justify-self: stretch;
+  }
+
+  /* Language, theme and the close (X) button stay on top of the open menu, in their own places */
+  .header-tools {
+    gap: 8px;
+    position: relative;
+    z-index: 9999;
+  }
+
+  .mobile-nav-active .header-tools .mobile-nav-toggle {
+    position: static;
+    font-size: 30px;
+    color: #fff;
+  }
+
+  .header-tools .theme-toggle-btn,
+  [data-theme="dark"] .header-tools .theme-toggle-btn {
+    width: 38px;
+    height: 38px;
+    color: var(--nav-color);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .header-tools .mobile-nav-toggle {
+    font-size: 30px;
+    margin-left: 4px;
+  }
+
+  .header .logo h1 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 400px) {
+  .header .logo h1 {
+    font-size: 20px;
+  }
+
+  .lang-dd-toggle {
+    padding: 0 10px;
+    gap: 5px;
+  }
+
+  .lang-dd-toggle .bi-globe2 {
+    display: none;
+  }
+}
+
+/* Mobile menu panel: as tall as its links, not the whole screen */
+@media (max-width: 1199px) {
+  .mobile-nav-active .navmenu > ul {
+    bottom: auto;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+}
+
+/*--------------------------------------------------------------
+# Responsive refinements (tablet & phone)
+--------------------------------------------------------------*/
+@media (max-width: 767px) {
+  /* Justified Thai leaves big gaps on narrow screens: align left instead */
+  .text-justify,
+  .services-2 .service-item .description,
+  .services .details p,
+  .about p {
+    text-align: left !important;
+  }
+
+  .section {
+    padding: 64px 0;
+  }
+
+  .section-title {
+    padding-bottom: 36px;
+  }
+
+  /* Stats: 2 × 2 instead of four full-width rows */
+  .stats .row > [class*="col-"] {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .stats .stats-item {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 8px;
+    padding: 18px 16px;
+  }
+
+  .stats .stats-item i {
+    font-size: 30px;
+  }
+
+  .stats .stats-item span {
+    font-size: 34px;
+  }
+
+  .stats .stats-item p {
+    font-size: 13.5px;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* Team: two people per row */
+  #team .row > [class*="col-"] {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  #team .member .member-info {
+    padding: 14px 12px !important;
+  }
+
+  #team .member .member-info h4 {
+    font-size: 14.5px;
+    line-height: 1.4;
+  }
+
+  #team .member .role-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 6px;
+  }
+
+  #team .member .role-row span,
+  #team .member .profile-link {
+    font-size: 12.5px;
+  }
+
+  /* Payment panel: number on its own line, buttons below, badge tucked under the bank name */
+  .payment-panel-card {
+    padding: 22px 18px !important;
+  }
+
+  .payment-panel-card .panel-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .payment-panel-card .panel-account-badge {
+    margin-left: 0 !important;
+    order: 3;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 6px 12px;
+  }
+
+  .payment-panel-card .panel-acno-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px;
+  }
+
+  .payment-panel-card .panel-acno {
+    font-size: 20px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .payment-panel-card .panel-btn-group {
+    margin-left: 0;
+  }
+
+  .payment-panel-card .panel-btn-group button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* Journey timeline cards a little narrower so the next one peeks in */
+  .timeline {
+    grid-auto-columns: minmax(200px, 72vw);
+  }
+
+  /* Product phones smaller */
+  .product-phones {
+    height: 380px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 991px) {
+  /* Tablet: KITTEN values two per row instead of one */
+  .values-grid > [class*="col-"] {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+/*--------------------------------------------------------------
+# Motion layer (works with assets/js/core/main.js "Motion layer")
+--------------------------------------------------------------*/
+/* Scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 1000;
+  background: linear-gradient(90deg, var(--accent-color), #ff8a4c);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+/* Hero: slow zoom, follows the mouse, content drifts away as you scroll */
+.hero.hero-minimal {
+  --mx: 0;
+  --my: 0;
+  --hs: 0;
+}
+
+.hero.hero-minimal .hero-bg {
+  inset: -40px;
+  width: calc(100% + 80px);
+  height: calc(100% + 80px);
+  transform: translate(calc(var(--mx) * -28px), calc(var(--my) * -28px + var(--hs) * 120px));
+  transition: transform 0.6s ease-out;
+  animation: kcKenBurns 24s ease-in-out infinite alternate;
+}
+
+
+.hero.hero-minimal .hero-inner {
+  transform: translate(calc(var(--mx) * 12px), calc(var(--my) * 12px + var(--hs) * 140px));
+  opacity: calc(1 - var(--hs) * 1.4);
+  transition: transform 0.6s ease-out;
+}
+
+.hero .hero-grid {
+  animation: kcGridPan 20s linear infinite;
+}
+
+@keyframes kcKenBurns {
+  from { scale: 1; }
+  to { scale: 1.1; }
+}
+
+@keyframes kcGridPan {
+  to { background-position: 3rem 3rem; }
+}
+
+/* Scroll cue (mouse) at the bottom of the hero */
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  z-index: 3;
+  width: 26px;
+  height: 42px;
+  margin-left: -13px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 14px;
+  opacity: calc(1 - var(--hs) * 4);
+}
+
+.scroll-cue::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 4px;
+  height: 8px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--accent-color);
+  animation: kcWheel 1.8s ease-in-out infinite;
+}
+
+@keyframes kcWheel {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(14px); opacity: 0; }
+}
+
+/* Section title: the orange line draws in */
+.section-title h2::after {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s;
+}
+
+.section-title.in-view h2::after {
+  transform: scaleX(1);
+}
+
+/* Cards: lean towards the pointer and lift */
+.tilt {
+  --rx: 0deg;
+  --ry: 0deg;
+  --lift: 0px;
+  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift)) !important;
+  transition: transform 0.25s ease-out, box-shadow 0.35s ease, border-color 0.35s ease !important;
+  will-change: transform;
+}
+
+.tilt:hover {
+  --lift: -6px;
+  box-shadow: 0 22px 44px -24px rgba(39, 61, 78, 0.45) !important;
+}
+
+[data-theme="dark"] .tilt:hover {
+  box-shadow: 0 22px 44px -22px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Buttons: a light sweep across on hover */
+.btn-kc,
+.service-details .service-contact-btn {
+  background-image: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  background-repeat: no-repeat;
+  transition: background-position 0.8s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-kc:hover,
+.service-details .service-contact-btn:hover {
+  background-position: -60% 0;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px -12px var(--accent-color);
+}
+
+/* Process: the line draws itself, then the numbers pop in one by one */
+.process-list::before {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.process-list.in-view::before {
+  transform: scaleX(1);
+}
+
+.process-list .process-num {
+  transform: scale(0.3);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.3, 1.6, 0.5, 1), opacity 0.4s ease;
+}
+
+.process-list.in-view .process-num {
+  transform: none;
+  opacity: 1;
+}
+
+.process-list.in-view .process-step:nth-child(2) .process-num { transition-delay: 0.25s; }
+.process-list.in-view .process-step:nth-child(3) .process-num { transition-delay: 0.5s; }
+.process-list.in-view .process-step:nth-child(4) .process-num { transition-delay: 0.75s; }
+.process-list.in-view .process-step:nth-child(5) .process-num { transition-delay: 1s; }
+
+@media (max-width: 991px) {
+  .process-list::before {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  .process-list.in-view::before {
+    transform: scaleY(1);
+  }
+}
+
+/* Stats: icons pop in */
+.stats .stats-item i {
+  transform: scale(0.4) rotate(-20deg);
+  opacity: 0;
+  transition: transform 0.7s cubic-bezier(0.3, 1.6, 0.5, 1), opacity 0.4s ease;
+}
+
+.stats.in-view .stats-item i {
+  transform: none;
+  opacity: 1;
+}
+
+/* Journey: dots pop along the line */
+.timeline .timeline-dot {
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.timeline.in-view .timeline-dot {
+  transform: scale(1);
+}
+
+.timeline.in-view .timeline-item:nth-child(2) .timeline-dot { transition-delay: 0.12s; }
+.timeline.in-view .timeline-item:nth-child(3) .timeline-dot { transition-delay: 0.24s; }
+.timeline.in-view .timeline-item:nth-child(4) .timeline-dot { transition-delay: 0.36s; }
+.timeline.in-view .timeline-item:nth-child(5) .timeline-dot { transition-delay: 0.48s; }
+.timeline.in-view .timeline-item:nth-child(6) .timeline-dot { transition-delay: 0.6s; }
+.timeline.in-view .timeline-item:nth-child(7) .timeline-dot { transition-delay: 0.72s; }
+
+/* FUFU phones float gently */
+.product-phones .phone-front {
+  animation: kcFloat 7s ease-in-out infinite;
+}
+
+@keyframes kcFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -12px; }
+}
+
+/* Visitors who prefer less motion get a still page */
+@media (prefers-reduced-motion: reduce) {
+  .hero.hero-minimal .hero-bg,
+  .hero .hero-grid,
+  .scroll-cue::after,
+  .product-phones .phone-front {
+    animation: none !important;
+  }
+
+  .section-title h2::after,
+  .process-list::before,
+  .process-list .process-num,
+  .stats .stats-item i,
+  .timeline .timeline-dot {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+
+  .hero.hero-minimal .hero-inner {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*--------------------------------------------------------------
+# Header becomes a floating, translucent pill once you scroll
+--------------------------------------------------------------*/
+.header {
+  transition: top 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    padding 0.45s ease, border-radius 0.45s ease, background-color 0.45s ease, box-shadow 0.45s ease;
+}
+
+.scrolled .header {
+  --background-color: rgba(14, 22, 30, 0.55);
+  top: 14px;
+  left: 0;
+  right: 0;
+  width: min(1140px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 6px 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 14px 40px -18px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+}
+
+[data-theme="dark"] .scrolled .header,
+[data-theme="dark"].scrolled .header {
+  --background-color: rgba(10, 14, 22, 0.6);
+}
+
+.scrolled .header .header-inner {
+  padding-left: 22px;
+  padding-right: 10px;
+}
+
+.scrolled .header .logo h1 {
+  font-size: 20px;
+  transition: font-size 0.45s ease;
+}
+
+.header .logo h1 {
+  transition: font-size 0.45s ease;
+}
+
+.scrolled .header .navmenu a,
+.scrolled .header .navmenu a:focus {
+  font-size: 14px;
+}
+
+.scrolled .header .lang-dd-toggle {
+  height: 34px;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.scrolled .header .theme-toggle-btn {
+  width: 34px;
+  height: 34px;
+}
+
+/* The open mobile menu needs the page, not the pill, as its frame */
+.mobile-nav-active .header,
+.mobile-nav-active.scrolled .header {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (max-width: 1199px) {
+  .scrolled .header {
+    top: 10px;
+    width: calc(100% - 20px);
+    padding: 4px 2px;
+  }
+
+  .scrolled .header .header-inner {
+    padding-left: 16px;
+    padding-right: 8px;
+  }
+
+  .scrolled .header .mobile-nav-toggle {
+    font-size: 26px;
+  }
+}
+
+/*--------------------------------------------------------------
+# Theme & language switch transitions (View Transitions API)
+--------------------------------------------------------------*/
+/* Theme: the new colours grow out of the toggle as a circle (clip-path driven from theme.js) */
+html.vt-theme::view-transition-old(root),
+html.vt-theme::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.vt-theme::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* Language: old text drifts up and fades, the new text rises in */
+html.vt-lang::view-transition-old(root) {
+  animation: kcLangOut 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+html.vt-lang::view-transition-new(root) {
+  animation: kcLangIn 0.5s 0.08s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes kcLangOut {
+  to { opacity: 0; transform: translateY(-10px); filter: blur(4px); }
+}
+
+@keyframes kcLangIn {
+  from { opacity: 0; transform: translateY(14px); filter: blur(4px); }
+}
+
+/* Toggle icon spins as the theme changes */
+.theme-toggle-btn.theme-spin i {
+  animation: kcThemeSpin 0.6s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+@keyframes kcThemeSpin {
+  from { transform: rotate(-120deg) scale(0.4); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* The language button gives a small pulse when the language changes */
+.lang-dd-current {
+  display: inline-block;
+}
+
+.lang-dd.changed .lang-dd-current {
+  animation: kcPop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes kcPop {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* Fallback (no View Transitions): a gentler blur than before */
+body.i18n-loading .main {
+  filter: blur(3px);
+  transform: translateY(6px);
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.vt-lang::view-transition-old(root),
+  html.vt-lang::view-transition-new(root) {
+    animation: none;
+  }
+
+  .theme-toggle-btn.theme-spin i,
+  .lang-dd.changed .lang-dd-current {
+    animation: none;
+  }
+}
+
+/*--------------------------------------------------------------
+# Small screens: language & theme inside the burger menu
+--------------------------------------------------------------*/
+.mnav-tools {
+  display: none;
+}
+
+@media (max-width: 1199px) {
+  /* Top bar keeps only the logo and the burger */
+  .header-tools .lang-dd,
+  .header-tools #theme-toggle {
+    display: none;
+  }
+
+  .navmenu .mnav-tools {
+    display: block;
+    margin: 10px 16px 6px;
+    padding: 16px 4px 4px;
+    border-top: 1px solid color-mix(in srgb, var(--nav-dropdown-color), transparent 85%);
+  }
+
+  .mnav-label {
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: color-mix(in srgb, var(--nav-dropdown-color), transparent 35%);
+  }
+
+  .mnav-langs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+    gap: 8px;
+  }
+
+  .mnav-langs .mnav-lang {
+    appearance: none;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: 1px solid color-mix(in srgb, var(--nav-dropdown-color), transparent 82%);
+    background: transparent;
+    color: var(--nav-dropdown-color);
+    font-family: var(--nav-font);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  }
+
+  .mnav-langs .mnav-lang.active {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #fff;
+  }
+
+  .mnav-theme {
+    appearance: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--nav-dropdown-color), transparent 82%);
+    background: transparent;
+    color: var(--nav-dropdown-color);
+    font-family: var(--nav-font);
+    font-size: 15px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .mnav-theme-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--accent-color), transparent 88%);
+    color: var(--accent-color);
+  }
+
+  .mnav-theme-text {
+    flex: 1;
+  }
+
+  .mnav-theme .theme-icon-light,
+  .mnav-theme .when-dark {
+    display: none;
+  }
+
+  [data-theme="dark"] .mnav-theme .theme-icon-light,
+  [data-theme="dark"] .mnav-theme .when-dark {
+    display: inline;
+  }
+
+  [data-theme="dark"] .mnav-theme .theme-icon-dark,
+  [data-theme="dark"] .mnav-theme .when-light {
+    display: none;
+  }
+
+  /* A small on/off switch on the right */
+  .mnav-switch {
+    position: relative;
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--nav-dropdown-color), transparent 80%);
+    transition: background-color 0.3s;
+  }
+
+  .mnav-switch span {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+
+  [data-theme="dark"] .mnav-switch {
+    background: var(--accent-color);
+  }
+
+  [data-theme="dark"] .mnav-switch span {
+    transform: translateX(18px);
+  }
+
+  .mnav-langs .mnav-lang:focus-visible,
+  .mnav-theme:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+  }
+}
+
+/*--------------------------------------------------------------
+# Back-to-top: round button with a reading-progress ring
+--------------------------------------------------------------*/
+.scroll-top {
+  --p: 0;
+  right: 20px;
+  bottom: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  box-shadow: 0 12px 28px -10px color-mix(in srgb, var(--accent-color), transparent 30%);
+  overflow: visible;
+  transform: translateY(24px) scale(0.6);
+  transition: opacity 0.35s ease, visibility 0.35s, transform 0.5s cubic-bezier(0.3, 1.5, 0.5, 1), box-shadow 0.3s ease, background-color 0.3s;
+}
+
+.scroll-top.active {
+  transform: none;
+}
+
+.scroll-top:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 34px -12px var(--accent-color);
+}
+
+.scroll-top i {
+  position: relative;
+  font-size: 28px;
+  transition: transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.scroll-top:hover i {
+  animation: kcArrowNudge 0.9s ease-in-out infinite;
+}
+
+@keyframes kcArrowNudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* The ring sits just outside the button and fills as you read */
+.scroll-top-ring {
+  position: absolute;
+  inset: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.scroll-top-ring circle {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.scroll-top-ring .track {
+  stroke: color-mix(in srgb, var(--accent-color), transparent 80%);
+}
+
+.scroll-top-ring .bar {
+  stroke: var(--accent-color);
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: calc(100 - var(--p));
+  transition: stroke-dashoffset 0.15s linear;
+}
+
+/* Click: the arrow shoots up and comes back from below */
+.scroll-top.launch i {
+  animation: kcLaunch 0.65s cubic-bezier(0.5, 0, 0.3, 1);
+}
+
+@keyframes kcLaunch {
+  0% { transform: translateY(0); opacity: 1; }
+  45% { transform: translateY(-34px); opacity: 0; }
+  46% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 767px) {
+  .scroll-top {
+    right: 16px;
+    bottom: 16px;
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-top,
+  .scroll-top i,
+  .scroll-top-ring .bar {
+    transition: none;
+    animation: none !important;
+  }
+}
+
+/*--------------------------------------------------------------
+# Hero: richer motion (spotlight, scan line, code glyphs, glitch, typing)
+--------------------------------------------------------------*/
+/* Overlay: lighter in the middle, darker at the edges, so the cats show and the text still reads */
+.hero.hero-minimal::before {
+  background:
+    radial-gradient(ellipse 75% 65% at 50% 45%, rgba(0, 9, 16, 0.45), rgba(0, 9, 16, 0.82) 70%, rgba(0, 9, 16, 0.95) 100%);
+}
+
+/* Code symbols drifting up */
+.hero .hero-glyphs {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero .hero-glyphs span {
+  position: absolute;
+  left: var(--x);
+  bottom: -40px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(22px * var(--s));
+  color: rgba(255, 74, 23, 0.45);
+  animation: kcRise 14s linear infinite;
+  animation-delay: var(--d);
+}
+
+@keyframes kcRise {
+  0% { transform: translateY(0) rotate(0); opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 0.6; }
+  100% { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+}
+
+/* DIGITAL NATIVE: lines grow out from the label */
+.hero-label-row .hero-rule {
+  animation: kcRuleL 1s 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.hero-label-row .hero-rule:first-child {
+  transform-origin: right;
+}
+
+.hero-label-row .hero-rule:last-child {
+  transform-origin: left;
+}
+
+@keyframes kcRuleL {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.hero-label {
+  animation: kcLabelGlow 3.5s 1.6s ease-in-out infinite;
+}
+
+@keyframes kcLabelGlow {
+  0%, 100% { text-shadow: none; }
+  50% { text-shadow: 0 0 14px rgba(255, 74, 23, 0.7); }
+}
+
+/* CODE: a quick glitch every few seconds; the dot pulses */
+#scramble-code {
+  display: inline-block;
+  animation: kcGlitch 5s 3s infinite;
+}
+
+@keyframes kcGlitch {
+  0%, 90%, 100% { text-shadow: none; transform: none; }
+  91% { text-shadow: -3px 0 rgba(255, 74, 23, 0.9), 3px 0 rgba(80, 220, 255, 0.8); transform: translateX(1px) skewX(-6deg); }
+  93% { text-shadow: 3px 0 rgba(255, 74, 23, 0.9), -3px 0 rgba(80, 220, 255, 0.8); transform: translateX(-2px); }
+  95% { text-shadow: -1px 0 rgba(255, 74, 23, 0.9), 1px 0 rgba(80, 220, 255, 0.8); transform: none; }
+}
+
+.hero-dot {
+  display: inline-block;
+  animation: kcDot 2.2s 2.4s ease-in-out infinite;
+}
+
+@keyframes kcDot {
+  0%, 100% { text-shadow: 0 0 0 rgba(255, 74, 23, 0); transform: scale(1); }
+  50% { text-shadow: 0 0 24px rgba(255, 74, 23, 0.95); transform: scale(1.12); }
+}
+
+/* Typing tagline: an invisible full copy holds the space, the visible copy types over it */
+#hero-type {
+  position: relative;
+}
+
+#hero-type .type-ghost {
+  visibility: hidden;
+}
+
+#hero-type .type-text {
+  position: absolute;
+  inset: 0;
+}
+
+#hero-type .type-caret {
+  /* A zero-width "word joiner" character with a right border: glued to the last letter, never wraps alone */
+  display: inline;
+  border-right: 2px solid var(--accent-color);
+  margin-right: -2px;
+  padding-left: 2px;
+  margin-left: -2px;
+  animation: kcCaret 0.85s step-end infinite;
+}
+
+#hero-type.typed .type-caret {
+  animation: kcCaret 0.85s step-end 4, kcFade 0.4s 3.4s forwards;
+}
+
+@keyframes kcCaret {
+  50% { opacity: 0; }
+}
+
+@keyframes kcFade {
+  to { opacity: 0; }
+}
+
+/* Buttons: Get Started + Email side by side */
+.hero-ctas {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-mail-btn {
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 16px 30px;
+  background: var(--accent-color);
+  background-image: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  background-repeat: no-repeat;
+  box-shadow: 0 12px 30px -12px var(--accent-color);
+  transition: background-position 0.8s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-mail-btn:hover {
+  color: #fff;
+  background-position: -60% 0;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px -12px var(--accent-color);
+}
+
+html[lang="th"] .hero-mail-btn,
+html[lang="zh-Hans"] .hero-mail-btn,
+html[lang="ja"] .hero-mail-btn,
+html[lang="ko"] .hero-mail-btn {
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 575px) {
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .hero .hero-glyphs span:nth-child(even) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .hero-glyphs {
+    display: none;
+  }
+
+  .hero-label-row .hero-rule,
+  .hero-label,
+  #scramble-code,
+  .hero-dot,
+  #hero-type .type-caret {
+    animation: none !important;
+  }
+}
+
+/*--------------------------------------------------------------
+# Theme switch: direction-aware reveal, button ripple, smooth fallback
+--------------------------------------------------------------*/
+/* Dark → light: the old (dark) view sits on top and shrinks into the button */
+html.vt-theme.vt-theme-in::view-transition-old(root) {
+  z-index: 3;
+}
+
+html.vt-theme.vt-theme-in::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* Orange ripple bursting out of the toggle */
+.theme-toggle-btn.theme-burst,
+.mnav-theme.theme-burst .mnav-theme-icon {
+  animation: kcBurst 0.75s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes kcBurst {
+  0% { box-shadow: 0 0 0 0 rgba(255, 74, 23, 0.65); }
+  100% { box-shadow: 0 0 0 18px rgba(255, 74, 23, 0); }
+}
+
+.theme-toggle-btn.theme-burst {
+  border-color: var(--accent-color);
+}
+
+/* Fallback for browsers without View Transitions: everything fades to the new colours */
+html.theme-fade,
+html.theme-fade *,
+html.theme-fade *::before,
+html.theme-fade *::after {
+  transition: background-color 0.55s ease, color 0.55s ease, border-color 0.55s ease, fill 0.55s ease, stroke 0.55s ease, box-shadow 0.55s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle-btn.theme-burst,
+  .mnav-theme.theme-burst .mnav-theme-icon {
+    animation: none;
+  }
 }

@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitten Code — ม็อกอัป v3 (Bento)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f0eb; --tile:#ffffff; --ink:#17130f; --muted:#6b645c; --line:#e2dcd3;
+    --orange:#ff4a17; --dark:#14110e; --r:28px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Bricolage Grotesque','Prompt',sans-serif;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-.02em}
+  .brand img{width:36px;height:36px;border-radius:50%}
+  .links{display:flex;gap:28px;font-size:15px;color:var(--muted)}
+  .links a:hover{color:var(--ink)}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:500;font-size:15px;transition:transform .2s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-o{background:var(--orange);color:#fff}
+  .btn-d{background:var(--ink);color:#fff}
+  .btn-g{border:1.5px solid var(--line);background:var(--tile)}
+
+  /* bento */
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+  .t{background:var(--tile);border-radius:var(--r);padding:36px;position:relative;overflow:hidden}
+  .t.dark{background:var(--dark);color:#f3f0eb}
+  .t.or{background:var(--orange);color:#fff}
+  .t.img{padding:0}
+  .t.img img{width:100%;height:100%;object-fit:cover}
+  .kick{font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .dark .kick{color:#a39a8f}
+  h1{font-size:clamp(64px,10vw,148px);line-height:.92;letter-spacing:-.045em;font-weight:700}
+  h1 .dot{color:var(--orange)}
+  h2{font-size:clamp(34px,4.4vw,56px);line-height:1.12;letter-spacing:-.03em;font-weight:700}
+  h3{font-size:24px;line-height:1.3;font-weight:600;letter-spacing:-.01em}
+  .lead{font-size:20px;color:var(--muted);max-width:36ch}
+  section{padding:16px 0}
+  .sec-head{display:flex;justify-content:space-between;align-items:end;gap:24px;padding:80px 0 28px}
+  .sec-head p{color:var(--muted);max-width:42ch}
+
+  /* hero */
+  .hero-main{grid-column:span 7;min-height:560px;display:flex;flex-direction:column;justify-content:space-between}
+  .hero-main .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero-cat{grid-column:span 5;min-height:560px}
+  .hero-cat .tag{position:absolute;left:20px;bottom:20px;background:rgba(20,17,14,.72);color:#fff;backdrop-filter:blur(6px);border-radius:999px;padding:8px 16px;font-size:14px}
+  .stat{grid-column:span 3;display:flex;flex-direction:column;justify-content:space-between;min-height:190px}
+  .stat b{font-size:64px;line-height:1;letter-spacing:-.04em;font-weight:700}
+  .stat b small{font-size:24px;letter-spacing:0}
+  .stat p{color:var(--muted);font-size:15px}
+  .or .stat-p, .t.or p{color:#ffe1d6}
+
+  /* services */
+  .svc{grid-column:span 4;min-height:300px;display:flex;flex-direction:column;gap:14px}
+  .svc .ico{width:52px;height:52px;border-radius:16px;background:var(--bg);display:grid;place-items:center;font-size:24px}
+  .dark .ico{background:#2a241f}
+  .svc ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+  .svc li{font-size:14px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line)}
+  .dark .svc li,.svc.dark li{border-color:#3a322b}
+  .svc .price{font-size:14px;color:var(--muted)}
+  .svc-wide{grid-column:span 8}
+  .svc-photo{grid-column:span 4;min-height:300px}
+
+  /* process */
+  .steps{grid-column:span 12;display:grid;grid-template-columns:repeat(5,1fr);gap:0;padding:0}
+  @media (max-width:1180px){.steps{grid-template-columns:repeat(3,1fr)}.step:nth-child(3){border-right:0}.step:nth-child(n+4){border-top:1.5px solid var(--line)}}
+  .step{padding:36px 28px;border-right:1.5px solid var(--line)}
+  .step:last-child{border-right:0}
+  .step .n{font-size:15px;color:var(--orange);font-weight:700}
+  .step h3{font-size:19px;margin:28px 0 8px;white-space:nowrap}
+  .step p{font-size:15px;color:var(--muted)}
+
+  /* product */
+  .fufu{grid-column:span 12;display:grid;grid-template-columns:1.1fr 1fr;gap:40px;padding:56px;min-height:560px}
+  .fufu .feat{list-style:none;margin:28px 0;display:grid;gap:14px}
+  .fufu .feat li{display:flex;gap:14px;align-items:flex-start;color:#d8d0c6}
+  .fufu .feat li::before{content:"";flex:0 0 8px;height:8px;margin-top:11px;border-radius:50%;background:var(--orange)}
+  .proof{display:flex;align-items:baseline;gap:16px;border-top:1.5px solid #3a322b;padding-top:22px}
+  .proof b{font-size:56px;letter-spacing:-.04em;color:var(--orange);line-height:1}
+  .proof span{color:#a39a8f;font-size:15px}
+  .disc{font-size:13px;color:#8c8278;margin-top:14px}
+  .phones{position:relative;display:flex;justify-content:center;align-items:center}
+  .phone{width:230px;border-radius:34px;border:7px solid #2a241f;overflow:hidden;background:#000}
+  .phone.side{position:absolute;width:190px;opacity:.55}
+  .phone.l{transform:translateX(-150px) rotate(-7deg)} .phone.r{transform:translateX(150px) rotate(7deg)}
+  .phone.front{position:relative;z-index:2}
+
+  /* work */
+  .work{grid-column:span 4;min-height:340px;display:flex;flex-direction:column;padding:0}
+  .work .pic{flex:1;overflow:hidden;background:var(--bg)}
+  .work .pic img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .work:hover .pic img{transform:scale(1.04)}
+  .work .cap{padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+  .work .cap span{font-size:14px;color:var(--muted)}
+
+  /* credentials */
+  .cred{grid-column:span 6;display:grid;grid-template-columns:1fr 130px;gap:24px;align-items:start}
+  .cred img{border-radius:10px;border:1.5px solid var(--line);transform:rotate(3deg)}
+  .cred p{color:var(--muted);font-size:15px;margin-top:6px}
+  .timeline{grid-column:span 12;padding:40px 36px}
+  .tl{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:28px}
+  .tl div{border-top:2px solid var(--ink);padding-top:16px}
+  .tl b{display:block;font-size:14px;color:var(--orange)}
+  .tl p{font-size:15px;margin-top:6px}
+  .note{font-size:13px;color:var(--muted);margin-top:22px}
+
+  /* contact */
+  .contact{grid-column:span 8;min-height:420px;display:flex;flex-direction:column;justify-content:space-between}
+  .contact h2{font-size:clamp(40px,5.6vw,76px);max-width:14ch}
+  .contact-cat{grid-column:span 4;min-height:420px}
+  .info{grid-column:span 12;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .info .t{padding:26px 28px}
+  .info p{font-size:15px;color:var(--muted)}
+  .info b{display:block;font-size:16px;font-weight:600;margin-top:4px;word-break:break-word}
+  footer{padding:48px 0 40px;color:var(--muted);font-size:14px}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  .badge{position:fixed;right:16px;bottom:16px;z-index:30;background:var(--ink);color:#fff;font-size:12px;padding:8px 14px;border-radius:999px}
+
+  @media (max-width:960px){
+    .links{display:none}
+    .hero-main,.hero-cat,.svc,.svc-wide,.svc-photo,.work,.cred,.contact,.contact-cat{grid-column:span 12}
+    .stat{grid-column:span 6}
+    .hero-cat,.contact-cat{min-height:340px}
+    .steps{grid-template-columns:1fr}
+    .step{border-right:0;border-bottom:1.5px solid var(--line)}
+    .fufu{grid-template-columns:1fr;padding:32px}
+    .phones{min-height:480px}
+    .tl,.info{grid-template-columns:1fr 1fr}
+    .sec-head{flex-direction:column;align-items:start;padding-top:56px}
+  }
+  @media (max-width:560px){
+    .t{padding:26px}
+    .stat b{font-size:48px}
+    .tl,.info{grid-template-columns:1fr}
+    .phone.side{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#"><img src="../../assets/img/LOGO-KittenCode.png" alt="">Kitten Code</a>
+    <div class="links">
+      <a href="#services">บริการ</a><a href="#process">วิธีทำงาน</a><a href="#product">FUFU</a><a href="#work">ผลงาน</a><a href="#proof">การรับรอง</a>
+    </div>
+    <a class="btn btn-d" href="#contact">คุยสโคปฟรี</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section>
+    <div class="grid">
+      <div class="t hero-main">
+        <span class="kick">KITTEN CODE CO.,LTD. · พิษณุโลก</span>
+        <div>
+          <h1>Kitten<br>Code<span class="dot">.</span></h1>
+          <p class="lead" style="margin-top:24px">นวัตกรรมใหญ่ ไม่ต้องเริ่มจากบริษัทใหญ่ เราทำเว็บ แอป ระบบหลังบ้าน และ AI ให้ธุรกิจคุณใช้งานได้จริง</p>
+        </div>
+        <div class="cta">
+          <a class="btn btn-o" href="#contact">คุยสโคปและประเมินงบฟรี →</a>
+          <a class="btn btn-g" href="#work">ดูผลงาน</a>
+        </div>
+      </div>
+      <div class="t img hero-cat">
+        <img src="../../assets/img/services-1.jpg" alt="แมวใส่ฮู้ดนั่งเขียนโค้ด">
+        <span class="tag">Code for a Better Tomorrow</span>
+      </div>
+
+      <div class="t stat"><span class="kick">ตั้งแต่ปี 2562</span><b>7 <small>ปี</small></b><p>บนเส้นทางดิจิทัล</p></div>
+      <div class="t stat"><span class="kick">กรมทรัพย์สินทางปัญญา</span><b>4</b><p>ผลงานจดแจ้งลิขสิทธิ์โปรแกรม</p></div>
+      <div class="t stat"><span class="kick">NIA · depa · IP MART</span><b>4</b><p>โครงการและเวทีระดับประเทศที่ได้รับคัดเลือก</p></div>
+      <div class="t or stat"><span class="kick" style="color:#ffe1d6">บริษัทจดทะเบียน</span><b>1 <small>ล้านบาท</small></b><p>ทุนจดทะเบียน ตรวจสอบได้</p></div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="sec-head">
+      <h2>เราทำอะไรให้คุณได้บ้าง</h2>
+      <p>ทีมเดียวดูแลครบ ตั้งแต่ไอเดียแรก ออกแบบ พัฒนา จนถึงหลังเปิดใช้งาน</p>
+    </div>
+    <div class="grid">
+      <div class="t svc svc-wide dark">
+        <div class="ico">⌘</div>
+        <span class="kick">พัฒนาซอฟต์แวร์</span>
+        <h3 style="font-size:32px;max-width:20ch">เว็บแอป แอปมือถือ และระบบหลังบ้านที่ออกแบบให้ธุรกิจคุณโดยเฉพาะ</h3>
+        <ul><li>เว็บแอปพลิเคชัน</li><li>iOS / Android</li><li>ERP · CRM · POS</li><li>แชทบอท LINE</li><li>ระบบข้อมูล</li><li>เชื่อมระบบ</li></ul>
+      </div>
+      <div class="t img svc-photo"><img src="../../assets/img/about.jpg" alt="หน้าจอโลโก้ Kitten Code บนโต๊ะทำงาน"></div>
+
+      <div class="t svc">
+        <div class="ico">✦</div>
+        <span class="kick">AI</span>
+        <h3>เชื่อม AI เข้ากับงานจริง</h3>
+        <p class="price">AI Integration กับระบบหลังบ้าน และอบรม AI / Workshop ปรับตามสายงาน</p>
+        <ul><li>AI Integration</li><li>อบรม AI</li><li>Workshop</li></ul>
+      </div>
+      <div class="t svc">
+        <div class="ico">▶</div>
+        <span class="kick">สื่อ</span>
+        <h3>เล่าเรื่องแบรนด์ให้คนจำ</h3>
+        <p class="price">วิดีโอองค์กร โมชันกราฟิก และกราฟิกสำหรับโซเชียล</p>
+        <ul><li>วิดีโอองค์กร</li><li>โมชันกราฟิก</li><li>กราฟิก</li></ul>
+      </div>
+      <div class="t svc">
+        <div class="ico">◎</div>
+        <span class="kick">ที่ปรึกษา</span>
+        <h3>วางระบบก่อนลงทุน</h3>
+        <p class="price">วิเคราะห์ระบบ วิเคราะห์ข้อมูล และวางโรดแมปเทคโนโลยี</p>
+        <ul><li>System Analysis</li><li>Data &amp; BI</li><li>Roadmap</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="sec-head">
+      <h2>ทำงานด้วยกัน 5 ขั้น</h2>
+      <p>คุณเห็นงานและทดลองใช้ได้ระหว่างทาง ไม่ต้องรอจนวันส่งมอบ</p>
+    </div>
+    <div class="grid">
+      <div class="t steps">
+        <div class="step"><span class="n">01</span><h3>คุยสโคปฟรี</h3><p>เล่าไอเดีย รับการประเมินงบเบื้องต้นฟรี</p></div>
+        <div class="step"><span class="n">02</span><h3>ออกแบบ</h3><p>ตกลงขอบเขตเป็นลายลักษณ์อักษร แล้วออกแบบหน้าจอด้วยกัน</p></div>
+        <div class="step"><span class="n">03</span><h3>พัฒนา</h3><p>พัฒนาเป็นรอบ ให้คุณทดลองใช้ได้ระหว่างทาง</p></div>
+        <div class="step"><span class="n">04</span><h3>วัดผลและส่งมอบ</h3><p>ตรวจคุณภาพ ทดสอบร่วมกัน แล้วส่งมอบ</p></div>
+        <div class="step"><span class="n">05</span><h3>ดูแลหลังใช้งาน</h3><p>ช่วยดูแลและปรับปรุงต่อเนื่อง</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT -->
+  <section id="product">
+    <div class="sec-head">
+      <h2>เราไม่ได้แค่รับทำ<br>เราสร้างของเราเองด้วย</h2>
+      <p>FUFU Pet Care คือแอปดูแลสัตว์เลี้ยงที่เราออกแบบ พัฒนา และดูแลเองทั้งหมด ตั้งแต่โมเดล AI จนถึงพอร์ทัลคลินิก</p>
+    </div>
+    <div class="grid">
+      <div class="t dark fufu">
+        <div>
+          <img src="../../assets/img/fufu/fufu-logo.png" alt="FUFU Pet Care" style="width:72px;border-radius:18px;margin-bottom:22px">
+          <h2 style="color:#fff">FUFU Pet Care</h2>
+          <ul class="feat">
+            <li>คัดกรองผิวหนังและขนจากรูปถ่ายด้วย AI แบ่ง 4 ระดับความเร่งด่วน</li>
+            <li>FUFU AI Vet ถามเรื่องน้องได้ตลอด 24 ชั่วโมง</li>
+            <li>สมุดสุขภาพประจำตัว วัคซีน ถ่ายพยาธิ น้ำหนัก และการแจ้งเตือน</li>
+            <li>ส่งต่อเคสให้คลินิกพาร์ทเนอร์ ผ่าน FUFU Partner Portal</li>
+          </ul>
+          <div class="proof"><b>94%</b><span>ความแม่นยำของโมเดลคัดกรองผิวหนัง ทดสอบกับภาพที่สัตวแพทย์ยืนยันแล้ว 6,215 ภาพ</span></div>
+          <p class="disc">คัดกรองเบื้องต้น ไม่ใช่การวินิจฉัย สัตวแพทย์เป็นผู้ตัดสินขั้นสุดท้าย</p>
+          <div style="display:flex;gap:12px;margin-top:26px;flex-wrap:wrap">
+            <a class="btn btn-o" href="https://app.fufupetcare.com" target="_blank" rel="noopener">เปิดเว็บแอป ↗</a>
+            <a class="btn" style="border:1.5px solid #3a322b" href="https://fufupetcare.com" target="_blank" rel="noopener">fufupetcare.com</a>
+          </div>
+        </div>
+        <div class="phones">
+          <div class="phone side l"><img src="../../assets/img/fufu/fufu-app-scan.png" alt=""></div>
+          <div class="phone front"><img src="../../assets/img/fufu/fufu-app-home.png" alt="หน้าแรกแอป FUFU Pet Care"></div>
+          <div class="phone side r"><img src="../../assets/img/fufu/fufu-app-chat.png" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="sec-head">
+      <h2>ผลงานบางส่วน</h2>
+      <a class="btn btn-g" href="../../index.html#portfolio">ดูผลงานทั้งหมด →</a>
+    </div>
+    <div class="grid">
+      <a class="t work" href="#"><div class="pic"><img src="../../assets/img/portfolio/Product/product-FUFU.png" alt=""></div><div class="cap"><h3 style="font-size:19px">FUFU Pet Care</h3><span>แอป + AI</span></div></a>
+      <a class="t work" href="#"><div class="pic"><img src="../../assets/img/portfolio/Product/product-Kitt-EDGE.png" alt=""></div><div class="cap"><h3 style="font-size:19px">Kitt EDGE</h3><span>ผลิตภัณฑ์</span></div></a>
+      <a class="t work" href="#"><div class="pic"><img src="../../assets/img/portfolio/Media/media-overall.png" alt=""></div><div class="cap"><h3 style="font-size:19px">งานสื่อและวิดีโอ</h3><span>มัลติมีเดีย</span></div></a>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section id="proof">
+    <div class="sec-head">
+      <h2>ผลงานที่พิสูจน์ได้ ตรวจสอบได้</h2>
+      <p>แสดงเฉพาะสิ่งที่มีเอกสารยืนยัน</p>
+    </div>
+    <div class="grid">
+      <div class="t cred">
+        <div><span class="kick">กรมทรัพย์สินทางปัญญา</span><h3 style="margin-top:10px">จดแจ้งลิขสิทธิ์โปรแกรม 4 ผลงาน</h3><p>ว1.000520 · ว1.000636 · ว1.001745 · ว1.001746</p></div>
+        <img src="../../assets/img/credentials/doc-copyright-000520.png" alt="เอกสารจดแจ้งลิขสิทธิ์">
+      </div>
+      <div class="t cred">
+        <div><span class="kick">กรมพัฒนาธุรกิจการค้า</span><h3 style="margin-top:10px">บริษัทจดทะเบียน ตรวจสอบได้</h3><p>ก่อตั้ง 6 พ.ค. 2569 ทุนจดทะเบียน 1,000,000 บาท และเครื่องหมาย DBD Registered</p></div>
+        <img src="../../assets/img/credentials/doc-dbd-registered.png" alt="เครื่องหมาย DBD Registered">
+      </div>
+      <div class="t timeline">
+        <span class="kick">เวทีที่ได้รับคัดเลือก ปี 2569</span>
+        <div class="tl">
+          <div><b>พ.ค.</b><p>1 ใน 25 องค์กรทั่วประเทศ โครงการมาตรฐานการจัดการนวัตกรรม ISO 56001:2024 (NIA × TNI)</p></div>
+          <div><b>ก.ค.</b><p>1 ใน 19 ดิจิทัลสตาร์ทอัพ depa Digital Startup Fund</p></div>
+          <div><b>28 ส.ค.</b><p>1 ใน 10 ผลงานบนเวที Pitching IP MART SHOWBIZ 2026</p></div>
+          <div><b>5 พ.ย.</b><p>FUFU Pet Care ผ่านการคัดเลือกเป็นผู้มีสิทธิ์นำเสนอผลงาน รอบคัดเลือกระดับประเทศ ASEAN Digital Awards 2027 (depa)</p></div>
+        </div>
+        <p class="note">ISO 56001: บริษัทได้รับคัดเลือกเข้าร่วมโครงการ ไม่ใช่การได้รับการรับรองมาตรฐาน ISO</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="grid" style="margin-top:80px">
+      <div class="t or contact">
+        <span class="kick" style="color:#ffe1d6">เริ่มต้นได้วันนี้</span>
+        <h2>มีไอเดียอยู่ในหัว? เล่าให้เราฟัง</h2>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-d" href="https://lin.ee/u1gpCVs" target="_blank" rel="noopener">แอดไลน์ @458ddksw</a>
+          <a class="btn" style="background:#fff;color:var(--ink)" href="tel:+66808850555">โทร 080 885 0555</a>
+        </div>
+      </div>
+      <div class="t img contact-cat"><img src="../../assets/img/hero-bg.jpg" alt="ออฟฟิศแมวโปรแกรมเมอร์" style="object-position:70% 50%"></div>
+      <div class="info">
+        <div class="t"><p>อีเมล</p><b>kittencode.co.ltd@gmail.com</b></div>
+        <div class="t"><p>โทร</p><b>+66 8 0885 0555</b></div>
+        <div class="t"><p>LINE Official</p><b>@458ddksw</b></div>
+        <div class="t"><p>ที่อยู่</p><b>347/11 หมู่ 3 ต.ท่าโพธิ์ อ.เมืองพิษณุโลก จ.พิษณุโลก 65000</b></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2569 บริษัท คิทเท่น โค้ด จำกัด · KITTEN CODE CO.,LTD.</span>
+    <span>Facebook · Instagram @kitten.code · TikTok · LinkedIn</span>
+  </div>
+</footer>
+
+<div class="badge">ม็อกอัป v3 · ยังไม่ใช่เว็บจริง</div>
+</body>
+</html>

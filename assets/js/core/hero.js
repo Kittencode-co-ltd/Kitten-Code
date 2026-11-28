@@ -86,5 +86,54 @@
     play(800, 400);
     document.addEventListener('kc:langchange', function () { play(0, 200); });
     elA.parentElement.addEventListener('mouseenter', function () { play(0, 200); });
+
+    /* Tagline types itself out, letter by letter (grapheme-safe for Thai/CJK) */
+    var tagline = document.getElementById('hero-type');
+    if (!tagline || reduceMotion) return;
+    var typeTimer;
+
+    function graphemes(text) {
+      if (window.Intl && Intl.Segmenter) {
+        return Array.from(new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text), function (s) { return s.segment; });
+      }
+      return Array.from(text);
+    }
+
+    function typeOut(delay) {
+      clearTimeout(typeTimer);
+      var full = (tagline.getAttribute('data-full') || tagline.textContent).replace(/\s+/g, ' ').trim();
+      tagline.setAttribute('data-full', full);
+      tagline.setAttribute('aria-label', full);
+      var chars = graphemes(full);
+      // An invisible full copy keeps the layout still while the visible copy types over it.
+      var ghost = document.createElement('span');
+      ghost.className = 'type-ghost';
+      ghost.setAttribute('aria-hidden', 'true');
+      ghost.textContent = full;
+      var out = document.createElement('span');
+      out.className = 'type-text';
+      out.setAttribute('aria-hidden', 'true');
+      var typed = document.createTextNode('');
+      var caret = document.createElement('span');
+      caret.className = 'type-caret';
+      caret.textContent = '\u2060'; // word joiner: no line break allowed before the caret
+      out.append(typed, caret);
+      tagline.replaceChildren(ghost, out);
+      tagline.classList.remove('typed');
+      var i = 0;
+      function step() {
+        if (i >= chars.length) { tagline.classList.add('typed'); return; }
+        typed.data += chars[i++];
+        typeTimer = setTimeout(step, 28 + Math.random() * 34);
+      }
+      typeTimer = setTimeout(step, delay);
+    }
+
+    typeOut(1300);
+    // i18n.js rewrites the element with the new language's text, then fires kc:langchange.
+    document.addEventListener('kc:langchange', function () {
+      tagline.removeAttribute('data-full');
+      typeOut(250);
+    });
   });
 })();

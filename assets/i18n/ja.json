@@ -9,14 +9,18 @@
     "services": "サービス",
     "portfolio": "実績",
     "team": "チーム",
-    "contact": "お問い合わせ"
+    "contact": "お問い合わせ",
+    "language": "言語",
+    "theme_dark": "ダークモード",
+    "theme_light": "ライトモード"
   },
   "hero": {
     "label": "Digital Native",
     "title_word1": "Kitten",
     "title_word2": "Code",
     "subtitle": "偉大なイノベーションは、大企業から始まるとは限らない。",
-    "cta_button": "はじめる"
+    "cta_button": "はじめる",
+    "cta_email": "メールで相談"
   },
   "about": {
     "heading": "会社概要",
