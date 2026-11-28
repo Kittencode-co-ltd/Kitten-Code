@@ -1,0 +1,96 @@
+/* Refinement layer for the existing layout (prototype only).
+   Keeps every section and grid of index.html; changes type, colour, spacing and imagery treatment. */
+
+:root {
+  --default-font: "Inter", "Prompt", system-ui, sans-serif;
+  --heading-font: "Inter", "Prompt", sans-serif;
+  --nav-font: "Inter", "Prompt", sans-serif;
+  --default-color: #3F3D3A;
+  --heading-color: #161616;
+  --accent-color: #F05A1A;
+}
+html[lang="th"] {
+  --default-font: "Prompt", system-ui, sans-serif;
+  --heading-font: "Prompt", sans-serif;
+  --nav-font: "Prompt", sans-serif;
+}
+body { font-size: 16.5px; line-height: 1.75; }
+
+/* Calmer light sections: warm off-white instead of pinkish grey */
+.light-background { --background-color: #F5F3EF; --surface-color: #FFFFFF; }
+[data-theme="dark"] .light-background { --background-color: #121726; --surface-color: #182033; }
+[data-theme="dark"] { --background-color: #0E1220; --surface-color: #161D2E; }
+
+/* Section titles: keep the template's label + headline, but quieter (no shouting caps, no 800 weight) */
+.section-title { padding-bottom: 48px; }
+.section-title h2 { font-size: 13px; letter-spacing: 2px; font-weight: 600; }
+.section-title h2::after { width: 48px; }
+.section-title p { font-size: clamp(28px, 3.2vw, 40px); font-weight: 600; text-transform: none; letter-spacing: -.01em; line-height: 1.3; margin-top: 10px; }
+.section { padding: 96px 0; }
+
+/* ---------- Hero: same centred composition, real work photo, plain words ---------- */
+.hero.hero-real { min-height: 88vh; overflow: hidden; background: #0E1220; }
+.hero.hero-real::before { background: linear-gradient(180deg, rgba(14,18,32,.84) 0%, rgba(14,18,32,.9) 70%, rgba(14,18,32,.97) 100%); z-index: 2; }
+.hero.hero-real .hero-bg { position: absolute; inset: -12px; width: calc(100% + 24px); height: calc(100% + 24px); object-fit: cover; z-index: 1; opacity: 1; filter: saturate(.35) blur(3px); }
+.hero.hero-real .hero-inner { position: relative; z-index: 3; min-height: 72vh; padding-top: 80px; }
+.hero-kicker { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.7); margin: 0 0 22px; font-family: "Inter", sans-serif; font-weight: 500; }
+.hero.hero-real h2.hero-headline { font-size: clamp(40px, 6vw, 76px); font-weight: 600; line-height: 1.22; letter-spacing: -.01em; text-transform: none; color: #fff; margin: 0; }
+.hero.hero-real p.hero-sub { font-size: clamp(16px, 1.5vw, 19px); color: rgba(255,255,255,.78); max-width: 620px; margin: 22px auto 0; font-weight: 300; }
+.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+.btn-solid, .btn-ghost-light { display: inline-flex; align-items: center; height: 52px; padding: 0 28px; border-radius: 8px; font-weight: 500; font-size: 16px; transition: background-color .25s, color .25s, border-color .25s; }
+.btn-solid { background: var(--accent-color); color: #fff; }
+.btn-solid:hover { background: #D94C10; color: #fff; }
+.btn-ghost-light { border: 1px solid rgba(255,255,255,.45); color: #fff; }
+.btn-ghost-light:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,.06); }
+
+/* ---------- About: real team in the image slot ---------- */
+.team-mosaic { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.team-mosaic img { width: 100%; aspect-ratio: 4 / 3.4; object-fit: cover; object-position: center 25%; border-radius: 10px; }
+.about .about-video { aspect-ratio: 16 / 10; object-fit: cover; width: 100%; filter: saturate(.85); }
+.about h3 { font-weight: 600; }
+.about .mission-list strong { font-weight: 600; }
+
+/* ---------- Cards: one consistent treatment ---------- */
+.value-card, .rec-card, .proof-card, .services-2 .service-item, .payment-method-card, .payment-panel-card, .info-item, .team .member {
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%) !important;
+}
+.value-card:hover, .services-2 .service-item:hover, .team .member:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent-color), transparent 55%) !important; }
+.value-letter { font-weight: 700; color: color-mix(in srgb, var(--accent-color), transparent 88%); }
+
+/* Featured services: real images, calmer hover (no 120% zoom), smaller icon disc */
+.services .service-item .img { border-radius: 12px; overflow: hidden; aspect-ratio: 4 / 3; background: #F5F3EF; }
+.services .service-item .img img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s ease; }
+.services .service-item .img img.img-doc { object-fit: contain; padding: 18px; background: #F5F3EF; }
+.services .service-item:hover .img img { transform: scale(1.03); }
+.services .details { border-radius: 12px; box-shadow: none; border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%); }
+.services .details .icon { width: 56px; height: 56px; font-size: 22px; top: -28px; left: calc(50% - 28px); border-width: 4px; }
+.services .details h3 { font-weight: 600; }
+.services .details p { font-size: 15px; line-height: 1.7; }
+
+/* Stats: lighter numbers */
+.stats .stats-item span { font-weight: 600; }
+
+/* Team cards: name and role easier to read */
+.team .member .member-info h4 { font-weight: 600; font-size: 17px; }
+
+/* Header: solid, quiet bar instead of transparent-on-image glow */
+.header { --background-color: rgba(14,18,32,0); }
+.scrolled .header { --background-color: rgba(14,18,32,.92); backdrop-filter: blur(10px); }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .section { padding: 72px 0; }
+  .hero.hero-real .hero-inner { padding-top: 96px; }
+  .btn-solid, .btn-ghost-light { width: 100%; justify-content: center; }
+}
+
+/* No decorative glow behind the team cards */
+.team-glow::before { display: none; }
+
+.hero-headline .nb { white-space: nowrap; }
+@media (max-width: 768px) {
+  .hero.hero-real h2.hero-headline { font-size: clamp(28px, 8.4vw, 40px); }
+  .hero-kicker { font-size: 11px; letter-spacing: 1.2px; }
+}

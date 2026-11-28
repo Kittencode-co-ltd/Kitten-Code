@@ -5,7 +5,7 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 ## Project Overview
 
 Company website and back-office financial management system for **KITTEN CODE Co.,Ltd (บริษัท คิทเท่น โค้ด จำกัด)** — a Thai digital agency. Two distinct sections:
-- **Public website** (`index.html` + `team-profile/`): Marketing, portfolio, team profiles
+- **Public website** (`index.html`, `trust.html`, `services/`, `team-profile/`): Marketing, portfolio, team profiles, credentials and the customer-facing Trust page. Company claims on these pages must be verifiable (see the Awards & Credentials section); don't add unproven figures
 - **Back-office** (`back-office/`): Authenticated internal tool for invoices, quotations, receipts, financial tracking, and calendaring
 
 ## Tech Stack
@@ -14,7 +14,7 @@ Company website and back-office financial management system for **KITTEN CODE Co
 - **Styling**: Bootstrap 5.3.3 + custom SCSS/CSS
 - **Backend**: Firebase (Firestore, Auth, Realtime Database)
 - **Data Connect**: Firebase Data Connect with PostgreSQL (`fdcdb` database, `asia-southeast1`)
-- **i18n**: Custom English/Thai switcher via `assets/js/i18n.js` and `assets/i18n/{en,th}.json`
+- **i18n**: Custom switcher for Thai, English, Chinese (Simplified), Japanese and Korean via `assets/js/core/i18n.js` and `assets/i18n/{th,en,zh,ja,ko}.json`
 - **UI libs**: AOS, GLightbox, Swiper, Chart.js
 
 ## Local Development
@@ -33,7 +33,7 @@ There are no npm build scripts, linting, or test suites configured.
 ## Deployment
 
 CI/CD runs automatically on push to `main` via `.github/workflows/deploy.yml`. It:
-1. Copies `assets/`, `back-office/`, and `index.html` into `public/`
+1. Copies `assets/`, `back-office/`, `team-profile/`, `services/`, `index.html`, `card.html` and `trust.html` into `public/`
 2. Injects Firebase secrets from GitHub Actions environment
 3. Deploys `public/` to GitHub Pages
 
@@ -43,7 +43,7 @@ Firebase rules and indexes deploy separately via `firebase deploy`.
 
 ### JavaScript (`assets/js/`)
 
-The public website uses `assets/js/core/` (`main.js`, `i18n.js`, `theme.js`) and `portfolio-loader.js`.
+The public website uses `assets/js/core/` (`layout.js`, `main.js`, `hero.js`, `i18n.js`, `theme.js`) and `portfolio-loader.js`. `layout.js` renders the shared header and footer into `<div data-kc-header data-active="…">` / `<div data-kc-footer>` and must load (deferred) before `main.js`; edit the header or footer there, not in the pages.
 
 The back office lives entirely under `assets/js/bo/`:
 - `bo/core/firebase-config.js` — Firebase SDK initialization (Auth, Firestore) and re-exports of SDK helpers; every back-office page imports from here
@@ -83,6 +83,6 @@ Key collections: `users`, `usernames` (public username → `{ uid, email }` inde
 
 PostgreSQL tables via Firebase Data Connect: `User`, `Collection`, `Entry`.
 
-### Bilingual Support
+### Multilingual Support
 
-All user-facing strings are keyed in `assets/i18n/en.json` and `assets/i18n/th.json`. HTML elements use `data-i18n="<key>"` attributes; `i18n.js` swaps text on language toggle.
+Public pages support th, en, zh, ja and ko. All user-facing strings are keyed in `assets/i18n/<lang>.json`; English is the source of truth and any key missing from another language falls back to English. Markup: `data-i18n="<key>"` (text), `data-i18n-alt` (image alt), `data-i18n-list` (a `<ul>` rebuilt from a string array, optional `data-i18n-icon`), and `<body data-i18n-title="<key>">` for the page title. Add a new key to all five files. Scripts can call `window.KCi18n.t(key)` and listen for the `kc:langchange` event.

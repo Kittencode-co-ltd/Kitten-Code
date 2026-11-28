@@ -121,7 +121,12 @@
 
   /**
    * Initiate Pure Counter
+   * data-kc-since="2019" keeps a "years since" counter current without editing the page.
    */
+  document.querySelectorAll('[data-kc-since]').forEach(function(el) {
+    var years = new Date().getFullYear() - parseInt(el.getAttribute('data-kc-since'), 10);
+    if (years > 0) el.setAttribute('data-purecounter-end', String(years));
+  });
   new PureCounter();
 
   /**
@@ -238,68 +243,82 @@
     })
   }
   window.addEventListener('load', navmenuScrollspy);
+
+  /**
+   * Horizontal timeline: drop the edge fade once scrolled to the end
+   */
+  document.querySelectorAll('.timeline-scroll').forEach(function(box) {
+    function check() {
+      box.classList.toggle('at-end', box.scrollLeft + box.clientWidth >= box.scrollWidth - 4);
+    }
+    box.addEventListener('scroll', check, { passive: true });
+    window.addEventListener('resize', check);
+    check();
+  });
   document.addEventListener('scroll', navmenuScrollspy);
 
 })();
 
 /**
- * Payment Section — switchPayment / toggleAccNo / copyAccount
- * Kept outside IIFE so inline onclick attributes in HTML can reach them.
+ * Payment Section
+ *  [data-pay-method]  switches the visible panel (#panel-<method>)
+ *  [data-acno-toggle] shows / hides the full account number
+ *  [data-acno-copy]   copies the account number (enabled only while shown)
+ * Brand colours come from the .brand-<method> classes in main.css.
  */
-var methodColors = {
-  kbank:  { border: '#00a651', bar: '#00a651', shadow: 'rgba(0,166,81,0.18)' },
-  ktb:    { border: '#1565c0', bar: '#1565c0', shadow: 'rgba(21,101,192,0.18)' },
-  alipay: { border: '#00a0e9', bar: '#00a0e9', shadow: 'rgba(0,160,233,0.18)' },
-  paypal: { border: '#0070ba', bar: '#0070ba', shadow: 'rgba(0,112,186,0.18)' }
-};
+(function() {
+  "use strict";
 
-function switchPayment(method, el) {
-  // Reset all cards to default (CSS handles base styles)
-  document.querySelectorAll('.payment-method-card').forEach(function(c) {
-    c.classList.remove('active');
-    c.style.borderColor = '';
-    c.style.boxShadow = '';
-    var bar = c.querySelector('.method-bar');
-    if (bar) bar.style.background = '';
-  });
-  // Activate selected card
-  var col = methodColors[method];
-  el.classList.add('active');
-  el.style.borderColor = col.border;
-  el.style.boxShadow = '0 4px 20px ' + col.shadow;
-  var bar = el.querySelector('.method-bar');
-  if (bar) bar.style.background = col.bar;
-  // Show corresponding panel
-  document.querySelectorAll('.payment-panel').forEach(function(p) { p.style.display = 'none'; });
-  document.getElementById('panel-' + method).style.display = 'block';
-}
-
-function toggleAccNo(bank) {
-  var mask    = document.getElementById('acno-' + bank + '-mask');
-  var reveal  = document.getElementById('acno-' + bank);
-  var btn     = document.getElementById('btn-toggle-' + bank);
-  var copyBtn = document.getElementById('btn-copy-' + bank);
-  var shown   = reveal.style.display !== 'none';
-  if (shown) {
-    mask.style.display    = '';
-    reveal.style.display  = 'none';
-    btn.innerHTML         = '<i class="bi bi-eye" id="icon-toggle-' + bank + '"></i> Show';
-    copyBtn.style.opacity       = '0.35';
-    copyBtn.style.pointerEvents = 'none';
-  } else {
-    mask.style.display    = 'none';
-    reveal.style.display  = '';
-    btn.innerHTML         = '<i class="bi bi-eye-slash" id="icon-toggle-' + bank + '"></i> Hide';
-    copyBtn.style.opacity       = '1';
-    copyBtn.style.pointerEvents = 'auto';
+  function t(key, fallback) {
+    var v = window.KCi18n && window.KCi18n.t(key);
+    return typeof v === 'string' && v ? v : fallback;
   }
-}
 
-function copyAccount(elemId, msgId) {
-  var text = document.getElementById(elemId).innerText;
-  navigator.clipboard.writeText(text).then(function() {
-    var msg = document.getElementById(msgId);
-    msg.style.opacity = '1';
-    setTimeout(function() { msg.style.opacity = '0'; }, 2500);
+  function setToggleLabel(btn, shown) {
+    btn.setAttribute('aria-pressed', shown ? 'true' : 'false');
+    btn.querySelector('i').className = shown ? 'bi bi-eye-slash' : 'bi bi-eye';
+    var label = btn.querySelector('span');
+    label.setAttribute('data-i18n', shown ? 'payment.hide' : 'payment.show');
+    label.textContent = shown ? t('payment.hide', 'Hide') : t('payment.show', 'Show');
+  }
+
+  document.addEventListener('click', function(e) {
+    var method = e.target.closest('[data-pay-method]');
+    if (method) {
+      var code = method.getAttribute('data-pay-method');
+      document.querySelectorAll('[data-pay-method]').forEach(function(c) {
+        var on = c === method;
+        c.classList.toggle('active', on);
+        c.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      document.querySelectorAll('.payment-panel').forEach(function(p) {
+        p.hidden = p.id !== 'panel-' + code;
+      });
+      return;
+    }
+
+    var toggle = e.target.closest('[data-acno-toggle]');
+    if (toggle) {
+      var panel = toggle.closest('.payment-panel');
+      var full = panel.querySelector('[data-acno-full]');
+      var show = full.hidden;
+      full.hidden = !show;
+      panel.querySelector('[data-acno-mask]').hidden = show;
+      panel.querySelector('[data-acno-copy]').disabled = !show;
+      setToggleLabel(toggle, show);
+      return;
+    }
+
+    var copy = e.target.closest('[data-acno-copy]');
+    if (copy) {
+      var box = copy.closest('.payment-panel');
+      var text = box.querySelector('[data-acno-full]').textContent.trim();
+      navigator.clipboard.writeText(text).then(function() {
+        var msg = box.querySelector('[data-acno-msg]');
+        msg.classList.add('show');
+        clearTimeout(msg._t);
+        msg._t = setTimeout(function() { msg.classList.remove('show'); }, 2500);
+      });
+    }
   });
-}
+})();

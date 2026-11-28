@@ -9,9 +9,7 @@
     "services": "Services",
     "portfolio": "Portfolio",
     "team": "Team",
-    "contact": "Contact",
-    "lang_th": "TH",
-    "lang_en": "EN"
+    "contact": "Contact"
   },
   "hero": {
     "label": "Digital Native",
@@ -34,7 +32,12 @@
     "projects": "Projects",
     "development": "Development",
     "multimedia": "Multimedia & Production",
-    "team": "Team"
+    "team": "Team",
+    "years": "Years on the digital journey (since 2019)",
+    "copyrights": "Registered software copyrights",
+    "programs": "National programmes and stages we were selected for",
+    "capital": "Million baht registered capital",
+    "note": "Only figures we can show proof for. Details are in Awards & Credentials below."
   },
   "services": {
     "heading": "Services",
@@ -58,57 +61,135 @@
       "web_app": {
         "title": "Web Application",
         "description": "We develop custom web applications with a strong focus on hard coded solutions to ensure high performance, stability, and flexibility, while supporting future scalability.",
-        "price": "Starting price 20,000 THB"
+        "price": "Starting price 20,000 THB",
+        "features": [
+          "Custom web application development",
+          "Responsive design for all devices",
+          "Backend API & database integration",
+          "Performance optimization & security hardening",
+          "Ongoing maintenance & support"
+        ]
       },
       "mobile_app": {
         "title": "Mobile Application",
         "description": "We build iOS and Android mobile applications using hard coded development approaches to maximize performance, responsiveness, and the ability to meet specific business requirements.",
-        "price": "Starting price 35,000 THB"
+        "price": "Starting price 35,000 THB",
+        "features": [
+          "iOS & Android native/cross-platform development",
+          "Intuitive UI/UX design",
+          "Push notifications & offline support",
+          "App Store & Google Play submission",
+          "Post-launch maintenance"
+        ]
       },
       "chatbot": {
         "title": "Chatbot Development",
         "description": "We design and develop intelligent chatbots for websites, social media, and various platforms to enhance customer service efficiency and automate business processes.",
-        "price": "Starting price 15,000 THB"
+        "price": "Starting price 15,000 THB",
+        "features": [
+          "AI-powered conversational chatbots",
+          "Multi-platform integration (LINE, Facebook, Web)",
+          "Natural language processing (NLP)",
+          "Custom workflow & escalation logic",
+          "Analytics & conversation reporting"
+        ]
       },
       "ai_training": {
         "title": "AI Training",
         "description": "We provide AI training programs and seminars for organizations and educational institutions, covering fundamentals, industry trends, and practical applications.",
-        "price": "Starting price 30,000 THB"
+        "price": "Starting price 30,000 THB",
+        "features": [
+          "AI fundamentals & industry trends workshops",
+          "Hands-on practical training sessions",
+          "Custom curriculum for your organization",
+          "Post-training resources & support",
+          "Certificate of completion"
+        ]
       },
       "erp": {
         "title": "ERP / CRM / POS System",
         "description": "We develop and customize ERP, CRM, and POS systems to manage organizational resources comprehensively, strengthen customer relationships, and optimize point-of-sale operations — improving efficiency, reducing redundancy, and supporting better business decision-making.",
-        "price": "Starting price 50,000 THB"
+        "price": "Starting price 50,000 THB",
+        "features": [
+          "End-to-end ERP / CRM / POS system development & customization",
+          "ERP modules: HR, Finance, Inventory, Procurement",
+          "CRM: customer management, sales pipeline & automation",
+          "POS: retail & F&B point-of-sale with reporting",
+          "Cloud-based or on-premise deployment",
+          "Data migration, staff training & dedicated support"
+        ]
       },
       "system_analysis": {
         "title": "System Analysis",
         "description": "We analyze and design systems aligned with business processes, creating clear structures that reduce complexity and improve operational efficiency.",
-        "price": "Starting price 10,000 THB"
+        "price": "Starting price 10,000 THB",
+        "features": [
+          "Business process analysis & documentation",
+          "System architecture design",
+          "Data flow & entity-relationship diagrams",
+          "Requirements specification (SRS)",
+          "Technology stack recommendation"
+        ]
       },
       "data_analysis": {
         "title": "Data Analysis & Prediction",
         "description": "We perform in depth data analysis and develop predictive models to support accurate and data-driven business decisions.",
-        "price": "Starting price 30,000 THB"
+        "price": "Starting price 30,000 THB",
+        "features": [
+          "Data collection, cleaning & visualization",
+          "Statistical analysis & trend identification",
+          "Machine learning predictive models",
+          "Business intelligence dashboards",
+          "Actionable insight reports"
+        ]
       },
       "multimedia_production": {
         "title": "Multimedia & Production",
         "description": "We provide video editing and media production to help tell your brand’s story through clear and engaging visual content.",
-        "price": "Starting price 15,000 THB"
+        "price": "Starting price 15,000 THB",
+        "features": [
+          "Corporate video production & editing",
+          "Motion graphics & 2D animation",
+          "Commercial & social media content",
+          "Brand identity visual assets",
+          "Post-production color grading & audio"
+        ]
       },
       "consult": {
         "title": "Consult",
         "description": "We offer technology and information system consulting, including AI integration strategies, to enhance organizational capability and competitiveness.",
-        "price": "Starting price 10,000 THB"
+        "price": "Starting price 10,000 THB",
+        "features": [
+          "Technology strategy & roadmap planning",
+          "AI & digital transformation advisory",
+          "IT infrastructure assessment",
+          "Vendor & technology selection guidance",
+          "Ongoing advisory retainer packages"
+        ]
       },
       "workshops": {
         "title": "Workshops",
         "description": "We provide workshops across all our services, taking you from start to smart. Boost your digital presence through professional.",
-        "price": "Starting price 12,000 THB"
+        "price": "Starting price 12,000 THB",
+        "features": [
+          "Full-day or half-day workshop formats",
+          "Customized content for your team",
+          "Hands-on project-based learning",
+          "Expert facilitators from Kitten Code",
+          "Workshop materials & follow-up resources"
+        ]
       },
       "rnd": {
         "title": "Research & Development",
         "description": "We apply advanced food science and formulation expertise to craft recipes that ensure quality and stability for food, drinks, and bakery products.",
-        "price": "Starting price 30,000 THB"
+        "price": "Starting price 30,000 THB",
+        "features": [
+          "Advanced food science research & formulation",
+          "Product recipe development & testing",
+          "Quality & stability analysis",
+          "Regulatory compliance consultation",
+          "Scale-up guidance for production"
+        ]
       },
       "cloud": {
         "title": "Cloud",
@@ -145,7 +226,18 @@
     "founder_category": "Founder & Co-Founder",
     "full_team_category": "Our Full Team",
     "advisory_category": "Advisory Board",
-    "view_profile": "View Profile"
+    "view_profile": "View Profile",
+    "roles": {
+      "ceos": "CEO & Founder",
+      "ctos": "CTO & Co-Founder",
+      "hr": "Legal & HR",
+      "coo": "Developer",
+      "cro": "Food R&D",
+      "cmo": "Business Economic Analyst",
+      "Marketing_advisor": "Marketing and Communications Advisor",
+      "advisor": "Advisor",
+      "Technology_advisor": "Technology Advisor"
+    }
   },
   "payment": {
     "heading": "Payment",
@@ -165,7 +257,8 @@
     "alipay_prompt": "Scan QR Code to Pay via Alipay",
     "alipay_desc": "Open your Alipay app and scan the QR code below",
     "paypal_prompt": "Scan QR Code to Pay via PayPal",
-    "paypal_desc": "Open your PayPal app or scan the QR code to complete your payment"
+    "paypal_desc": "Open your PayPal app or scan the QR code to complete your payment",
+    "hide": "Hide"
   },
   "contact": {
     "heading": "Contact",
@@ -180,7 +273,11 @@
     "admin": "Admin",
     "logout": "Logout",
     "login": "Login",
-    "copyright": "Copyright"
+    "copyright": "Copyright",
+    "back_office": "Back Office",
+    "phone": "Phone",
+    "email": "Email",
+    "trust": "Trust & data care"
   },
   "images": {
     "hero_bg": "High-tech hero background image",
@@ -193,5 +290,301 @@
     "bank_ktb": "KRUNGTHAI BANK Logo",
     "alipay_qr": "Alipay QR Code",
     "paypal_qr": "PayPal QR Code"
+  },
+  "profile": {
+    "page_title": "Personal Profile",
+    "personal_info": "Personal information",
+    "name": "Name",
+    "degree": "Degree",
+    "tel": "Tel",
+    "email": "E-mail",
+    "social": "Social",
+    "skill": "Skill",
+    "experience": "Experience",
+    "vision": "Vision",
+    "my_value": "Value I live by"
+  },
+  "profiles": {
+    "advisor_1": {
+      "degrees": [
+        "B.A. (French), Khon Kaen University, 2015",
+        "MBA (Marketing), Khon Kaen University, 2020",
+        "Ph.D. in Business Administration (Marketing), Khon Kaen University, 2025"
+      ],
+      "experience": [
+        "Lecturer, Khon Kaen University",
+        "Committee Member & Secretary, Business Incubation Center",
+        "Research Assistant (PMU-B)",
+        "Customer Relationship Officer, Kasikornbank",
+        "Ground Staff, Thai Airways",
+        "International Customer Service Officer"
+      ],
+      "vision": "To guide the team towards premium solutions and robust strategies."
+    },
+    "advisor_2": {
+      "degrees": [
+        "B.Sc. Computer Science",
+        "M.Sc. Integrated Science and Innovation"
+      ],
+      "skills": [
+        "Machine Learning",
+        "Full-Stack Development",
+        "Data Analysis",
+        "Complex Problem Solving & Analytical Inquiry",
+        "Empathy-Driven Leadership"
+      ],
+      "vision": "To be a visionary developer who balances technical precision with the warmth of a cat servant. I am dedicated to constant self-evolution, using my curiosity to master new technologies. My goal is to create meaningful digital experiences while sharing the journey with my feline companions and growing every day."
+    },
+    "ceo": {
+      "degree": "B.A. Social Development",
+      "skills": [
+        "Project Management",
+        "Documentation",
+        "SWOT Analysis",
+        "Policy Analysis"
+      ],
+      "vision": "Building a sustainable future by delivering high-quality digital solutions that empower social progress and human potential."
+    },
+    "co_rd_neem": {
+      "degree": "Bachelor of Economics",
+      "skills": [
+        "Data Collection & Analysis",
+        "Economic Research",
+        "Market Analysis"
+      ],
+      "vision": "To be a chill innovator who balances the pursuit of maximum utility with the comfort of a good webtoon marathon. I am dedicated to constant self-evolution, putting my creativity into everyday food tech. My goal is to provide one way to fuel people's health, while enjoying the next chapter of life and growing every day."
+    },
+    "dev": {
+      "degree": "B.Sc. Computer Science",
+      "skills": [
+        "Full-Stack Development",
+        "Database Management",
+        "Agile & Collaborative Workflow"
+      ],
+      "vision": "To deliver innovative, high-performance web solutions by bridging the gap between sophisticated design and robust functionality. My goal is to empower businesses through clean code, seamless user experiences, and scalable technology that drives digital growth and lasting user engagement worldwide."
+    },
+    "hr_beam": {
+      "degree": "Bachelor of Laws",
+      "skills": [
+        "Legal Knowledge & Law",
+        "HR Management",
+        "Document Preparation"
+      ],
+      "vision": "To empower passionate people to create impact and drive rapid growth."
+    },
+    "rd_aim": {
+      "degree": "Bachelor of Faculty of Agro-industry",
+      "skills": [
+        "Food Chemistry & Microbiology",
+        "Ingredient Functionality",
+        "Food Safety & Regulations"
+      ],
+      "vision": "Building a sustainable future by leveraging cutting-edge food technology to deliver high-quality, safe, and scalable solutions that enhance consumer well-being and drive impactful growth."
+    }
+  },
+  "mission": {
+    "m1": "Building technology and innovation that truly answers people's problems and needs.",
+    "m2": "Bringing technology, business, creativity and other disciplines together to find better, more effective solutions.",
+    "m3": "Turning ideas and business opportunities into products, services and solutions that work in practice.",
+    "m4": "Creating lasting value and business opportunity while improving the lives of people and society.",
+    "m5": "Continuously learning, experimenting and applying new technology to open up new possibilities."
+  },
+  "vision": {
+    "label": "Our Vision",
+    "statement": "Beyond Technology, Creating Possibilities.",
+    "philosophy_label": "Our philosophy"
+  },
+  "values": {
+    "subheading": "The values that drive our innovation",
+    "k": "Stay open to learning, dare to ask questions and keep looking for new possibilities.",
+    "i": "Innovate with a clear goal: solve real problems and create real value.",
+    "t1": "Think differently, challenge old frames and connect knowledge across disciplines.",
+    "t2": "Believe in the power of collaboration, respect differences and grow together.",
+    "e": "Turn ideas into real work with responsibility, quality and commitment.",
+    "n": "Create lasting value for clients, businesses, people and society."
+  },
+  "process": {
+    "heading": "How We Work",
+    "subheading": "From the first idea to after launch",
+    "s1": {
+      "title": "Free scoping call",
+      "desc": "Talk through your idea and get a first budget estimate, free of charge."
+    },
+    "s2": {
+      "title": "Design",
+      "desc": "Agree the scope in writing, then design the flow and screens with you."
+    },
+    "s3": {
+      "title": "Build",
+      "desc": "Develop in rounds you can see and try along the way."
+    },
+    "s4": {
+      "title": "Measure & hand over",
+      "desc": "Check quality before delivery, test it with you and hand it over."
+    },
+    "s5": {
+      "title": "Care after launch",
+      "desc": "Stay with you after launch to support and keep improving."
+    }
+  },
+  "fufu": {
+    "kicker": "Our own product",
+    "slogan": "Because they are family",
+    "intro": "We don't only build for clients. FUFU Pet Care is a pet-care app we designed, built and run ourselves, from the AI model to the app and the clinic portal.",
+    "f1": "AI skin and coat screening from a photo, with 4 urgency levels",
+    "f2": "FUFU AI Vet: ask about your pet any time, 24 hours a day",
+    "f3": "A health record for each pet: vaccines, deworming, weight and reminders",
+    "f4": "Cases referred to partner clinics with photos and history, through the FUFU Partner Portal",
+    "proof": "accuracy of the skin screening model, tested on 6,215 vet-confirmed images",
+    "disclaimer": "Preliminary screening only, not a diagnosis. A veterinarian makes the final call.",
+    "cta_app": "Open the web app",
+    "alt_scan": "FUFU app: choosing a pet and body area to scan",
+    "alt_home": "FUFU app home screen",
+    "alt_chat": "FUFU AI Vet chat screen"
+  },
+  "tech": {
+    "heading": "Technology",
+    "subheading": "Platforms and tools we build with",
+    "note": "Trademarks belong to their owners. Shown to describe the tools we use, not a partnership."
+  },
+  "credentials": {
+    "heading": "Awards & Credentials",
+    "subheading": "Proof you can check",
+    "ip": {
+      "issuer": "Department of Intellectual Property",
+      "title": "4 software copyrights registered",
+      "note": "Copyright notifications for computer programs."
+    },
+    "biz": {
+      "issuer": "Department of Business Development",
+      "title": "A registered, verifiable company",
+      "reg": "Juristic person registration no.",
+      "founded": "Incorporated 6 May 2026 with 1,000,000 baht registered capital",
+      "trustmark": "DBD Registered e-commerce trustmark"
+    },
+    "team": {
+      "issuer": "Team certifications",
+      "title": "Certified in AI education and practice",
+      "completion": "(certificate of completion)"
+    },
+    "verify": "Verify",
+    "iso_note": "ISO 56001: we were selected to join the programme. This is not an ISO certification.",
+    "trust_cta": "How we look after your work and data"
+  },
+  "rec": {
+    "nia": {
+      "highlight": "1 of 25 organisations",
+      "title": "Selected for the Innovation Management Standard ISO 56001:2024 programme by NIA and TNI",
+      "date": "May 2026"
+    },
+    "depa": {
+      "highlight": "1 of 19 digital startups",
+      "title": "depa Digital Startup Fund",
+      "date": "Jul 2026"
+    },
+    "ipmart": {
+      "highlight": "1 of 10 on the pitching stage",
+      "title": "IP MART SHOWBIZ 2026",
+      "date": "Aug 2026"
+    },
+    "asean": {
+      "highlight": "FUFU Pet Care",
+      "title": "ASEAN Digital Awards 2027: selected to present in the national selection round, Digital Startup category (depa)",
+      "date": "Nov 2026"
+    },
+    "vote": {
+      "highlight": "Popular Vote",
+      "title": "Popular Vote award for FUFU Pet Care",
+      "date": "Mar 2026"
+    }
+  },
+  "timeline": {
+    "heading": "Our Journey",
+    "subheading": "From a small team to a registered company",
+    "hint": "Swipe to see more",
+    "t1": {
+      "date": "2019",
+      "text": "Started as a small team in Phitsanulok, building websites, apps and media"
+    },
+    "t2": {
+      "date": "Feb 2026",
+      "text": "Registered as a commercial business and received the DBD Registered trustmark"
+    },
+    "t3": {
+      "date": "Mar 2026",
+      "text": "Popular Vote award for FUFU Pet Care"
+    },
+    "t4": {
+      "date": "May 2026",
+      "text": "Incorporated as KITTEN CODE Co.,Ltd. and selected 1 of 25 organisations for the ISO 56001 programme"
+    },
+    "t5": {
+      "date": "Jul 2026",
+      "text": "1 of 19 startups in the depa Digital Startup Fund"
+    },
+    "t6": {
+      "date": "Aug 2026",
+      "text": "1 of 10 on the IP MART SHOWBIZ 2026 pitching stage"
+    },
+    "t7": {
+      "date": "Nov 2026",
+      "text": "4 software copyrights registered; FUFU selected for the ASEAN Digital Awards 2027 national round"
+    }
+  },
+  "legal": {
+    "title": "Company",
+    "reg": "Juristic person registration no.",
+    "date": "Registered 6 May 2026"
+  },
+  "trust": {
+    "title": "Trust & Data Care",
+    "intro": "How we work with you, how we look after your data and ideas, and the facts you can check about us.",
+    "quality": {
+      "title": "Quality you can rely on",
+      "items": [
+        "We understand what you need before we start, and agree the scope in writing.",
+        "Every delivery is checked for quality before it reaches you.",
+        "We set measurable goals, review results and keep improving.",
+        "Everyone on the team owns the quality of their own work."
+      ]
+    },
+    "data": {
+      "title": "Your data stays protected",
+      "items": [
+        "Only people who need your data for the work can access it.",
+        "We never put your data or personal data into outside tools, including AI tools, that are not approved.",
+        "We collect and use personal data in line with Thailand's Personal Data Protection Act B.E. 2562 (PDPA).",
+        "Anything unusual is reported and handled straight away."
+      ]
+    },
+    "innovation": {
+      "title": "Innovation with care for your ideas",
+      "items": [
+        "We set aside time and resources to experiment with new technology.",
+        "Every idea is recorded, assessed and given feedback.",
+        "We learn from what doesn't work and use it next time.",
+        "We protect our intellectual property and yours."
+      ]
+    },
+    "env": {
+      "title": "Light on resources",
+      "items": [
+        "Digital documents and signatures first; we print only when needed.",
+        "We save energy in the office and on our equipment.",
+        "Old electronics go to proper e-waste handlers."
+      ]
+    },
+    "facts": {
+      "title": "Facts you can check",
+      "company": "Company",
+      "trustmark": "E-commerce trustmark",
+      "ip": "Intellectual property",
+      "ip_value": "4 software copyright notifications with the Department of Intellectual Property",
+      "mgmt": "Management system",
+      "mgmt_value": "Building an integrated management system along ISO 9001, ISO/IEC 27001, ISO 14001 and ISO 56001 lines. Selected for the NIA × TNI ISO 56001:2024 programme; not yet certified.",
+      "contact": "Contact"
+    },
+    "note": "Need an NDA or a specific security requirement for your project? Tell us at the scoping call and we will agree it in writing.",
+    "back": "See awards & credentials"
   }
 }

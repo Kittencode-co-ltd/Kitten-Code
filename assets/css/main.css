@@ -444,7 +444,7 @@ h6 {
   }
 }
 
-/* Language Switcher Button */
+/* Language Switcher (TH / EN / 中 / 日 / 한) */
 .lang-toggle-wrapper {
   display: flex;
   align-items: center;
@@ -454,34 +454,40 @@ h6 {
 .lang-toggle {
   display: flex;
   align-items: center;
+  gap: 2px;
   background-color: color-mix(in srgb, var(--default-color) 10%, transparent);
   border-radius: 20px;
   padding: 3px;
 }
 
-.navmenu .lang-toggle a.lang-btn {
-  padding: 6px 14px !important;
+.lang-toggle .lang-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--nav-color);
+  font-family: var(--nav-font);
   font-size: 13px;
   font-weight: 600;
+  line-height: 1;
+  min-width: 34px;
+  padding: 7px 10px;
   border-radius: 16px;
-  transition: all 0.3s ease;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.navmenu .lang-toggle a.lang-btn:before {
-  display: none !important; /* Hide the nav hover underline */
+.lang-toggle .lang-btn:hover:not(.active) {
+  color: var(--nav-hover-color);
 }
 
-.navmenu .lang-toggle a.lang-btn.active {
+.lang-toggle .lang-btn.active {
   background-color: var(--accent-color);
-  color: var(--contrast-color) !important;
+  color: var(--contrast-color);
 }
 
-.navmenu .lang-toggle a.lang-btn:hover:not(.active) {
-  background-color: transparent;
+.lang-toggle .lang-btn:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
 }
 
 /* Mobile Navigation */
@@ -2147,13 +2153,6 @@ body.i18n-loading .main {
   pointer-events: none;
 }
 
-/* Smooth lang-btn active indicator */
-.lang-btn {
-  transition:
-    color 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
 
 /*--------------------------------------------------------------
 # Dark Mode Theme System
@@ -2619,4 +2618,1115 @@ section,
 [data-theme="dark"] .payment-panel-card .qr-frame {
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.08);
+}
+
+/*--------------------------------------------------------------
+# Languages: CJK font stacks (system fonts, nothing extra to download)
+--------------------------------------------------------------*/
+html[lang="zh-Hans"] {
+  --default-font: "Roboto", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", sans-serif;
+  --heading-font: "Raleway", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --nav-font: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+}
+
+html[lang="ja"] {
+  --default-font: "Roboto", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "Noto Sans JP", "Noto Sans CJK JP", sans-serif;
+  --heading-font: "Raleway", "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif;
+  --nav-font: "Inter", "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif;
+}
+
+html[lang="ko"] {
+  --default-font: "Roboto", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Noto Sans CJK KR", sans-serif;
+  --heading-font: "Raleway", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --nav-font: "Inter", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+}
+
+/* Korean breaks lines between words, not inside them */
+html[lang="ko"] body {
+  word-break: keep-all;
+}
+
+/* Language buttons inside the mobile menu sit on a light panel */
+@media (max-width: 1199px) {
+  .lang-toggle .lang-btn {
+    color: var(--nav-dropdown-color);
+  }
+}
+
+/* Theme toggle: correct icon before theme.js runs */
+.theme-toggle-btn .theme-icon-light {
+  display: none;
+}
+
+[data-theme="dark"] .theme-toggle-btn .theme-icon-light {
+  display: inline-block;
+}
+
+[data-theme="dark"] .theme-toggle-btn .theme-icon-dark {
+  display: none;
+}
+
+/*--------------------------------------------------------------
+# Shared helpers (replace former inline styles)
+--------------------------------------------------------------*/
+.text-justify {
+  text-align: justify;
+}
+
+html[lang="zh-Hans"] .text-justify,
+html[lang="ja"] .text-justify,
+html[lang="ko"] .text-justify {
+  text-align: start;
+}
+
+/*--------------------------------------------------------------
+# Hero (minimal tech variant on the home page)
+--------------------------------------------------------------*/
+.hero.hero-minimal {
+  overflow: hidden;
+}
+
+.hero.hero-minimal .hero-bg {
+  z-index: 0;
+  opacity: 0.35;
+}
+
+.hero.hero-minimal .hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+  background-position: center;
+}
+
+.hero.hero-minimal .hero-glow {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 200px;
+  background: radial-gradient(ellipse at center, rgba(255, 74, 23, 0.15) 0%, transparent 70%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero.hero-minimal .hero-inner {
+  z-index: 2;
+  min-height: 90vh;
+  padding-top: 60px;
+}
+
+.hero-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.hero-rule {
+  display: block;
+  width: 40px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.hero-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 5px;
+  color: var(--accent-color);
+  text-transform: uppercase;
+}
+
+.hero.hero-minimal .hero-title {
+  font-size: clamp(2.5rem, 8vw, 6.5rem);
+  letter-spacing: -2px;
+  margin-bottom: 25px;
+  line-height: 1;
+  color: #fff;
+  font-family: "Inter", var(--default-font);
+}
+
+.hero-word-light {
+  font-weight: 200;
+}
+
+.hero-word-bold,
+.hero-dot {
+  font-weight: 700;
+}
+
+.hero-dot {
+  color: var(--accent-color);
+}
+
+.scramble-char {
+  color: var(--scramble-color, #ff4a17);
+  opacity: 0.8;
+  text-shadow: 0 0 8px var(--scramble-color, #ff4a17);
+}
+
+.hero.hero-minimal .hero-slogan {
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  font-weight: 300;
+  letter-spacing: 3px;
+  max-width: 600px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  margin-bottom: 4rem;
+}
+
+html[lang="zh-Hans"] .hero-label,
+html[lang="ja"] .hero-label,
+html[lang="ko"] .hero-label,
+html[lang="zh-Hans"] .hero.hero-minimal .hero-slogan,
+html[lang="ja"] .hero.hero-minimal .hero-slogan,
+html[lang="ko"] .hero.hero-minimal .hero-slogan {
+  letter-spacing: 1px;
+}
+
+.minimal-tech-btn {
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 16px 36px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+}
+
+.minimal-tech-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background-color: var(--accent-color);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.minimal-tech-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.minimal-tech-btn:hover::after {
+  width: 100%;
+}
+
+.minimal-tech-btn i {
+  transition: transform 0.3s ease;
+}
+
+.minimal-tech-btn:hover i {
+  transform: translateX(4px);
+}
+
+/*--------------------------------------------------------------
+# Team category dividers
+--------------------------------------------------------------*/
+.team-divider {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.team-divider-line {
+  width: 40px;
+  height: 1px;
+  background-color: rgba(255, 74, 23, 0.4);
+}
+
+.team-category {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--heading-color);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/*--------------------------------------------------------------
+# Payment: brand colours and button states
+--------------------------------------------------------------*/
+.payment.section {
+  padding: 80px 0;
+}
+
+.brand-kbank  { --brand: #00a651; --brand-shadow: rgba(0, 166, 81, 0.18); }
+.brand-ktb    { --brand: #1565c0; --brand-shadow: rgba(21, 101, 192, 0.18); }
+.brand-alipay { --brand: #00a0e9; --brand-shadow: rgba(0, 160, 233, 0.18); }
+.brand-paypal { --brand: #0070ba; --brand-shadow: rgba(0, 112, 186, 0.18); }
+
+.brand-text {
+  color: var(--brand);
+}
+
+button.payment-method-card {
+  display: block;
+  width: 100%;
+  height: 100%;
+  font: inherit;
+  color: inherit;
+}
+
+.payment-method-card .pm-label,
+.payment-method-card .pm-sublabel,
+.payment-method-card .pm-icon-wrap {
+  display: block;
+}
+
+.payment-method-card .pm-logo {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.payment-method-card.active {
+  border-color: var(--brand);
+  box-shadow: 0 4px 20px var(--brand-shadow);
+}
+
+.payment-method-card.active .method-bar {
+  background: var(--brand);
+}
+
+.payment-method-card:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.payment-panel-card .panel-field {
+  margin-bottom: 20px;
+}
+
+.payment-panel-card .btn-copy-acno {
+  background: var(--brand);
+}
+
+.payment-panel-card .btn-copy-acno:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.payment-panel-card .copy-msg.show {
+  opacity: 1;
+}
+
+/*--------------------------------------------------------------
+# Team profile pages
+--------------------------------------------------------------*/
+.portfolio-details .portfolio-info ul.profile-sublist {
+  margin-top: 4px;
+  padding-left: 1rem;
+  list-style: disc;
+}
+
+/*--------------------------------------------------------------
+# Shared buttons
+--------------------------------------------------------------*/
+.btn-kc,
+.btn-kc-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.btn-kc {
+  background: var(--accent-color);
+  color: var(--contrast-color);
+  border: 2px solid var(--accent-color);
+}
+
+.btn-kc:hover {
+  background: color-mix(in srgb, var(--accent-color), #000 12%);
+  color: var(--contrast-color);
+}
+
+.btn-kc-ghost {
+  border: 2px solid color-mix(in srgb, var(--default-color), transparent 70%);
+  color: var(--heading-color);
+}
+
+.btn-kc-ghost:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/*--------------------------------------------------------------
+# About: mission list
+--------------------------------------------------------------*/
+.about .mission-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  counter-reset: none;
+}
+
+.about .mission-list li {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
+}
+
+.about .mission-list li:last-child {
+  border-bottom: 0;
+}
+
+.about .mission-list .mission-num {
+  font-family: "Inter", var(--default-font);
+  font-weight: 700;
+  color: var(--accent-color);
+  min-width: 28px;
+}
+
+.about .mission-list strong {
+  display: block;
+  color: var(--heading-color);
+  font-family: var(--heading-font);
+}
+
+.about .mission-list span:not(.mission-num) {
+  display: block;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--default-color), transparent 15%);
+}
+
+/*--------------------------------------------------------------
+# Vision & KITTEN values
+--------------------------------------------------------------*/
+.vision-statement {
+  max-width: 880px;
+  margin: 0 auto 72px;
+}
+
+.vision-label {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  margin-bottom: 16px;
+}
+
+.vision-en {
+  font-family: "Inter", var(--heading-font);
+  font-size: clamp(1.9rem, 4.6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  color: var(--heading-color);
+  margin-bottom: 14px;
+}
+
+.vision-local {
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--default-color), transparent 10%);
+  margin-bottom: 22px;
+}
+
+html[lang="en"] .vision-local {
+  display: none;
+}
+
+.vision-philosophy {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 10px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 60%);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.vision-philosophy strong {
+  color: var(--accent-color);
+}
+
+.value-card {
+  position: relative;
+  height: 100%;
+  padding: 32px 28px 28px;
+  background: var(--surface-color);
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--accent-color), transparent 50%);
+}
+
+.value-letter {
+  position: absolute;
+  top: -18px;
+  right: 14px;
+  font-family: "Inter", var(--heading-font);
+  font-size: 120px;
+  font-weight: 800;
+  line-height: 1;
+  color: color-mix(in srgb, var(--accent-color), transparent 84%);
+  pointer-events: none;
+}
+
+.value-card h3 {
+  position: relative;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.value-card h3::first-letter {
+  color: var(--accent-color);
+}
+
+.value-tag {
+  position: relative;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  margin-bottom: 14px;
+}
+
+.value-desc {
+  position: relative;
+  margin: 0;
+}
+
+/*--------------------------------------------------------------
+# Stats note
+--------------------------------------------------------------*/
+.stats .stats-note {
+  margin: 28px 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
+/*--------------------------------------------------------------
+# Process
+--------------------------------------------------------------*/
+.process-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  position: relative;
+}
+
+.process-list::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: color-mix(in srgb, var(--accent-color), transparent 70%);
+}
+
+.process-step {
+  position: relative;
+  text-align: center;
+  padding: 0 6px;
+}
+
+.process-num {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  color: var(--contrast-color);
+  font-weight: 700;
+  margin-bottom: 16px;
+  box-shadow: 0 0 0 6px var(--background-color);
+}
+
+.process-step > i {
+  display: block;
+  font-size: 28px;
+  color: var(--heading-color);
+  margin-bottom: 8px;
+}
+
+.process-step h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.process-step p {
+  font-size: 0.9rem;
+  margin: 0;
+  color: color-mix(in srgb, var(--default-color), transparent 15%);
+}
+
+@media (max-width: 991px) {
+  .process-list {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .process-list::before {
+    top: 0;
+    bottom: 0;
+    left: 22px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+
+  .process-step {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    column-gap: 18px;
+    text-align: left;
+    padding: 0 0 26px;
+  }
+
+  .process-num {
+    grid-row: span 3;
+    margin: 0;
+  }
+
+  .process-step > i {
+    display: none;
+  }
+}
+
+/*--------------------------------------------------------------
+# Our product: FUFU Pet Care
+--------------------------------------------------------------*/
+.product-kicker {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  margin-bottom: 14px;
+}
+
+.product-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.product-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.product-brand h2 {
+  font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.product-slogan {
+  margin: 2px 0 0;
+  color: color-mix(in srgb, var(--default-color), transparent 30%);
+}
+
+.product-intro {
+  font-size: 1.05rem;
+  margin-bottom: 18px;
+}
+
+.product-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 22px;
+}
+
+.product-features li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 7px 0;
+}
+
+.product-features i {
+  color: var(--accent-color);
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+
+.product-proof {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: var(--surface-color);
+  border-left: 4px solid var(--accent-color);
+}
+
+.product-proof strong {
+  font-family: "Inter", var(--heading-font);
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--accent-color);
+}
+
+.product-disclaimer {
+  font-size: 0.85rem;
+  margin: 10px 0 24px;
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
+}
+
+.product-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.product-phones {
+  position: relative;
+  height: 560px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.product-phones .phone {
+  position: absolute;
+  width: 46%;
+  border-radius: 28px;
+  padding: 8px;
+  background: #11161b;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.18);
+}
+
+.product-phones .phone img {
+  display: block;
+  width: 100%;
+  border-radius: 21px;
+}
+
+.product-phones .phone-front {
+  left: 27%;
+  top: 0;
+  z-index: 2;
+}
+
+.product-phones .phone-back-left {
+  left: 0;
+  top: 60px;
+  transform: rotate(-6deg);
+}
+
+.product-phones .phone-back-right {
+  right: 0;
+  top: 60px;
+  transform: rotate(6deg);
+}
+
+@media (max-width: 575px) {
+  .product-phones {
+    height: 420px;
+  }
+}
+
+/*--------------------------------------------------------------
+# Technology strip
+--------------------------------------------------------------*/
+.tech-note {
+  margin: 18px 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--default-color), transparent 45%);
+}
+
+/*--------------------------------------------------------------
+# Awards & credentials
+--------------------------------------------------------------*/
+.rec-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 22px;
+  background: var(--surface-color);
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
+}
+
+.rec-issuer {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.rec-issuer img {
+  max-height: 40px;
+  max-width: 120px;
+  object-fit: contain;
+}
+
+.issuer-text {
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent-color), transparent 88%);
+  color: var(--accent-color);
+}
+
+.rec-highlight {
+  font-family: "Inter", var(--heading-font);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--accent-color);
+  margin-bottom: 8px;
+}
+
+.rec-card h3 {
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.rec-date {
+  margin-top: auto;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
+.proof-card {
+  position: relative;
+  height: 100%;
+  padding: 28px 26px 26px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface-color), var(--default-color) 3%);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
+}
+
+.proof-docs {
+  display: flex;
+  height: 130px;
+  margin-bottom: 20px;
+}
+
+.proof-docs img {
+  height: 120px;
+  width: auto;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transform: rotate(-4deg);
+}
+
+.proof-docs img + img {
+  margin-left: -28px;
+  margin-top: 10px;
+  transform: rotate(5deg);
+}
+
+.proof-docs-wide img {
+  height: 96px;
+}
+
+.proof-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  margin-bottom: 8px;
+}
+
+.proof-kicker img {
+  height: 22px;
+  width: auto;
+}
+
+.proof-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.proof-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.proof-list li {
+  padding: 7px 0;
+  border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+}
+
+.proof-list code {
+  font-family: "Inter", var(--default-font);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin-right: 6px;
+}
+
+.proof-verify {
+  margin-left: 6px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.proof-note {
+  font-size: 0.8rem;
+  margin: 10px 0 0;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
+.credentials-foot {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.credentials-foot p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
+/*--------------------------------------------------------------
+# Journey timeline (horizontal scroll)
+--------------------------------------------------------------*/
+.timeline-scroll {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+}
+
+.timeline-scroll:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 4px;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 1fr);
+  position: relative;
+  min-width: max-content;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 47px;
+  height: 2px;
+  background: color-mix(in srgb, var(--accent-color), transparent 65%);
+}
+
+.timeline-item {
+  scroll-snap-align: start;
+  padding-right: 24px;
+}
+
+.timeline-date {
+  display: block;
+  height: 32px;
+  font-family: "Inter", var(--heading-font);
+  font-weight: 700;
+  color: var(--heading-color);
+}
+
+.timeline-dot {
+  position: relative;
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 8px 0 18px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 0 5px var(--background-color);
+}
+
+.timeline-item p {
+  margin: 0;
+  font-size: 0.93rem;
+  max-width: 240px;
+}
+
+.timeline-hint {
+  font-size: 0.8rem;
+  margin: 8px 0 0;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
+/*--------------------------------------------------------------
+# Contact & footer: legal entity
+--------------------------------------------------------------*/
+.contact .legal-item p {
+  margin: 0;
+  text-align: center;
+}
+
+.footer .footer-legal {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/*--------------------------------------------------------------
+# Trust page
+--------------------------------------------------------------*/
+.trust-intro {
+  max-width: 760px;
+  margin: 0 auto 48px;
+  text-align: center;
+  font-size: 1.08rem;
+}
+
+.trust-card {
+  height: 100%;
+  padding: 30px 28px;
+  border-radius: 18px;
+  background: var(--surface-color);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
+}
+
+.trust-card > i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  font-size: 24px;
+  color: var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color), transparent 88%);
+  margin-bottom: 18px;
+}
+
+.trust-card h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.trust-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.trust-card li {
+  padding: 4px 0;
+}
+
+.trust-facts {
+  margin-top: 48px;
+  padding: 28px;
+  border-radius: 18px;
+  border: 1px dashed color-mix(in srgb, var(--accent-color), transparent 50%);
+}
+
+.trust-facts dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 10px 24px;
+  margin: 0;
+}
+
+.trust-facts dt {
+  font-weight: 600;
+  color: var(--heading-color);
+}
+
+.trust-facts dd {
+  margin: 0;
+}
+
+@media (max-width: 575px) {
+  .trust-facts dl {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .trust-facts dd {
+    margin-bottom: 10px;
+  }
+}
+
+.trust-note {
+  margin: 24px 0 0;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
+/* Team profile: KITTEN value */
+.portfolio-details .portfolio-info .profile-value small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--default-color), transparent 30%);
+}
+
+.profile-value-name b {
+  color: var(--accent-color);
+}
+
+/* Timeline: fade the right edge so it is clear there is more to scroll */
+.journey .timeline-scroll {
+  -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+  mask-image: linear-gradient(90deg, #000 85%, transparent);
+}
+
+.journey .timeline-scroll.at-end {
+  -webkit-mask-image: none;
+  mask-image: none;
 }

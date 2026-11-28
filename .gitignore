@@ -81,3 +81,5 @@ drop_port/
 # one-off admin migration script + credentials (never commit service account keys)
 scripts/migrate-users-to-uid.js
 scripts/service-account.json
+# Superdesign scratch
+.superdesign/tmp/

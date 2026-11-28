@@ -37,29 +37,9 @@
   </script>
 </head>
 
-<body class="portfolio-details-page">
+<body class="portfolio-details-page i18n-loading" data-i18n-title="profile.page_title">
 
-    <header id="header" class="header d-flex align-items-center fixed-top">
-        <div class="container-fluid container-xl position-relative d-flex align-items-center">
-
-            <a href="../index.html" class="logo d-flex align-items-center me-auto">
-                <h1 class="sitename">KITTEN CODE</h1>
-            </a>
-
-            <nav id="navmenu" class="navmenu">
-                <ul>
-                    <li><a href="../index.html#hero">Home</a></li>
-                    <li><a href="../index.html#about">About</a></li>
-                    <li><a href="../index.html#services">Services</a></li>
-                    <li><a href="../index.html#portfolio">Portfolio</a></li>
-                    <li><a href="../index.html#team" class="active">Team</a></li>
-                    <li><a href="../index.html#contact">Contact</a></li>
-                </ul>
-                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-            </nav>
-
-        </div>
-    </header>
+  <div data-kc-header data-active="team"></div>
 
     <main class="main">
 
@@ -67,7 +47,7 @@
         <div class="page-title dark-background" data-aos="fade"
             style="background-image: url(../assets/img/page-title-bg.webp);">
             <div class="container position-relative">
-                <h1>Personal Profile</h1>
+                <h1 data-i18n="profile.page_title">Personal Profile</h1>
             </div>
         </div><!-- End Page Title -->
 
@@ -80,31 +60,35 @@
 
                     <div class="col-lg-4">
                         <div class="portfolio-info" data-aos="fade-up" data-aos-delay="200">
-                            <h3>Personal information</h3>
+                            <h3 data-i18n="profile.personal_info">Personal information</h3>
                             <ul>
-                                <li><strong>Name</strong> : Yanisa Kanthaping</li>
-                                <li><strong>Degree</strong> : Bachelor of Faculty of Agro-industry</li>
-                                <li><strong>Tel</strong> : +66 9 3164 1415</li>
-                                <li><strong>E-mail</strong> : <a href="mailto:yanisakantaping@gmail.com">yanisakantaping@gmail.com</a></li>
-                                <li><strong>Social</strong> :
+                                <li><strong data-i18n="profile.name">Name</strong> : Yanisa Kanthaping</li>
+                                <li><strong data-i18n="profile.degree">Degree</strong> : <span data-i18n="profiles.rd_aim.degree">Bachelor of Faculty of Agro-industry</span></li>
+                                <li><strong data-i18n="profile.tel">Tel</strong> : +66 9 3164 1415</li>
+                                <li><strong data-i18n="profile.email">E-mail</strong> : <a href="mailto:yanisakantaping@gmail.com">yanisakantaping@gmail.com</a></li>
+                                <li><strong data-i18n="profile.social">Social</strong> :
                                     <a href="https://www.facebook.com/yanisa.kantaping" class="mx-2"><i
                                             class="bi bi-facebook"></i></a>
                                     <a href="https://line.me/ti/p/2005yanisa" class="me-2"><i
                                             class="bi bi-line"></i></a>
                                 </li>
                                 <li>
-                                    <strong>Skill</strong>
-                                    <ul style="margin-top: 4px; padding-left: 1rem; list-style: disc;">
+                                    <strong data-i18n="profile.skill">Skill</strong>
+                                    <ul class="profile-sublist" data-i18n-list="profiles.rd_aim.skills">
                                         <li>Food Chemistry &amp; Microbiology</li>
                                         <li>Ingredient Functionality</li>
                                         <li>Food Safety &amp; Regulations</li>
                                     </ul>
                                 </li>
+                              <li class="profile-value"><strong data-i18n="profile.my_value">Value I live by</strong> :
+                                <span class="profile-value-name"><b>I</b>nnovate with Purpose</span>
+                                <small data-i18n="values.i"></small>
+                              </li>
                             </ul>
                         </div>
                         <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
-                            <h2>Vision</h2>
-                            <p style="text-align: justify;">
+                            <h2 data-i18n="profile.vision">Vision</h2>
+                            <p class="text-justify" data-i18n="profiles.rd_aim.vision">
                                 Building a sustainable future by leveraging cutting-edge food technology to deliver
                                 high-quality, safe, and scalable solutions that enhance consumer well-being and drive
                                 impactful growth.
@@ -145,135 +129,20 @@
 
     </main>
 
-    <footer id="footer" class="footer dark-background">
+  <div data-kc-footer></div>
 
-        <div class="container footer-top">
-            <div class="row gy-4">
-                <div class="col-lg-3 col-md-6 footer-about">
-                    <a href="index.html" class="logo d-flex align-items-center">
-                        <span class="sitename">KITTEN CODE</span>
-                    </a>
-                    <div class="footer-contact pt-3">
-                        <p>347/11 M.3 THAPHO</p>
-                        <p>PHITSANULOK 65000</p>
-                        <p class="mt-3"><strong>Phone:</strong> <span>+66 8 0885 0555</span></p>
-                        <p><strong>Email:</strong> <span>kittencode.co.ltd@gmail.com</span></p>
-                    </div>
-                    <div class="social-links d-flex pt-3">
-                        <a
-                            href="https://www.facebook.com/people/Kitten-Code/61578657051567/?rdid=yfAectJDp5KPICia&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CULYwJj6J%2F"><i
-                                class="bi bi-facebook"></i></a>
-                        <a
-                            href="https://www.instagram.com/kitten.code/?igsh=OWR0NGNnZXRsMWE2&utm_source=qr&fbclid=IwY2xjawQicEVleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAEwAAEejquiaKVz6sFt0mMevcdU4n6Fgpn53hg80AsyN_PKHf26_NWw2UYMrY6eSVM_aem_m2g9xrOI8uV9fNFrhOxBFA"><i
-                                class="bi bi-instagram"></i></a>
-                    </div>
-
-                </div>
-
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Useful Links</h4>
-                    <ul>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#hero">Home</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#about">About us</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">Services</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Our Services</h4>
-                    <ul>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">Web Application</a>
-                        </li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">Mobile
-                                Application</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">Chatbot
-                                Development</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">AI Training</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">ERP System</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-2 col-md-12 footer-links">
-                    <h4>&nbsp;</h4>
-                    <ul>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">System Analysis</a>
-                        </li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">Data Analysis &amp;
-                                Prediction</a>
-                        </li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">Multimedia &amp;
-                                Production</a>
-                        </li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">Workshops</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="../index.html#services-2">Consult</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-2 col-md-12 footer-links" id="adminFooterSection">
-                    <h4>Admin</h4>
-                    <ul id="adminLinks">
-                        <!-- Links injected by JS -->
-                    </ul>
-                </div>
-
-                <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const adminLinksContainer = document.getElementById('adminLinks');
-                        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-                        if (isLoggedIn) {
-                            adminLinksContainer.innerHTML = `
-                                <li><i class="bi bi-chevron-right"></i> <a href="#" onclick="handleLogout(event)">Logout</a></li>
-                            `;
-                        } else {
-                            adminLinksContainer.innerHTML = `
-                                <li><i class="bi bi-chevron-right"></i> <a href="../back-office/login.html">Login</a></li>
-                            `;
-                        }
-                    });
-
-                    function handleLogout(event) {
-                        event.preventDefault();
-                        localStorage.removeItem('isLoggedIn');
-                        window.location.reload();
-                    }
-                </script>
-
-            </div>
-        </div>
-
-        <div class="container copyright text-center mt-4">
-            <p>ยฉ <span>Copyright</span> <strong class="px-1 sitename">KITTEN CODE Co., Ltd.</strong> </p>
-        </div>
-
-    </footer>
-
-    <!-- Scroll Top -->
-    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
-
-    <!-- Preloader -->
-    <div id="preloader"></div>
-
-    <!-- Vendor JS Files -->
-    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
-    <script src="../assets/vendor/php-email-form/validate.js" defer></script>
-    <script src="../assets/vendor/aos/aos.js" defer></script>
-    <script src="../assets/vendor/glightbox/js/glightbox.min.js" defer></script>
-    <script src="../assets/vendor/purecounter/purecounter_vanilla.js" defer></script>
-    <script src="../assets/vendor/swiper/swiper-bundle.min.js" defer></script>
-    <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js" defer></script>
-    <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js" defer></script>
-
-    <!-- Dynamic Portfolio Loader -->
-    <script src="../assets/js/portfolio-loader.js" defer></script>
-
-    <!-- Main JS File -->
-    <script src="../assets/js/core/main.js" defer></script>
-  <!-- Theme Toggle -->
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="../assets/vendor/aos/aos.js" defer></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js" defer></script>
+  <script src="../assets/vendor/purecounter/purecounter_vanilla.js" defer></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js" defer></script>
+  <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js" defer></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js" defer></script>
+  <script src="../assets/js/core/layout.js" defer></script>
+  <script src="../assets/js/core/main.js" defer></script>
+  <script src="../assets/js/portfolio-loader.js" defer></script>
   <script src="../assets/js/core/theme.js" defer></script>
-
+  <script src="../assets/js/core/i18n.js" defer></script>
 </body>
 
 </html>
-

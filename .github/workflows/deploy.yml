@@ -67,6 +67,7 @@ jobs:
           cp -r services public/
           cp index.html public/
           cp card.html public/
+          cp trust.html public/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

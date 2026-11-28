@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="th" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KITTEN CODE — ซอฟต์แวร์ที่ธุรกิจใช้งานได้จริง</title>
+<link rel="icon" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Prompt:wght@300;400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    try { var t = localStorage.getItem('kc-preview-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  })();
+</script>
+<style>
+/* ---------- Tokens (Kitten Code brand: paper + ink + orange) ---------- */
+:root, [data-theme="light"] {
+  --bg: #F7F5F0;
+  --bg-2: #EFECE4;
+  --surface: #FFFFFF;
+  --fg: #111111;
+  --muted: #5C5A55;
+  --line: #E2DED3;
+  --orange: #F26A1E;
+  --orange-ink: #C4500E;      /* orange text on light backgrounds (AA) */
+  --on-orange: #111111;
+  --shadow: 0 1px 2px rgba(17,17,17,.05), 0 20px 40px -24px rgba(17,17,17,.22);
+  --disc: #F26A1E;
+}
+[data-theme="dark"] {
+  --bg: #0E1322;               /* deep navy, near-black but not black */
+  --bg-2: #131A2C;
+  --surface: #182136;
+  --fg: #F4F2EC;
+  --muted: #A3ABBE;
+  --line: #263049;
+  --orange: #F57A33;
+  --orange-ink: #FF9A5C;
+  --on-orange: #111111;
+  --shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 24px 48px -24px rgba(0,0,0,.7);
+  --disc: #F26A1E;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: 'Fredoka', 'Prompt', system-ui, sans-serif; font-weight: 400;
+  font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased;
+  transition: background-color .45s ease, color .45s ease;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: var(--muted); }
+.eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
+.h2 { font-size: clamp(32px, 4vw, 48px); }
+.lead { color: var(--muted); font-size: 18px; margin: 16px 0 0; max-width: 620px; }
+.mono { font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+.section { padding: 112px 0; }
+.sec-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; margin-bottom: 48px; }
+
+/* ---------- Buttons ---------- */
+.btn { display: inline-flex; align-items: center; gap: 10px; height: 54px; padding: 0 26px; border-radius: 999px; font: 500 16px 'Fredoka','Prompt',sans-serif; text-decoration: none; border: 2px solid transparent; cursor: pointer; transition: transform .3s ease, background-color .3s, border-color .3s, color .3s; }
+.btn-primary { background: var(--orange); color: var(--on-orange); }
+.btn-primary:hover { transform: translateY(-2px); }
+.btn-outline { border-color: var(--fg); color: var(--fg); background: transparent; }
+.btn-outline:hover { background: var(--fg); color: var(--bg); }
+.btn svg { transition: transform .3s ease; }
+.btn:hover svg { transform: translateX(3px); }
+.btn:focus-visible, .icon-btn:focus-visible, .lang button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+
+/* ---------- Header ---------- */
+.top { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid transparent; transition: border-color .3s, background-color .45s; }
+.top.scrolled { border-color: var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 28px; height: 76px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600; font-size: 18px; letter-spacing: .04em; }
+.brand img { width: 40px; height: 40px; }
+.nav { display: flex; gap: 28px; margin-left: auto; }
+.nav a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: 15px; transition: color .25s; }
+.nav a:hover { color: var(--fg); }
+.tools { display: flex; align-items: center; gap: 10px; }
+.lang { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 999px; }
+.lang button { all: unset; cursor: pointer; font: 500 13px 'Fredoka','Prompt',sans-serif; color: var(--muted); min-width: 30px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; }
+.lang button.on { background: var(--fg); color: var(--bg); }
+.icon-btn { all: unset; cursor: pointer; width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 50%; }
+.icon-btn .sun { display: none; }
+[data-theme="dark"] .icon-btn .sun { display: block; }
+[data-theme="dark"] .icon-btn .moon { display: none; }
+.top .btn { height: 44px; padding: 0 18px; font-size: 15px; }
+
+/* ---------- Hero ---------- */
+.hero { padding: 72px 0 40px; overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+.hero h1 { font-size: clamp(40px, 5.4vw, 72px); line-height: 1.18; margin-top: 22px; }
+.hero h1 .hl { color: var(--orange-ink); position: relative; white-space: nowrap; }
+.hero h1 .hl svg { position: absolute; left: 0; bottom: -8px; width: 100%; height: 14px; }
+.hero h1 .hl path { stroke: var(--orange); stroke-dasharray: 400; stroke-dashoffset: 400; animation: draw 1.2s .9s cubic-bezier(.2,.7,.2,1) forwards; }
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 36px; }
+.hero-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); }
+.hero-facts div { font-size: 14px; color: var(--muted); line-height: 1.5; }
+.hero-facts b { display: block; font-size: 22px; font-weight: 600; color: var(--fg); }
+
+.stage { position: relative; height: 560px; }
+.disc { position: absolute; left: 50%; top: 50%; width: 440px; height: 440px; margin: -220px 0 0 -220px; border-radius: 50%; background: var(--disc); }
+.disc::after { content: ""; position: absolute; inset: -22px; border-radius: 50%; border: 2px dashed color-mix(in srgb, var(--orange) 55%, transparent); animation: spin 60s linear infinite; }
+.mascot-hero { position: absolute; left: 50%; bottom: 40px; width: 360px; transform: translateX(-50%); animation: float 6s ease-in-out infinite; filter: drop-shadow(0 24px 30px rgba(0,0,0,.18)); }
+.float-card { position: absolute; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); padding: 14px 16px; font-size: 14px; line-height: 1.4; }
+.float-card b { display: block; font-size: 15px; font-weight: 600; }
+.float-card span { color: var(--muted); }
+.fc-1 { left: -8px; top: 70px; animation: drift 7s ease-in-out infinite; }
+.fc-2 { right: -10px; top: 92px; animation: drift 8s ease-in-out -2s infinite; }
+.fc-3 { left: 20px; bottom: 34px; animation: drift 9s ease-in-out -4s infinite; display: flex; align-items: center; gap: 12px; }
+.fc-ico { width: 38px; height: 38px; border-radius: 12px; background: color-mix(in srgb, var(--orange) 16%, transparent); color: var(--orange-ink); display: grid; place-items: center; flex: none; }
+.phone-mini { position: absolute; right: 18px; bottom: 0; width: 150px; border-radius: 24px; padding: 6px; background: #151515; box-shadow: var(--shadow); transform: rotate(6deg); animation: drift 10s ease-in-out -1s infinite; }
+.phone-mini img { border-radius: 19px; }
+
+/* ---------- Proof strip ---------- */
+.proof { padding: 32px 0 8px; }
+.proof .wrap { display: flex; align-items: center; gap: 36px; flex-wrap: wrap; justify-content: space-between; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding-top: 26px; padding-bottom: 26px; }
+.proof p { margin: 0; font-size: 14px; color: var(--muted); max-width: 220px; line-height: 1.5; }
+.proof .logos { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; }
+.proof .logos img { height: 40px; width: auto; }
+.proof .logos img[alt="depa"] { height: 30px; }
+[data-theme="dark"] .proof .logos img { background: #fff; border-radius: 8px; padding: 4px 8px; height: 44px; }
+.badge-text { font-weight: 600; font-size: 15px; padding: 8px 14px; border: 1.5px solid var(--line); border-radius: 10px; color: var(--muted); }
+
+/* ---------- Services ---------- */
+.services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.svc { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 12px; min-height: 260px; transition: transform .35s ease, box-shadow .35s ease, border-color .35s; }
+.svc:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--orange) 45%, var(--line)); }
+.svc .ico { width: 50px; height: 50px; border-radius: 14px; display: grid; place-items: center; background: var(--bg-2); color: var(--fg); }
+.svc:hover .ico { background: var(--orange); color: var(--on-orange); }
+.svc h3 { font-size: 22px; margin-top: 8px; }
+.svc p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
+.svc .price { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); }
+.svc .price b { color: var(--fg); font-weight: 600; font-size: 16px; }
+.svc.feature { grid-column: span 2; background: var(--fg); color: var(--bg); border-color: var(--fg); overflow: hidden; }
+.svc.feature p, .svc.feature .price { color: color-mix(in srgb, var(--bg) 70%, transparent); border-color: color-mix(in srgb, var(--bg) 18%, transparent); }
+.svc.feature .price b { color: var(--bg); }
+.svc.feature .ico { background: var(--orange); color: var(--on-orange); }
+.svc.feature .peek { position: absolute; right: -10px; bottom: -6px; width: 170px; transform: translateY(20px); opacity: 0; transition: transform .6s cubic-bezier(.2,.7,.2,1), opacity .6s; }
+.svc.feature:hover .peek, .svc.feature.inview .peek { transform: none; opacity: 1; }
+.svc.feature .body { max-width: 60%; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+
+/* ---------- Work ---------- */
+.work { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
+.case { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: box-shadow .35s, transform .35s; }
+.case:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+.case .media { background: var(--bg-2); overflow: hidden; }
+.case .media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s cubic-bezier(.2,.7,.2,1); }
+.case:hover .media img { transform: scale(1.03); }
+.case .info { padding: 22px 26px 26px; display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; }
+.case h3 { font-size: 22px; }
+.case p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.tag { font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.case-fufu { grid-column: span 7; }
+.case-fufu .media { aspect-ratio: 16 / 11; display: flex; align-items: center; justify-content: center; gap: 18px; padding: 32px; background: linear-gradient(160deg, #FBF6EE, #F1E6D6); }
+[data-theme="dark"] .case-fufu .media { background: linear-gradient(160deg, #1B2540, #142036); }
+.case-fufu .media img { width: auto; height: 100%; object-fit: contain; border-radius: 20px; box-shadow: 0 20px 40px -20px rgba(0,0,0,.4); }
+.case-fufu .media img:nth-child(2) { transform: translateY(18px); }
+.case-fufu .media, .case-td .media { aspect-ratio: auto; height: 400px; }
+.case-td { grid-column: span 5; }
+.case-td .media img { object-position: left center; }
+.case-media { grid-column: span 12; }
+.case-media .media { aspect-ratio: 21 / 8; }
+.note { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
+
+/* ---------- Process ---------- */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; position: relative; }
+.steps::before { content: ""; position: absolute; left: 28px; right: 28px; top: 27px; height: 2px; background: var(--line); }
+.steps::after { content: ""; position: absolute; left: 28px; top: 27px; height: 2px; width: 0; background: var(--orange); transition: width 1.6s cubic-bezier(.2,.7,.2,1); }
+.steps.inview::after { width: calc(100% - 56px); }
+.step { position: relative; }
+.step .n { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); border: 2px solid var(--line); font-weight: 600; font-size: 18px; position: relative; z-index: 1; transition: border-color .4s, background-color .4s; }
+.steps.inview .step .n { border-color: var(--orange); }
+.step h3 { font-size: 19px; margin: 18px 0 6px; }
+.step p { margin: 0; font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+/* ---------- Credentials ---------- */
+.cred-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; }
+.awards { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 10px 30px; }
+.award { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.award:last-child { border-bottom: 0; }
+.award .rank { font-size: 15px; font-weight: 600; color: var(--orange-ink); line-height: 1.4; }
+.award b { display: block; font-weight: 600; }
+.award span { font-size: 15px; color: var(--muted); }
+.legal { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 30px; padding-top: 196px; }
+.legal .docs { position: absolute; left: 30px; top: -18px; display: flex; }
+.legal .docs img { width: 120px; border-radius: 4px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); transform: rotate(-5deg); }
+.legal .docs img + img { margin-left: -36px; margin-top: 16px; transform: rotate(4deg); }
+.legal .peek { position: absolute; right: 22px; top: -54px; width: 118px; }
+.legal h3 { font-size: 22px; margin-bottom: 14px; }
+.legal dl { margin: 0; }
+.legal div.r { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.legal div.r:last-child { border-bottom: 0; }
+.legal dt { color: var(--muted); }
+.legal dd { margin: 0; text-align: right; font-weight: 500; }
+.small-note { font-size: 13px; color: var(--muted); margin: 14px 0 0; }
+
+/* ---------- Values ---------- */
+.values { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.val { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px 20px; transition: transform .35s, border-color .35s; }
+.val:hover { transform: translateY(-4px); border-color: var(--orange); }
+.val .L { font-size: 54px; font-weight: 600; line-height: 1; color: var(--orange-ink); }
+.val h3 { font-size: 16px; margin: 18px 0 6px; line-height: 1.3; }
+.val p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.55; }
+.vision-line { font-size: clamp(24px, 2.6vw, 34px); font-weight: 500; line-height: 1.45; max-width: 860px; margin: 0 0 40px; }
+.vision-line small { display: block; font-size: 15px; color: var(--muted); font-weight: 400; margin-top: 10px; }
+
+/* ---------- Team ---------- */
+.team { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.member .ph { border-radius: 20px; overflow: hidden; background: var(--bg-2); aspect-ratio: 1; }
+.member img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s cubic-bezier(.2,.7,.2,1); }
+.member:hover img { transform: scale(1.04); }
+.member b { display: block; margin-top: 14px; font-weight: 600; font-size: 16px; line-height: 1.4; }
+.member span { font-size: 14px; color: var(--muted); }
+
+/* ---------- CTA ---------- */
+.cta { position: relative; background: var(--orange); color: #111; border-radius: 32px; padding: clamp(36px, 6vw, 72px); overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 24px; align-items: center; }
+.cta h2 { font-size: clamp(30px, 3.6vw, 48px); line-height: 1.25; }
+.nb { white-space: nowrap; }
+.cta p { margin: 16px 0 28px; font-size: 18px; max-width: 520px; }
+.cta .email { display: inline-block; font-size: clamp(20px, 2.4vw, 30px); font-weight: 600; color: #111; text-decoration: none; border-bottom: 3px solid #111; margin-bottom: 28px; }
+.cta .btn-dark { background: #111; color: #F7F5F0; }
+.cta .btn-dark:hover { transform: translateY(-2px); }
+.cta .btn-line { border: 2px solid #111; color: #111; }
+.cta .wave { width: 100%; max-width: 330px; justify-self: end; animation: float 6s ease-in-out infinite; }
+.cta .alt { margin-top: 22px; font-size: 14px; }
+
+/* ---------- Footer ---------- */
+.foot { padding: 56px 0 40px; }
+.foot .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 28px; }
+
+/* ---------- Motion ---------- */
+@keyframes float { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -12px); } }
+.cta .wave { animation-name: floatY; }
+@keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes drift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.phone-mini { animation-name: driftR; }
+@keyframes driftR { 0%, 100% { transform: rotate(6deg) translateY(0); } 50% { transform: rotate(6deg) translateY(-10px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.hero .in { opacity: 0; animation: rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
+.hero .in.d2 { animation-delay: .12s; } .hero .in.d3 { animation-delay: .24s; } .hero .in.d4 { animation-delay: .36s; } .hero .in.d5 { animation-delay: .48s; }
+.rv { opacity: 0; transform: translateY(18px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+.rv.inview { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv, .hero .in { opacity: 1 !important; transform: none !important; }
+  .hero h1 .hl path { stroke-dashoffset: 0; }
+  .mascot-hero { transform: translateX(-50%); }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .nav { display: none; }
+  .hero .wrap { grid-template-columns: 1fr; }
+  .stage { height: 500px; max-width: 520px; margin: 0 auto; width: 100%; }
+  .services { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .values { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cred-grid { grid-template-columns: 1fr; }
+  .legal { margin-top: 30px; }
+}
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+  .section { padding: 80px 0; }
+  .lang { display: none; }
+  .top .btn span { display: none; }
+  .stage { height: 420px; }
+  .disc { width: 320px; height: 320px; margin: -160px 0 0 -160px; }
+  .mascot-hero { width: 270px; }
+  .fc-2 { display: none; }
+  .phone-mini { width: 110px; }
+  .services { grid-template-columns: 1fr; }
+  .svc.feature { grid-column: auto; }
+  .svc.feature .body { max-width: 100%; }
+  .svc.feature .peek { display: none; }
+  .work > * { grid-column: span 12 !important; }
+  .steps { grid-template-columns: 1fr; gap: 24px; }
+  .steps::before, .steps::after { display: none; }
+  .step { display: grid; grid-template-columns: 56px 1fr; column-gap: 16px; }
+  .step .n { grid-row: span 2; }
+  .step h3 { margin-top: 4px; }
+  .values { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .team { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .award { grid-template-columns: 1fr; gap: 4px; }
+  .cta { grid-template-columns: 1fr; }
+  .nb { white-space: normal; }
+  .hero-facts { grid-template-columns: 1fr 1fr; }
+  .cta .wave { max-width: 200px; justify-self: center; }
+}
+</style>
+</head>
+<body>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a href="#" class="brand"><img src="img/logo.png" alt="KITTEN CODE"><span>KITTEN CODE</span></a>
+    <nav class="nav" aria-label="เมนูหลัก">
+      <a href="#services">บริการ</a>
+      <a href="#work">ผลงาน</a>
+      <a href="#proof">ความน่าเชื่อถือ</a>
+      <a href="#team">ทีม</a>
+      <a href="#contact">ติดต่อ</a>
+    </nav>
+    <div class="tools">
+      <div class="lang" role="group" aria-label="ภาษา">
+        <button type="button" class="on" aria-pressed="true">TH</button>
+        <button type="button" aria-pressed="false">EN</button>
+        <button type="button" aria-pressed="false" aria-label="简体中文">中</button>
+        <button type="button" aria-pressed="false" aria-label="日本語">日</button>
+        <button type="button" aria-pressed="false" aria-label="한국어">한</button>
+      </div>
+      <button type="button" class="icon-btn" id="themeBtn" aria-label="สลับธีมสว่าง/มืด">
+        <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2z"/></svg>
+        <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+      </button>
+      <a class="btn btn-primary" href="mailto:kittencode.co.ltd@gmail.com?subject=Project%20inquiry">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>อีเมลหาเรา</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow in">Software studio · Phitsanulok, Thailand · since 2019</span>
+        <h1 class="in d2">เราสร้างซอฟต์แวร์<br>ที่ธุรกิจคุณ<span class="hl">ใช้งานได้จริง<svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 80 2, 180 2, 298 9" fill="none" stroke-width="4" stroke-linecap="round"/></svg></span></h1>
+        <p class="lead in d3">เว็บ แอป ระบบหลังบ้าน แชทบอท และงาน AI ออกแบบและเขียนโค้ดเองทั้งหมดโดยทีมที่คุยง่าย ทำงานเป็นขั้นตอนชัดเจน และดูแลต่อหลังส่งมอบ</p>
+        <div class="hero-cta in d4">
+          <a class="btn btn-primary" href="mailto:kittencode.co.ltd@gmail.com?subject=Project%20inquiry">ส่งอีเมลเล่าโปรเจกต์
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn-outline" href="#work">ดูผลงานของเรา</a>
+        </div>
+        <div class="hero-facts in d5">
+          <div><b>4</b>ผลงานจดแจ้งลิขสิทธิ์โปรแกรม</div>
+          <div><b>1 ใน 19</b>depa Digital Startup Fund</div>
+          <div><b>1 ใน 25</b>โครงการ ISO 56001 (NIA × TNI)</div>
+        </div>
+      </div>
+
+      <div class="stage in d3" aria-hidden="true">
+        <div class="disc"></div>
+        <img class="mascot-hero" src="img/kc-hood-laptop.png" alt="">
+        <div class="float-card fc-1"><b>Web · Mobile · AI</b><span>ออกแบบเฉพาะธุรกิจคุณ</span></div>
+        <div class="float-card fc-2"><b>คุยสโคปงานฟรี</b><span>ประเมินงบเบื้องต้นให้</span></div>
+        <div class="float-card fc-3"><span class="fc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12.5l5 5L20 6.5"/></svg></span><div><b>บริษัทจดทะเบียน</b><span class="mono">0655569001411</span></div></div>
+        <div class="phone-mini"><img src="img/fufu-app-home.png" alt=""></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF STRIP -->
+  <section class="proof" aria-label="หน่วยงานที่คัดเลือกเรา">
+    <div class="wrap rv">
+      <p>ได้รับคัดเลือกและจดทะเบียนกับหน่วยงานเหล่านี้</p>
+      <div class="logos">
+        <img src="img/depa.png" alt="depa">
+        <img src="img/dip.png" alt="กรมทรัพย์สินทางปัญญา">
+        <img src="img/DBD.png" alt="กรมพัฒนาธุรกิจการค้า">
+        <span class="badge-text">NIA × TNI</span>
+        <span class="badge-text">IP MART 2026</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div>
+          <span class="eyebrow">บริการ</span>
+          <h2 class="h2" style="margin-top: 14px">เลือกเฉพาะที่ธุรกิจคุณต้องใช้</h2>
+          <p class="lead">เขียนโค้ดเองทั้งระบบ ไม่ใช้เทมเพลตสำเร็จรูป ราคาเริ่มต้นบอกไว้ชัดเจน</p>
+        </div>
+      </div>
+      <div class="services">
+        <article class="svc feature rv">
+          <div class="body">
+            <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18M8 21h8"/></svg></span>
+            <h3>เว็บแอปพลิเคชัน</h3>
+            <p>เว็บที่ออกแบบเฉพาะงานของคุณ ใช้ได้ทุกอุปกรณ์ เชื่อมฐานข้อมูลและระบบเดิม พร้อมดูแลต่อเนื่องหลังเปิดใช้งาน</p>
+            <div class="price"><span>ราคาเริ่มต้น</span><b>20,000 บาท</b></div>
+          </div>
+          <img class="peek" src="img/kc-hood-peek.png" alt="" aria-hidden="true">
+        </article>
+        <article class="svc rv">
+          <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
+          <h3>แอปมือถือ</h3>
+          <p>iOS และ Android ส่งขึ้น App Store และ Google Play ให้ครบ</p>
+          <div class="price"><span>ราคาเริ่มต้น</span><b>35,000 บาท</b></div>
+        </article>
+        <article class="svc rv">
+          <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/></svg></span>
+          <h3>แชทบอท</h3>
+          <p>ตอบลูกค้าอัตโนมัติบน LINE, Facebook และเว็บไซต์</p>
+          <div class="price"><span>ราคาเริ่มต้น</span><b>15,000 บาท</b></div>
+        </article>
+        <article class="svc rv">
+          <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
+          <h3>ERP · CRM · POS</h3>
+          <p>ระบบบริหารงาน ลูกค้า และหน้าร้าน ตามขั้นตอนจริงของธุรกิจ</p>
+          <div class="price"><span>ราคาเริ่มต้น</span><b>50,000 บาท</b></div>
+        </article>
+        <article class="svc rv">
+          <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+          <h3>ข้อมูลและพยากรณ์</h3>
+          <p>รวบรวมข้อมูล แดชบอร์ด และโมเดลช่วยตัดสินใจ</p>
+          <div class="price"><span>ราคาเริ่มต้น</span><b>30,000 บาท</b></div>
+        </article>
+        <article class="svc rv">
+          <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="M17 10l5-3v10l-5-3"/></svg></span>
+          <h3>วิดีโอและมัลติมีเดีย</h3>
+          <p>วิดีโอองค์กร โมชันกราฟิก และคอนเทนต์โซเชียล</p>
+          <div class="price"><span>ราคาเริ่มต้น</span><b>15,000 บาท</b></div>
+        </article>
+        <article class="svc rv">
+          <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l9 5-9 5-9-5z"/><path d="M7 11v5c3 2 7 2 10 0v-5"/></svg></span>
+          <h3>ที่ปรึกษาและอบรม AI</h3>
+          <p>วางแผนใช้เทคโนโลยี และเวิร์กช็อป AI ตามสายงาน</p>
+          <div class="price"><span>ราคาเริ่มต้น</span><b>10,000 บาท</b></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="section" id="work" style="padding-top: 24px">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div>
+          <span class="eyebrow">ผลงาน</span>
+          <h2 class="h2" style="margin-top: 14px">งานจริงที่ใช้งานอยู่ตอนนี้</h2>
+        </div>
+      </div>
+      <div class="work">
+        <a class="case case-fufu rv" href="https://app.fufupetcare.com" target="_blank" rel="noopener">
+          <div class="media"><img src="img/fufu-app-home.png" alt="หน้าหลักแอป FUFU Pet Care"><img src="img/fufu-app-scan.png" alt="หน้าสแกนในแอป FUFU Pet Care"></div>
+          <div class="info">
+            <div><h3>FUFU Pet Care</h3><p>แอปดูแลสุขภาพสัตว์เลี้ยง ผลิตภัณฑ์ของเราเอง</p><p class="note">AI คัดกรองผิวหนัง แม่นยำ 94% จาก 6,215 ภาพที่สัตวแพทย์ยืนยัน · คัดกรองเบื้องต้น ไม่แทนการวินิจฉัย</p></div>
+            <span class="tag">Product · AI</span>
+          </div>
+        </a>
+        <a class="case case-td rv" href="https://kittencode-co-ltd.github.io/TD-Pet-Clinic/" target="_blank" rel="noopener">
+          <div class="media"><img src="img/work-td.jpg" alt="เว็บไซต์ TD Pet Clinic"></div>
+          <div class="info"><div><h3>TD Pet Clinic</h3><p>เว็บไซต์คลินิกรักษาสัตว์ พิษณุโลก</p></div><span class="tag">Website</span></div>
+        </a>
+        <div class="case case-media rv">
+          <div class="media"><img src="img/work-media.jpg" alt="ตัวอย่างงานวิดีโอและกราฟิก"></div>
+          <div class="info"><div><h3>วิดีโอ คอนเทนต์ และโมชันกราฟิก</h3><p>งานวิดีโอองค์กร คลิปสั้น และกราฟิกให้หลายแบรนด์</p></div><span class="tag">Multimedia</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section" style="padding-top: 24px">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div>
+          <span class="eyebrow">วิธีทำงาน</span>
+          <h2 class="h2" style="margin-top: 14px">ชัดเจนทุกขั้น ตั้งแต่วันแรก</h2>
+        </div>
+      </div>
+      <ol class="steps rv" id="steps">
+        <li class="step"><span class="n">1</span><h3>คุยสโคปฟรี</h3><p>เล่าโจทย์ทางอีเมล รับการประเมินงบเบื้องต้นฟรี</p></li>
+        <li class="step"><span class="n">2</span><h3>ออกแบบ</h3><p>ตกลงขอบเขตเป็นลายลักษณ์อักษร แล้วออกแบบไปด้วยกัน</p></li>
+        <li class="step"><span class="n">3</span><h3>พัฒนา</h3><p>ทำเป็นรอบ ให้คุณเห็นและลองใช้ระหว่างทาง</p></li>
+        <li class="step"><span class="n">4</span><h3>ตรวจและส่งมอบ</h3><p>ตรวจคุณภาพก่อนส่ง และทดสอบร่วมกับคุณ</p></li>
+        <li class="step"><span class="n">5</span><h3>ดูแลต่อ</h3><p>ซัพพอร์ตและปรับปรุงหลังเปิดใช้งาน</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CREDENTIALS -->
+  <section class="section" id="proof" style="padding-top: 24px">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div>
+          <span class="eyebrow">รางวัลและการรับรอง</span>
+          <h2 class="h2" style="margin-top: 14px">ทุกข้อตรวจสอบได้</h2>
+        </div>
+      </div>
+      <div class="cred-grid">
+        <div class="awards rv">
+          <div class="award"><span class="rank">FUFU Pet Care<br>พ.ย. 2569</span><div><b>ASEAN Digital Awards 2027</b><span>ผ่านการคัดเลือกเป็นผู้มีสิทธิ์นำเสนอผลงาน รอบคัดเลือกระดับประเทศ สาขา Digital Startup (depa)</span></div></div>
+          <div class="award"><span class="rank">1 ใน 10<br>ส.ค. 2569</span><div><b>IP MART SHOWBIZ 2026</b><span>ผลงานบนเวที Pitching</span></div></div>
+          <div class="award"><span class="rank">1 ใน 19<br>ก.ค. 2569</span><div><b>depa Digital Startup Fund</b><span>ดิจิทัลสตาร์ทอัพที่ได้รับคัดเลือก</span></div></div>
+          <div class="award"><span class="rank">1 ใน 25<br>พ.ค. 2569</span><div><b>โครงการ ISO 56001:2024</b><span>องค์กรที่ได้รับคัดเลือก โดย NIA ร่วมกับ TNI (เข้าร่วมโครงการ ยังไม่ใช่การรับรองมาตรฐาน)</span></div></div>
+          <div class="award"><span class="rank">มี.ค. 2569</span><div><b>Popular Vote</b><span>รางวัล Popular Vote กับ FUFU Pet Care</span></div></div>
+        </div>
+        <div class="legal rv">
+          <div class="docs" aria-hidden="true"><img src="img/doc-company-registration.png" alt=""><img src="img/doc-copyright-000520.png" alt=""></div>
+          <img class="peek" src="img/kc-hood-peek.png" alt="" aria-hidden="true">
+          <h3>บริษัทจดทะเบียน ตรวจสอบได้</h3>
+          <dl>
+            <div class="r"><dt>เลขทะเบียนนิติบุคคล</dt><dd class="mono">0655569001411</dd></div>
+            <div class="r"><dt>จดทะเบียนบริษัท</dt><dd>6 พ.ค. 2569</dd></div>
+            <div class="r"><dt>ทุนจดทะเบียน</dt><dd>1,000,000 บาท</dd></div>
+            <div class="r"><dt>ลิขสิทธิ์โปรแกรม</dt><dd>4 ผลงาน</dd></div>
+            <div class="r"><dt>พาณิชย์อิเล็กทรอนิกส์</dt><dd>DBD Registered</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="section" style="padding-top: 24px; background: var(--bg-2)">
+    <div class="wrap">
+      <div class="rv">
+        <span class="eyebrow">วิสัยทัศน์และค่านิยม</span>
+        <p class="vision-line" style="margin-top: 18px">“ก้าวข้ามขีดจำกัดของเทคโนโลยี เพื่อสร้างความเป็นไปได้ใหม่”<small>Beyond Technology, Creating Possibilities. · Different Minds. One Innovation.</small></p>
+      </div>
+      <div class="values">
+        <div class="val rv"><span class="L">K</span><h3>Keep Exploring</h3><p>เรียนรู้ ตั้งคำถาม หาความเป็นไปได้ใหม่</p></div>
+        <div class="val rv"><span class="L">I</span><h3>Innovate with Purpose</h3><p>สร้างนวัตกรรมที่แก้ปัญหาจริง</p></div>
+        <div class="val rv"><span class="L">T</span><h3>Think Beyond Boundaries</h3><p>คิดต่าง เชื่อมความรู้หลายศาสตร์</p></div>
+        <div class="val rv"><span class="L">T</span><h3>Together We Create</h3><p>ร่วมมือ เคารพความต่าง โตไปด้วยกัน</p></div>
+        <div class="val rv"><span class="L">E</span><h3>Execute with Excellence</h3><p>ทำจริง ด้วยคุณภาพและความรับผิดชอบ</p></div>
+        <div class="val rv"><span class="L">N</span><h3>Nurture Lasting Impact</h3><p>สร้างคุณค่าที่ยั่งยืนให้ลูกค้าและสังคม</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="section" id="team">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div>
+          <span class="eyebrow">ทีม</span>
+          <h2 class="h2" style="margin-top: 14px">คนที่ทำงานกับคุณจริง ๆ</h2>
+        </div>
+      </div>
+      <div class="team">
+        <div class="member rv"><div class="ph"><img src="img/team-1.jpg" alt=""></div><b>Pimsiree Anurakchanachai (Panda)</b><span>CEO &amp; Founder</span></div>
+        <div class="member rv"><div class="ph"><img src="img/team-3.jpg" alt=""></div><b>Supawit Kongboon (F)</b><span>CTO &amp; Co-Founder</span></div>
+        <div class="member rv"><div class="ph"><img src="img/team-8.jpg" alt=""></div><b>Paphawadee Buakao (Beam)</b><span>Legal &amp; HR</span></div>
+        <div class="member rv"><div class="ph"><img src="img/team-4.jpg" alt=""></div><b>Chaiyakan Jaitrongkla (Jui)</b><span>Developer</span></div>
+        <div class="member rv"><div class="ph"><img src="img/rd-aim.jpg" alt=""></div><b>Yanisa Kantaping (Aim)</b><span>Food R&amp;D</span></div>
+        <div class="member rv"><div class="ph"><img src="img/co-rd-neem.jpg" alt=""></div><b>Chanon Seubsai-on (Neem)</b><span>Business Economic Analyst</span></div>
+        <div class="member rv"><div class="ph"><img src="img/advisor-1.jpg" alt=""></div><b>Patcharee Hongthong, Ph.D.</b><span>ที่ปรึกษาด้านการตลาดและการสื่อสาร</span></div>
+        <div class="member rv"><div class="ph"><img src="img/team-2.jpg" alt=""></div><b>Natchanon Jaruteekampron</b><span>ที่ปรึกษาด้านเทคโนโลยี</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" id="contact" style="padding-top: 24px">
+    <div class="wrap">
+      <div class="cta rv">
+        <div>
+          <h2><span class="nb">เล่าโจทย์ของคุณทางอีเมล</span><br><span class="nb">เราตอบพร้อมประเมินงบให้ฟรี</span></h2>
+          <p>เขียนเป็นภาษาไทยหรืออังกฤษก็ได้ บอกว่าธุรกิจทำอะไร อยากแก้ปัญหาอะไร และอยากเริ่มเมื่อไร</p>
+          <a class="email" href="mailto:kittencode.co.ltd@gmail.com?subject=Project%20inquiry">kittencode.co.ltd@gmail.com</a>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap">
+            <a class="btn btn-dark" href="mailto:kittencode.co.ltd@gmail.com?subject=Project%20inquiry">เขียนอีเมลถึงเรา
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+            <a class="btn btn-line" href="../trust.html">เราดูแลข้อมูลคุณอย่างไร</a>
+          </div>
+          <p class="alt">โทร +66 8 0885 0555 · LINE @458ddksw · 347/11 หมู่ 3 ต.ท่าโพธิ์ อ.เมือง จ.พิษณุโลก 65000</p>
+        </div>
+        <img class="wave" src="img/kc-hood-wave.png" alt="น้องคิทเท่น มาสคอตของ Kitten Code โบกมือทักทาย">
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>© 2569 บริษัท คิทเท่น โค้ด จำกัด · เลขทะเบียนนิติบุคคล 0655569001411</span>
+    <span>Beyond Technology, Creating Possibilities.</span>
+  </div>
+</footer>
+
+<script>
+  // Theme toggle (remembered per browser)
+  (function () {
+    var root = document.documentElement, btn = document.getElementById('themeBtn');
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('kc-preview-theme', next); } catch (e) {}
+    });
+  })();
+
+  // Header border once scrolled
+  (function () {
+    var top = document.getElementById('top');
+    function onScroll() { top.classList.toggle('scrolled', window.scrollY > 8); }
+    window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  })();
+
+  // Reveal on scroll
+  (function () {
+    var els = document.querySelectorAll('.rv, .steps, .svc.feature');
+    if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('inview'); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('inview'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (e, i) { e.style.transitionDelay = (i % 4) * 60 + 'ms'; io.observe(e); });
+  })();
+</script>
+</body>
+</html>

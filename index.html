@@ -42,89 +42,34 @@
 
 <body class="index-page i18n-loading">
 
-  <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
-
-      <a href="index.html" class="logo d-flex align-items-center me-auto">
-        <h1 class="sitename">KITTEN CODE</h1>
-      </a>
-
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li><a href="#hero" class="active" data-i18n="nav.home">Home</a></li>
-          <li><a href="#about" data-i18n="nav.about">About</a></li>
-          <li><a href="#services" data-i18n="nav.services">Services</a></li>
-          <li><a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a></li>
-          <li><a href="#team" data-i18n="nav.team">Team</a></li>
-          <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
-          <li class="lang-toggle-wrapper">
-            <div class="lang-toggle" onclick="toggleLanguage(); return false;" style="cursor: pointer;">
-              <a href="#" class="lang-btn active" data-lang="th">TH</a>
-              <a href="#" class="lang-btn" data-lang="en">EN</a>
-            </div>
-          </li>
-          <li class="theme-toggle-wrapper">
-            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
-              <i class="bi bi-moon-fill theme-icon-dark"></i>
-              <i class="bi bi-sun-fill theme-icon-light" style="display:none;"></i>
-            </button>
-          </li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-
-    </div>
-  </header>
+  <div data-kc-header data-active="home"></div>
 
   <main class="main">
 
     <!-- Hero Section -->
-    <section id="hero" class="hero section dark-background" style="position: relative; overflow: hidden;">
+    <section id="hero" class="hero hero-minimal section dark-background">
 
-      <!-- Image Background -->
-      <img src="assets/img/hero-bg.jpg" alt=""
-        style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.35;">
+      <img src="assets/img/hero-bg.jpg" alt="" class="hero-bg" data-i18n-alt="images.hero_bg">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-glow" aria-hidden="true"></div>
 
+      <div class="container hero-inner d-flex flex-column align-items-center justify-content-center text-center">
 
-      <!-- Minimal High-Tech Grid Overlay -->
-      <div
-        style="position: absolute; inset: 0; z-index: 1; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 3rem 3rem; background-position: center;">
-      </div>
-
-      <!-- Accent Lighting Top -->
-      <div
-        style="position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 60%; height: 200px; background: radial-gradient(ellipse at center, rgba(255, 74, 23, 0.15) 0%, transparent 70%); z-index: 1; pointer-events: none;">
-      </div>
-
-      <div class="container position-relative d-flex flex-column align-items-center justify-content-center text-center"
-        style="z-index: 2; min-height: 90vh; padding-top: 60px;">
-
-        <!-- Clean Tech Label -->
-        <div data-aos="fade-down" data-aos-delay="100" class="mb-4 d-flex align-items-center justify-content-center">
-          <span
-            style="display: block; width: 40px; height: 1px; background-color: rgba(255,255,255,0.2); margin-right: 15px;"></span>
-          <span data-i18n="hero.label"
-            style="font-size: 0.75rem; font-weight: 500; letter-spacing: 5px; color: #ff4a17; text-transform: uppercase;">Digital
-            Native</span>
-          <span
-            style="display: block; width: 40px; height: 1px; background-color: rgba(255,255,255,0.2); margin-left: 15px;"></span>
+        <div data-aos="fade-down" data-aos-delay="100" class="hero-label-row mb-4">
+          <span class="hero-rule"></span>
+          <span class="hero-label" data-i18n="hero.label">Digital Native</span>
+          <span class="hero-rule"></span>
         </div>
 
-        <!-- Typography Contrast -->
-        <h2 data-aos="fade-up" data-aos-delay="200"
-          style="font-size: clamp(2.5rem, 8vw, 6.5rem); letter-spacing: -2px; margin-bottom: 25px; line-height: 1; color: #fff; font-family: 'Inter', sans-serif;">
-          <span style="font-weight: 200;" id="scramble-kitten" data-i18n="hero.title_word1">Kitten</span>
-          <span style="font-weight: 700;" id="scramble-code" data-i18n="hero.title_word2">Code</span><span
-            style="color: #ff4a17; font-weight: 700;">.</span>
+        <h2 class="hero-title" data-aos="fade-up" data-aos-delay="200">
+          <span class="hero-word-light" id="scramble-kitten" data-i18n="hero.title_word1">Kitten</span>
+          <span class="hero-word-bold" id="scramble-code" data-i18n="hero.title_word2">Code</span><span class="hero-dot">.</span>
         </h2>
 
-        <!-- Spaced Minimal Slogan -->
-        <p data-aos="fade-up" data-aos-delay="300" data-i18n="hero.subtitle"
-          style="font-size: clamp(0.85rem, 1.5vw, 1rem); font-weight: 300; letter-spacing: 3px; max-width: 600px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; margin-bottom: 4rem;">
-          Great innovation doesn't always start in big company
+        <p class="hero-slogan" data-aos="fade-up" data-aos-delay="300" data-i18n="hero.subtitle">
+          Great innovation doesn't always start in a big company.
         </p>
 
-        <!-- Precision Button -->
         <div class="d-flex mt-2" data-aos="fade-up" data-aos-delay="400">
           <a href="#about" class="minimal-tech-btn d-inline-flex align-items-center justify-content-center">
             <span data-i18n="hero.cta_button">Get Started</span>
@@ -132,139 +77,6 @@
           </a>
         </div>
       </div>
-
-      <!-- Minimalist Interaction CSS -->
-      <style>
-        .minimal-tech-btn {
-          color: #fff;
-          font-size: 0.8rem;
-          font-weight: 500;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          text-decoration: none;
-          padding: 16px 36px;
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          background: rgba(255, 255, 255, 0.02);
-          border-radius: 0;
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          position: relative;
-          overflow: hidden;
-          backdrop-filter: blur(5px);
-        }
-
-        .minimal-tech-btn::after {
-          content: '';
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          width: 0%;
-          height: 2px;
-          background-color: #ff4a17;
-          transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .minimal-tech-btn:hover {
-          color: #fff;
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(255, 255, 255, 0.4);
-        }
-
-        .minimal-tech-btn:hover::after {
-          width: 100%;
-        }
-
-        .minimal-tech-btn i {
-          transition: transform 0.3s ease;
-        }
-
-        .minimal-tech-btn:hover i {
-          transform: translateX(4px);
-        }
-      </style>
-
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          class TextScramble {
-            constructor(el) {
-              this.el = el;
-              this.chars = '!<>-_\\\\/[]{}—=+*^?#________';
-              this.update = this.update.bind(this);
-            }
-            setText(newText) {
-              const oldText = this.el.innerText;
-              const length = Math.max(oldText.length, newText.length);
-              const promise = new Promise((resolve) => this.resolve = resolve);
-              this.queue = [];
-              for (let i = 0; i < length; i++) {
-                const from = oldText[i] || '';
-                const to = newText[i] || '';
-                const start = Math.floor((i / length) * 60);
-                const end = start + 180;
-                this.queue.push({ from, to, start, end });
-              }
-              cancelAnimationFrame(this.frameRequest);
-              this.frame = 0;
-              this.update();
-              return promise;
-            }
-            update() {
-              let output = '';
-              let complete = 0;
-              for (let i = 0, n = this.queue.length; i < n; i++) {
-                let { from, to, start, end, char } = this.queue[i];
-                if (this.frame >= end) {
-                  complete++;
-                  output += to;
-                } else if (this.frame >= start) {
-                  if (!char || Math.random() < 0.28) {
-                    char = this.randomChar();
-                    this.queue[i].char = char;
-                    const colors = ['#ff4a17', '#ffffff'];
-                    this.queue[i].color = colors[Math.floor(Math.random() * colors.length)];
-                  }
-                  const c = this.queue[i].color || '#ff4a17';
-                  output += `<span style="color: ${c}; opacity: 0.8; text-shadow: 0 0 8px ${c};">${char}</span>`;
-                } else {
-                  output += from;
-                }
-              }
-              this.el.innerHTML = output;
-              if (complete === this.queue.length) {
-                this.resolve();
-              } else {
-                this.frameRequest = requestAnimationFrame(this.update);
-                this.frame++;
-              }
-            }
-            randomChar() {
-              return this.chars[Math.floor(Math.random() * this.chars.length)];
-            }
-          }
-
-          const elKitten = document.getElementById('scramble-kitten');
-          const elCode = document.getElementById('scramble-code');
-          if (elKitten && elCode) {
-            const fx1 = new TextScramble(elKitten);
-            const fx2 = new TextScramble(elCode);
-
-            // Trigger effect on load with delay for AOS animation
-            setTimeout(() => {
-              fx1.setText('Kitten');
-              setTimeout(() => {
-                fx2.setText('Code');
-              }, 400);
-            }, 800);
-
-            // Re-trigger effect on hover
-            const heroTitle = elKitten.parentElement;
-            heroTitle.style.cursor = 'crosshair';
-            heroTitle.addEventListener('mouseenter', () => {
-              fx1.setText('Kitten');
-              setTimeout(() => { fx2.setText('Code'); }, 200);
-            });
-          }
-        });
-      </script>
 
     </section><!-- /Hero Section -->
 
@@ -278,7 +90,7 @@
             <h3 data-i18n="about.heading">About us</h3>
             <img src="assets/img/about.jpg" class="img-fluid rounded-4 mb-4" alt="" data-i18n-alt="images.about_thumb1"
               loading="lazy">
-            <p style="text-align: justify;" data-i18n="about.description">Since 2019, our team of experts has been at
+            <p class="text-justify" data-i18n="about.description">Since 2019, our team of experts has been at
               the forefront of digital
               development, delivering precision
               solutions for our clients. In 2026, we officially evolved into a registered Full-stack Tech Partner to
@@ -290,23 +102,13 @@
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="250">
             <div class="content ps-0 ps-lg-5">
               <h5 data-i18n="about.mission_heading">Our Mission</h5>
-              <p>
-                <span data-i18n="about.mission_text">"To drive business growth through high-performance digital
-                  solutions and AI-powered innovations."</span><br>
-                <span data-i18n="about.why_choose_us">Why Choose Us?</span>
-              </p>
-              <ul>
-                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="about.bullet1">All-in-One Tech Partner :
-                    From Web & App development
-                    to Media & AI. We cover it all.</span></li>
-                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="about.bullet2">AI-Driven Success : We
-                    integrate cutting-edge AI to
-                    keep your business ahead of the curve.</span></li>
-                <li><i class="bi bi-check-circle-fill"></i> <span data-i18n="about.bullet3">Proven Precision : Expertise
-                    since 2019, delivering
-                    results that actually work.</span></li>
-              </ul>
-
+              <ol class="mission-list">
+                <li><span class="mission-num">01</span><div><strong>Innovate with Purpose</strong><span data-i18n="mission.m1">Building technology and innovation that truly answers people's problems and needs.</span></div></li>
+                <li><span class="mission-num">02</span><div><strong>Connect Diverse Expertise</strong><span data-i18n="mission.m2">Bringing technology, business, creativity and other disciplines together to find better solutions.</span></div></li>
+                <li><span class="mission-num">03</span><div><strong>Transform Ideas into Reality</strong><span data-i18n="mission.m3">Turning ideas and business opportunities into products, services and solutions that work in practice.</span></div></li>
+                <li><span class="mission-num">04</span><div><strong>Create Sustainable Value</strong><span data-i18n="mission.m4">Creating lasting value and opportunity while improving the lives of people and society.</span></div></li>
+                <li><span class="mission-num">05</span><div><strong>Explore the Future</strong><span data-i18n="mission.m5">Learning, experimenting and applying new technology to open up new possibilities.</span></div></li>
+              </ol>
 
               <div class="position-relative mt-4">
                 <img src="assets/img/about-2.jpg" class="img-fluid rounded-4" alt="" data-i18n-alt="images.about_thumb2"
@@ -322,59 +124,121 @@
 
     </section><!-- /About Section -->
 
-    <!-- Stats Section -->
-    <section id="stats" class="stats section light-background">
+    <!-- Vision & Values Section -->
+    <section id="vision" class="vision section light-background">
+      <div class="container">
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-3 col-md-6">
-            <div class="stats-item d-flex align-items-center w-100 h-100">
-              <i class="bi bi-journal-richtext color-green flex-shrink-0"></i>
-              <div>
-                <span data-purecounter-start="0" data-purecounter-end="500" data-purecounter-duration="1"
-                  class="purecounter"></span>
-                <p data-i18n="stats.projects">Projects</p>
-              </div>
-            </div>
-          </div><!-- End Stats Item -->
-
-          <div class="col-lg-3 col-md-6">
-            <div class="stats-item d-flex align-items-center w-100 h-100">
-              <i class="bi bi-display color-orange flex-shrink-0"></i>
-              <div>
-                <span data-purecounter-start="0" data-purecounter-end="300" data-purecounter-duration="1"
-                  class="purecounter"></span>
-                <p data-i18n="stats.development">Development</p>
-              </div>
-            </div>
-          </div><!-- End Stats Item -->
-
-          <div class="col-lg-3 col-md-6">
-            <div class="stats-item d-flex align-items-center w-100 h-100">
-              <i class="bi bi-film color-green flex-shrink-0"></i>
-              <div>
-                <span data-purecounter-start="0" data-purecounter-end="200" data-purecounter-duration="1"
-                  class="purecounter"></span>
-                <p data-i18n="stats.multimedia">Multimedia & Production </p>
-              </div>
-            </div>
-          </div><!-- End Stats Item -->
-
-          <div class="col-lg-3 col-md-6">
-            <div class="stats-item d-flex align-items-center w-100 h-100">
-              <i class="bi bi-people color-pink flex-shrink-0"></i>
-              <div>
-                <span data-purecounter-start="0" data-purecounter-end="8" data-purecounter-duration="1"
-                  class="purecounter"></span>
-                <p data-i18n="stats.team">Team</p>
-              </div>
-            </div>
-          </div><!-- End Stats Item -->
-
+        <div class="vision-statement text-center" data-aos="fade-up">
+          <span class="vision-label" data-i18n="vision.label">Our Vision</span>
+          <p class="vision-en">Beyond Technology, Creating Possibilities.</p>
+          <p class="vision-local" data-i18n="vision.statement">Beyond Technology, Creating Possibilities.</p>
+          <p class="vision-philosophy"><span data-i18n="vision.philosophy_label">Our philosophy</span>
+            <strong>Different Minds. One Innovation.</strong></p>
         </div>
 
+        <div class="section-title pb-4" data-aos="fade-up">
+          <h2>KITTEN VALUES</h2>
+          <p data-i18n="values.subheading">The values that drive our innovation</p>
+        </div>
+
+        <div class="row g-4 values-grid">
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <article class="value-card">
+              <span class="value-letter" aria-hidden="true">K</span>
+              <h3>Keep Exploring</h3>
+              <p class="value-tag">Curiosity &amp; Continuous Learning</p>
+              <p class="value-desc" data-i18n="values.k">Stay open to learning, ask bold questions and keep looking for new possibilities.</p>
+            </article>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="150">
+            <article class="value-card">
+              <span class="value-letter" aria-hidden="true">I</span>
+              <h3>Innovate with Purpose</h3>
+              <p class="value-tag">Purposeful Innovation</p>
+              <p class="value-desc" data-i18n="values.i">Innovate with a clear goal: solve real problems and create real value.</p>
+            </article>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <article class="value-card">
+              <span class="value-letter" aria-hidden="true">T</span>
+              <h3>Think Beyond Boundaries</h3>
+              <p class="value-tag">Creative &amp; Critical Thinking</p>
+              <p class="value-desc" data-i18n="values.t1">Think differently, challenge old frames and connect knowledge across disciplines.</p>
+            </article>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="250">
+            <article class="value-card">
+              <span class="value-letter" aria-hidden="true">T</span>
+              <h3>Together We Create</h3>
+              <p class="value-tag">Collaboration &amp; Diversity</p>
+              <p class="value-desc" data-i18n="values.t2">Believe in collaboration, respect differences and grow together.</p>
+            </article>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <article class="value-card">
+              <span class="value-letter" aria-hidden="true">E</span>
+              <h3>Execute with Excellence</h3>
+              <p class="value-tag">Ownership &amp; Excellence</p>
+              <p class="value-desc" data-i18n="values.e">Turn ideas into real work with responsibility, quality and commitment.</p>
+            </article>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="350">
+            <article class="value-card">
+              <span class="value-letter" aria-hidden="true">N</span>
+              <h3>Nurture Lasting Impact</h3>
+              <p class="value-tag">Sustainability &amp; Social Impact</p>
+              <p class="value-desc" data-i18n="values.n">Create lasting value for clients, businesses, people and society.</p>
+            </article>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- /Vision & Values Section -->
+
+
+    <!-- Stats Section -->
+    <section id="stats" class="stats section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-4">
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item d-flex align-items-center w-100 h-100">
+              <i class="bi bi-calendar2-check color-green flex-shrink-0"></i>
+              <div>
+                <span data-purecounter-start="0" data-purecounter-end="7" data-purecounter-duration="1" class="purecounter" data-kc-since="2019"></span>
+                <p data-i18n="stats.years">Years on the digital journey (since 2019)</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item d-flex align-items-center w-100 h-100">
+              <i class="bi bi-shield-check color-orange flex-shrink-0"></i>
+              <div>
+                <span data-purecounter-start="0" data-purecounter-end="4" data-purecounter-duration="1" class="purecounter" ></span>
+                <p data-i18n="stats.copyrights">Registered software copyrights</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item d-flex align-items-center w-100 h-100">
+              <i class="bi bi-award color-green flex-shrink-0"></i>
+              <div>
+                <span data-purecounter-start="0" data-purecounter-end="4" data-purecounter-duration="1" class="purecounter" ></span>
+                <p data-i18n="stats.programs">National programmes &amp; stages selected for</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item d-flex align-items-center w-100 h-100">
+              <i class="bi bi-building-check color-pink flex-shrink-0"></i>
+              <div>
+                <span data-purecounter-start="0" data-purecounter-end="1" data-purecounter-duration="1" class="purecounter" ></span>
+                <p data-i18n="stats.capital">Million baht registered capital</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="stats-note" data-i18n="stats.note">Figures we can show proof for. Details in the Awards &amp; Credentials section below.</p>
       </div>
 
     </section><!-- /Stats Section -->
@@ -404,7 +268,7 @@
                 <a class="stretched-link">
                   <h3 data-i18n="services.featured.development.title">Development</h3>
                 </a>
-                <p style="text-align: start;" data-i18n="services.featured.development.description">We provide
+                <p class="text-start" data-i18n="services.featured.development.description">We provide
                   end-to-end software development services with a focus on hard
                   coded solutions to ensure
                   high performance, security, and flexibility. Our services include web and mobile application
@@ -426,7 +290,7 @@
                 <a class="stretched-link">
                   <h3 data-i18n="services.featured.multimedia.title">Multimedia</h3>
                 </a>
-                <p style="text-align: start;" data-i18n="services.featured.multimedia.description">We deliver
+                <p class="text-start" data-i18n="services.featured.multimedia.description">We deliver
                   comprehensive multimedia and production services to enhance
                   corporate branding and
                   marketing communication. Our services include corporate videos, commercial advertisements, motion
@@ -449,7 +313,7 @@
                 <a class="stretched-link">
                   <h3 data-i18n="services.featured.consult.title">Consult</h3>
                 </a>
-                <p style="text-align: start;" data-i18n="services.featured.consult.description">We provide technology
+                <p class="text-start" data-i18n="services.featured.consult.description">We provide technology
                   and AI consulting to help organizations
                   strategically adapt to the digital era.
                   Our offerings include AI training programs and hands on workshops for organizations and educational
@@ -489,7 +353,7 @@
                         Application</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify; " data-i18n="services.list.web_app.description">We
+                <p class="description text-justify" data-i18n="services.list.web_app.description">We
                   develop custom web
                   applications with a strong focus on hard coded solutions to
                   ensure high performance, stability, and flexibility, while supporting future scalability.</p>
@@ -512,7 +376,7 @@
                         Application</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;" data-i18n="services.list.mobile_app.description">We
+                <p class="description text-justify" data-i18n="services.list.mobile_app.description">We
                   build iOS and Android mobile applications using
                   hard coded development approaches to maximize performance, responsiveness, and the ability to meet
                   specific business requirements.</p>
@@ -535,7 +399,7 @@
                         Development</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;" data-i18n="services.list.chatbot.description">We
+                <p class="description text-justify" data-i18n="services.list.chatbot.description">We
                   design and develop intelligent chatbots for
                   websites, social media, and various platforms to enhance customer service efficiency and automate
                   business processes.</p>
@@ -558,7 +422,7 @@
                         Training</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;" data-i18n="services.list.ai_training.description">We
+                <p class="description text-justify" data-i18n="services.list.ai_training.description">We
                   provide AI training programs and seminars for
                   organizations and educational institutions, covering fundamentals, industry trends, and practical
                   applications.</p>
@@ -580,7 +444,7 @@
                         data-i18n="services.list.erp.title">ERP / CRM / POS System</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;" data-i18n="services.list.erp.description">We develop
+                <p class="description text-justify" data-i18n="services.list.erp.description">We develop
                   and customize ERP, CRM, and POS systems to manage organizational resources comprehensively, strengthen
                   customer relationships, and optimize point-of-sale operations.</p>
                 <div class="text-end mt-2">
@@ -602,7 +466,7 @@
                         Analysis</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;"
+                <p class="description text-justify"
                   data-i18n="services.list.system_analysis.description">We analyze and design systems aligned with
                   business
                   processes, creating clear structures that reduce complexity and improve operational efficiency.</p>
@@ -625,7 +489,7 @@
                         Analysis & Prediction</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;" data-i18n="services.list.data_analysis.description">
+                <p class="description text-justify" data-i18n="services.list.data_analysis.description">
                   We perform in depth data analysis and develop
                   predictive models to support accurate and data-driven business decisions.</p>
                 <div class="text-end mt-2">
@@ -646,7 +510,7 @@
                         data-i18n="services.list.multimedia_production.title">Multimedia & Production</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;"
+                <p class="description text-justify"
                   data-i18n="services.list.multimedia_production.description">We provide video editing and media
                   production to
                   help tell your brand’s story through clear and engaging visual content.</p>
@@ -668,7 +532,7 @@
                         data-i18n="services.list.consult.title">Consult</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;" data-i18n="services.list.consult.description">We
+                <p class="description text-justify" data-i18n="services.list.consult.description">We
                   offer technology and information system
                   consulting, including AI integration strategies, to enhance organizational capability and
                   competitiveness.</p>
@@ -691,7 +555,7 @@
                     </h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;" data-i18n="services.list.workshops.description">We
+                <p class="description text-justify" data-i18n="services.list.workshops.description">We
                   provide workshops across all our services, taking
                   you from start to smart. Boost your digital presence through professional.</p>
                 <div class="text-end mt-2">
@@ -713,7 +577,7 @@
                         Development</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;" data-i18n="services.list.rnd.description">We apply
+                <p class="description text-justify" data-i18n="services.list.rnd.description">We apply
                   advanced food science and formulation
                   expertise to craft recipes that ensure quality and stability for food, drinks,
                   and bakery products.</p>
@@ -734,7 +598,7 @@
                     <h4 class="title"><a class="stretched-link" data-i18n="services.list.cloud.title">Cloud</a></h4>
                   </div>
                 </div>
-                <p class="description" style="text-align: justify;" data-i18n="services.list.cloud.description">Coming
+                <p class="description text-justify" data-i18n="services.list.cloud.description">Coming
                   Soon.</p>
 
               </div>
@@ -747,87 +611,123 @@
 
     </section><!-- /Services 2 Section -->
 
-    <!-- Clients Section -->
-    <section id="clients" class="clients section ">
+    <!-- Process Section -->
+    <section id="process" class="process section">
       <div class="container section-title" data-aos="fade-up">
-        <h2 data-i18n="partners.heading">Partners</h2>
-        <p data-i18n="partners.subheading">CHECK OUR PARTNERS</p>
-      </div><!-- End Section Title -->
-      <div class="container" data-aos="fade-up">
+        <h2 data-i18n="process.heading">How we work</h2>
+        <p data-i18n="process.subheading">From the first idea to after launch</p>
+      </div>
+      <div class="container">
+        <ol class="process-list">
+          <li class="process-step" data-aos="fade-up" data-aos-delay="100">
+            <span class="process-num">1</span>
+            <i class="bi bi-chat-dots"></i>
+            <h3 data-i18n="process.s1.title">Free scoping call</h3>
+            <p data-i18n="process.s1.desc">Talk through the idea and get a first budget estimate, free of charge.</p>
+          </li>
+          <li class="process-step" data-aos="fade-up" data-aos-delay="180">
+            <span class="process-num">2</span>
+            <i class="bi bi-pencil-square"></i>
+            <h3 data-i18n="process.s2.title">Design</h3>
+            <p data-i18n="process.s2.desc">Agree the scope in writing, then design the flow and screens with you.</p>
+          </li>
+          <li class="process-step" data-aos="fade-up" data-aos-delay="260">
+            <span class="process-num">3</span>
+            <i class="bi bi-code-slash"></i>
+            <h3 data-i18n="process.s3.title">Build</h3>
+            <p data-i18n="process.s3.desc">Develop in rounds you can see and test along the way.</p>
+          </li>
+          <li class="process-step" data-aos="fade-up" data-aos-delay="340">
+            <span class="process-num">4</span>
+            <i class="bi bi-graph-up-arrow"></i>
+            <h3 data-i18n="process.s4.title">Measure &amp; hand over</h3>
+            <p data-i18n="process.s4.desc">Check quality before delivery, test with you and hand over.</p>
+          </li>
+          <li class="process-step" data-aos="fade-up" data-aos-delay="420">
+            <span class="process-num">5</span>
+            <i class="bi bi-life-preserver"></i>
+            <h3 data-i18n="process.s5.title">Care after launch</h3>
+            <p data-i18n="process.s5.desc">Stay with you after launch to support and improve.</p>
+          </li>
+        </ol>
+      </div>
+    </section><!-- /Process Section -->
 
-        <div class="swiper init-swiper marquee-slider">
-          <script type="application/json" class="swiper-config">
-            {
-              "loop": true,
-              "speed": 4000,
-              "autoplay": {
-                "delay": 0,
-                "disableOnInteraction": false
-              },
-              "slidesPerView": "auto",
-              "spaceBetween": 40,
-              "breakpoints": {
-                "320": {
-                  "slidesPerView": 2,
-                  "spaceBetween": 20
-                },
-                "480": {
-                  "slidesPerView": 3,
-                  "spaceBetween": 30
-                },
-                "640": {
-                  "slidesPerView": 4,
-                  "spaceBetween": 40
-                },
-                "992": {
-                  "slidesPerView": 6,
-                  "spaceBetween": 50
-                }
-              }
-            }
-          </script>
-          <div class="swiper-wrapper align-items-center">
-            <div class="swiper-slide client-logo">
-              <a href='https://dbdregistered.dbd.go.th/api/public/shopinfo?param=6F643C2B561EB1F700BA0F9EA370D5664DBDD6BCBF5BB8D5A8718499F48C33BD'
-                target="_blank">
-                <img
-                  src='https://dbdregistered.dbd.go.th/api/public/banner?param=6F643C2B561EB1F700BA0F9EA370D5664DBDD6BCBF5BB8D5A8718499F48C33BD'
-                  class="img-fluid" alt="DBD" loading="lazy" />
-              </a>
+    <!-- Our Product: FUFU Pet Care -->
+    <section id="product" class="product section light-background">
+      <div class="container">
+        <div class="row gy-5 align-items-center">
+
+          <div class="col-lg-6" data-aos="fade-up">
+            <span class="product-kicker" data-i18n="fufu.kicker">Our own product</span>
+            <div class="product-brand">
+              <img src="assets/img/fufu/fufu-logo.png" alt="FUFU Pet Care" class="product-logo" loading="lazy">
+              <div>
+                <h2>FUFU Pet Care</h2>
+                <p class="product-slogan" data-i18n="fufu.slogan">Because they are family</p>
+              </div>
             </div>
-            <div class="swiper-slide client-logo">
-              <img src="assets/img/client/KKBS.png" class="img-fluid" alt="" loading="lazy">
+            <p class="product-intro" data-i18n="fufu.intro">We don't only build for clients. FUFU Pet Care is a pet-care app we designed, built and run ourselves, from the AI model to the app and the clinic portal.</p>
+            <ul class="product-features">
+              <li><i class="bi bi-camera"></i><span data-i18n="fufu.f1">AI skin and coat screening from a photo, with 4 urgency levels</span></li>
+              <li><i class="bi bi-chat-heart"></i><span data-i18n="fufu.f2">FUFU AI Vet: ask about your pet any time, 24 hours</span></li>
+              <li><i class="bi bi-journal-medical"></i><span data-i18n="fufu.f3">A health record for each pet: vaccines, deworming, weight and reminders</span></li>
+              <li><i class="bi bi-hospital"></i><span data-i18n="fufu.f4">Cases referred to partner clinics with photos and history, through the FUFU Partner Portal</span></li>
+            </ul>
+            <div class="product-proof">
+              <strong>94%</strong>
+              <span data-i18n="fufu.proof">accuracy of the skin screening model, tested on 6,215 vet-confirmed images</span>
             </div>
-            <div class="swiper-slide client-logo">
-              <img src="assets/img/client/linedev.png" class="img-fluid" alt="" loading="lazy">
-            </div>
-            <div class="swiper-slide client-logo">
-              <img src="assets/img/client/Google-Cloud-Logo.png" class="img-fluid" alt="" loading="lazy">
-            </div>
-            <div class="swiper-slide client-logo">
-              <img src="assets/img/client/Meta-Logo.png" class="img-fluid" alt="" loading="lazy">
-            </div>
-            <div class="swiper-slide client-logo">
-              <img src="assets/img/client/Cloudflare-Logo.wine.png" class="img-fluid" alt="" loading="lazy">
-            </div>
-            <div class="swiper-slide client-logo">
-              <img src="assets/img/client/N8n-logo-new.svg.png" class="img-fluid" alt="" loading="lazy">
-            </div>
-            <div class="swiper-slide client-logo">
-              <img src="assets/img/client/Github-logo.png" class="img-fluid" alt="" loading="lazy">
-            </div>
-            <div class="swiper-slide client-logo">
-              <img src="assets/img/client/dip.png" class="img-fluid" alt="" loading="lazy">
-            </div>
-            <div class="swiper-slide client-logo">
-              <img src="assets/img/client/depa.png" class="img-fluid" alt="" loading="lazy">
+            <p class="product-disclaimer" data-i18n="fufu.disclaimer">Preliminary screening only, not a diagnosis. A veterinarian makes the final call.</p>
+            <div class="product-links">
+              <a href="https://app.fufupetcare.com" class="btn-kc" target="_blank" rel="noopener"><span data-i18n="fufu.cta_app">Open the web app</span> <i class="bi bi-arrow-up-right"></i></a>
+              <a href="https://fufupetcare.com" class="btn-kc-ghost" target="_blank" rel="noopener">fufupetcare.com</a>
             </div>
           </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
+            <div class="product-phones" aria-label="FUFU Pet Care app screens">
+              <div class="phone phone-back-left"><img src="assets/img/fufu/fufu-app-scan.png" alt="" loading="lazy" data-i18n-alt="fufu.alt_scan"></div>
+              <div class="phone phone-front"><img src="assets/img/fufu/fufu-app-home.png" alt="" loading="lazy" data-i18n-alt="fufu.alt_home"></div>
+              <div class="phone phone-back-right"><img src="assets/img/fufu/fufu-app-chat.png" alt="" loading="lazy" data-i18n-alt="fufu.alt_chat"></div>
+            </div>
+          </div>
+
         </div>
-
       </div>
+    </section><!-- /Product Section -->
 
-    </section><!-- /Clients Section -->
+
+    <!-- Clients Section -->
+    <section id="tech" class="clients section">
+      <div class="container section-title" data-aos="fade-up">
+        <h2 data-i18n="tech.heading">Technology</h2>
+        <p data-i18n="tech.subheading">Platforms and tools we build with</p>
+      </div>
+      <div class="container" data-aos="fade-up">
+        <div class="swiper init-swiper marquee-slider">
+          <script type="application/json" class="swiper-config">
+            {"loop": true, "speed": 4000, "autoplay": {"delay": 0, "disableOnInteraction": false}, "slidesPerView": "auto", "spaceBetween": 40,
+              "breakpoints": {"320": {"slidesPerView": 2, "spaceBetween": 20}, "480": {"slidesPerView": 3, "spaceBetween": 30}, "640": {"slidesPerView": 4, "spaceBetween": 40}, "992": {"slidesPerView": 6, "spaceBetween": 50}}}
+          </script>
+          <div class="swiper-wrapper align-items-center">
+            <div class="swiper-slide client-logo"><img src="assets/img/client/linedev.png" class="img-fluid" alt="LINE Developers" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/Google-Cloud-Logo.png" class="img-fluid" alt="Google Cloud" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/Meta-Logo.png" class="img-fluid" alt="Meta" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/Cloudflare-Logo.wine.png" class="img-fluid" alt="Cloudflare" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/N8n-logo-new.svg.png" class="img-fluid" alt="n8n" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/Github-logo.png" class="img-fluid" alt="GitHub" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/linedev.png" class="img-fluid" alt="LINE Developers" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/Google-Cloud-Logo.png" class="img-fluid" alt="Google Cloud" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/Meta-Logo.png" class="img-fluid" alt="Meta" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/Cloudflare-Logo.wine.png" class="img-fluid" alt="Cloudflare" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/N8n-logo-new.svg.png" class="img-fluid" alt="n8n" loading="lazy"></div>
+            <div class="swiper-slide client-logo"><img src="assets/img/client/Github-logo.png" class="img-fluid" alt="GitHub" loading="lazy"></div>
+          </div>
+        </div>
+        <p class="tech-note" data-i18n="tech.note">Trademarks belong to their owners. Shown to describe the tools we use, not a partnership.</p>
+      </div>
+    </section><!-- /Tech Section -->
 
 
 
@@ -1141,26 +1041,185 @@
 
     </section><!-- /Portfolio Section -->
 
+    <!-- Awards & Credentials Section -->
+    <section id="credentials" class="credentials section">
+      <div class="container section-title" data-aos="fade-up">
+        <h2 data-i18n="credentials.heading">Awards &amp; Credentials</h2>
+        <p data-i18n="credentials.subheading">Proof you can check</p>
+      </div>
+
+      <div class="container">
+        <div class="row g-4 mb-5">
+          <div class="col-xl col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <article class="rec-card">
+              <div class="rec-issuer"><span class="issuer-text">NIA × TNI</span></div>
+              <p class="rec-highlight" data-i18n="rec.nia.highlight">1 of 25 organisations</p>
+              <h3 data-i18n="rec.nia.title">Innovation Management Standard ISO 56001:2024 programme</h3>
+              <span class="rec-date" data-i18n="rec.nia.date">May 2026</span>
+            </article>
+          </div>
+          <div class="col-xl col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="160">
+            <article class="rec-card">
+              <div class="rec-issuer"><img src="assets/img/client/depa.png" alt="depa" loading="lazy"></div>
+              <p class="rec-highlight" data-i18n="rec.depa.highlight">1 of 19 digital startups</p>
+              <h3 data-i18n="rec.depa.title">depa Digital Startup Fund</h3>
+              <span class="rec-date" data-i18n="rec.depa.date">Jul 2026</span>
+            </article>
+          </div>
+          <div class="col-xl col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="220">
+            <article class="rec-card">
+              <div class="rec-issuer"><img src="assets/img/client/dip.png" alt="DIP" loading="lazy"></div>
+              <p class="rec-highlight" data-i18n="rec.ipmart.highlight">Top 10 pitching stage</p>
+              <h3 data-i18n="rec.ipmart.title">IP MART SHOWBIZ 2026</h3>
+              <span class="rec-date" data-i18n="rec.ipmart.date">Aug 2026</span>
+            </article>
+          </div>
+          <div class="col-xl col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="280">
+            <article class="rec-card">
+              <div class="rec-issuer"><img src="assets/img/client/depa.png" alt="depa" loading="lazy"></div>
+              <p class="rec-highlight" data-i18n="rec.asean.highlight">FUFU Pet Care</p>
+              <h3 data-i18n="rec.asean.title">ASEAN Digital Awards 2027: selected to present in the national selection round, Digital Startup category</h3>
+              <span class="rec-date" data-i18n="rec.asean.date">Nov 2026</span>
+            </article>
+          </div>
+          <div class="col-xl col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="340">
+            <article class="rec-card">
+              <div class="rec-issuer"><span class="issuer-text">FUFU Pet Care</span></div>
+              <p class="rec-highlight" data-i18n="rec.vote.highlight">Popular Vote</p>
+              <h3 data-i18n="rec.vote.title">Popular Vote award for FUFU Pet Care</h3>
+              <span class="rec-date" data-i18n="rec.vote.date">Mar 2026</span>
+            </article>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-4" data-aos="fade-up">
+            <article class="proof-card">
+              <div class="proof-docs" aria-hidden="true">
+                <img src="assets/img/credentials/doc-copyright-000520.png" alt="" loading="lazy">
+                <img src="assets/img/credentials/doc-copyright-000636.png" alt="" loading="lazy">
+              </div>
+              <span class="proof-kicker"><img src="assets/img/client/dip.png" alt="" loading="lazy"> <span data-i18n="credentials.ip.issuer">Department of Intellectual Property</span></span>
+              <h3 data-i18n="credentials.ip.title">4 registered software copyrights</h3>
+              <ul class="proof-list">
+                <li><code>ว1.000520</code> FUFU Pet Care :ฟูฟู เพ็ทแคร์</li>
+                <li><code>ว1.000636</code> โมเดลอัจฉริยะตรวจจับ และวิเคราะห์โรคผิวหนัง ในสุนัขและแมวจากการถ่ายภาพ</li>
+                <li><code>ว1.001745</code> Smart AI Veterinary Assistant Chatbot</li>
+                <li><code>ว1.001746</code> FUFU Partner Portal: Pet Business Management System</li>
+              </ul>
+              <p class="proof-note" data-i18n="credentials.ip.note">Copyright notifications (จดแจ้งลิขสิทธิ์), computer programs.</p>
+            </article>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <article class="proof-card">
+              <div class="proof-docs" aria-hidden="true">
+                <img src="assets/img/credentials/doc-company-registration.png" alt="" loading="lazy">
+                <img src="assets/img/credentials/doc-dbd-registered.png" alt="" loading="lazy">
+              </div>
+              <span class="proof-kicker"><img src="assets/img/client/DBD.png" alt="" loading="lazy"> <span data-i18n="credentials.biz.issuer">Department of Business Development</span></span>
+              <h3 data-i18n="credentials.biz.title">A registered, verifiable company</h3>
+              <ul class="proof-list">
+                <li><span data-i18n="credentials.biz.reg">Juristic person registration no.</span> <code>0655569001411</code></li>
+                <li data-i18n="credentials.biz.founded">Company incorporated 6 May 2026, registered capital 1,000,000 baht</li>
+                <li><span data-i18n="credentials.biz.trustmark">DBD Registered e-commerce trustmark</span>
+                  <a class="proof-verify" href="https://dbdregistered.dbd.go.th/api/public/shopinfo?param=6F643C2B561EB1F700BA0F9EA370D5664DBDD6BCBF5BB8D5A8718499F48C33BD" target="_blank" rel="noopener"><span data-i18n="credentials.verify">Verify</span> <i class="bi bi-box-arrow-up-right"></i></a></li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <article class="proof-card">
+              <div class="proof-docs proof-docs-wide" aria-hidden="true">
+                <img src="assets/img/credentials/doc-gemini.png" alt="" loading="lazy">
+                <img src="assets/img/credentials/doc-nvidia.png" alt="" loading="lazy">
+              </div>
+              <span class="proof-kicker"><i class="bi bi-mortarboard"></i> <span data-i18n="credentials.team.issuer">Team certifications</span></span>
+              <h3 data-i18n="credentials.team.title">Certified in AI education and practice</h3>
+              <ul class="proof-list">
+                <li><strong>Gemini Certified Educator</strong> · Google for Education</li>
+                <li><strong>AI for All: From Basics to GenAI Practice</strong> · NVIDIA Academy <span data-i18n="credentials.team.completion">(certificate of completion)</span></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="credentials-foot" data-aos="fade-up">
+          <p data-i18n="credentials.iso_note">ISO 56001: we were selected to join the programme. This is not an ISO certification.</p>
+          <a href="trust.html" class="btn-kc"><span data-i18n="credentials.trust_cta">How we look after your work and data</span> <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+    </section><!-- /Credentials Section -->
+
+
+    <!-- Journey / Timeline Section -->
+    <section id="journey" class="journey section light-background">
+      <div class="container section-title" data-aos="fade-up">
+        <h2 data-i18n="timeline.heading">Our Journey</h2>
+        <p data-i18n="timeline.subheading">From a small team to a registered company</p>
+      </div>
+      <div class="container" data-aos="fade-up">
+        <div class="timeline-scroll" tabindex="0" aria-label="Company timeline">
+          <ol class="timeline">
+            <li class="timeline-item">
+              <span class="timeline-date" data-i18n="timeline.t1.date">2019</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p data-i18n="timeline.t1.text">Started as a small team in Phitsanulok, building websites, apps and media</p>
+            </li>
+            <li class="timeline-item">
+              <span class="timeline-date" data-i18n="timeline.t2.date">Feb 2026</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p data-i18n="timeline.t2.text">Registered as a commercial business, and received the DBD Registered trustmark</p>
+            </li>
+            <li class="timeline-item">
+              <span class="timeline-date" data-i18n="timeline.t3.date">Mar 2026</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p data-i18n="timeline.t3.text">Popular Vote award for FUFU Pet Care</p>
+            </li>
+            <li class="timeline-item">
+              <span class="timeline-date" data-i18n="timeline.t4.date">May 2026</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p data-i18n="timeline.t4.text">Incorporated as KITTEN CODE Co.,Ltd. Selected 1 of 25 organisations for the ISO 56001 programme</p>
+            </li>
+            <li class="timeline-item">
+              <span class="timeline-date" data-i18n="timeline.t5.date">Jul 2026</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p data-i18n="timeline.t5.text">1 of 19 startups in the depa Digital Startup Fund</p>
+            </li>
+            <li class="timeline-item">
+              <span class="timeline-date" data-i18n="timeline.t6.date">Aug 2026</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p data-i18n="timeline.t6.text">Top 10 on the IP MART SHOWBIZ 2026 pitching stage</p>
+            </li>
+            <li class="timeline-item">
+              <span class="timeline-date" data-i18n="timeline.t7.date">Nov 2026</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p data-i18n="timeline.t7.text">4 software copyrights registered. FUFU selected for the ASEAN Digital Awards 2027 national round</p>
+            </li>
+          </ol>
+        </div>
+        <p class="timeline-hint"><i class="bi bi-arrow-left-right"></i> <span data-i18n="timeline.hint">Swipe to see more</span></p>
+      </div>
+    </section><!-- /Journey Section -->
+
+
     <!-- Team Section -->
     <section id="team" class="team section ">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2 data-i18n="team.heading">Team</h2>
-        <p style="margin-bottom: 0;" data-i18n="team.subheading">CHECK OUR TEAM</p>
+        <p class="mb-0" data-i18n="team.subheading">CHECK OUR TEAM</p>
       </div><!-- End Section Title -->
 
       <div class="container">
 
         <div class="row align-items-center justify-content-center mb-4 mt-3" data-aos="fade-up">
           <div class="col-auto text-center">
-            <div class="d-inline-flex align-items-center justify-content-center" style="gap: 12px;">
-              <span style="width: 40px; height: 1px; background-color: rgba(255, 74, 23, 0.4);"></span>
-              <h4 class="mb-0" data-i18n="team.founder_category"
-                style="font-weight: 600; font-size: 0.95rem; color: var(--heading-color); text-transform: uppercase; letter-spacing: 2px;">
-                Founder & Co-Founder
-              </h4>
-              <span style="width: 40px; height: 1px; background-color: rgba(255, 74, 23, 0.4);"></span>
+            <div class="team-divider">
+              <span class="team-divider-line"></span>
+              <h4 class="team-category" data-i18n="team.founder_category">Founder & Co-Founder</h4>
+              <span class="team-divider-line"></span>
             </div>
           </div>
         </div>
@@ -1204,13 +1263,10 @@
 
         <div class="row align-items-center justify-content-center mt-5 mb-4" data-aos="fade-up">
           <div class="col-auto text-center">
-            <div class="d-inline-flex align-items-center justify-content-center" style="gap: 12px;">
-              <span style="width: 40px; height: 1px; background-color: rgba(255, 74, 23, 0.4);"></span>
-              <h4 class="mb-0" data-i18n="team.full_team_category"
-                style="font-weight: 600; font-size: 0.95rem; color: var(--heading-color); text-transform: uppercase; letter-spacing: 2px;">
-                Our Full Team
-              </h4>
-              <span style="width: 40px; height: 1px; background-color: rgba(255, 74, 23, 0.4);"></span>
+            <div class="team-divider">
+              <span class="team-divider-line"></span>
+              <h4 class="team-category" data-i18n="team.full_team_category">Our Full Team</h4>
+              <span class="team-divider-line"></span>
             </div>
           </div>
         </div>
@@ -1328,13 +1384,10 @@
         <!-- Advisory Board Category -->
         <div class="row align-items-center justify-content-center mt-0 mb-4" data-aos="fade-up">
           <div class="col-auto text-center">
-            <div class="d-inline-flex align-items-center justify-content-center" style="gap: 12px;">
-              <span style="width: 40px; height: 1px; background-color: rgba(255, 74, 23, 0.4);"></span>
-              <h4 class="mb-0" data-i18n="team.advisory_category"
-                style="font-weight: 600; font-size: 0.95rem; color: var(--heading-color); text-transform: uppercase; letter-spacing: 2px;">
-                Advisory Board
-              </h4>
-              <span style="width: 40px; height: 1px; background-color: rgba(255, 74, 23, 0.4);"></span>
+            <div class="team-divider">
+              <span class="team-divider-line"></span>
+              <h4 class="team-category" data-i18n="team.advisory_category">Advisory Board</h4>
+              <span class="team-divider-line"></span>
             </div>
           </div>
         </div>
@@ -1404,9 +1457,8 @@
     </section><!-- /Team Section -->
 
     <!-- Payment Section -->
-    <section id="payment" class="features section light-background" style="padding: 80px 0;">
+    <section id="payment" class="features payment section light-background">
 
-      <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2 data-i18n="payment.heading">Payment</h2>
         <p data-i18n="payment.subheading">Secure Payment Methods</p>
@@ -1414,157 +1466,132 @@
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <!-- Payment Method Selector -->
         <div class="row justify-content-center g-3 mb-5" id="paymentMethodSelector">
-          <!-- KBank -->
           <div class="col-6 col-md-3">
-            <div class="payment-method-card active" data-color="#00a651" onclick="switchPayment('kbank', this)"
-              style="border-color:#00a651;box-shadow:0 4px 20px rgba(0,166,81,0.15);">
-              <div class="method-bar" style="background:#00a651;"></div>
+            <button type="button" class="payment-method-card brand-kbank active" data-pay-method="kbank" aria-pressed="true">
+              <span class="method-bar"></span>
               <img src="assets/img/bank/KBank_logo.png" alt="KBank" class="pm-logo" loading="lazy">
-              <div class="pm-label" style="color:#00a651;">KASIKORNBANK</div>
-              <div class="pm-sublabel" data-i18n="payment.method_thai_bank">Thai Bank Transfer</div>
-            </div>
+              <span class="pm-label brand-text">KASIKORNBANK</span>
+              <span class="pm-sublabel" data-i18n="payment.method_thai_bank">Thai Bank Transfer</span>
+            </button>
           </div>
-          <!-- Krungthai -->
           <div class="col-6 col-md-3">
-            <div class="payment-method-card" data-color="#1565c0" onclick="switchPayment('ktb', this)">
-              <div class="method-bar"></div>
+            <button type="button" class="payment-method-card brand-ktb" data-pay-method="ktb" aria-pressed="false">
+              <span class="method-bar"></span>
               <img src="assets/img/bank/Krunkthai_logo.jpg" alt="Krungthai" class="pm-logo" loading="lazy">
-              <div class="pm-label" style="color:#1565c0;">KRUNGTHAI BANK</div>
-              <div class="pm-sublabel" data-i18n="payment.method_thai_bank">Thai Bank Transfer</div>
-            </div>
+              <span class="pm-label brand-text">KRUNGTHAI BANK</span>
+              <span class="pm-sublabel" data-i18n="payment.method_thai_bank">Thai Bank Transfer</span>
+            </button>
           </div>
-          <!-- Alipay -->
           <div class="col-6 col-md-3">
-            <div class="payment-method-card" data-color="#00a0e9" onclick="switchPayment('alipay', this)">
-              <div class="method-bar"></div>
-              <div class="pm-icon-wrap" style="color:#00a0e9;"><i class="bi bi-alipay"></i></div>
-              <div class="pm-label" style="color:#00a0e9;">ALIPAY</div>
-              <div class="pm-sublabel" data-i18n="payment.method_scan_qr">Scan QR to Pay</div>
-            </div>
+            <button type="button" class="payment-method-card brand-alipay" data-pay-method="alipay" aria-pressed="false">
+              <span class="method-bar"></span>
+              <span class="pm-icon-wrap brand-text"><i class="bi bi-alipay"></i></span>
+              <span class="pm-label brand-text">ALIPAY</span>
+              <span class="pm-sublabel" data-i18n="payment.method_scan_qr">Scan QR to Pay</span>
+            </button>
           </div>
-          <!-- PayPal -->
           <div class="col-6 col-md-3">
-            <div class="payment-method-card" data-color="#0070ba" onclick="switchPayment('paypal', this)">
-              <div class="method-bar"></div>
-              <div class="pm-icon-wrap" style="color:#0070ba;"><i class="bi bi-paypal"></i></div>
-              <div class="pm-label" style="color:#0070ba;">PAYPAL</div>
-              <div class="pm-sublabel" data-i18n="payment.method_international">International Transfer</div>
-            </div>
+            <button type="button" class="payment-method-card brand-paypal" data-pay-method="paypal" aria-pressed="false">
+              <span class="method-bar"></span>
+              <span class="pm-icon-wrap brand-text"><i class="bi bi-paypal"></i></span>
+              <span class="pm-label brand-text">PAYPAL</span>
+              <span class="pm-sublabel" data-i18n="payment.method_international">International Transfer</span>
+            </button>
           </div>
         </div>
 
-        <!-- Payment Detail Panel -->
         <div class="row justify-content-center">
           <div class="col-lg-7 col-md-10">
 
-            <!-- KBank Detail -->
-            <div id="panel-kbank" class="payment-panel" style="display:block;">
+            <div id="panel-kbank" class="payment-panel brand-kbank">
               <div class="payment-panel-card">
                 <div class="panel-header">
                   <img src="assets/img/bank/KBank_logo.png" alt="KBank" class="bank-logo" loading="lazy">
                   <div>
                     <div class="panel-bank-name">KASIKORN BANK</div>
-                    <div class="panel-secure-label" style="color:#00a651;"><span
-                        style="margin-right:4px;">&#10003;</span> <span data-i18n="payment.secure_transfer">Secure Bank
-                        Transfer</span></div>
+                    <div class="panel-secure-label brand-text"><span class="me-1">&#10003;</span> <span data-i18n="payment.secure_transfer">Secure Bank Transfer</span></div>
                   </div>
                   <div class="panel-account-badge">
                     <div class="panel-badge-label" data-i18n="payment.account_type_label">ACCOUNT TYPE</div>
-                    <div class="panel-badge-value" style="color:#00a651;" data-i18n="payment.account_type_savings">
-                      Savings</div>
+                    <div class="panel-badge-value brand-text" data-i18n="payment.account_type_savings">Savings</div>
                   </div>
                 </div>
-                <div style="margin-bottom:20px;">
-                  <div class="panel-field-label">Account Holder</div>
-                  <div class="panel-holder-name">&#3588;&#3636;&#3607;&#3648;&#3607;&#3656;&#3609;
-                    &#3650;&#3588;&#3657;&#3604; <span class="panel-holder-sub">(Kitten Code Co., Ltd.)</span></div>
+                <div class="panel-field">
+                  <div class="panel-field-label" data-i18n="payment.account_holder">Account Holder</div>
+                  <div class="panel-holder-name">คิทเท่น โค้ด <span class="panel-holder-sub" data-i18n="payment.company_name">(KITTEN CODE Co.,Ltd)</span></div>
                 </div>
-                <div style="margin-bottom:20px;">
+                <div class="panel-field">
                   <div class="panel-field-label" data-i18n="payment.account_number">Account Number</div>
                   <div class="panel-acno-row">
-                    <div id="acno-kbank-mask" class="panel-acno">226-3-XXXXX-2</div>
-                    <div id="acno-kbank" class="panel-acno" style="display:none;">226-3-92729-2</div>
+                    <div class="panel-acno" data-acno-mask>226-3-XXXXX-2</div>
+                    <div class="panel-acno" data-acno-full hidden>226-3-92729-2</div>
                     <div class="panel-btn-group">
-                      <button onclick="toggleAccNo('kbank')" id="btn-toggle-kbank" class="btn-show-acno"
-                        style="color:#00a651;">
-                        <i class="bi bi-eye" id="icon-toggle-kbank"></i> Show
+                      <button type="button" class="btn-show-acno brand-text" data-acno-toggle aria-pressed="false">
+                        <i class="bi bi-eye"></i> <span data-i18n="payment.show">Show</span>
                       </button>
-                      <button onclick="copyAccount('acno-kbank','kbank-copy-msg')" id="btn-copy-kbank"
-                        class="btn-copy-acno" style="background:#00a651;opacity:0.35;pointer-events:none;">
-                        <i class="bi bi-clipboard"></i> Copy
+                      <button type="button" class="btn-copy-acno" data-acno-copy disabled>
+                        <i class="bi bi-clipboard"></i> <span data-i18n="payment.copy">Copy</span>
                       </button>
                     </div>
                   </div>
-                  <div id="kbank-copy-msg" class="copy-msg" style="color:#00a651;">&#10003; Copied to clipboard!</div>
+                  <div class="copy-msg brand-text" data-acno-msg role="status">&#10003; <span data-i18n="payment.copied">Copied to clipboard!</span></div>
                 </div>
               </div>
             </div>
 
-            <!-- KTB Detail -->
-            <div id="panel-ktb" class="payment-panel" style="display:none;">
+            <div id="panel-ktb" class="payment-panel brand-ktb" hidden>
               <div class="payment-panel-card">
                 <div class="panel-header">
                   <img src="assets/img/bank/Krunkthai_logo.jpg" alt="Krungthai" class="bank-logo" loading="lazy">
                   <div>
                     <div class="panel-bank-name">KRUNGTHAI BANK</div>
-                    <div class="panel-secure-label" style="color:#1565c0;"><span
-                        style="margin-right:4px;">&#10003;</span> <span data-i18n="payment.secure_transfer">Secure Bank
-                        Transfer</span></div>
+                    <div class="panel-secure-label brand-text"><span class="me-1">&#10003;</span> <span data-i18n="payment.secure_transfer">Secure Bank Transfer</span></div>
                   </div>
                   <div class="panel-account-badge">
                     <div class="panel-badge-label" data-i18n="payment.account_type_label">ACCOUNT TYPE</div>
-                    <div class="panel-badge-value" style="color:#1565c0;" data-i18n="payment.account_type_savings">
-                      Savings</div>
+                    <div class="panel-badge-value brand-text" data-i18n="payment.account_type_savings">Savings</div>
                   </div>
                 </div>
-                <div style="margin-bottom:20px;">
-                  <div class="panel-field-label">Account Holder</div>
-                  <div class="panel-holder-name">&#3588;&#3636;&#3607;&#3648;&#3607;&#3656;&#3609;
-                    &#3650;&#3588;&#3657;&#3604; <span class="panel-holder-sub">(Kitten Code Co., Ltd.)</span></div>
+                <div class="panel-field">
+                  <div class="panel-field-label" data-i18n="payment.account_holder">Account Holder</div>
+                  <div class="panel-holder-name">คิทเท่น โค้ด <span class="panel-holder-sub" data-i18n="payment.company_name">(KITTEN CODE Co.,Ltd)</span></div>
                 </div>
-                <div style="margin-bottom:20px;">
+                <div class="panel-field">
                   <div class="panel-field-label" data-i18n="payment.account_number">Account Number</div>
                   <div class="panel-acno-row">
-                    <div id="acno-ktb-mask" class="panel-acno">665-6-XXXXX-0</div>
-                    <div id="acno-ktb" class="panel-acno" style="display:none;">665-6-09488-0</div>
+                    <div class="panel-acno" data-acno-mask>665-6-XXXXX-0</div>
+                    <div class="panel-acno" data-acno-full hidden>665-6-09488-0</div>
                     <div class="panel-btn-group">
-                      <button onclick="toggleAccNo('ktb')" id="btn-toggle-ktb" class="btn-show-acno"
-                        style="color:#1565c0;">
-                        <i class="bi bi-eye" id="icon-toggle-ktb"></i> Show
+                      <button type="button" class="btn-show-acno brand-text" data-acno-toggle aria-pressed="false">
+                        <i class="bi bi-eye"></i> <span data-i18n="payment.show">Show</span>
                       </button>
-                      <button onclick="copyAccount('acno-ktb','ktb-copy-msg')" id="btn-copy-ktb" class="btn-copy-acno"
-                        style="background:#1565c0;opacity:0.35;pointer-events:none;">
-                        <i class="bi bi-clipboard"></i> Copy
+                      <button type="button" class="btn-copy-acno" data-acno-copy disabled>
+                        <i class="bi bi-clipboard"></i> <span data-i18n="payment.copy">Copy</span>
                       </button>
                     </div>
                   </div>
-                  <div id="ktb-copy-msg" class="copy-msg" style="color:#1565c0;">&#10003; Copied to clipboard!</div>
+                  <div class="copy-msg brand-text" data-acno-msg role="status">&#10003; <span data-i18n="payment.copied">Copied to clipboard!</span></div>
                 </div>
               </div>
             </div>
 
-            <!-- Alipay Detail -->
-            <div id="panel-alipay" class="payment-panel" style="display:none;">
+            <div id="panel-alipay" class="payment-panel brand-alipay" hidden>
               <div class="payment-panel-card qr-panel">
                 <div class="qr-title" data-i18n="payment.alipay_prompt">Scan QR Code to Pay via Alipay</div>
-                <div class="qr-desc" data-i18n="payment.alipay_desc">Open your Alipay app and scan the QR code below
-                </div>
+                <div class="qr-desc" data-i18n="payment.alipay_desc">Open your Alipay app and scan the QR code below</div>
                 <div class="qr-frame">
-                  <img src="assets/img/bank/alipay-kitten.jpg" alt="Alipay QR" loading="lazy">
+                  <img src="assets/img/bank/alipay-kitten.jpg" alt="Alipay QR" data-i18n-alt="images.alipay_qr" loading="lazy">
                 </div>
               </div>
             </div>
 
-            <!-- PayPal Detail -->
-            <div id="panel-paypal" class="payment-panel" style="display:none;">
+            <div id="panel-paypal" class="payment-panel brand-paypal" hidden>
               <div class="payment-panel-card qr-panel">
                 <div class="qr-title" data-i18n="payment.paypal_prompt">Scan QR Code to Pay via PayPal</div>
-                <div class="qr-desc" data-i18n="payment.paypal_desc">Open your PayPal app or scan the QR code to
-                  complete your payment</div>
+                <div class="qr-desc" data-i18n="payment.paypal_desc">Open your PayPal app or scan the QR code to complete your payment</div>
                 <div class="qr-frame">
-                  <img src="assets/img/bank/paypal-kitten.jpg" alt="PayPal QR" loading="lazy">
+                  <img src="assets/img/bank/paypal-kitten.jpg" alt="PayPal QR" data-i18n-alt="images.paypal_qr" loading="lazy">
                 </div>
               </div>
             </div>
@@ -1573,7 +1600,6 @@
         </div>
 
       </div>
-
 
     </section>
     <!-- End Payment Section -->
@@ -1591,6 +1617,16 @@
 
         <div class="row gy-4">
           <div class="row gy-4">
+
+            <div class="col-lg-12">
+              <div class="info-item legal-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up"
+                data-aos-delay="150">
+                <i class="bi bi-building"></i>
+                <h3 data-i18n="legal.title">Company</h3>
+                <p>บริษัท คิทเท่น โค้ด จำกัด · KITTEN CODE Co.,Ltd.</p>
+                <p><span data-i18n="legal.reg">Juristic person registration no.</span> 0655569001411 · <span data-i18n="legal.date">Registered 6 May 2026</span></p>
+              </div>
+            </div>
 
             <div class="col-lg-12">
               <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up"
@@ -1630,122 +1666,7 @@
 
   </main>
 
-  <footer id="footer" class="footer dark-background">
-
-    <div class="container footer-top">
-      <div class="row gy-4">
-        <div class="col-lg-3 col-md-6 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">KITTEN CODE</span>
-          </a>
-          <div class="footer-contact pt-3">
-            <p>347/11 M.3 THAPHO</p>
-            <p>PHITSANULOK 65000</p>
-            <p class="mt-3"><strong>Phone:</strong> <span>+66 8 0885 0555</span></p>
-            <p><strong>Email:</strong> <span>kittencode.co.ltd@gmail.com</span></p>
-          </div>
-          <div class="social-links d-flex pt-3">
-            <a
-              href="https://www.facebook.com/people/Kitten-Code/61578657051567/?rdid=yfAectJDp5KPICia&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CULYwJj6J%2F"><i
-                class="bi bi-facebook"></i></a>
-            <a
-              href="https://www.instagram.com/kitten.code/?igsh=OWR0NGNnZXRsMWE2&utm_source=qr&fbclid=IwY2xjawQicEVleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAEwAAEejquiaKVz6sFt0mMevcdU4n6Fgpn53hg80AsyN_PKHf26_NWw2UYMrY6eSVM_aem_m2g9xrOI8uV9fNFrhOxBFA"><i
-                class="bi bi-instagram"></i></a>
-          </div>
-
-        </div>
-
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4 data-i18n="footer.useful_links">Useful Links</h4>
-          <ul>
-            <li><i class="bi bi-chevron-right"></i> <a href="#hero" data-i18n="nav.home">Home</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#about" data-i18n="nav.about">About us</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="nav.services">Services</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4 data-i18n="footer.our_services">Our Services</h4>
-          <ul>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.web_app.title">Web
-                Application</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2"
-                data-i18n="services.list.mobile_app.title">Mobile Application</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2"
-                data-i18n="services.list.chatbot.title">Chatbot Development</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2" data-i18n="services.list.ai_training.title">AI
-                Training</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2"
-                data-i18n="services.list.erp.title">ERP/CRM/POS System</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-2 col-md-12 footer-links">
-          <h4>&nbsp;</h4>
-          <ul>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2"
-                data-i18n="services.list.system_analysis.title">System Analysis</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2"
-                data-i18n="services.list.data_analysis.title">Data Analysis & Prediction</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2"
-                data-i18n="services.list.multimedia_production.title">Multimedia & Production</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2"
-                data-i18n="services.list.workshops.title">Workshops</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="#services-2"
-                data-i18n="services.list.consult.title">Consult</a></li>
-          </ul>
-        </div>
-        <div class="col-lg-2 col-md-12 footer-links" id="adminFooterSection">
-          <h4 data-i18n="footer.admin">Admin</h4>
-          <ul id="adminLinks">
-            <!-- Links injected by JS -->
-          </ul>
-        </div>
-
-        <script>
-          document.addEventListener("DOMContentLoaded", function () {
-            const adminLinksContainer = document.getElementById('adminLinks');
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-            if (isLoggedIn) {
-              adminLinksContainer.innerHTML = `
-                <li><i class="bi bi-chevron-right"></i> <a href="#" onclick="handleLogout(event)" data-i18n="footer.logout">Logout</a></li>
-              `;
-            } else {
-              adminLinksContainer.innerHTML = `
-                <li><i class="bi bi-chevron-right"></i> <a href="back-office/login.html" data-i18n="footer.login">Login</a></li>
-              `;
-            }
-
-            // Re-apply translations for dynamically added elements
-            if (window.currentTranslations) {
-              applyTranslations(window.currentTranslations);
-            }
-          });
-
-          function handleLogout(event) {
-            event.preventDefault();
-            localStorage.removeItem('isLoggedIn');
-            window.location.reload();
-          }
-        </script>
-
-      </div>
-    </div>
-
-    <div class="container copyright text-center mt-4">
-      <p>© <span data-i18n="footer.copyright">Copyright</span> <strong class="px-1 sitename">KITTEN CODE Co.,
-          Ltd.</strong> </p>
-    </div>
-
-  </footer>
-
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-      class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
-  <div id="preloader"></div>
+  <div data-kc-footer></div>
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
@@ -1758,7 +1679,9 @@
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js" defer></script>
 
   <!-- Main JS File -->
+  <script src="assets/js/core/layout.js" defer></script>
   <script src="assets/js/core/main.js" defer></script>
+  <script src="assets/js/core/hero.js" defer></script>
 
   <!-- i18n Logic -->
   <script src="assets/js/core/i18n.js" defer></script>
